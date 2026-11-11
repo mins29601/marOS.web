@@ -27,7 +27,7 @@ que sobrevivan a un cambio de tema y no dependan de marOS.
 
 | Tipo | Clave | Origen | Ejemplos | URL propuesta (en / es) |
 |---|---|---|---|---|
-| **Propiedad** | `mis_property` | marOS + WP (spec 003) | villas, apartamentos | `/villas/<slug>/`, `/apartments/<slug>/` · `/es/villas/…`, `/es/apartamentos/…` |
+| **Propiedad** | `mis_property` | marOS + WP (spec 003) | villas, apartamentos | propuesta: `/en/str/<slug>/` · `/es/vft/<slug>/` (en estudio, spec 002) |
 | **Tour / experiencia** | `mis_tour` | WP | Granada private tour, wine tour Ronda | `/services/tours/<slug>/` · `/es/servicios/tours/<slug>/` |
 | **Servicio** | `mis_service` | WP | chófer, traslados, chef privado, catering, bodas, eventos, conserjería, gestión de propiedades | `/services/<tipo>/<slug>/` · `/es/servicios/<tipo>/<slug>/` |
 | **Zona** | taxonomía `zona` con página de zona | WP | Sierra Blanca, Milla de Oro, Nueva Andalucía | `/areas/<slug>/` · `/es/zonas/<slug>/` |
@@ -35,7 +35,7 @@ que sobrevivan a un cambio de tema y no dependan de marOS.
 | **Página** | `page` | WP | contacto, sobre nosotros, legales, landings | `/<slug>/` (se mantiene) |
 | **Opinión** | del plugin de opiniones | WP | opiniones de huéspedes y clientes | sin URL propia |
 
-Mantener la base `/services/<tipo>/` para tours y servicios conserva la URL de la mayoría de las
+Las URLs de esta tabla son propuestas: se deciden con el estudio de URLs de la spec 002. Mantener la base `/services/<tipo>/` para tours y servicios conserva la URL de la mayoría de las
 ~115 páginas actuales sin redirección; solo las propiedades y las zonas cambian de ruta (con 301).
 
 ## Taxonomías

@@ -28,6 +28,8 @@ recomendación de Claude; Julio decide.
 | T19 | 2026-11-11 | Una base de datos por entorno; Git solo despliega código | Julio | spec 001, plan |
 | T20 | 2026-11-11 | Plugin MCP desde el principio, en producción y pruebas (cambia T5) | Julio | spec 001 |
 | T21 | 2026-11-11 | El nombre corto de FareHarbor no hace falta por ahora | Julio | spec 004 |
+| T22 | 2026-11-11 | Constitución 1.0.0 aprobada | Julio | constitución |
+| T23 | 2026-11-11 | La fase 1 usa un dominio temporal; marbellainstyle.com se cambia en el lanzamiento | Julio | spec 001 |
 
 ## Decisiones pendientes
 
@@ -38,7 +40,7 @@ recomendación de Claude; Julio decide.
 | D3 | Plugin SEO | Yoast · Rank Math · SEOPress | **Yoast SEO** (+ el módulo de WPML para SEO) | La compatibilidad más probada con WPML (hreflang, sitemaps por idioma); hoy no hay ningún plugin SEO. Rank Math es buena alternativa si se quiere schema avanzado gratis |
 | D4 | Formularios | Contact Form 7 (actual) · Gravity Forms · Fluent Forms | **Gravity Forms** | Guarda entradas, add-on oficial de WPML, webhooks a n8n/Streak, anti-spam con Turnstile. El formulario de reserva es del plugin propio, no de este |
 | D5 | Caché | APO solo · APO + WP Rocket (actual) | **APO solo**, sin WP Rocket | Dos cachés de página se pisan; APO cachea en el borde y purga con el plugin de Cloudflare |
-| D6 | URLs | Mantener todo bajo `/services/` · Propiedades por tipo (`/villas/`, `/apartments/`) y tours/servicios en `/services/<tipo>/` | **Propiedades por tipo con 301; tours y servicios conservan `/services/<tipo>/<slug>/`** | Las propiedades son un tipo nuevo y merecen URLs limpias; los ~100 tours y servicios no cambian de URL |
+| D6 | URLs | Ver «Estudio de URLs» en la spec 002 | **En estudio.** Propuesta de Julio: alquileres en `/en/str/<slug>/` y `/es/vft/<slug>/`, sin tipología | Decidir con datos de tráfico: cuántas URLs cambian y cuánto tráfico tienen |
 | D8 | Cookies / consentimiento | Complianz (actual) · Cookiebot · CookieYes | **Complianz** | Ya está, Consent Mode v2 con GTM y WPML |
 | D9 | Copia producción → pruebas | Script WP-CLI por SSH · WP Migrate Pro · WPvivid | **Script WP-CLI** en GitHub Actions; WPvivid Pro como respaldo y para copias de seguridad | Repetible con un botón y sin licencia; depende de que IONOS tenga WP-CLI |
 | D10 | MCP de pruebas detrás de Access | Excepción de ruta `/wp-json/mcp/*` · token de servicio | **Excepción de ruta** solo en pruebas, protegida por contraseña de aplicación y límite de peticiones | Los conectores de Claude no envían cabeceras de Access; pruebas no tiene datos personales |

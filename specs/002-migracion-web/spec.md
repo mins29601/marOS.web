@@ -119,3 +119,29 @@ marketing se copian de las fichas actuales.
 - «Para la migración de contenido, necesitaremos un plan específico» → [plan.md](./plan.md).
 - Tipos de destino: según la [spec 004](../004-modelo-contenido/spec.md) (propiedades, tours,
   servicios, zonas).
+
+### Session 2026-11-11 (respuestas de Julio, 22:36)
+
+- Propuesta de Julio para alquileres: un slug genérico, sin el tipo de propiedad en la URL:
+  `str` (short term rentals) en inglés y `vft` en español, p. ej.
+  `marbellainstyle.com/en/str/villa-nido-modern-4br-flamingos`. «La estructura de las URL es algo
+  que habrá que estudiar» → **estudio de URLs** (ver más abajo), pendiente de decisión.
+
+## Estudio de URLs (pendiente)
+
+Preguntas que el estudio debe responder con datos de Search Console y del rastreo (plan M0–M1):
+
+1. **Prefijo de idioma para inglés**: hoy el inglés va sin prefijo (`/sierra-blanca/`) y el
+   español con `/es/`. La propuesta `/en/str/…` pone prefijo a los dos. Ventaja: estructura
+   simétrica y clara. Coste: **todas** las URLs inglesas actuales cambian y necesitan 301
+   (inglés es el idioma con todo el tráfico). Alternativa: inglés sin prefijo, `/str/<slug>/` y
+   `/es/vft/<slug>/`.
+2. **Base de alquileres**: `str`/`vft` (genérico, la URL no cambia si cambia la tipología) frente a
+   palabras que la gente busca (`/villas/`, `/rentals/`, `/es/alquiler-vacacional/`). Impacto en
+   SEO de la palabra en la URL: pequeño; impacto en confianza y clics: a medir.
+3. **Tours y servicios**: mantener `/services/<tipo>/<slug>/` o simplificar.
+4. **Zonas**: `/areas/<slug>/` frente a mantener los slugs actuales en la raíz.
+5. **Blog**: mantener las entradas en la raíz o moverlas a `/blog/<slug>/`.
+
+Para cada opción: número de URLs que cambian, tráfico afectado y redirecciones necesarias.
+

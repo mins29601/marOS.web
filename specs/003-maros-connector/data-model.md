@@ -15,7 +15,7 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 | `lodgify_id` | M | no | Solo informativo |
 | `maros_updated_at` / `etag` | M | no | Para saltar actualizaciones iguales |
 | Nombre comercial de marOS | M | no | Referencia; el título visible es de WP |
-| Tipo de propiedad (villa, apartamento…) | M | no | Categoría de marOS → término de `tipo-propiedad`; marca la URL |
+| Tipo de propiedad (villa, apartamento…) | M | no | Categoría de marOS → término de `tipo-propiedad`; no forma parte de la URL (propuesta `str`/`vft`) |
 | Capacidad máxima | L | no | |
 | Tipos de alojamiento (id, nombre, capacidad, unidades) | L | no | Para calendario y presupuesto |
 | Fotos (URL origen, orden, hash) | L | no | Se descargan a Medios; alt y pie son WP |
@@ -37,7 +37,7 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 
 - `zona`: Sierra Blanca, Milla de Oro, Nueva Andalucía… (traducible; enlaza con las landings de zona).
 - `tipo-propiedad`: villa, apartamento… Los términos los crea la sincronización a partir de la
-  categoría de marOS; cada término tiene su base de URL (`villas`, `apartments`) y su nombre traducido.
+  categoría de marOS, con su nombre traducido. Sirve para filtrar y para los listados, no para la URL.
 - `equipamiento`: piscina climatizada, vistas al mar… (términos creados por la sincronización,
   nombres traducibles en WP).
 

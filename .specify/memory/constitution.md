@@ -1,6 +1,6 @@
 <!--
 Sync Impact Report
-- Versión: — → 1.0.0 (BORRADOR, pendiente de aprobación de Julio)
+- Versión: — → 1.0.0 (ratificada por Julio el 11 de noviembre de 2026: «Apruebo la constitución»)
 - Origen: docs/arquitectura-maros.md (decisiones del 11 de noviembre de 2026) y constitución de
   marOS 1.4.0, principio X (API publicada para la web y los colaboradores).
 - Plantillas: plan-template.md adaptado (la tabla de reutilización habla de WordPress, no de Mantine).
@@ -12,7 +12,7 @@ delante. Vende las villas que gestiona la empresa y muestra su disponibilidad, p
 reservas a través de la API de marOS. Esta constitución fija las reglas que toda especificación,
 plan e implementación de este repositorio deben cumplir.
 
-**Estado**: BORRADOR 1.0.0. No rige hasta que Julio la apruebe.
+**Estado**: vigente desde el 11 de noviembre de 2026.
 
 ## Principios fundamentales
 
@@ -96,4 +96,4 @@ Esta constitución prevalece sobre cualquier otra práctica del repositorio. Cam
 aprobación de Julio, una nota en el Sync Impact Report y subir la versión (MAJOR si se elimina o
 contradice un principio, MINOR si se añade, PATCH si se aclara).
 
-**Versión**: 1.0.0 (borrador) | **Ratificada**: pendiente | **Última modificación**: 2026-11-11
+**Versión**: 1.0.0 | **Ratificada**: 2026-11-11 | **Última modificación**: 2026-11-11

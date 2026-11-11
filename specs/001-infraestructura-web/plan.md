@@ -10,6 +10,20 @@ Poner Cloudflare delante del dominio sin cortes, crear producción y pruebas en 
 pruebas, activar APO, desplegar el código propio con GitHub Actions por SSH, copiar contenido de
 producción a pruebas e instalar MCP Adapter en los dos entornos desde el inicio.
 
+## Dominio temporal (decisión de Julio, 11 de noviembre de 2026, 22:36)
+
+«El dominio no será el de marbellainstyle todavía. Usaremos uno temporal.» Por tanto:
+
+- La fase 1 se monta sobre un **dominio temporal** (nombre pendiente, `<temporal>` en este plan):
+  producción en `www.<temporal>` y pruebas en `staging.<temporal>`, los dos detrás de Cloudflare.
+  Producción también queda protegida con Access hasta el lanzamiento.
+- Como el dominio temporal es nuevo, se da de alta en Cloudflare desde cero, sin riesgo de cortes.
+- **marbellainstyle.com no se toca en la fase 1.** Los pasos 0 y 1 (pasar sus DNS a Cloudflare sin
+  cortes, con el correo de Google Workspace) se hacen como preparación del lanzamiento (spec 002,
+  M7), unas semanas antes.
+- Todas las URLs se generan a partir de `home_url()`; el cambio de dominio en el lanzamiento es
+  un `wp search-replace` más las redirecciones.
+
 ## Technical Context
 
 **Language/Version**: PHP 8.3 (la más alta estable que ofrezca IONOS), WordPress ≥ 6.9 (Abilities
@@ -93,7 +107,7 @@ marOS.web/
 
 | | Pruebas | Producción |
 |---|---|---|
-| Host | `staging.marbellainstyle.com` | `www.marbellainstyle.com` (antes del lanzamiento, `nueva.`, ver Q4) |
+| Host | `staging.<temporal>` | `www.<temporal>` hasta el lanzamiento; después `www.marbellainstyle.com` |
 | Carpeta IONOS | `~/staging/` | `~/production/` |
 | Base de datos | propia | propia |
 | marOS | pruebas | producción |
@@ -120,7 +134,7 @@ Leyenda: **[Tú]** paso en un panel (IONOS, Cloudflare, registrador, GitHub) · 
 preparo o automatizo yo (scripts, workflows, revisión) · **[Juntos]** lo haces tú con mi guía y
 lo compruebo después.
 
-### Paso 0. Preparación (sin tocar nada visible)
+### Paso 0. Preparación de marbellainstyle.com (se hace antes del lanzamiento, no en la fase 1)
 
 | # | Quién | Qué |
 |---|---|---|
@@ -130,7 +144,15 @@ lo compruebo después.
 | 0.4 | [Tú] | En el DNS actual, bajar el TTL de todos los registros a 300 s, 24–48 h antes del cambio |
 | 0.5 | [Tú] | Si el registrador tiene DNSSEC activo, desactivarlo (esperar 24 h) |
 
-### Paso 1. Cloudflare sin cortes
+### Paso 1a. Dominio temporal en Cloudflare (fase 1)
+
+| # | Quién | Qué |
+|---|---|---|
+| 1a.1 | [Tú] | Registrar o elegir el dominio temporal (en IONOS) |
+| 1a.2 | [Tú] | Darlo de alta en Cloudflare (plan Free) y poner sus nameservers en IONOS |
+| 1a.3 | [Tú] | Registros `www`, `@` y `staging` hacia IONOS con proxy activo; SSL «Full (strict)» |
+
+### Paso 1. marbellainstyle.com a Cloudflare sin cortes (antes del lanzamiento)
 
 | # | Quién | Qué |
 |---|---|---|
@@ -146,22 +168,22 @@ lo compruebo después.
 
 | # | Quién | Qué |
 |---|---|---|
-| 2.1 | [Tú] | En IONOS: crear las carpetas `production` y `staging`, dos bases de datos MySQL y asignar `staging.` y `nueva.` a sus carpetas |
+| 2.1 | [Tú] | En IONOS: crear las carpetas `production` y `staging`, dos bases de datos MySQL y asignar `www.<temporal>` y `staging.<temporal>` a sus carpetas |
 | 2.2 | [Tú] | Elegir PHP 8.3 para ambas carpetas |
 | 2.3 | [Tú] | Crear el usuario SSH/SFTP y añadir la clave pública que te daré (o pasarme usuario y método de acceso) |
 | 2.4 | [Juntos] | Certificado: SSL de IONOS si se puede validar con Cloudflare delante; si no, certificado de origen de Cloudflare importado en IONOS |
 | 2.5 | [Claude] | Workflow `bootstrap` (una vez): instalar WordPress con WP-CLI en cada carpeta, `wp-config.php` desde la plantilla, idioma, zona horaria, usuarios |
 | 2.6 | [Tú] | Crear en IONOS el cron cada 5 minutos para cada entorno (comando que te daré) |
-| 2.7 | [Tú] | En Cloudflare, registros `staging` y `nueva` hacia IONOS con proxy activo |
+| 2.7 | — | (incluido en 1a.3) |
 
 ### Paso 3. Pruebas privada y sin indexar
 
 | # | Quién | Qué |
 |---|---|---|
-| 3.1 | [Tú] | Cloudflare Zero Trust → Access → aplicación para `staging.` y `nueva.` con los emails autorizados (código por email) |
+| 3.1 | [Tú] | Cloudflare Zero Trust → Access → aplicación para `staging.<temporal>` y `www.<temporal>` con los emails autorizados: Access pide el email al entrar y envía un código de un solo uso; solo entran los emails de la lista |
 | 3.2 | [Tú] | Crear un token de servicio de Access para marOS pruebas (avisos a WordPress) y para el MCP; pasarme los ids, no los secretos |
 | 3.3 | [Claude] | mu-plugin `mis-entorno`: `noindex`, `X-Robots-Tag`, `robots.txt` cerrado y correo bloqueado en pruebas |
-| 3.4 | [Claude] | `.htaccess` que solo acepta IPs de Cloudflare en pruebas y `nueva.` (y en producción tras el lanzamiento) |
+| 3.4 | [Claude] | `.htaccess` que solo acepta IPs de Cloudflare en los dos entornos |
 | 3.5 | [Tú] | Regla de transformación en Cloudflare que añade `X-Robots-Tag: noindex` a `staging.` (segunda capa) |
 
 ### Paso 4. Despliegue con Git
@@ -171,7 +193,7 @@ lo compruebo después.
 | 4.1 | [Claude] | Esqueleto del repo, `ci.yml`, `deploy-staging.yml`, `deploy-production.yml`, `scripts/deploy.sh`, `smoke.sh` |
 | 4.2 | [Tú] | En GitHub: crear los Environments `staging` y `production` (este con revisor obligatorio: tú) y pegar los secretos SSH |
 | 4.3 | [Tú] | Proteger la rama `main` (PR obligatorio y CI en verde) |
-| 4.4 | [Claude] | Primer despliegue a pruebas y a `nueva.`; comprobar con el smoke |
+| 4.4 | [Claude] | Primer despliegue a pruebas y a producción (dominio temporal); comprobar con el smoke |
 
 ### Paso 5. APO y WAF
 

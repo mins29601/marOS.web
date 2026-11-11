@@ -17,7 +17,7 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - El dominio pasa a Cloudflare sin cortes (Priority: P1)
+### User Story 1 - El dominio pasa a Cloudflare sin cortes (Priority: P1, antes del lanzamiento)
 
 Los nameservers de marbellainstyle.com pasan a Cloudflare. La web actual, el correo, el motor de
 reservas `stay.` y cualquier otro servicio siguen funcionando igual durante y después del cambio.
@@ -206,3 +206,12 @@ subdominio y su usuario SSH: producción y pruebas.
 - «Tendremos un plugin MCP desde el principio» → MCP Adapter en producción y pruebas desde la
   fase 1 (US7, FR-010). Lectura de Claude: «desde el principio» incluye producción; las Abilities
   que escriben crean borradores.
+
+### Session 2026-11-11 (respuestas de Julio, 22:36)
+
+- Constitución 1.0.0 aprobada.
+- «El dominio no será el de marbellainstyle todavía. Usaremos uno temporal.» → la fase 1 usa un
+  dominio temporal (`www.` y `staging.`), los dos protegidos con Access hasta el lanzamiento. US1
+  (DNS de marbellainstyle.com a Cloudflare) pasa a la preparación del lanzamiento. Q3 y Q4 quedan
+  sustituidas. *Pendiente*: nombre del dominio temporal.
+- Q5 (emails de Access): aclarado qué significa; *pendiente* la lista.
