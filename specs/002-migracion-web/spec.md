@@ -127,6 +127,9 @@ marketing se copian de las fichas actuales.
   `marbellainstyle.com/en/str/villa-nido-modern-4br-flamingos`. «La estructura de las URL es algo
   que habrá que estudiar» → **estudio de URLs** (ver más abajo), pendiente de decisión.
 
+- «Cuando se haga la migración, habrá que revisar qué se pasa y qué no» (Julio, 22:38) → Q2 se
+  decide página a página en el plan M1, con los datos de tráfico.
+
 ## Estudio de URLs (pendiente)
 
 Preguntas que el estudio debe responder con datos de Search Console y del rastreo (plan M0–M1):

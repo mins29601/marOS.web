@@ -30,23 +30,26 @@ recomendación de Claude; Julio decide.
 | T21 | 2026-11-11 | El nombre corto de FareHarbor no hace falta por ahora | Julio | spec 004 |
 | T22 | 2026-11-11 | Constitución 1.0.0 aprobada | Julio | constitución |
 | T23 | 2026-11-11 | La fase 1 usa un dominio temporal; marbellainstyle.com se cambia en el lanzamiento | Julio | spec 001 |
+| T24 | 2026-11-11 | Qué contenido se migra se decide página a página en la migración (plan M1) | Julio | spec 002 |
+| D2 | 2026-11-11 | Plugin de idiomas: **WPML** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D3 | 2026-11-11 | Plugin SEO: **Yoast SEO** (+ el módulo de WPML para SEO) | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D4 | 2026-11-11 | Formularios: **Gravity Forms** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D5 | 2026-11-11 | Caché: **APO solo**, sin WP Rocket | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D8 | 2026-11-11 | Cookies / consentimiento: **Complianz** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D9 | 2026-11-11 | Copia producción → pruebas: **Script WP-CLI** en GitHub Actions; WPvivid Pro como respaldo y para copias de seguridad | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D10 | 2026-11-11 | MCP de pruebas detrás de Access: **Excepción de ruta** solo en pruebas, protegida por contraseña de aplicación y límite de peticiones | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D11 | 2026-11-11 | Opiniones: **Site Reviews** al lanzar | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D12 | 2026-11-11 | Copias de seguridad: **WPvivid o UpdraftPlus a Google Drive**, diaria BD y semanal archivos | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D13 | 2026-11-11 | Correo saliente de WordPress: **SMTP transaccional** con plugin (WP Mail SMTP o FluentSMTP) | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D15 | 2026-11-11 | Antes de la fase 3, botón Reservar: **Enlace a `stay.`** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D16 | 2026-11-11 | Campos editables de tours y servicios: **Secure Custom Fields** sobre metadatos registrados | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D17 | 2026-11-11 | Dónde se registran tours y servicios: **Plugin `mis-contenido`** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 
 ## Decisiones pendientes
 
 | # | Decisión | Opciones | Recomendación | Por qué |
 |---|---|---|---|---|
 | D1 | Tema base | (a) tema de bloques + hijo; (b) tema clásico con maquetador (Elementor, Uncode/WPBakery, Divi) | **(a) Tema de bloques**: Twenty Twenty-Five como padre (o Ollie si se quiere más diseño de serie) y tema hijo `marbellainstyle` con `theme.json` | Contenido en bloques nativos: lo puede editar el MCP, no hay lock-in de maquetador, es más rápido con APO, y nuestros bloques de reserva encajan sin adaptadores. El maquetador actual obliga a rehacer el contenido igualmente |
-| D2 | Plugin de idiomas | WPML · Polylang Pro · TranslatePress | **WPML** | Ya está en uso (en/es/de/ru/fr), mantiene `/es/` etc., buen soporte de tipos de contenido y campos, y facilita migrar las traducciones existentes |
-| D3 | Plugin SEO | Yoast · Rank Math · SEOPress | **Yoast SEO** (+ el módulo de WPML para SEO) | La compatibilidad más probada con WPML (hreflang, sitemaps por idioma); hoy no hay ningún plugin SEO. Rank Math es buena alternativa si se quiere schema avanzado gratis |
-| D4 | Formularios | Contact Form 7 (actual) · Gravity Forms · Fluent Forms | **Gravity Forms** | Guarda entradas, add-on oficial de WPML, webhooks a n8n/Streak, anti-spam con Turnstile. El formulario de reserva es del plugin propio, no de este |
-| D5 | Caché | APO solo · APO + WP Rocket (actual) | **APO solo**, sin WP Rocket | Dos cachés de página se pisan; APO cachea en el borde y purga con el plugin de Cloudflare |
 | D6 | URLs | Ver «Estudio de URLs» en la spec 002 | **En estudio.** Propuesta de Julio: alquileres en `/en/str/<slug>/` y `/es/vft/<slug>/`, sin tipología | Decidir con datos de tráfico: cuántas URLs cambian y cuánto tráfico tienen |
-| D8 | Cookies / consentimiento | Complianz (actual) · Cookiebot · CookieYes | **Complianz** | Ya está, Consent Mode v2 con GTM y WPML |
-| D9 | Copia producción → pruebas | Script WP-CLI por SSH · WP Migrate Pro · WPvivid | **Script WP-CLI** en GitHub Actions; WPvivid Pro como respaldo y para copias de seguridad | Repetible con un botón y sin licencia; depende de que IONOS tenga WP-CLI |
-| D10 | MCP de pruebas detrás de Access | Excepción de ruta `/wp-json/mcp/*` · token de servicio | **Excepción de ruta** solo en pruebas, protegida por contraseña de aplicación y límite de peticiones | Los conectores de Claude no envían cabeceras de Access; pruebas no tiene datos personales |
-| D11 | Opiniones | Site Reviews (actual) · desde Lodgify/Airbnb vía marOS | **Site Reviews** al lanzar | No bloquea; se puede pasar a marOS cuando la API las dé |
-| D12 | Copias de seguridad | IONOS · WPvivid/UpdraftPlus a almacenamiento externo | **WPvivid o UpdraftPlus a Google Drive**, diaria BD y semanal archivos | No depender solo del hosting |
-| D13 | Correo saliente de WordPress | PHP mail de IONOS · SMTP transaccional (Brevo, Postmark, Google) | **SMTP transaccional** con plugin (WP Mail SMTP o FluentSMTP) | Entregabilidad y registro de envíos |
-| D15 | Antes de la fase 3, botón Reservar | Enlace a `stay.` (Lodgify) · formulario de solicitud | **Enlace a `stay.`** | Mantiene las reservas actuales sin esperar a la API |
-| D16 | Campos editables de tours y servicios | Secure Custom Fields (gratis, mantenido por WordPress.org) · ACF Pro · solo bloques | **Secure Custom Fields** sobre metadatos registrados | Pantallas de edición cómodas, compatible con WPML, y los datos quedan como metadatos estándar (sirven a REST, MCP y Block Bindings) |
-| D17 | Dónde se registran tours y servicios | En el tema · en un plugin propio `mis-contenido` | **Plugin `mis-contenido`** | El contenido sobrevive a un cambio de tema |
+
+Las filas D… de «Decisiones tomadas» conservan su número original; su justificación está en el historial de este archivo.
