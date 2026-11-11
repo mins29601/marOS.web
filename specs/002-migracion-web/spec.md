@@ -4,7 +4,8 @@
 
 **Created**: 2026-11-11
 
-**Status**: Borrador. Inventario inicial en [research.md](./research.md).
+**Status**: Borrador. Inventario inicial en [research.md](./research.md) y plan de migración de
+contenido en [plan.md](./plan.md).
 
 **Fuentes**:
 
@@ -110,3 +111,11 @@ marketing se copian de las fichas actuales.
 - Q4: ¿`stay.marbellainstyle.com` se mantiene hasta la fase 3 (reservas en la web)? → *pendiente*
   (recomendación: sí, y los botones de reservar enlazan allí hasta entonces)
 - Q5: ¿Diseño nuevo o se replica el actual? → *pendiente*
+
+### Session 2026-11-11 (respuestas de Julio, 22:01)
+
+- Q1 → «Inglés y español ok». Alemán, ruso y francés no se migran: 301 a la versión inglesa.
+- Q5 → «Será un nuevo diseño, con nuevo tema». El contenido se reconstruye en bloques (plan M3).
+- «Para la migración de contenido, necesitaremos un plan específico» → [plan.md](./plan.md).
+- Tipos de destino: según la [spec 004](../004-modelo-contenido/spec.md) (propiedades, tours,
+  servicios, zonas).

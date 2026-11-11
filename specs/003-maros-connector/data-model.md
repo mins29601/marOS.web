@@ -1,10 +1,13 @@
-# Data Model: Villa (marOS Connector)
+# Data Model: Propiedad (marOS Connector)
+
+Una Propiedad es cualquier alojamiento que se alquila a través de marOS: villa, apartamento u
+otro tipo que aparezca en marOS. El tipo es un dato (taxonomía), no un tipo de contenido aparte.
 
 Leyenda de origen: **L** = Lodgify vía marOS (spec 025) · **E** = expediente de marOS (spec 003
 de marOS) · **M** = marOS (estado) · **WP** = se edita en WordPress.
 Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_maros_`.
 
-## Tipo de contenido `villa`
+## Tipo de contenido `propiedad` (`mis_property`)
 
 | Campo | Origen | Traducible | Notas |
 |---|---|---|---|
@@ -12,10 +15,11 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 | `lodgify_id` | M | no | Solo informativo |
 | `maros_updated_at` / `etag` | M | no | Para saltar actualizaciones iguales |
 | Nombre comercial de marOS | M | no | Referencia; el título visible es de WP |
+| Tipo de propiedad (villa, apartamento…) | M | no | Categoría de marOS → término de `tipo-propiedad`; marca la URL |
 | Capacidad máxima | L | no | |
 | Tipos de alojamiento (id, nombre, capacidad, unidades) | L | no | Para calendario y presupuesto |
 | Fotos (URL origen, orden, hash) | L | no | Se descargan a Medios; alt y pie son WP |
-| Servicios / amenities | L | no | Se mapean a la taxonomía `servicio` |
+| Equipamiento / amenities | L | no | Se mapean a la taxonomía `equipamiento` |
 | Dormitorios, baños, camas | E | no | |
 | Zona / ubicación aproximada | E | no | Sin dirección exacta (principio X de marOS) |
 | Horario de entrada y salida, depósito, política | M | no | **Pendiente de confirmar** si marOS lo da; si no, WP |
@@ -32,8 +36,9 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 ## Taxonomías
 
 - `zona`: Sierra Blanca, Milla de Oro, Nueva Andalucía… (traducible; enlaza con las landings de zona).
-- `tipo-alojamiento`: villa, apartamento.
-- `servicio`: piscina climatizada, vistas al mar… (términos creados por la sincronización,
+- `tipo-propiedad`: villa, apartamento… Los términos los crea la sincronización a partir de la
+  categoría de marOS; cada término tiene su base de URL (`villas`, `apartments`) y su nombre traducido.
+- `equipamiento`: piscina climatizada, vistas al mar… (términos creados por la sincronización,
   nombres traducibles en WP).
 
 ## Datos que NO se guardan en WordPress

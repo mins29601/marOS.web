@@ -10,7 +10,7 @@
 **Fuentes**:
 
 - [S1] [Arquitectura](../../docs/arquitectura-maros.md), secciones 3.2, 3.3, 3.4 y 4.
-- [S2] marOS spec 025 «Catálogo de Lodgify»: qué datos de la villa vienen de Lodgify (capacidad,
+- [S2] marOS spec 025 «Catálogo de Lodgify»: qué datos de la propiedad vienen de Lodgify (capacidad,
   fotos, servicios, tipos de alojamiento, calendario, tarifas) y cuáles del expediente de marOS
   (dormitorios, baños, camas, ubicación); marca «publicable en la web»; solo fechas futuras.
 - [S3] Constitución de marOS, principio X: la API nunca entrega direcciones exactas, códigos ni
@@ -20,19 +20,19 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Las villas publicables aparecen solas en WordPress (Priority: P1)
+### User Story 1 - Las propiedades publicables aparecen solas en WordPress (Priority: P1)
 
-Cuando un administrador marca una villa como publicable en marOS, aparece en WordPress como
-borrador del tipo Villa con sus datos operativos. Un editor añade los textos de marketing, las
+Cuando un administrador marca una propiedad (villa, apartamento u otro tipo) como publicable en
+marOS, aparece en WordPress como borrador del tipo Propiedad, con su tipo y sus datos operativos. Un editor añade los textos de marketing, las
 traducciones y el SEO, y la publica.
 
 **Acceptance Scenarios**:
 
 1. **Given** una propiedad publicable nueva en marOS, **When** marOS avisa a WordPress (o pasa el
-   cron de respaldo), **Then** se crea una Villa en **borrador** con sus campos operativos.
-2. **Given** una Villa existente, **When** cambian en marOS su capacidad o sus fotos, **Then**
+   cron de respaldo), **Then** se crea una Propiedad en **borrador**, con el término de `tipo-propiedad` que diga marOS, con sus campos operativos.
+2. **Given** una Propiedad existente, **When** cambian en marOS su capacidad o sus fotos, **Then**
    WordPress actualiza solo los campos operativos y no toca textos, slug ni SEO.
-3. **Given** una propiedad que deja de ser publicable, **When** se sincroniza, **Then** la Villa
+3. **Given** una propiedad que deja de ser publicable, **When** se sincroniza, **Then** la Propiedad
    pasa a borrador (no se borra) y un editor recibe un aviso para poner la redirección.
 4. **Given** el mismo aviso dos veces, **When** llega, **Then** no se hace nada la segunda vez.
 5. **Given** un editor, **When** intenta cambiar un campo operativo, **Then** el campo se ve pero
@@ -44,15 +44,15 @@ traducciones y el SEO, y la publica.
 
 1. **Given** un aviso firmado de marOS (`property.updated`), **When** llega a
    `/wp-json/maros/v1/webhook`, **Then** se verifica la firma HMAC y la hora (±5 min), se encola
-   la relectura de esa villa y se responde 202 en menos de 1 s.
+   la relectura de esa propiedad y se responde 202 en menos de 1 s.
 2. **Given** un aviso sin firma, con firma mala o repetido, **When** llega, **Then** se rechaza
    y se registra.
 3. **Given** el cron real de IONOS, **When** se ejecuta, **Then** procesa la cola cada 5 minutos
-   y, una vez por noche, reconcilia todas las villas con `/v1/properties`.
+   y, una vez por noche, reconcilia todas las propiedades con `/v1/properties`.
 4. **Given** marOS caído, **When** falla la sincronización, **Then** se reintenta con espera
    creciente, la web sigue mostrando los últimos datos y el panel avisa si lleva más de 26 h sin
    sincronizar.
-5. **Given** una Villa actualizada, **When** termina la sincronización, **Then** se purga su URL
+5. **Given** una Propiedad actualizada, **When** termina la sincronización, **Then** se purga su URL
    en Cloudflare (APO).
 
 ### User Story 3 - El huésped busca, consulta y pide presupuesto sin ver la clave (Priority: P1)
@@ -60,8 +60,8 @@ traducciones y el SEO, y la publica.
 **Acceptance Scenarios**:
 
 1. **Given** el bloque Buscador, **When** el huésped elige fechas, huéspedes y zona, **Then** ve
-   las villas disponibles, consultadas a través del proxy del plugin.
-2. **Given** el bloque Calendario en una villa, **When** se carga, **Then** muestra los días libres,
+   las propiedades disponibles (filtrables por tipo), consultadas a través del proxy del plugin.
+2. **Given** el bloque Calendario en una propiedad, **When** se carga, **Then** muestra los días libres,
    la estancia mínima y los días cerrados a llegada o salida de los próximos meses.
 3. **Given** el bloque Presupuesto, **When** el huésped elige fechas válidas, **Then** ve el
    desglose (estancia, limpieza, tasas, IVA, total) tal como lo devuelve marOS.
@@ -86,12 +86,12 @@ traducciones y el SEO, y la publica.
 4. **Given** el huésped vuelve de pagar, **When** llega a la página de gracias, **Then** ve el
    estado consultado a `GET /v1/bookings/{id}`.
 
-### User Story 5 - Claude edita villas y landings por MCP, con revisión (Priority: P2)
+### User Story 5 - Claude edita propiedades y landings por MCP, con revisión (Priority: P2)
 
 **Acceptance Scenarios**:
 
-1. **Given** el MCP en pruebas, **When** Claude usa la Ability `maros/update-villa-copy`,
-   **Then** cambia solo los textos de marketing de una villa en un idioma, como revisión
+1. **Given** el MCP en pruebas, **When** Claude usa la Ability `maros/update-property-copy`,
+   **Then** cambia solo los textos de marketing de una propiedad en un idioma, como revisión
    pendiente o borrador, nunca los campos operativos.
 2. **Given** la Ability `maros/create-landing`, **When** se usa, **Then** crea una página en
    borrador con un patrón de bloques aprobado.
@@ -111,7 +111,7 @@ traducciones y el SEO, y la publica.
 
 ### Edge Cases
 
-- Una villa con varios tipos de alojamiento (room types): el calendario y el presupuesto
+- Una propiedad con varios tipos de alojamiento (room types): el calendario y el presupuesto
   piden el tipo; si solo hay uno, se elige solo.
 - Fotos: se descargan a la biblioteca de medios (para texto alternativo, traducciones y URLs
   propias); se identifican por hash para no duplicarlas; una foto que desaparece en marOS se quita
@@ -126,8 +126,11 @@ traducciones y el SEO, y la publica.
 
 ### Functional Requirements
 
-- **FR-001**: El plugin MUST registrar el tipo de contenido `villa` y las taxonomías `zona`,
-  `tipo-alojamiento` (villa/apartamento) y `servicio` (amenities). Campos en [data-model.md](./data-model.md).
+- **FR-001**: El plugin MUST registrar el tipo de contenido `propiedad` (clave `mis_property`) y
+  las taxonomías `tipo-propiedad` (villa, apartamento… según la categoría que dé marOS, nunca
+  fijada en el código), `zona` y `equipamiento` (amenities). La URL pública depende del tipo
+  (`/villas/<slug>/`, `/apartments/<slug>/`, decisión D6). Los tours y servicios no son de este
+  tipo: ver spec 004. Campos en [data-model.md](./data-model.md).
 - **FR-002**: Los campos operativos MUST ser de solo lectura en el editor y en la REST de
   WordPress; solo los escribe la sincronización.
 - **FR-003**: La sincronización MUST combinar aviso de marOS (webhook firmado) + cola
@@ -137,11 +140,11 @@ traducciones y el SEO, y la publica.
   la clave en el servidor.
 - **FR-005**: Los bloques MUST ser bloques de Gutenberg dinámicos (render en servidor + Interactivity
   API), con equivalente en shortcode para cualquier tema o maquetador: `maros/buscador`,
-  `maros/calendario`, `maros/presupuesto`, `maros/reservar`, y bloques de datos de villa
+  `maros/calendario`, `maros/presupuesto`, `maros/reservar`, y bloques de datos de la propiedad
   (`maros/ficha`, `maros/galeria`).
 - **FR-006**: El plugin MUST registrar Abilities (WordPress Abilities API) con esquema de entrada
-  y salida y comprobación de permisos: `maros/list-villas`, `maros/get-villa`,
-  `maros/update-villa-copy`, `maros/create-landing`, `maros/sync-status`, `maros/resync-villa`,
+  y salida y comprobación de permisos: `maros/list-properties`, `maros/get-property`,
+  `maros/update-property-copy`, `maros/create-landing`, `maros/sync-status`, `maros/resync-property`,
   `maros/check-availability`.
 - **FR-007**: El entorno de marOS MUST venir de constantes de `wp-config.php`: `MAROS_ENV`,
   `MAROS_API_BASE`, `MAROS_API_KEY`, `MAROS_WEBHOOK_SECRET`.
@@ -171,5 +174,11 @@ traducciones y el SEO, y la publica.
 ### Session 2026-11-11 (preguntas abiertas)
 
 - Q1: ¿Las opiniones (Site Reviews) siguen en WordPress o vendrán de marOS/Lodgify? → *pendiente*
-- Q2: ¿Ruta de las villas: `/villas/<slug>/` o la actual `/services/villas/<slug>/`? → *pendiente* (D6)
+- Q2: ¿Ruta por tipo (`/villas/<slug>/`, `/apartments/<slug>/`) o la actual `/services/villas/<slug>/`? → *pendiente* (D6)
+
+### Session 2026-11-11 (respuestas de Julio, 22:01)
+
+- «El tipo de contenido villa no es correcto, pues también hay otros tipos de propiedades como
+  apartamentos» → el tipo pasa a ser `propiedad`, con la taxonomía `tipo-propiedad`.
+- «Habrá otros tipos de datos, como tours» → modelo de contenido en la spec 004.
 - Q3: ¿Antes de la fase 3, el botón Reservar enlaza a `stay.marbellainstyle.com`? → *pendiente*

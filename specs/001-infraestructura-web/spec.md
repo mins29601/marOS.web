@@ -183,3 +183,12 @@ subdominio y su usuario SSH: producción y pruebas.
   temporal protegido por Access (`nueva.marbellainstyle.com`) que el día del lanzamiento pasa a
   servir `www.`. → *pendiente*
 - Q5: ¿Quién debe entrar en pruebas (emails para Access)? → *pendiente*
+
+### Session 2026-11-11 (respuestas de Julio, 22:01)
+
+- Q1 → La web actual está alojada en IONOS. *Falta*: ¿el dominio está registrado también en IONOS
+  y sus DNS se gestionan allí? ¿La web actual está en el mismo contrato Unlimited Plus?
+- Q2 → El correo está en Google Workspace: hay que conservar los MX de Google, SPF
+  (`include:_spf.google.com`), la clave DKIM (`google._domainkey`) y DMARC, todos en «solo DNS».
+- Q4 → «Necesitaremos un entorno/dominio de pruebas y otro de producción»: `staging.` y `www.`
+  (con `nueva.` como nombre temporal de producción hasta el lanzamiento, si se confirma).

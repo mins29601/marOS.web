@@ -72,7 +72,8 @@ marOS.web/
 │   ├── themes/
 │   │   └── marbellainstyle/      # tema hijo (padre según la decisión D1)
 │   ├── plugins/
-│   │   └── maros-connector/      # plugin propio (spec 003)
+│   │   ├── maros-connector/      # plugin propio: propiedades desde marOS (spec 003)
+│   │   └── mis-contenido/        # plugin propio: tours, servicios, zonas (spec 004)
 │   └── mu-plugins/
 │       └── mis-entorno.php       # por entorno: noindex y correo bloqueado en pruebas,
 │                                 # comprueba que pruebas no apunte a marOS producción
@@ -125,7 +126,7 @@ lo compruebo después.
 |---|---|---|
 | 0.1 | [Tú] | Responder Q1–Q5 de la spec (alojamiento actual, registrador, correo, www, quién entra en pruebas) |
 | 0.2 | [Tú] | Exportar la zona DNS actual (archivo BIND o captura) y pasármela |
-| 0.3 | [Claude] | Revisar la zona: correo (MX, SPF, DKIM, DMARC), `stay.` (motor de reservas), verificaciones de Google/Meta, CAA |
+| 0.3 | [Claude] | Revisar la zona: correo de Google Workspace (MX, SPF, DKIM, DMARC), `stay.` (motor de reservas), verificaciones de Google/Meta, CAA |
 | 0.4 | [Tú] | En el DNS actual, bajar el TTL de todos los registros a 300 s, 24–48 h antes del cambio |
 | 0.5 | [Tú] | Si el registrador tiene DNSSEC activo, desactivarlo (esperar 24 h) |
 
