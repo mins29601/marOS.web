@@ -162,7 +162,7 @@ traducciones y el SEO, y la publica.
 ## Assumptions
 
 - marOS expone `/v1/properties`, `/v1/availability`, `/v1/quotes`, `/v1/bookings` según S1 3.2;
-  las diferencias se resuelven con issues en `mins29601/marOS`.
+  las diferencias se resuelven con issues en `mins29601/marOS` (primera lista: mins29601/marOS#89).
 - marOS puede enviar webhooks salientes a WordPress (fase 4 en S1; se necesita antes para la web,
   ver issue en marOS).
 
