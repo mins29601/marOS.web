@@ -20,6 +20,10 @@ recomendación de Claude; Julio decide.
 | T11 | 2026-11-11 | Diseño nuevo con tema nuevo (antes D14) | Julio | mensaje del hilo |
 | T12 | 2026-11-11 | No hay un tipo «Villa»: el tipo es Propiedad (villas, apartamentos…); habrá otros tipos como tours | Julio | specs 003 y 004 |
 | T13 | 2026-11-11 | La migración de contenido tiene su propio plan | Julio | spec 002, plan.md |
+| T14 | 2026-11-11 | La API de marOS carga propiedades (y su calendario) en WordPress; no se llama en cada búsqueda | Julio | spec 003 |
+| T15 | 2026-11-11 | Dominio y DNS en IONOS | Julio | spec 001 |
+| T16 | 2026-11-11 | Tours en WordPress; se reservan en FareHarbor | Julio | spec 004 |
+| T17 | 2026-11-11 | De momento no hay más tipos de contenido | Julio | spec 004 |
 
 ## Decisiones pendientes
 

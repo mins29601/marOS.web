@@ -38,9 +38,11 @@ plan e implementación de este repositorio deben cumplir.
 
 - La web NUNCA llama a Lodgify. Propiedades, disponibilidad, presupuestos y reservas vienen de la
   API pública de marOS (constitución de marOS, principio X).
+- La API se usa para **cargar** propiedades, calendario y tarifas en WordPress, no en cada
+  búsqueda. Solo el presupuesto final y la reserva llaman a marOS en el momento.
 - La clave de la API vive solo en el servidor (`wp-config.php`), nunca en la base de datos, el
   repositorio ni el navegador. El navegador habla con un proxy del plugin.
-- Las respuestas de disponibilidad, presupuesto y reserva NUNCA se guardan en caché de página.
+- Las búsquedas por fechas, los presupuestos y las reservas NUNCA se guardan en caché de página.
 - Las preguntas o cambios del contrato de la API se plantean como issues en `mins29601/marOS`.
 
 ### IV. Dos entornos separados y promoción explícita

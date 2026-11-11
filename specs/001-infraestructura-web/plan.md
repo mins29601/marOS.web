@@ -125,7 +125,7 @@ lo compruebo después.
 | # | Quién | Qué |
 |---|---|---|
 | 0.1 | [Tú] | Responder Q1–Q5 de la spec (alojamiento actual, registrador, correo, www, quién entra en pruebas) |
-| 0.2 | [Tú] | Exportar la zona DNS actual (archivo BIND o captura) y pasármela |
+| 0.2 | [Tú] | Exportar la zona DNS actual desde IONOS (o captura de todos los registros) y pasármela |
 | 0.3 | [Claude] | Revisar la zona: correo de Google Workspace (MX, SPF, DKIM, DMARC), `stay.` (motor de reservas), verificaciones de Google/Meta, CAA |
 | 0.4 | [Tú] | En el DNS actual, bajar el TTL de todos los registros a 300 s, 24–48 h antes del cambio |
 | 0.5 | [Tú] | Si el registrador tiene DNSSEC activo, desactivarlo (esperar 24 h) |
@@ -137,7 +137,7 @@ lo compruebo después.
 | 1.1 | [Tú] | Crear la cuenta/zona en Cloudflare (plan Free) y dejar que importe los registros |
 | 1.2 | [Claude] | Comparar registro a registro con la zona exportada; lista de correcciones |
 | 1.3 | [Tú] | Dejar **todos** los registros en «solo DNS» (nube gris) para el primer cambio: el tráfico sigue igual |
-| 1.4 | [Tú] | Cambiar los nameservers en el registrador a los de Cloudflare |
+| 1.4 | [Tú] | En IONOS → Dominios → marbellainstyle.com → Nameservers: poner los de Cloudflare (IONOS lo llama «usar nameservers propios») |
 | 1.5 | [Claude] | Comprobar la propagación y que web, `stay.` y correo responden igual |
 | 1.6 | [Juntos] | SSL «Full (strict)»; activar el proxy (nube naranja) en `@` y `www` de la web actual; comprobar |
 | 1.7 | [Tú] | Activar DNSSEC en Cloudflare y pegar el registro DS en el registrador |

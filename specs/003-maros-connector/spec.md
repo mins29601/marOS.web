@@ -55,22 +55,44 @@ traducciones y el SEO, y la publica.
 5. **Given** una Propiedad actualizada, **When** termina la sincronización, **Then** se purga su URL
    en Cloudflare (APO).
 
-### User Story 3 - El huésped busca, consulta y pide presupuesto sin ver la clave (Priority: P1)
+### User Story 3 - El huésped busca y consulta el calendario con datos de WordPress (Priority: P1)
+
+La API de marOS sirve para **cargar** las propiedades en WordPress, no para cada búsqueda (Julio,
+11 de noviembre de 2026). La sincronización guarda en WordPress, además de la ficha, el
+calendario de disponibilidad y las tarifas por noche; el buscador y el calendario consultan
+solo la base de datos de WordPress.
 
 **Acceptance Scenarios**:
 
-1. **Given** el bloque Buscador, **When** el huésped elige fechas, huéspedes y zona, **Then** ve
-   las propiedades disponibles (filtrables por tipo), consultadas a través del proxy del plugin.
-2. **Given** el bloque Calendario en una propiedad, **When** se carga, **Then** muestra los días libres,
-   la estancia mínima y los días cerrados a llegada o salida de los próximos meses.
-3. **Given** el bloque Presupuesto, **When** el huésped elige fechas válidas, **Then** ve el
-   desglose (estancia, limpieza, tasas, IVA, total) tal como lo devuelve marOS.
-4. **Given** cualquier llamada desde el navegador, **When** se inspecciona, **Then** va a
+1. **Given** el bloque Buscador, **When** el huésped elige fechas, huéspedes, tipo y zona,
+   **Then** ve las propiedades disponibles, calculadas en WordPress con el calendario
+   sincronizado, sin ninguna llamada a marOS.
+2. **Given** el bloque Calendario en una propiedad, **When** se carga, **Then** muestra los días
+   libres, la estancia mínima y los días cerrados a llegada o salida, desde WordPress.
+3. **Given** un listado o una ficha, **When** se muestra el precio «desde», **Then** sale de las
+   tarifas sincronizadas, nunca calculado de otra forma.
+4. **Given** un cambio de disponibilidad en Lodgify, **When** marOS avisa a WordPress
+   (`availability.changed`), **Then** el calendario de esa propiedad se recarga en menos de 5
+   minutos; sin aviso, la reconciliación nocturna lo corrige.
+5. **Given** las búsquedas, **When** se miran sus cabeceras, **Then** llevan `Cache-Control:
+   no-store` (o una caché de pocos minutos, a decidir) para no enseñar disponibilidad vieja.
+6. **Given** un dato de calendario con más de 26 h sin actualizar, **When** se busca, **Then** la
+   propiedad sigue saliendo pero el panel «marOS» avisa a los administradores.
+
+### User Story 3b - El presupuesto final se pide a marOS (Priority: P2, fase 3)
+
+La búsqueda es local, pero el precio exacto y la reserva no se pueden dar sin marOS: el
+presupuesto final y la reserva sí llaman a la API, una vez por huésped que va a reservar, a
+través del proxy del plugin.
+
+**Acceptance Scenarios**:
+
+1. **Given** el bloque Presupuesto, **When** el huésped elige fechas y pulsa «Ver precio»,
+   **Then** WordPress pide `POST /v1/quotes` y muestra el desglose tal como lo devuelve marOS.
+2. **Given** cualquier llamada desde el navegador, **When** se inspecciona, **Then** va a
    `/wp-json/maros/v1/…` del propio dominio y nunca contiene la clave de marOS.
-5. **Given** las respuestas del proxy, **When** se miran sus cabeceras, **Then** llevan
-   `Cache-Control: no-store` y Cloudflare no las guarda.
-6. **Given** un mismo visitante que lanza más de N consultas por minuto, **When** sigue, **Then**
-   recibe 429 (límite en WordPress y en el WAF).
+3. **Given** un mismo visitante que pide más de N presupuestos por minuto, **When** sigue,
+   **Then** recibe 429 (límite en WordPress y en el WAF).
 
 ### User Story 4 - El huésped reserva y paga con el enlace de Lodgify (Priority: P2, fase 3)
 
@@ -133,11 +155,17 @@ traducciones y el SEO, y la publica.
   tipo: ver spec 004. Campos en [data-model.md](./data-model.md).
 - **FR-002**: Los campos operativos MUST ser de solo lectura en el editor y en la REST de
   WordPress; solo los escribe la sincronización.
-- **FR-003**: La sincronización MUST combinar aviso de marOS (webhook firmado) + cola
-  (Action Scheduler) + cron real de IONOS cada 5 min + reconciliación nocturna completa.
-- **FR-004**: El proxy MUST exponer solo `GET availability`, `POST quotes`, `POST bookings` y
-  `GET bookings/{id}` (de reservas creadas en esa sesión), validar y filtrar parámetros, y añadir
-  la clave en el servidor.
+- **FR-003**: La sincronización MUST cargar en WordPress la ficha, el calendario (por día y tipo
+  de alojamiento: disponible, estancia mínima, cerrado a llegada/salida) y las tarifas por noche
+  de cada propiedad publicable, solo fechas futuras. Combina aviso de marOS (webhook firmado,
+  `property.updated` y `availability.changed`) + cola (Action Scheduler) + cron real de IONOS
+  cada 5 min + reconciliación nocturna completa.
+- **FR-003b**: El calendario y las tarifas MUST guardarse en tablas propias indexadas
+  (`{prefix}maros_calendar`, `{prefix}maros_rates`), no en metadatos, para que la búsqueda por
+  fechas sea rápida. La búsqueda MUST NOT llamar a marOS.
+- **FR-004**: El proxy MUST exponer solo `POST quotes`, `POST bookings` y `GET bookings/{id}`
+  (de reservas creadas en esa sesión), validar y filtrar parámetros, y añadir la clave en el
+  servidor.
 - **FR-005**: Los bloques MUST ser bloques de Gutenberg dinámicos (render en servidor + Interactivity
   API), con equivalente en shortcode para cualquier tema o maquetador: `maros/buscador`,
   `maros/calendario`, `maros/presupuesto`, `maros/reservar`, y bloques de datos de la propiedad
@@ -145,7 +173,7 @@ traducciones y el SEO, y la publica.
 - **FR-006**: El plugin MUST registrar Abilities (WordPress Abilities API) con esquema de entrada
   y salida y comprobación de permisos: `maros/list-properties`, `maros/get-property`,
   `maros/update-property-copy`, `maros/create-landing`, `maros/sync-status`, `maros/resync-property`,
-  `maros/check-availability`.
+  `maros/check-availability` (sobre los datos de WordPress).
 - **FR-007**: El entorno de marOS MUST venir de constantes de `wp-config.php`: `MAROS_ENV`,
   `MAROS_API_BASE`, `MAROS_API_KEY`, `MAROS_WEBHOOK_SECRET`.
 - **FR-008**: El plugin MUST tener una pantalla «marOS» con estado: entorno, última
@@ -156,15 +184,18 @@ traducciones y el SEO, y la publica.
 
 ## Success Criteria *(mandatory)*
 
-- **SC-001**: Un cambio en marOS se ve en la web en menos de 5 minutos con aviso, y en menos de
-  26 h en el peor caso.
+- **SC-001**: Un cambio en marOS (ficha o calendario) se ve en la web en menos de 5 minutos con
+  aviso, y en menos de 26 h en el peor caso.
+- **SC-001b**: Una búsqueda por fechas responde en menos de 300 ms en el servidor, sin llamadas
+  externas.
 - **SC-002**: La clave de marOS no aparece en ninguna respuesta, HTML, JS ni registro accesible.
 - **SC-003**: Presupuesto mostrado al huésped = presupuesto de marOS al céntimo.
 - **SC-004**: Los bloques funcionan con el tema base elegido y con al menos otro tema estándar.
 
 ## Assumptions
 
-- marOS expone `/v1/properties`, `/v1/availability`, `/v1/quotes`, `/v1/bookings` según S1 3.2;
+- marOS expone `/v1/properties` y una descarga de calendario y tarifas por propiedad (o
+  `/v1/availability` por rango largo), además de `/v1/quotes` y `/v1/bookings`, según S1 3.2;
   las diferencias se resuelven con issues en `mins29601/marOS` (primera lista: mins29601/marOS#89).
 - marOS puede enviar webhooks salientes a WordPress (fase 4 en S1; se necesita antes para la web,
   ver issue en marOS).
@@ -182,3 +213,10 @@ traducciones y el SEO, y la publica.
   apartamentos» → el tipo pasa a ser `propiedad`, con la taxonomía `tipo-propiedad`.
 - «Habrá otros tipos de datos, como tours» → modelo de contenido en la spec 004.
 - Q3: ¿Antes de la fase 3, el botón Reservar enlaza a `stay.marbellainstyle.com`? → *pendiente*
+
+### Session 2026-11-11 (respuestas de Julio, 22:09)
+
+- «La API se usará para cargar las propiedades en el WordPress, no cada vez que haya que hacer
+  una búsqueda» → la búsqueda y el calendario usan datos sincronizados en WordPress (US3,
+  FR-003, FR-003b). Lectura de Claude, pendiente de confirmar: el presupuesto final y la reserva
+  (fase 3) sí llaman a marOS, una vez por huésped que va a reservar (US3b).

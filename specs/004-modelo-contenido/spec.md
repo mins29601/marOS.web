@@ -58,7 +58,8 @@ Las etiquetas (`post_tag`) no se migran: hoy están bloqueadas en robots.txt.
 **Acceptance Scenarios**:
 
 1. **Given** un editor que crea un Tour, **When** lo rellena, **Then** ve los campos del tour
-   (duración, recogida, idiomas, incluye/no incluye, precio desde, privado o en grupo, galería) y
+   (duración, recogida, idiomas, incluye/no incluye, precio desde, privado o en grupo, galería,
+   id de artículo de FareHarbor) y
    la web lo pinta con la plantilla de tour en inglés y español.
 2. **Given** un Servicio, **When** se publica, **Then** aparece en la lista de su tipo de servicio
    y en las zonas que tenga marcadas.
@@ -69,8 +70,11 @@ Las etiquetas (`post_tag`) no se migran: hoy están bloqueadas en robots.txt.
 
 **Acceptance Scenarios**:
 
-1. **Given** la ficha de un tour o servicio, **When** el visitante pide información, **Then** el
-   formulario (plugin de formularios, D4) lleva el nombre del tour o servicio y llega al equipo.
+1. **Given** la ficha de un tour, **When** el visitante pulsa «Reservar», **Then** se abre la
+   reserva de **FareHarbor** de ese tour (ventana Lightframe de FareHarbor, sin salir de la web),
+   con el id de compañía y de artículo guardados en el tour.
+1b. **Given** la ficha de un servicio, **When** el visitante pide información, **Then** el
+   formulario (plugin de formularios, D4) lleva el nombre del servicio y llega al equipo.
 2. **Given** que en el futuro los tours se gestionen en otro sistema, **When** llegue ese momento,
    **Then** el tipo Tour podrá sincronizarse como la Propiedad, sin cambiar sus URLs.
 
@@ -101,9 +105,8 @@ Las etiquetas (`post_tag`) no se migran: hoy están bloqueadas en robots.txt.
 
 ### Session 2026-11-11 (preguntas abiertas)
 
-- Q1: ¿Los tours (y otros servicios) vendrán algún día de un sistema (marOS, un proveedor) o se
-  editan siempre en WordPress? → *pendiente* (supuesto actual: WordPress)
-- Q2: ¿Hay otros tipos que no veo en la web actual (p. ej. yates, coches, eventos con fecha)?
-  → *pendiente*
-- Q3: ¿Los tours se pueden reservar y pagar en la web, o solo se piden por formulario?
-  → *pendiente* (supuesto: formulario)
+- Q1 → «Los tours se mantienen por el momento en WordPress» (Julio, 22:09).
+- Q2 → «Por el momento no hay otros tipos de datos» (Julio, 22:09).
+- Q3 → «Se reservan en FareHarbor» (Julio, 22:09): botón de reserva con Lightframe de
+  FareHarbor; la web no cobra tours. Pendiente: el nombre corto de compañía en FareHarbor y si
+  todos los tours tienen ya su artículo creado allí.

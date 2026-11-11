@@ -192,3 +192,8 @@ subdominio y su usuario SSH: producción y pruebas.
   (`include:_spf.google.com`), la clave DKIM (`google._domainkey`) y DMARC, todos en «solo DNS».
 - Q4 → «Necesitaremos un entorno/dominio de pruebas y otro de producción»: `staging.` y `www.`
   (con `nueva.` como nombre temporal de producción hasta el lanzamiento, si se confirma).
+
+### Session 2026-11-11 (respuestas de Julio, 22:09)
+
+- Q1 → El dominio está registrado en IONOS y la web y los DNS se gestionan allí. El cambio de
+  nameservers a Cloudflare se hace en el panel de dominios de IONOS (paso 1.4 del plan).

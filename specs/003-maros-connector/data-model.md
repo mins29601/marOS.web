@@ -41,9 +41,18 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 - `equipamiento`: piscina climatizada, vistas al mar… (términos creados por la sincronización,
   nombres traducibles en WP).
 
+## Calendario y tarifas (tablas propias)
+
+| Tabla | Columnas | Notas |
+|---|---|---|
+| `{prefix}maros_calendar` | `property_id`, `room_type_id`, `date`, `available`, `min_stay`, `closed_arrival`, `closed_departure`, `synced_at` | Solo fechas futuras (hasta 18 meses, como marOS). Índice por `date, available` |
+| `{prefix}maros_rates` | `property_id`, `room_type_id`, `date`, `amount`, `currency`, `synced_at` | Para el precio «desde» y para ordenar; el precio final siempre lo da marOS |
+
+Cada carga de una propiedad reemplaza su calendario entero en una transacción (todo o nada).
+
 ## Datos que NO se guardan en WordPress
 
-- Calendario, tarifas, presupuestos: siempre en vivo por el proxy.
+- Presupuestos: se piden a marOS al reservar.
 - Datos de huéspedes: se reenvían a marOS y se descartan.
 - Reservas: solo `maros_booking_id`, estado y fecha, en una tabla propia con borrado a 90 días.
 
