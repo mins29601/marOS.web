@@ -1,0 +1,53 @@
+# Data Model: Villa (marOS Connector)
+
+Leyenda de origen: **L** = Lodgify vía marOS (spec 025) · **E** = expediente de marOS (spec 003
+de marOS) · **M** = marOS (estado) · **WP** = se edita en WordPress.
+Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_maros_`.
+
+## Tipo de contenido `villa`
+
+| Campo | Origen | Traducible | Notas |
+|---|---|---|---|
+| `maros_id` | M | no | Clave de sincronización (`lodgify-373016`, `villa-concha`…) |
+| `lodgify_id` | M | no | Solo informativo |
+| `maros_updated_at` / `etag` | M | no | Para saltar actualizaciones iguales |
+| Nombre comercial de marOS | M | no | Referencia; el título visible es de WP |
+| Capacidad máxima | L | no | |
+| Tipos de alojamiento (id, nombre, capacidad, unidades) | L | no | Para calendario y presupuesto |
+| Fotos (URL origen, orden, hash) | L | no | Se descargan a Medios; alt y pie son WP |
+| Servicios / amenities | L | no | Se mapean a la taxonomía `servicio` |
+| Dormitorios, baños, camas | E | no | |
+| Zona / ubicación aproximada | E | no | Sin dirección exacta (principio X de marOS) |
+| Horario de entrada y salida, depósito, política | M | no | **Pendiente de confirmar** si marOS lo da; si no, WP |
+| Publicable en la web | M | no | Si deja de serlo → borrador |
+| Título visible (H1) | WP | sí | |
+| Slug | WP | sí | Se conserva el de la web actual (spec 002) |
+| Resumen y descripción larga | WP | sí | Bloques de Gutenberg |
+| Puntos fuertes, FAQ, «ideal para» | WP | sí | |
+| Orden de galería, imagen destacada, alt | WP | sí | |
+| SEO (title, meta, OG, schema) | WP | sí | Plugin SEO (D3) |
+| Opiniones destacadas | WP | sí | Pendiente Q1 |
+| Enlaces a Airbnb/Booking/Vrbo | WP | no | Opcional |
+
+## Taxonomías
+
+- `zona`: Sierra Blanca, Milla de Oro, Nueva Andalucía… (traducible; enlaza con las landings de zona).
+- `tipo-alojamiento`: villa, apartamento.
+- `servicio`: piscina climatizada, vistas al mar… (términos creados por la sincronización,
+  nombres traducibles en WP).
+
+## Datos que NO se guardan en WordPress
+
+- Calendario, tarifas, presupuestos: siempre en vivo por el proxy.
+- Datos de huéspedes: se reenvían a marOS y se descartan.
+- Reservas: solo `maros_booking_id`, estado y fecha, en una tabla propia con borrado a 90 días.
+
+## Opciones del plugin (no secretas)
+
+- Última sincronización completa, errores recientes, tamaño de cola.
+- Mapeo de servicios marOS → términos.
+
+## Constantes en `wp-config.php` (secretas o de entorno)
+
+`MAROS_ENV` (`production` | `staging` | `mock`), `MAROS_API_BASE`, `MAROS_API_KEY`,
+`MAROS_WEBHOOK_SECRET`.
