@@ -218,5 +218,6 @@ través del proxy del plugin.
 
 - «La API se usará para cargar las propiedades en el WordPress, no cada vez que haya que hacer
   una búsqueda» → la búsqueda y el calendario usan datos sincronizados en WordPress (US3,
-  FR-003, FR-003b). Lectura de Claude, pendiente de confirmar: el presupuesto final y la reserva
-  (fase 3) sí llaman a marOS, una vez por huésped que va a reservar (US3b).
+  FR-003, FR-003b).
+- «Antes de la reserva habrá que confirmar en tiempo real con la API» (Julio, 22:13) → el
+  presupuesto final y la reserva (fase 3) llaman a marOS en el momento (US3b, US4).

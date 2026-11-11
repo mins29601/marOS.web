@@ -24,6 +24,7 @@ recomendación de Claude; Julio decide.
 | T15 | 2026-11-11 | Dominio y DNS en IONOS | Julio | spec 001 |
 | T16 | 2026-11-11 | Tours en WordPress; se reservan en FareHarbor | Julio | spec 004 |
 | T17 | 2026-11-11 | De momento no hay más tipos de contenido | Julio | spec 004 |
+| T18 | 2026-11-11 | Antes de reservar se confirma en tiempo real con la API (presupuesto y reserva) | Julio | spec 003 |
 
 ## Decisiones pendientes
 
