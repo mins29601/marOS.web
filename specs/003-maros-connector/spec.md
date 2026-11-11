@@ -112,7 +112,7 @@ través del proxy del plugin.
 
 **Acceptance Scenarios**:
 
-1. **Given** el MCP en pruebas, **When** Claude usa la Ability `maros/update-property-copy`,
+1. **Given** el MCP (en pruebas o en producción), **When** Claude usa la Ability `maros/update-property-copy`,
    **Then** cambia solo los textos de marketing de una propiedad en un idioma, como revisión
    pendiente o borrador, nunca los campos operativos.
 2. **Given** la Ability `maros/create-landing`, **When** se usa, **Then** crea una página en

@@ -25,6 +25,9 @@ recomendación de Claude; Julio decide.
 | T16 | 2026-11-11 | Tours en WordPress; se reservan en FareHarbor | Julio | spec 004 |
 | T17 | 2026-11-11 | De momento no hay más tipos de contenido | Julio | spec 004 |
 | T18 | 2026-11-11 | Antes de reservar se confirma en tiempo real con la API (presupuesto y reserva) | Julio | spec 003 |
+| T19 | 2026-11-11 | Una base de datos por entorno; Git solo despliega código | Julio | spec 001, plan |
+| T20 | 2026-11-11 | Plugin MCP desde el principio, en producción y pruebas (cambia T5) | Julio | spec 001 |
+| T21 | 2026-11-11 | El nombre corto de FareHarbor no hace falta por ahora | Julio | spec 004 |
 
 ## Decisiones pendientes
 
@@ -38,7 +41,7 @@ recomendación de Claude; Julio decide.
 | D6 | URLs | Mantener todo bajo `/services/` · Propiedades por tipo (`/villas/`, `/apartments/`) y tours/servicios en `/services/<tipo>/` | **Propiedades por tipo con 301; tours y servicios conservan `/services/<tipo>/<slug>/`** | Las propiedades son un tipo nuevo y merecen URLs limpias; los ~100 tours y servicios no cambian de URL |
 | D8 | Cookies / consentimiento | Complianz (actual) · Cookiebot · CookieYes | **Complianz** | Ya está, Consent Mode v2 con GTM y WPML |
 | D9 | Copia producción → pruebas | Script WP-CLI por SSH · WP Migrate Pro · WPvivid | **Script WP-CLI** en GitHub Actions; WPvivid Pro como respaldo y para copias de seguridad | Repetible con un botón y sin licencia; depende de que IONOS tenga WP-CLI |
-| D10 | MCP detrás de Access | Excepción de ruta `/wp-json/mcp/*` · token de servicio | **Excepción de ruta** solo en pruebas, protegida por contraseña de aplicación y límite de peticiones | Los conectores de Claude no envían cabeceras de Access; pruebas no tiene datos personales |
+| D10 | MCP de pruebas detrás de Access | Excepción de ruta `/wp-json/mcp/*` · token de servicio | **Excepción de ruta** solo en pruebas, protegida por contraseña de aplicación y límite de peticiones | Los conectores de Claude no envían cabeceras de Access; pruebas no tiene datos personales |
 | D11 | Opiniones | Site Reviews (actual) · desde Lodgify/Airbnb vía marOS | **Site Reviews** al lanzar | No bloquea; se puede pasar a marOS cuando la API las dé |
 | D12 | Copias de seguridad | IONOS · WPvivid/UpdraftPlus a almacenamiento externo | **WPvivid o UpdraftPlus a Google Drive**, diaria BD y semanal archivos | No depender solo del hosting |
 | D13 | Correo saliente de WordPress | PHP mail de IONOS · SMTP transaccional (Brevo, Postmark, Google) | **SMTP transaccional** con plugin (WP Mail SMTP o FluentSMTP) | Entregabilidad y registro de envíos |

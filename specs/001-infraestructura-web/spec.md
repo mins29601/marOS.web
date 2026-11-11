@@ -101,17 +101,19 @@ subdominio y su usuario SSH: producción y pruebas.
 2. **Given** ese flujo, **When** se intenta en sentido contrario, **Then** no existe: nunca se
    copia de pruebas a producción.
 
-### User Story 7 - El MCP de WordPress funciona en pruebas (Priority: P2)
+### User Story 7 - El MCP de WordPress funciona desde el inicio en los dos entornos (Priority: P1)
 
 **Acceptance Scenarios**:
 
-1. **Given** WordPress de pruebas 6.9 o superior con MCP Adapter y «Enable Abilities for MCP»,
+1. **Given** WordPress 6.9 o superior (producción y pruebas) con MCP Adapter y «Enable Abilities for MCP»,
    **When** Claude se conecta con un usuario dedicado y una contraseña de aplicación, **Then**
    lista las Abilities y puede leer contenido.
 2. **Given** ese usuario, **When** intenta algo fuera de sus permisos (rol Editor o uno propio),
    **Then** WordPress lo rechaza.
-3. **Given** producción, **When** se revisa, **Then** el MCP no está activo hasta que Julio lo
-   decida.
+3. **Given** producción, **When** Claude usa una Ability que escribe, **Then** crea un borrador
+   o una revisión pendiente; publicar lo hace una persona (constitución, principio VIII).
+4. **Given** cada entorno, **When** se conecta Claude, **Then** usa un usuario y una contraseña
+   de aplicación propios de ese entorno, y un conector distinto en Claude («web» y «web pruebas»).
 
 ### Edge Cases
 
@@ -147,7 +149,7 @@ subdominio y su usuario SSH: producción y pruebas.
   inverso.
 - **FR-009**: El WAF de Cloudflare MUST tener las reglas gestionadas gratuitas, protección de
   `wp-login.php` y `xmlrpc.php` y límite de peticiones en las rutas del proxy de reservas.
-- **FR-010**: MCP Adapter MUST instalarse primero en pruebas, con un usuario dedicado de permisos
+- **FR-010**: MCP Adapter MUST instalarse desde el inicio en producción y pruebas, cada uno con un usuario dedicado de permisos
   limitados.
 
 ### Key Entities
@@ -197,3 +199,10 @@ subdominio y su usuario SSH: producción y pruebas.
 
 - Q1 → El dominio está registrado en IONOS y la web y los DNS se gestionan allí. El cambio de
   nameservers a Cloudflare se hace en el panel de dominios de IONOS (paso 1.4 del plan).
+
+### Session 2026-11-11 (respuestas de Julio, 22:15 y 22:19)
+
+- Bases de datos: una por entorno, creadas en IONOS; Git solo lleva código (plan, «Bases de datos»).
+- «Tendremos un plugin MCP desde el principio» → MCP Adapter en producción y pruebas desde la
+  fase 1 (US7, FR-010). Lectura de Claude: «desde el principio» incluye producción; las Abilities
+  que escriben crean borradores.

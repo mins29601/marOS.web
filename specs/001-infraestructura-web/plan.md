@@ -8,7 +8,7 @@
 
 Poner Cloudflare delante del dominio sin cortes, crear producción y pruebas en IONOS, proteger
 pruebas, activar APO, desplegar el código propio con GitHub Actions por SSH, copiar contenido de
-producción a pruebas e instalar MCP Adapter en pruebas.
+producción a pruebas e instalar MCP Adapter en los dos entornos desde el inicio.
 
 ## Technical Context
 
@@ -100,7 +100,7 @@ marOS.web/
 | Despliegue | automático al fusionar en `main` | manual con aprobación de Julio, mismo commit probado |
 | Acceso | Cloudflare Access + noindex | público con APO (Access hasta el lanzamiento) |
 | Correo saliente | bloqueado / redirigido | normal |
-| MCP Adapter | sí | no hasta decisión |
+| MCP Adapter | sí, usuario propio | sí desde el inicio, usuario propio; las escrituras crean borradores |
 
 - **Configuración por entorno**: `wp-config.php` en el servidor (fuera del repo) define
   `WP_ENVIRONMENT_TYPE`, `MAROS_ENV`, `MAROS_API_BASE`, `MAROS_API_KEY`,
@@ -183,6 +183,22 @@ lo compruebo después.
 | 5.4 | [Juntos] | WAF: reglas gestionadas, desafío en `wp-login.php` y `xmlrpc.php`, límite de peticiones en `/wp-json/maros/v1/(quotes|bookings)` |
 | 5.5 | [Claude] | Desactivar la caché de página de otros plugins (p. ej. WP Rocket) si se instalan, para no duplicar con APO |
 
+### Bases de datos
+
+- **Una por entorno**, creadas por Julio en el panel de IONOS. Sus credenciales viven solo en el
+  `wp-config.php` de cada instalación, nunca en el repositorio ni en GitHub.
+- **Git solo lleva código.** El contenido y los ajustes viven en la base de cada entorno.
+- **Esquema propio versionado**: las tablas del plugin (calendario, tarifas, registro) las crea y
+  actualiza el plugin con un número de versión de esquema. Tras cada despliegue, el workflow
+  ejecuta por SSH `wp maros migrate`, que aplica solo lo que falte y nunca borra datos.
+- **Ajustes repetibles**: los ajustes preparados en pruebas que deban pasar a producción (WPML,
+  plugin SEO, permalinks…) se guardan como scripts de WP-CLI en `scripts/settings/` o como lista
+  en `docs/runbooks/`; nunca se copia la base de pruebas sobre producción.
+- **Copias**: `wp db export` antes de cada despliegue a producción (se guardan las 10 últimas en
+  el servidor, fuera de la carpeta pública) y copia diaria fuera de IONOS (D12).
+- **Acceso**: MySQL de IONOS solo acepta conexiones desde el propio hosting, así que todas las
+  operaciones las hace WP-CLI por SSH; GitHub nunca se conecta a la base directamente.
+
 ### Paso 6. Copiar producción a pruebas
 
 | # | Quién | Qué |
@@ -191,14 +207,14 @@ lo compruebo después.
 | 6.2 | [Tú] | Lanzarlo a mano cuando haga falta (botón en GitHub) |
 | 6.3 | — | Alternativa sin SSH: WPvivid o WP Migrate (decisión D9) |
 
-### Paso 7. MCP Adapter en pruebas
+### Paso 7. MCP Adapter en producción y pruebas
 
 | # | Quién | Qué |
 |---|---|---|
-| 7.1 | [Claude] | Instalar MCP Adapter y Enable Abilities for MCP en pruebas por WP-CLI (WordPress ≥ 6.9) |
-| 7.2 | [Tú] | Crear el usuario `claude-mcp` (rol Editor o uno propio) y su contraseña de aplicación |
-| 7.3 | [Juntos] | Dar paso al MCP a través de Access: excepción de ruta solo para `/wp-json/mcp/*` (protegida por la contraseña de aplicación) o token de servicio (decisión D10) |
-| 7.4 | [Tú] | Añadir el conector en Claude con la URL y la credencial |
+| 7.1 | [Claude] | Instalar MCP Adapter y Enable Abilities for MCP en los dos entornos por WP-CLI (WordPress ≥ 6.9), primero en pruebas y, tras probarlo, en producción |
+| 7.2 | [Tú] | Crear en cada entorno el usuario `claude-mcp` (rol propio con permisos de editor, sin publicar en producción) y su contraseña de aplicación |
+| 7.3 | [Juntos] | Dar paso al MCP a través de Access: excepción de ruta solo para `/wp-json/mcp/*` (protegida por la contraseña de aplicación) o token de servicio (decisión D10). En producción no hay Access: la ruta queda protegida por la contraseña de aplicación y un límite de peticiones en el WAF |
+| 7.4 | [Tú] | Añadir en Claude dos conectores, «web» y «web pruebas», cada uno con su URL y su credencial |
 | 7.5 | [Claude] | Probar: listar Abilities, leer contenido, comprobar que lo no permitido se rechaza |
 
 ## Riesgos y comprobaciones pendientes
@@ -207,5 +223,6 @@ lo compruebo después.
 - Si IONOS permite cron en el panel para este plan; si no, alternativa: Cron Trigger de Cloudflare
   o el ejecutor de marOS llamando a `wp-cron.php` con un secreto.
 - Certificado SSL en IONOS con DNS en Cloudflare (paso 2.4).
-- Los avisos de marOS a pruebas y el MCP deben pasar Cloudflare Access (pasos 3.2 y 7.3).
+- Los avisos de marOS a pruebas y el MCP de pruebas deben pasar Cloudflare Access (pasos 3.2 y 7.3).
+- El MCP de producción es público en la red: contraseña de aplicación larga, rol limitado, límite en el WAF y registro de cada llamada.
 - APO + WPML: APO cachea por URL; con idiomas por carpeta (`/es/`) funciona sin cookies.

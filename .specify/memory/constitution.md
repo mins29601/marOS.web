@@ -77,8 +77,9 @@ plan e implementación de este repositorio deben cumplir.
 
 ### VIII. Lo que hace la IA queda revisable
 
-- Las Abilities del MCP solo actúan con un usuario de WordPress con permisos limitados, empiezan
-  en pruebas y crean borradores o revisiones; publicar en producción lo decide una persona.
+- El MCP está activo en los dos entornos desde el inicio. Sus Abilities solo actúan con un usuario
+  de WordPress propio de cada entorno y con permisos limitados, y en producción crean borradores
+  o revisiones; publicar en producción lo decide una persona. Cada llamada queda registrada.
 
 ## Flujo de trabajo
 

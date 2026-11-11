@@ -108,5 +108,5 @@ Las etiquetas (`post_tag`) no se migran: hoy están bloqueadas en robots.txt.
 - Q1 → «Los tours se mantienen por el momento en WordPress» (Julio, 22:09).
 - Q2 → «Por el momento no hay otros tipos de datos» (Julio, 22:09).
 - Q3 → «Se reservan en FareHarbor» (Julio, 22:09): botón de reserva con Lightframe de
-  FareHarbor; la web no cobra tours. Pendiente: el nombre corto de compañía en FareHarbor y si
-  todos los tours tienen ya su artículo creado allí.
+  FareHarbor; la web no cobra tours. El nombre corto de compañía en FareHarbor no hace falta
+  por ahora (Julio, 22:15).
