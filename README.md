@@ -14,6 +14,7 @@ WordPress estándar en IONOS con Cloudflare delante, conectado a la API de marOS
 | [002 Migración](specs/002-migracion-web/spec.md) · [inventario](specs/002-migracion-web/research.md) · [plan de contenido](specs/002-migracion-web/plan.md) | Borrador |
 | [003 marOS Connector](specs/003-maros-connector/spec.md) · [datos](specs/003-maros-connector/data-model.md) | Borrador |
 | [004 Modelo de contenido](specs/004-modelo-contenido/spec.md) · [campos de tours](specs/004-modelo-contenido/data-model.md) | Borrador |
+| [005 Arquitectura de información y mockups](specs/005-arquitectura-informacion/spec.md) | Borrador |
 
 Flujo: `/speckit-specify` → `/speckit-clarify` → `/speckit-plan` → `/speckit-tasks` →
 `/speckit-implement`, cada spec en su rama y su pull request.
