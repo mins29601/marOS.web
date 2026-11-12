@@ -191,5 +191,11 @@ versión móvil como referencia principal; la de escritorio es la ampliación.
     (calendario a pantalla completa); B, inspirado en Le Collectionist (lista de semanas con
     precio, servicios a la carta dentro de la reserva y «programar llamada»).
 
+19. **Reserva en una sola pantalla** (Julio, 12/11, sustituye a la 18): cabecera de la casa
+    (foto, estrellas, nombre), fechas y huéspedes, y debajo el desglose que se actualiza; bloque
+    «Incluido» y «¿Prefieres hablarlo? · Programar llamada». Sin servicios extra en la reserva.
+    Por lo general no hay estancia mínima de 7 noches ni día fijo de entrada: nada de lista de
+    semanas; si una fecha tiene mínimo, se avisa en el calendario.
+
 Estas conclusiones se aplicarán a los wireframes cuando Julio dé su feedback (spec 005, paso 1
 del proceso de diseño).
