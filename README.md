@@ -6,6 +6,11 @@ WordPress estándar en IONOS con Cloudflare delante, conectado a la API de marOS
 - Constitución (reglas del proyecto): [.specify/memory/constitution.md](.specify/memory/constitution.md)
 - Decisiones: [docs/decisiones.md](docs/decisiones.md)
 
+## Entorno local
+
+WordPress en tu Mac con la API de marOS simulada: `npm install && npm run env:start` →
+http://localhost:8888. Instalación y uso: [docs/runbooks/entorno-local.md](docs/runbooks/entorno-local.md).
+
 ## Specs (spec-kit)
 
 | Spec | Estado |

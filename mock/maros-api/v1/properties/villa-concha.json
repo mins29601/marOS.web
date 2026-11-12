@@ -1,0 +1,70 @@
+{
+  "id": "villa-concha",
+  "lodgify_id": null,
+  "name": "Villa Concha",
+  "type": "villa",
+  "publishable": true,
+  "max_guests": 8,
+  "bedrooms": 4,
+  "bathrooms": 4,
+  "beds": 5,
+  "zone": "sierra-blanca",
+  "location": {
+    "area": "Sierra Blanca",
+    "lat": 36.52,
+    "lng": -4.9,
+    "precision": "approx"
+  },
+  "amenities": [
+    "private-pool",
+    "heated-pool",
+    "sea-view",
+    "gym",
+    "wifi",
+    "parking"
+  ],
+  "room_types": [
+    {
+      "id": 1,
+      "name": "Villa completa",
+      "max_guests": 8,
+      "units": 1
+    }
+  ],
+  "fees": {
+    "cleaning": 300
+  },
+  "check_in": "16:00",
+  "check_out": "11:00",
+  "deposit": 2000,
+  "photos": [
+    {
+      "url": "https://picsum.photos/seed/villa-concha-1/1600/1067",
+      "order": 1,
+      "hash": "mock-villa-concha-1"
+    },
+    {
+      "url": "https://picsum.photos/seed/villa-concha-2/1600/1067",
+      "order": 2,
+      "hash": "mock-villa-concha-2"
+    },
+    {
+      "url": "https://picsum.photos/seed/villa-concha-3/1600/1067",
+      "order": 3,
+      "hash": "mock-villa-concha-3"
+    },
+    {
+      "url": "https://picsum.photos/seed/villa-concha-4/1600/1067",
+      "order": 4,
+      "hash": "mock-villa-concha-4"
+    },
+    {
+      "url": "https://picsum.photos/seed/villa-concha-5/1600/1067",
+      "order": 5,
+      "hash": "mock-villa-concha-5"
+    }
+  ],
+  "updated_at": "2026-11-12T09:00:00Z",
+  "etag": "\"mock-villa-concha-1\"",
+  "web_url_hint": null
+}

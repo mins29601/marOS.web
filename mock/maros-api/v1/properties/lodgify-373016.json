@@ -1,0 +1,70 @@
+{
+  "id": "lodgify-373016",
+  "lodgify_id": 373016,
+  "name": "Villa Feliz",
+  "type": "villa",
+  "publishable": true,
+  "max_guests": 10,
+  "bedrooms": 5,
+  "bathrooms": 5,
+  "beds": 6,
+  "zone": "nueva-andalucia",
+  "location": {
+    "area": "Nueva Andalucía",
+    "lat": 36.5,
+    "lng": -4.96,
+    "precision": "approx"
+  },
+  "amenities": [
+    "private-pool",
+    "sea-view",
+    "air-conditioning",
+    "wifi",
+    "parking",
+    "bbq"
+  ],
+  "room_types": [
+    {
+      "id": 440001,
+      "name": "Villa completa",
+      "max_guests": 10,
+      "units": 1
+    }
+  ],
+  "fees": {
+    "cleaning": 350
+  },
+  "check_in": "16:00",
+  "check_out": "11:00",
+  "deposit": 1500,
+  "photos": [
+    {
+      "url": "https://picsum.photos/seed/lodgify-373016-1/1600/1067",
+      "order": 1,
+      "hash": "mock-lodgify-373016-1"
+    },
+    {
+      "url": "https://picsum.photos/seed/lodgify-373016-2/1600/1067",
+      "order": 2,
+      "hash": "mock-lodgify-373016-2"
+    },
+    {
+      "url": "https://picsum.photos/seed/lodgify-373016-3/1600/1067",
+      "order": 3,
+      "hash": "mock-lodgify-373016-3"
+    },
+    {
+      "url": "https://picsum.photos/seed/lodgify-373016-4/1600/1067",
+      "order": 4,
+      "hash": "mock-lodgify-373016-4"
+    },
+    {
+      "url": "https://picsum.photos/seed/lodgify-373016-5/1600/1067",
+      "order": 5,
+      "hash": "mock-lodgify-373016-5"
+    }
+  ],
+  "updated_at": "2026-11-12T09:00:00Z",
+  "etag": "\"mock-lodgify-373016-1\"",
+  "web_url_hint": null
+}
