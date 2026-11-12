@@ -35,6 +35,8 @@ Sin Figma. Tres pasos, cada uno documentado en spec-kit:
 
 
 
+Mapa del sitio completo, con el inventario de la web actual y a dónde va cada URL: [mapa-del-sitio.md](mapa-del-sitio.md).
+
 Las rutas son las del estudio de URLs (spec 002) y pueden cambiar. Se muestra en inglés y, entre
 paréntesis, en español.
 

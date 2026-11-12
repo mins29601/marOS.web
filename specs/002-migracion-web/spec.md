@@ -132,6 +132,10 @@ marketing se copian de las fichas actuales.
 
 ## Estudio de URLs (pendiente)
 
+Primera propuesta de correspondencias (287 URLs del sitemap) en
+[spec 005, mapa-del-sitio.md](../005-arquitectura-informacion/mapa-del-sitio.md) y en
+`redirects/inventario.csv`, generada con `redirects/generar.py`.
+
 Preguntas que el estudio debe responder con datos de Search Console y del rastreo (plan M0–M1):
 
 1. **Prefijo de idioma para inglés**: hoy el inglés va sin prefijo (`/sierra-blanca/`) y el
