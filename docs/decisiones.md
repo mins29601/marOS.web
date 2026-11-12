@@ -33,6 +33,7 @@ recomendación de Claude; Julio decide.
 | T24 | 2026-11-11 | Qué contenido se migra se decide página a página en la migración (plan M1) | Julio | spec 002 |
 | T25 | 2026-11-12 | Antes del código: mockups, mapa del sitio, menús y navegación | Julio | spec 005 |
 | T26 | 2026-11-12 | Diseño sin Figma: wireframes → Atomic Design → theme.json y patrones en pruebas; referencia Le Collectionist | Julio | spec 005 |
+| T27 | 2026-11-12 | Diseño mobile first; referencias: Le Collectionist, Vacation Marbella, My Private Villas y el minimalismo de Aman | Julio | spec 005, research |
 | D2 | 2026-11-11 | Plugin de idiomas: **WPML** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D3 | 2026-11-11 | Plugin SEO: **Yoast SEO** (+ el módulo de WPML para SEO) | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D4 | 2026-11-11 | Formularios: **Gravity Forms** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
