@@ -87,9 +87,10 @@ Móvil primero (390 px) y escritorio como ampliación. Los criterios están en
 |---|---|---|
 | 1 | Mapa del sitio y menús | Secciones y jerarquía |
 | M1 · E1 | Inicio | Alojamiento, servicios y experiencias al mismo nivel; gestión propia; vídeos de Instagram/TikTok; zonas |
-| M2 · E2 | Alquileres | Fechas con ±días, huéspedes y temas con número; precio total solo con fechas |
-| M3 · E3 | Ficha de propiedad | Anclas, persona de contacto, vídeos, dormitorios, servicios incluidos y extras, estancia mínima, distancias, FAQ |
-| M4 | Reservar en móvil | Barra fija → hoja inferior → calendario a pantalla completa → precio cerrado y «Reservar» |
+| M2 · E2 | Alquileres | Colecciones en pestañas, distintivo «Exclusiva», nota junto al nombre; fechas con ±días, huéspedes y temas con número; precio total solo con fechas |
+| M3 · E3 | Ficha de propiedad | Anclas, persona de contacto, vídeos, dormitorios, servicios incluidos y extras, estancia mínima, distancias, FAQ, valoraciones estilo Airbnb, «También en Airbnb, Booking y Vrbo» |
+| M4 | Reservar en móvil, flujo A (My Private Villas) | Barra fija → hoja inferior → calendario a pantalla completa → precio cerrado y «Reservar» |
+| M4b | Reservar en móvil, flujo B (Le Collectionist) | Semanas con precio → servicios incluidos y a la carta → resumen, «Reservar» o «Programar llamada» |
 | M5 · E4 | Servicios | Línea propia, solicitud sin alojamiento |
 | M6 | Menú móvil | Capa a pantalla completa |
 | E5 | Ficha de tour | Sin cambios respecto a la versión 1 |
@@ -104,4 +105,5 @@ Móvil primero (390 px) y escritorio como ampliación. Los criterios están en
   (mockup v2: en la capa «Menú» y en el pie)
 - Q3: ¿Eventos y bodas son una sección propia («Celebrate», como hoy) o parte de Concierge?
   (mockup: dentro de Concierge)
+- Q5: Elegir flujo de reserva A, B o una mezcla (mockup M4 y M4b).
 - Q4: ¿Nombre del blog: Blog, Journal o Guía de Marbella? (mockup: Journal)

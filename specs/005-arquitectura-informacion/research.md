@@ -178,5 +178,18 @@ versión móvil como referencia principal; la de escritorio es la ampliación.
 14. **Lo local en todo**: guías de zona hechas por el equipo, recomendaciones propias y caras del
     equipo; nada de textos genéricos.
 
+15. **Colecciones y distintivo «Exclusiva»** (Julio, 12/11): la mayoría de las casas son de
+    gestión directa, pero puede haber casas de colaboradores. Las de gestión directa llevan el
+    único distintivo permitido, «Exclusiva»; las colecciones (Exclusivas, Familias, Golf…) son
+    pestañas en Alojamiento y un bloque en Inicio. Corrige la conclusión 4 («sin insignias»).
+16. **Valoraciones con peso, como Airbnb** (Julio, 12/11): nota y nº de opiniones junto al
+    nombre en la tarjeta, bajo el H1 y en la caja de reserva; en la ficha, nota grande,
+    subvaloraciones con barras y opiniones con nombre y fecha.
+17. **«También en Airbnb, Booking y Vrbo»** (Julio, 12/11): la misma casa con su nota en cada
+    portal y enlace al anuncio, junto a «Reserva directa: mejor precio y trato con el equipo».
+18. **Dos flujos de reserva en móvil para comparar**: A, inspirado en My Private Villas
+    (calendario a pantalla completa); B, inspirado en Le Collectionist (lista de semanas con
+    precio, servicios a la carta dentro de la reserva y «programar llamada»).
+
 Estas conclusiones se aplicarán a los wireframes cuando Julio dé su feedback (spec 005, paso 1
 del proceso de diseño).

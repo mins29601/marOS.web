@@ -31,13 +31,19 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 | Orden de galería, imagen destacada, alt | WP | sí | |
 | SEO (title, meta, OG, schema) | WP | sí | Plugin SEO (D3) |
 | Opiniones destacadas | WP | sí | Pendiente Q1 |
-| Enlaces a Airbnb/Booking/Vrbo | WP | no | Opcional |
+| Gestión: exclusiva (gestión directa) o colaborador | WP | no | Distintivo «Exclusiva» en tarjetas y ficha (Julio, 12/11). **Pendiente**: si marOS sabe quién gestiona cada casa, pasa a origen M |
+| Persona de contacto (nombre, foto) | WP | sí | «[Nombre] será tu contacto» |
+| Vídeos (enlace, plataforma, carátula) | WP | sí | Hoy en Instagram y TikTok; dónde se alojan se decide al desarrollar (D18) |
+| Valoración media, nº de opiniones y subvaloraciones (limpieza, exactitud, comunicación, ubicación, llegada, calidad-precio) | WP | no | Se calcula de las opiniones propias (Site Reviews, D11). Origen de las opiniones: **pendiente** |
+| Presencia en portales: Airbnb, Booking.com, Vrbo (URL, nota, nº de opiniones, fecha de actualización) | WP | no | Se muestra «También en…» (Julio, 12/11). Los portales no dan API pública de notas: se actualizan a mano o con el MCP |
 
 ## Taxonomías
 
 - `zona`: Sierra Blanca, Milla de Oro, Nueva Andalucía… (traducible; enlaza con las landings de zona).
 - `tipo-propiedad`: villa, apartamento… Los términos los crea la sincronización a partir de la
   categoría de marOS, con su nombre traducido. Sirve para filtrar y para los listados, no para la URL.
+- `coleccion`: grupos editoriales (Exclusivas, Familias, Golf, Grupos…), traducible, la edita el
+  equipo en WP (Julio, 12/11). Una casa puede estar en varias.
 - `equipamiento`: piscina climatizada, vistas al mar… (términos creados por la sincronización,
   nombres traducibles en WP).
 
