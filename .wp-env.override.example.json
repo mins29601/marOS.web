@@ -3,13 +3,13 @@
 		"https://downloads.wordpress.org/plugin/wordpress-seo.zip",
 		"https://downloads.wordpress.org/plugin/polylang.zip",
 		"https://downloads.wordpress.org/plugin/complianz-gdpr.zip",
+		"https://downloads.wordpress.org/plugin/contact-form-7.zip",
 		"https://downloads.wordpress.org/plugin/secure-custom-fields.zip",
 		"https://downloads.wordpress.org/plugin/site-reviews.zip",
 		"https://downloads.wordpress.org/plugin/fluent-smtp.zip",
 		"https://downloads.wordpress.org/plugin/wpvivid-backuprestore.zip",
 		"https://downloads.wordpress.org/plugin/cloudflare.zip",
 		"https://downloads.wordpress.org/plugin/mcp-adapter.zip",
-		"https://downloads.wordpress.org/plugin/enable-abilities-for-mcp.zip",
-		"./paid-plugins/gravityforms.zip"
+		"https://downloads.wordpress.org/plugin/enable-abilities-for-mcp.zip"
 	]
 }

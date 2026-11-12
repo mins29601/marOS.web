@@ -36,7 +36,7 @@ recomendación de Claude; Julio decide.
 | T27 | 2026-11-12 | Diseño mobile first; referencias: Le Collectionist, Vacation Marbella, My Private Villas y el minimalismo de Aman | Julio | spec 005, research |
 | D2 | 2026-11-12 | Plugin de idiomas: **Polylang** (gratis). Cambia la decisión del 11/11 (WPML): la suscripción de WPML ha caducado y para en + es basta Polylang; Polylang Pro si hiciera falta | Julio («polylang está bien») | docs/decisiones.md |
 | D3 | 2026-11-11 | Plugin SEO: **Yoast SEO** (compatible con Polylang) | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
-| D4 | 2026-11-11 | Formularios: **Gravity Forms** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D4 | 2026-11-12 | Formularios: **Contact Form 7** por el momento (cambia Gravity Forms). Las solicitudes **no se guardan en WordPress** (sin Flamingo): contacto, tours a medida, servicios y propietarios se envían por email (FluentSMTP, Turnstile); las solicitudes de reserva de propiedad van a marOS como reserva **Open** desde marOS Connector | Julio («usemos por el momento contact form 7»; «no quiero que las solicitudes se guarden en el WordPress») | docs/decisiones.md |
 | D5 | 2026-11-11 | Caché: **APO solo**, sin WP Rocket | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D8 | 2026-11-11 | Cookies / consentimiento: **Complianz** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D9 | 2026-11-11 | Copia producción → pruebas: **Script WP-CLI** en GitHub Actions; WPvivid Pro como respaldo y para copias de seguridad | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |

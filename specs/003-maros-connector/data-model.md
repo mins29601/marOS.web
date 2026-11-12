@@ -61,6 +61,9 @@ Cada carga de una propiedad reemplaza su calendario entero en una transacción (
 - Presupuestos: se piden a marOS al reservar.
 - Datos de huéspedes: se reenvían a marOS y se descartan.
 - Reservas: solo `maros_booking_id`, estado y fecha, en una tabla propia con borrado a 90 días.
+- Solicitudes de reserva (D4, Julio 12/11): el formulario de solicitud de una propiedad se envía a marOS,
+  que la crea en Lodgify como reserva **Open**; WordPress no guarda la solicitud. Los demás
+  formularios (Contact Form 7) solo envían email.
 
 ## Opciones del plugin (no secretas)
 
