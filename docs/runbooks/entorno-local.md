@@ -53,6 +53,21 @@ npm run env:start    # la primera vez tarda unos minutos (descarga imágenes)
 - Cuando existan, se añaden a `.wp-env.json` `./wp-content/plugins/maros-connector` y
   `./wp-content/plugins/mis-contenido`.
 
+## 3b. Primera versión de la web (contenido de ejemplo)
+
+Con el entorno arrancado, dos comandos dejan la web navegable en inglés y español:
+
+```bash
+npm run wp -- maros sync --publish
+npm run wp -- eval-file wp-content/mis-scripts/setup/contenido-inicial.php
+```
+
+- `wp maros sync` carga las propiedades del mock (ficha, tipo, zona, equipamiento y fotos) en
+  inglés y español. Se puede repetir: solo actualiza lo que cambia (etag).
+- `contenido-inicial.php` crea zonas, tipos de servicio, 2 experiencias, 4 servicios, las páginas
+  del mapa del sitio (spec 005), los formularios de Contact Form 7 y los menús de cada idioma. Es
+  idempotente y los textos son de ejemplo.
+
 ## 4. La API de marOS simulada
 
 Base: `http://localhost:8888/wp-json/maros-mock` (desde dentro del contenedor:

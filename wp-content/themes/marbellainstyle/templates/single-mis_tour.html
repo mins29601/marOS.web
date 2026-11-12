@@ -1,0 +1,30 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+<!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"1280px"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|medium","right":"var:preset|spacing|medium","bottom":"var:preset|spacing|x-large"}}}} -->
+<main class="wp-block-group" style="padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--x-large);padding-left:var(--wp--preset--spacing--medium)">
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|small"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--small)">
+<!-- wp:paragraph {"className":"mis-eyebrow"} --><p class="mis-eyebrow">[mis_t en="Experience" es="Experiencia"]</p><!-- /wp:paragraph -->
+<!-- wp:post-title {"level":1,"fontSize":"x-large"} /-->
+<!-- wp:paragraph {"className":"mis-muted","metadata":{"bindings":{"content":{"source":"mis/tour","args":{"key":"facts"}}}}} --><p class="mis-muted"></p><!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+<!-- wp:post-featured-image {"aspectRatio":"16/9","align":"wide"} /-->
+<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|x-large"},"padding":{"top":"var:preset|spacing|large"}}}} -->
+<div class="wp-block-columns" style="padding-top:var(--wp--preset--spacing--large)">
+<!-- wp:column {"width":"64%"} --><div class="wp-block-column" style="flex-basis:64%">
+<!-- wp:post-excerpt {"fontSize":"medium"} /-->
+<!-- wp:post-content {"layout":{"type":"default"}} /-->
+</div><!-- /wp:column -->
+<!-- wp:column {"width":"36%"} --><div class="wp-block-column" style="flex-basis:36%">
+<!-- wp:group {"className":"mis-booking-box","layout":{"type":"default"}} --><div class="wp-block-group mis-booking-box">
+<!-- wp:paragraph {"fontSize":"medium","metadata":{"bindings":{"content":{"source":"mis/tour","args":{"key":"price"}}}}} --><p class="has-medium-font-size"></p><!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"mis-muted","metadata":{"bindings":{"content":{"source":"mis/tour","args":{"key":"tour_pickup"}}}}} --><p class="mis-muted"></p><!-- /wp:paragraph -->
+<!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button {"width":100,"metadata":{"bindings":{"url":{"source":"mis/tour","args":{"key":"booking_url"}}}}} --><div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button">[mis_t en="Book this experience" es="Reservar experiencia"]</a></div><!-- /wp:button --></div><!-- /wp:buttons -->
+<!-- wp:paragraph {"className":"mis-muted","fontSize":"small"} --><p class="mis-muted has-small-font-size">[mis_t en="Free cancellation up to 24 h before." es="Cancelación gratuita hasta 24 h antes."]</p><!-- /wp:paragraph -->
+</div><!-- /wp:group -->
+</div><!-- /wp:column -->
+</div>
+<!-- /wp:columns -->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

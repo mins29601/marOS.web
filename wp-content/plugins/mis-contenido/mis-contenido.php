@@ -163,11 +163,11 @@ add_filter(
 		return $taxonomies + array( 'zona' => 'zona', 'tipo-servicio' => 'tipo-servicio', 'tipo-tour' => 'tipo-tour' );
 	}
 );
-// Los datos objetivos del tour (precio, duración, FareHarbor) se copian a la traducción.
+// Solo los datos que no dependen del idioma se copian a la traducción (los textos, no).
 add_filter(
 	'pll_copy_post_metas',
 	static function ( array $metas ): array {
-		return array_merge( $metas, array( 'tour_duration', 'tour_start_time', 'tour_private', 'tour_price_from', 'tour_fareharbor_item', 'tour_booking_mode', 'service_price_from' ) );
+		return array_merge( $metas, array( 'tour_start_time', 'tour_private', 'tour_price_from', 'tour_fareharbor_item', 'tour_booking_mode' ) );
 	}
 );
 

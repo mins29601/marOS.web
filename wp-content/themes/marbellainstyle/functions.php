@@ -147,3 +147,16 @@ add_shortcode(
 	'mis_book',
 	static fn() => sprintf( '<a class="mis-book wp-element-button" href="%s">%s</a>', esc_url( mis_page_url( 'stay' ) ), esc_html( mis_t( 'Book', 'Reservar' ) ) )
 );
+
+/**
+ * [mis_form name="contact|request"] Formulario de Contact Form 7 del idioma actual.
+ * Los formularios se llaman «<name>-en» y «<name>-es». No guardan solicitudes (D4).
+ */
+add_shortcode(
+	'mis_form',
+	static function ( $atts ) {
+		$name  = sanitize_key( $atts['name'] ?? 'contact' ) . '-' . ( mis_is_es() ? 'es' : 'en' );
+		$forms = get_posts( array( 'post_type' => 'wpcf7_contact_form', 'name' => $name, 'numberposts' => 1, 'lang' => '' ) );
+		return $forms ? do_shortcode( sprintf( '[contact-form-7 id="%d"]', $forms[0]->ID ) ) : '';
+	}
+);

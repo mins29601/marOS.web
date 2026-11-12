@@ -37,7 +37,8 @@
 		"MAROS_ENV": "mock",
 		"MAROS_API_BASE": "http://localhost/wp-json/maros-mock",
 		"MAROS_API_KEY": "mock-local-no-secreta",
-		"MAROS_WEBHOOK_SECRET": "mock-local-no-secreta"
+		"MAROS_WEBHOOK_SECRET": "mock-local-no-secreta",
+		"WP_DEVELOPMENT_MODE": "theme"
 	},
 	"lifecycleScripts": {
 		"afterStart": "npx wp-env run cli wp rewrite structure '/%postname%/' --hard && npx wp-env run cli wp theme activate marbellainstyle && npx wp-env run cli wp plugin deactivate cloudflare && npx wp-env run cli wp language core install es_ES && npx wp-env run cli wp eval-file wp-content/mis-scripts/setup/idiomas.php"
