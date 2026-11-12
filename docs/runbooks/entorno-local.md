@@ -6,7 +6,7 @@ Usa el mismo `.wp-env.json` que los tests de GitHub (spec 001, «Testing»).
 | | Local | Pruebas | Producción |
 |---|---|---|---|
 | URL | http://localhost:8888 | `staging.<temporal>` | `www.<temporal>` |
-| PHP / WordPress | 8.3 / 6.9 | los de IONOS | los de IONOS |
+| PHP / WordPress | 8.3 / última estable (hoy 7.1) | los de IONOS | los de IONOS |
 | `WP_ENVIRONMENT_TYPE` | `local` | `staging` | `production` |
 | marOS | **mock** (JSON de `mock/maros-api/`) | marOS pruebas | marOS producción |
 | Correo | bloqueado (se anota en el log) | bloqueado | normal |
