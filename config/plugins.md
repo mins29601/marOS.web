@@ -17,11 +17,11 @@ con la misma versión que aquí.
 | Cloudflare (APO) | D5 | gratis (wp.org) | instalado, inactivo | sí | sí | En local no hay Cloudflare |
 | MCP Adapter | T5, T20 | gratis (wp.org) | sí | sí | sí | Expone `/wp-json/mcp` |
 | Enable Abilities for MCP | T5 | gratis (wp.org) | sí | sí | sí | |
-| **WPML** (+ String Translation, WPML SEO) | D2 | **de pago** | con override | sí | sí | Falta la licencia o los zip |
+| Polylang | D2 | gratis (wp.org) | sí | sí | sí | en (por defecto) + es; Polylang Pro opcional |
 | **Gravity Forms** | D4 | **de pago** | con override | sí | sí | Falta la licencia o los zip |
 | **WPvivid Pro** | D9 | **de pago** | no | sí | sí | Falta la licencia |
 
 ## Plugins de pago en local
 
-Los zip de pago no se suben al repositorio. Guárdalos en `paid-plugins/` (ignorada por git) y
+Hoy solo aplica a Gravity Forms. Los zip de pago no se suben al repositorio. Guárdalos en `paid-plugins/` (ignorada por git) y
 copia `.wp-env.override.example.json` a `.wp-env.override.json`. Después, `npm run env:start -- --update`.

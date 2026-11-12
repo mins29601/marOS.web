@@ -213,7 +213,7 @@ lo compruebo después.
 - **Esquema propio versionado**: las tablas del plugin (calendario, tarifas, registro) las crea y
   actualiza el plugin con un número de versión de esquema. Tras cada despliegue, el workflow
   ejecuta por SSH `wp maros migrate`, que aplica solo lo que falte y nunca borra datos.
-- **Ajustes repetibles**: los ajustes preparados en pruebas que deban pasar a producción (WPML,
+- **Ajustes repetibles**: los ajustes preparados en pruebas que deban pasar a producción (Polylang,
   plugin SEO, permalinks…) se guardan como scripts de WP-CLI en `scripts/settings/` o como lista
   en `docs/runbooks/`; nunca se copia la base de pruebas sobre producción.
 - **Copias**: `wp db export` antes de cada despliegue a producción (se guardan las 10 últimas en
@@ -247,4 +247,4 @@ lo compruebo después.
 - Certificado SSL en IONOS con DNS en Cloudflare (paso 2.4).
 - Los avisos de marOS a pruebas y el MCP de pruebas deben pasar Cloudflare Access (pasos 3.2 y 7.3).
 - El MCP de producción es público en la red: contraseña de aplicación larga, rol limitado, límite en el WAF y registro de cada llamada.
-- APO + WPML: APO cachea por URL; con idiomas por carpeta (`/es/`) funciona sin cookies.
+- APO + Polylang: APO cachea por URL; con idiomas por carpeta (`/es/`) funciona sin cookies.

@@ -139,7 +139,7 @@ través del proxy del plugin.
   propias); se identifican por hash para no duplicarlas; una foto que desaparece en marOS se quita
   de la galería, no de la biblioteca.
 - Precio «desde»: solo si marOS lo da; nunca se calcula en WordPress.
-- WPML: los campos operativos son iguales en todos los idiomas («copiar» en WPML); los textos se
+- Polylang (D2): los campos operativos son iguales en todos los idiomas (se sincronizan entre traducciones con el filtro `pll_copy_post_metas`); los textos se
   traducen.
 - Villa Concha y Villa Flamingos tienen ids de marOS que no son `lodgify-<id>`: el plugin usa
   siempre el id de marOS como clave, sea cual sea.

@@ -10,6 +10,7 @@
 	],
 	"plugins": [
 		"https://downloads.wordpress.org/plugin/wordpress-seo.zip",
+		"https://downloads.wordpress.org/plugin/polylang.zip",
 		"https://downloads.wordpress.org/plugin/complianz-gdpr.zip",
 		"https://downloads.wordpress.org/plugin/secure-custom-fields.zip",
 		"https://downloads.wordpress.org/plugin/site-reviews.zip",
@@ -21,7 +22,8 @@
 	],
 	"mappings": {
 		"wp-content/mu-plugins": "./wp-content/mu-plugins",
-		"wp-content/maros-mock": "./mock/maros-api"
+		"wp-content/maros-mock": "./mock/maros-api",
+		"wp-content/mis-scripts": "./scripts"
 	},
 	"config": {
 		"WP_ENVIRONMENT_TYPE": "local",
@@ -35,6 +37,6 @@
 		"MAROS_WEBHOOK_SECRET": "mock-local-no-secreta"
 	},
 	"lifecycleScripts": {
-		"afterStart": "npx wp-env run cli wp rewrite structure '/%postname%/' --hard && npx wp-env run cli wp theme activate marbellainstyle && npx wp-env run cli wp plugin deactivate cloudflare"
+		"afterStart": "npx wp-env run cli wp rewrite structure '/%postname%/' --hard && npx wp-env run cli wp theme activate marbellainstyle && npx wp-env run cli wp plugin deactivate cloudflare && npx wp-env run cli wp language core install es_ES && npx wp-env run cli wp eval-file wp-content/mis-scripts/setup/idiomas.php"
 	}
 }

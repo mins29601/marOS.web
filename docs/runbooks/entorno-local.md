@@ -41,10 +41,11 @@ npm run env:start    # la primera vez tarda unos minutos (descarga imágenes)
 ## 3. Qué monta
 
 - Tema **Ollie** como padre y el tema hijo **`marbellainstyle`** del repo, activo (D1).
-- Plugins gratuitos acordados: Yoast, Complianz, Secure Custom Fields, Site Reviews, FluentSMTP,
+- Plugins gratuitos acordados: Polylang, Yoast, Complianz, Secure Custom Fields, Site Reviews, FluentSMTP,
   WPvivid, MCP Adapter y Enable Abilities for MCP. Cloudflare se instala, pero queda inactivo.
   Lista completa y versiones: [config/plugins.md](../../config/plugins.md).
-- Los de pago (WPML, Gravity Forms) se añaden con `.wp-env.override.json` (ver config/plugins.md).
+- Idiomas con **Polylang**: inglés (por defecto) y español.
+- Los de pago (Gravity Forms) se añaden con `.wp-env.override.json` (ver config/plugins.md).
 - `wp-content/mu-plugins/` del repo:
   - `mis-entorno.php`: noindex, correo bloqueado y aviso si un entorno que no es producción
     apunta a marOS producción. Es el mismo que irá a pruebas.
