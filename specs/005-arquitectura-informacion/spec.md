@@ -80,7 +80,8 @@ páginas; buscador en Inicio y Alojamiento.
 
 ## Pantallas con mockup (versión 2)
 
-Móvil primero (390 px) y escritorio como ampliación. Los criterios están en
+Móvil primero (390 px) y escritorio como ampliación. El lienzo es navegable: las pantallas marcadas tienen «Play» y enlaces entre
+ellas (Inicio → Alquileres → Ficha → Reservar C1 → C2 → C3; menú; servicios). Los criterios están en
 [research.md](research.md) (conclusiones 1–14).
 
 | # | Pantalla | Qué decide |
