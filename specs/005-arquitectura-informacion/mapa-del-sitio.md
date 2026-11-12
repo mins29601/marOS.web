@@ -25,6 +25,11 @@ decisión D6 sigue en estudio), se cambia una constante del script y se vuelven 
   transporte, catering y eventos) **no cambian** y no necesitan redirección.
 - **Dominio final** `https://www.marbellainstyle.com` (hoy el canonical es sin `www`). El dominio
   temporal de la fase 1 no afecta a este mapa.
+- **Idiomas con Polylang** (Julio, 12/11, en lugar de WPML). Polylang deja el idioma por defecto
+  sin prefijo y el español en `/es/`, así que el mapa no cambia. Lo único que exige la versión
+  **Pro** (o código propio en el plugin de contenido) es traducir las bases de las URLs:
+  `/str/` ↔ `/es/vft/`, `/services/` ↔ `/es/servicios/`, `/areas/` ↔ `/es/zonas/`. Con Polylang
+  gratis, el español tendría que usar las mismas bases que el inglés (`/es/str/…`).
 - Solo **inglés y español**. Alemán, ruso y francés redirigen a la página equivalente en inglés.
 - El sitemap actual solo lista inglés. Las URLs en `/es/` (y `/de/`, `/ru/`, `/fr/`) se añadirán
   al inventario con el rastreo completo (plan M0.3).
