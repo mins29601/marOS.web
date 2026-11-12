@@ -103,9 +103,19 @@ Ibiza). El HTML se carga con JavaScript y no se pudo leer directamente.
   **distancias en minutos en coche**; **FAQ en acordeón** + «¿Más preguntas? Habla con nuestros
   expertos · Programar llamada»; carrusel de opiniones; similares; pie con boletín, sellos de
   socios, dirección, WhatsApp y redes. Chat flotante.
+- **Móvil** (vídeo de Julio, 12/11): listado con «Search» y «Map view» arriba y tarjetas a
+  ancho completo con carrusel de fotos. Ficha con foto a pantalla completa y cabecera
+  transparente (favorito, teléfono, menú); la subnavegación por anclas pasa a ser una fila
+  deslizable. **Barra inferior fija** con precio («From … per week»), «Send enquiry» y corazón.
+  Al pulsar sube una **hoja inferior** («When? Add dates»); al tocar fechas, **calendario a
+  pantalla completa** con aviso de **estancia mínima y día de entrada** («7 noches, de sábado a
+  sábado»), selector «Fechas exactas / Soy flexible», meses en vertical y botones «Borrar» /
+  «Añadir fechas». Con fechas, la hoja muestra el **precio de la estancia** («final price to be
+  confirmed») y «Send enquiry» + «Add to shortlist».
 - **Estilo**: fondo blanco, negro + acento lila, titulares finos sin serifa, etiquetas en
   mayúsculas espaciadas, botones rectos negros o de contorno, mucho aire.
-- **Copiar**: subnavegación por anclas en la ficha; caja fija que pide fechas antes del precio;
+- **Copiar**: en móvil, barra fija → hoja inferior → calendario a pantalla completa con la
+  estancia mínima y el día de entrada visibles; subnavegación por anclas en la ficha; caja fija que pide fechas antes del precio;
   destacados con icono (3, no 8); distancias en minutos; aviso de ubicación aproximada; FAQ por
   propiedad + «programar llamada»; lista de favoritos para comparar; chips de filtros rápidos e
   histograma de precio.
@@ -122,7 +132,8 @@ versión móvil como referencia principal; la de escritorio es la ampliación.
    grande, poco texto, una acción por bloque); la ficha sí da toda la información, pero plegada
    en secciones («leer más», acordeones) para no abrumar en el móvil.
 2. **Una sola acción principal fija.** En móvil, barra inferior fija con «Ver disponibilidad» (o
-   «Reservar» cuando hay fechas). En escritorio, caja lateral fija. Nada de dos botones que
+   «Reservar» cuando hay fechas); abre una hoja inferior y el calendario a pantalla completa con
+   la estancia mínima a la vista (flujo de My Private Villas, pero con precio cerrado y reserva). En escritorio, caja lateral fija. Nada de dos botones que
    compiten. WhatsApp como acción secundaria discreta, no un globo flotante.
 3. **Menú sencillo**: cabecera con logo, «Reservar» y «Menú» (capa a pantalla completa, también
    en escritorio, como Aman). Máximo dos niveles; nada de megamenús de 80 enlaces.
