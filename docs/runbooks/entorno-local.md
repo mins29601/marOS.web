@@ -40,16 +40,17 @@ npm run env:start    # la primera vez tarda unos minutos (descarga imágenes)
 
 ## 3. Qué monta
 
-- Tema **Ollie** (padre elegido en D1, pendiente de cerrar) y **Yoast**.
+- Tema **Ollie** como padre y el tema hijo **`marbellainstyle`** del repo, activo (D1).
+- Plugins gratuitos acordados: Yoast, Complianz, Secure Custom Fields, Site Reviews, FluentSMTP,
+  WPvivid, MCP Adapter y Enable Abilities for MCP. Cloudflare se instala, pero queda inactivo.
+  Lista completa y versiones: [config/plugins.md](../../config/plugins.md).
+- Los de pago (WPML, Gravity Forms) se añaden con `.wp-env.override.json` (ver config/plugins.md).
 - `wp-content/mu-plugins/` del repo:
   - `mis-entorno.php`: noindex, correo bloqueado y aviso si un entorno que no es producción
     apunta a marOS producción. Es el mismo que irá a pruebas.
   - `mis-maros-mock.php`: la API de marOS simulada (solo con `MAROS_ENV=mock`).
-- Cuando existan, se añaden a `plugins`/`themes` de `.wp-env.json`:
-  `./wp-content/themes/marbellainstyle`, `./wp-content/plugins/maros-connector` y
+- Cuando existan, se añaden a `.wp-env.json` `./wp-content/plugins/maros-connector` y
   `./wp-content/plugins/mis-contenido`.
-- **No incluye** WPML (de pago: se añade con `.wp-env.override.json` apuntando a tu zip, que no se
-  sube al repo) ni MCP Adapter (se añade cuando esté su release estable para WP 6.9).
 
 ## 4. La API de marOS simulada
 

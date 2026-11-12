@@ -4,3 +4,4 @@ node_modules/
 *.sql.gz
 .DS_Store
 vendor/
+paid-plugins/

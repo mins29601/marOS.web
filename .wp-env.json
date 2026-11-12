@@ -5,10 +5,19 @@
 	"port": 8888,
 	"testsPort": 8889,
 	"themes": [
-		"https://downloads.wordpress.org/theme/ollie.zip"
+		"https://downloads.wordpress.org/theme/ollie.zip",
+		"./wp-content/themes/marbellainstyle"
 	],
 	"plugins": [
-		"https://downloads.wordpress.org/plugin/wordpress-seo.zip"
+		"https://downloads.wordpress.org/plugin/wordpress-seo.zip",
+		"https://downloads.wordpress.org/plugin/complianz-gdpr.zip",
+		"https://downloads.wordpress.org/plugin/secure-custom-fields.zip",
+		"https://downloads.wordpress.org/plugin/site-reviews.zip",
+		"https://downloads.wordpress.org/plugin/fluent-smtp.zip",
+		"https://downloads.wordpress.org/plugin/wpvivid-backuprestore.zip",
+		"https://downloads.wordpress.org/plugin/cloudflare.zip",
+		"https://downloads.wordpress.org/plugin/mcp-adapter.zip",
+		"https://downloads.wordpress.org/plugin/enable-abilities-for-mcp.zip"
 	],
 	"mappings": {
 		"wp-content/mu-plugins": "./wp-content/mu-plugins",
@@ -26,6 +35,6 @@
 		"MAROS_WEBHOOK_SECRET": "mock-local-no-secreta"
 	},
 	"lifecycleScripts": {
-		"afterStart": "npx wp-env run cli wp rewrite structure '/%postname%/' --hard && npx wp-env run cli wp theme activate ollie"
+		"afterStart": "npx wp-env run cli wp rewrite structure '/%postname%/' --hard && npx wp-env run cli wp theme activate marbellainstyle && npx wp-env run cli wp plugin deactivate cloudflare"
 	}
 }
