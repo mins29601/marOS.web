@@ -131,7 +131,7 @@ Ibiza). El HTML se carga con JavaScript y no se pudo leer directamente.
   complemento de la ficha: es una línea de negocio con entrada propia.
 - **El carácter local hay que potenciarlo.**
 - **Instagram y vídeo**: hacemos muchos vídeos; cada propiedad tiene siempre varios vídeos de
-  presentación.
+  presentación. Hoy se suben a Instagram y TikTok (ver D18 en decisiones).
 
 ## Conclusiones para nuestra web (propuesta, sin cambiar aún los mockups)
 
