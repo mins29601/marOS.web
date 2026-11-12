@@ -62,47 +62,46 @@ Inicio  /en/  (/es/)
 Utilidades: Gracias, 404, Resultados de búsqueda general
 ```
 
-## Menús
+## Menús (versión 2, 12/11)
 
-**Cabecera (escritorio)**: logo · Stay · Experiences · Concierge · Owners · Journal ·
-selector EN/ES · WhatsApp · botón «Book a stay».
+**Cabecera (escritorio)**: logo · Alojamiento · Servicios · Experiencias · Zonas · EN/ES ·
+«Menú» (capa con Propietarios, Journal, Nosotros y contacto) · botón «Reservar».
 
-- Stay despliega: Todas las propiedades · Villas · Apartamentos · Por zona (lista de zonas).
-- Experiences despliega: tipos de tour (día completo, varios días, vino, cultura, aventura).
-- Concierge despliega: Transporte · Chef y catering · Eventos y bodas · Conserjería.
-- Owners despliega: Gestión vacacional · Gestión de propiedades · Recursos.
+**Móvil**: logo · «Reservar» · menú. El menú es una capa a pantalla completa: Alojamiento,
+Servicios, Experiencias y Zonas en acordeón; Propietarios, Journal y Nosotros; la persona de
+contacto con horario, WhatsApp y llamar; Instagram y TikTok; idioma.
 
-**Móvil**: cabecera con logo, botón «Book» y menú. El menú se abre a pantalla completa con las
-mismas secciones en acordeón, el idioma y los contactos (teléfono, WhatsApp, email) al final.
+**Pie**: Alojamiento, Servicios, Experiencias, Empresa (Nosotros, Propietarios, Opiniones, Trabaja
+con nosotros, Legal); contacto y dirección; Instagram, TikTok y YouTube.
 
-**Pie**: columnas Stay (zonas principales), Experiences, Concierge, Company (About, Opiniones,
-Trabaja con nosotros, Contacto, Journal); contacto (teléfono, WhatsApp, email, dirección de
-oficina); redes; legales; selector de idioma.
+**Navegación transversal**: migas; subnavegación fija por anclas en las fichas; zona enlazada en
+cada ficha; servicios como extras en la ficha de propiedad; «Habla con [Nombre]» en todas las
+páginas; buscador en Inicio y Alojamiento.
 
-**Navegación transversal**: migas de pan en fichas; «También te puede interesar» (propiedades de
-la misma zona, tours relacionados); zona enlazada desde cada propiedad y tour; buscador de
-fechas presente en Inicio, Stay y Zona.
+## Pantallas con mockup (versión 2)
 
-## Pantallas con mockup
+Móvil primero (390 px) y escritorio como ampliación. Los criterios están en
+[research.md](research.md) (conclusiones 1–14).
 
 | # | Pantalla | Qué decide |
 |---|---|---|
-| 1 | Mapa del sitio | Secciones y jerarquía |
-| 2 | Inicio (escritorio) | Orden de bloques, buscador, peso de cada línea de negocio |
-| 3 | Alquileres con búsqueda | Filtros, tarjeta de propiedad, mapa |
-| 4 | Ficha de propiedad | Galería, datos clave, calendario, precio y reserva |
-| 5 | Ficha de tour | Datos rápidos, itinerario, reserva FareHarbor |
-| 6 | Menú móvil | Navegación en el teléfono |
-| 7 | Ficha de propiedad (móvil) | Barra de reserva fija y orden del contenido |
+| 1 | Mapa del sitio y menús | Secciones y jerarquía |
+| M1 · E1 | Inicio | Alojamiento, servicios y experiencias al mismo nivel; gestión propia; vídeos de Instagram/TikTok; zonas |
+| M2 · E2 | Alquileres | Fechas con ±días, huéspedes y temas con número; precio total solo con fechas |
+| M3 · E3 | Ficha de propiedad | Anclas, persona de contacto, vídeos, dormitorios, servicios incluidos y extras, estancia mínima, distancias, FAQ |
+| M4 | Reservar en móvil | Barra fija → hoja inferior → calendario a pantalla completa → precio cerrado y «Reservar» |
+| M5 · E4 | Servicios | Línea propia, solicitud sin alojamiento |
+| M6 | Menú móvil | Capa a pantalla completa |
+| E5 | Ficha de tour | Sin cambios respecto a la versión 1 |
 
 ## Clarifications
 
 ### Preguntas para Julio
 
-- Q1: ¿El peso en Inicio es alquileres primero y luego experiencias y servicios, o las tres
-  líneas al mismo nivel? (mockup: alquileres primero)
+- Q1: ~~Peso en Inicio~~ **Resuelta (12/11)**: alquileres y servicios al mismo nivel; los
+  servicios también se venden a quien no se aloja con nosotros.
 - Q2: ¿«Owners» (captar propietarios) va en el menú principal o solo en el pie y en una landing?
-  (mockup: menú principal)
+  (mockup v2: en la capa «Menú» y en el pie)
 - Q3: ¿Eventos y bodas son una sección propia («Celebrate», como hoy) o parte de Concierge?
   (mockup: dentro de Concierge)
 - Q4: ¿Nombre del blog: Blog, Journal o Guía de Marbella? (mockup: Journal)
