@@ -49,7 +49,7 @@ recomendación de Claude; Julio decide.
 
 | # | Decisión | Opciones | Recomendación | Por qué |
 |---|---|---|---|---|
-| D1 | Tema base | (a) tema de bloques + hijo; (b) tema clásico con maquetador (Elementor, Uncode/WPBakery, Divi) | **(a) Tema de bloques**: Twenty Twenty-Five como padre (o Ollie si se quiere más diseño de serie) y tema hijo `marbellainstyle` con `theme.json` | Contenido en bloques nativos: lo puede editar el MCP, no hay lock-in de maquetador, es más rápido con APO, y nuestros bloques de reserva encajan sin adaptadores. El maquetador actual obliga a rehacer el contenido igualmente |
+| D1 | Tema base | Ollie · Kadence · Twenty Twenty-Five · GeneratePress | **Ollie** como padre + tema hijo `marbellainstyle` con patrones de marca | Criterios de Julio (12/11): fácil de gestionar, que funcione con el MCP y que permita muchos diseños sin reinventar la rueda. Ollie usa solo bloques del núcleo (MCP y sin dependencias) y trae biblioteca de patrones y estilos; Kadence tiene más diseños pero con bloques propios; Twenty Twenty-Five es el más estable pero con menos diseños listos |
 | D6 | URLs | Ver «Estudio de URLs» en la spec 002 | **En estudio.** Propuesta de Julio: alquileres en `/en/str/<slug>/` y `/es/vft/<slug>/`, sin tipología | Decidir con datos de tráfico: cuántas URLs cambian y cuánto tráfico tienen |
 
 Las filas D… de «Decisiones tomadas» conservan su número original; su justificación está en el historial de este archivo.
