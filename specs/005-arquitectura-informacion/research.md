@@ -81,7 +81,11 @@ Páginas: `/`, `/resorts/amangiri`, `/villas`.
 
 Solo se pudo leer el texto de la portada: «club» de propietarios que alquilan directo y más
 barato, vídeo del mes, oferta especial (con fechas pasadas), boletín. Sin estructura legible.
-**Pendiente**: URL de un listado o una villa para analizarla.
+El buscador (`/search/`, URL de Julio del 12/11) se carga con JavaScript y no se pudo leer
+sin navegador. Solo se ven los textos de un **formulario de solicitud en varios pasos**: lista de
+deseos, planes de viaje, con quién viajas, presupuesto y datos de contacto, más un chat en vivo.
+Es un enfoque de «te ayudamos a elegir» en vez de reserva directa.
+**Pendiente**: la URL de una villa concreta, o que Julio diga qué le gusta de esta web.
 
 ## Conclusiones para nuestra web (propuesta, sin cambiar aún los mockups)
 
