@@ -138,7 +138,7 @@ Primera propuesta de correspondencias (287 URLs del sitemap) en
 
 Preguntas que el estudio debe responder con datos de Search Console y del rastreo (plan M0–M1):
 
-1. **Prefijo de idioma para inglés**: hoy el inglés va sin prefijo (`/sierra-blanca/`) y el
+1. **Decidido (Julio, 12/11): el inglés se queda sin prefijo.** ~~Prefijo de idioma para inglés~~: hoy el inglés va sin prefijo (`/sierra-blanca/`) y el
    español con `/es/`. La propuesta `/en/str/…` pone prefijo a los dos. Ventaja: estructura
    simétrica y clara. Coste: **todas** las URLs inglesas actuales cambian y necesitan 301
    (inglés es el idioma con todo el tráfico). Alternativa: inglés sin prefijo, `/str/<slug>/` y

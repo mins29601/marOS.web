@@ -6,9 +6,9 @@ Salida:
   inventario.csv  — una fila por URL actual: qué es, a dónde va y si hay que revisarla.
   redirects.csv   — formato Cloudflare Bulk Redirects (source_url,target_url,status_code).
 
-Las rutas nuevas siguen la spec 005 (mapa del sitio) y la propuesta de Julio de `/en/str/`.
-La estructura de URLs (decisión D6) sigue en estudio: si cambia, se cambian las constantes
-de abajo y se vuelve a ejecutar el script.
+Las rutas nuevas siguen la spec 005 (mapa del sitio): inglés sin prefijo, español en /es/,
+alquileres en /str/ y /es/vft/. Si cambia una ruta, se cambian las constantes de abajo y se
+vuelve a ejecutar el script.
 
 Uso: python3 redirects/generar.py
 """
@@ -20,14 +20,16 @@ HOST_ANTIGUO = "marbellainstyle.com"
 HOST_NUEVO = "https://www.marbellainstyle.com"
 
 # --- Secciones de la web nueva (inglés). El español está en mapa-del-sitio.md ---
-INICIO = "/en/"
-STR = "/en/str/"                       # alquileres (short term rentals)
-AREAS = "/en/areas/"
-EXP = "/en/experiences/"
-SRV = "/en/services/"
-OWN = "/en/owners/"
-JOURNAL = "/en/journal/"
-REVIEWS = "/en/reviews/"
+# Inglés sin prefijo de idioma (decisión de Julio, 12/11); el español va en /es/.
+EN = "/"
+INICIO = EN
+STR = EN + "str/"                      # alquileres (short term rentals)
+AREAS = EN + "areas/"
+EXP = EN + "experiences/"
+SRV = EN + "services/"
+OWN = EN + "owners/"
+JOURNAL = EN + "journal/"
+REVIEWS = EN + "reviews/"
 
 # Tipos de servicio: tipo antiguo -> tipo nuevo
 TIPO_SERVICIO = {
@@ -80,7 +82,7 @@ ZONAS_SIN_GUIA = {"benahavis": "benahavis", "soto-grande": "sotogrande",
                   "el-madronal": "el-madronal", "new-golden-mile": "new-golden-mile"}
 
 # Entradas del blog que pasan a «Recursos para propietarios» (se quedan en el Journal,
-# con la categoría Propietarios, y se listan en /en/owners/resources/).
+# con la categoría Propietarios, y se listan en /owners/resources/).
 POSTS_PROPIETARIOS = {
     "benefits-property-marbella", "maximize-rental-income-marbella-luxury-property",
     "guest-experience-guide-maximize-marbella-rental-income",
@@ -97,18 +99,18 @@ POSTS_REVISAR = {
 }
 
 PAGINAS = {
-    "/": (INICIO, "mantener", "Portada; la raíz redirige al idioma por defecto"),
-    "/contact-us/": ("/en/contact/", "mantener", ""),
+    "/": (INICIO, "mantener", "Portada en inglés; el español en /es/"),
+    "/contact-us/": (EN + "contact/", "mantener", ""),
     "/blog/": (JOURNAL, "mantener", "Nombre del blog pendiente (Q4 de la spec 005)"),
-    "/privacy-policy/": ("/en/privacy-policy/", "mantener", ""),
-    "/terms-and-conditions/": ("/en/terms-and-conditions/", "mantener", ""),
-    "/legal-notice/": ("/en/legal-notice/", "mantener", ""),
-    "/about-marbella-instyle/": ("/en/about/", "mantener", ""),
-    "/work-with-us/": ("/en/work-with-us/", "mantener", ""),
+    "/privacy-policy/": (EN + "privacy-policy/", "mantener", ""),
+    "/terms-and-conditions/": (EN + "terms-and-conditions/", "mantener", ""),
+    "/legal-notice/": (EN + "legal-notice/", "mantener", ""),
+    "/about-marbella-instyle/": (EN + "about/", "mantener", ""),
+    "/work-with-us/": (EN + "work-with-us/", "mantener", ""),
     "/domestic-staff-marbella/": (SRV + "concierge/domestic-staff/", "mantener", "Pasa a ser un servicio de conserjería"),
     "/testimonials-from-our-customers/": (REVIEWS, "fusionar", "Opiniones de todo (Site Reviews)"),
-    "/thank-you/": ("/en/thank-you/", "mantener", "noindex"),
-    "/vacation-planner/": ("/en/contact/", "fusionar", "Revisar: si el formulario sigue siendo útil, página propia /en/plan-your-stay/"),
+    "/thank-you/": (EN + "thank-you/", "mantener", "noindex"),
+    "/vacation-planner/": (EN + "contact/", "fusionar", "Revisar: si el formulario sigue siendo útil, página propia /plan-your-stay/"),
     "/areas/": (AREAS, "mantener", ""),
     "/vacation-rental-management/": (OWN + "vacation-rental-management/", "mantener", ""),
     "/new-vacation-rental-management/": (OWN + "vacation-rental-management/", "fusionar", "Versión nueva de la misma página; se queda la mejor"),
@@ -178,7 +180,12 @@ CATEGORIAS_SERVICIOS = {
 
 
 def fila(url, tipo, seccion, destino, accion, estado="propuesta", nota="", maros=""):
-    codigo = "410" if accion == "retirar" else "301"
+    if accion == "retirar":
+        codigo = "410"
+    elif destino == url:
+        codigo, accion = "200", "misma URL"
+    else:
+        codigo = "301"
     return dict(url_antigua=url, tipo_actual=tipo, seccion_nueva=seccion,
                 destino=destino or "", codigo=codigo, accion=accion,
                 propiedad_maros=maros, estado=estado, nota=nota)
@@ -202,7 +209,7 @@ def clasificar(tipo, url):
             return fila(url, tipo, "Zonas", AREAS, "fusionar", nota="Pasa a ser la portada de Zonas")
         if slug in POSTS_PROPIETARIOS:
             return fila(url, tipo, "Journal (Propietarios)", JOURNAL + slug + "/", "mantener",
-                        nota="Se lista también en /en/owners/resources/")
+                        nota="Se lista también en /owners/resources/")
         if slug in POSTS_REVISAR:
             return fila(url, tipo, "Journal", JOURNAL + slug + "/", "mantener", "revisar",
                         "Antigua o de temporada pasada: retirar (301 al Journal) si no tiene tráfico")
@@ -251,7 +258,7 @@ def clasificar(tipo, url):
         slug = partes[1]
         if slug in ZONAS_SIN_GUIA:
             return fila(url, tipo, "Zonas", AREAS + ZONAS_SIN_GUIA[slug] + "/", "fusionar", "revisar",
-                        "Zona sin guía hoy: crear la página de zona o 301 a /en/areas/")
+                        "Zona sin guía hoy: crear la página de zona o 301 a /areas/")
         return fila(url, tipo, "Listados", CATEGORIAS_SERVICIOS[slug], "fusionar",
                     nota="Las categorías de servicios desaparecen; regla por patrón /services_cat/*")
 
@@ -287,7 +294,10 @@ def main():
     # Comprobaciones: sin bucles ni cadenas (ningún destino es a la vez origen)
     origenes = {r["url_antigua"] for r in filas}
     for r in filas:
-        assert r["destino"] not in origenes, f"cadena: {r['url_antigua']} -> {r['destino']}"
+        if r["codigo"] != "301":
+            continue
+        assert r["destino"] not in origenes or next(
+            x for x in filas if x["url_antigua"] == r["destino"])["codigo"] == "200", f"cadena: {r['url_antigua']} -> {r['destino']}"
 
     from collections import Counter
     print("Total:", len(filas))

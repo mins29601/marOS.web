@@ -20,10 +20,9 @@ decisión D6 sigue en estudio), se cambia una constante del script y se vuelven 
 
 ## 1. Supuestos
 
-- **Rutas con prefijo de idioma** `/en/` y `/es/`, y alquileres en `/en/str/` y `/es/vft/`, como
-  propuso Julio y como aparecen en la spec 005. Hoy el inglés va sin prefijo, así que **todas las
-  URLs inglesas cambian** y necesitan 301. Es el punto principal de D6: si se prefiere el inglés
-  sin prefijo, basta con cambiar las constantes del script.
+- **Inglés sin prefijo de idioma y español en `/es/`** (decisión de Julio, 12/11), como hoy.
+  Alquileres en `/str/` y `/es/vft/`, como propuso Julio. Así, 34 URLs actuales (páginas legales,
+  transporte, catering y eventos) **no cambian** y no necesitan redirección.
 - **Dominio final** `https://www.marbellainstyle.com` (hoy el canonical es sin `www`). El dominio
   temporal de la fase 1 no afecta a este mapa.
 - Solo **inglés y español**. Alemán, ruso y francés redirigen a la página equivalente en inglés.
@@ -36,50 +35,50 @@ Las rutas en español son traducciones de la sección; los slugs de cada ficha s
 migrar el contenido.
 
 ```text
-Inicio                                   /en/                          /es/
+Inicio                                   /                          /es/
 │
-├── Alojamiento (Stay)                   /en/str/                      /es/vft/
-│   ├── Ficha de propiedad               /en/str/<slug>/               /es/vft/<slug>/
-│   ├── Reservar (flujo C)               /en/str/<slug>/book/          /es/vft/<slug>/reservar/
-│   └── Colecciones (pestañas)           /en/str/?collection=<c>       (filtro, no indexable)
+├── Alojamiento (Stay)                   /str/                      /es/vft/
+│   ├── Ficha de propiedad               /str/<slug>/               /es/vft/<slug>/
+│   ├── Reservar (flujo C)               /str/<slug>/book/          /es/vft/<slug>/reservar/
+│   └── Colecciones (pestañas)           /str/?collection=<c>       (filtro, no indexable)
 │       Exclusivas · Familias · Golf · Grupos · (candidatas: Primera línea, Villas para eventos)
 │
-├── Servicios (Concierge)                /en/services/                 /es/servicios/
-│   ├── Transporte                       /en/services/transport/       /es/servicios/transporte/
+├── Servicios (Concierge)                /services/                 /es/servicios/
+│   ├── Transporte                       /services/transport/       /es/servicios/transporte/
 │   │   └── chófer, traslados aeropuerto Málaga / Gibraltar / Marbella, traslados de golf
-│   ├── Chef y catering                  /en/services/catering/        /es/servicios/catering/
+│   ├── Chef y catering                  /services/catering/        /es/servicios/catering/
 │   │   └── chef privado, catering, barbacoa, coctelería móvil, menús de Navidad
-│   ├── Eventos y bodas                  /en/services/events/          /es/servicios/eventos/
+│   ├── Eventos y bodas                  /services/events/          /es/servicios/eventos/
 │   │   ├── organización de eventos, fiestas privadas, wedding planner
-│   │   ├── Galería                      /en/services/events/gallery/
-│   │   └── Eventos realizados           /en/services/events/<slug>/   (si tienen tráfico)
-│   └── Conserjería                      /en/services/concierge/       /es/servicios/conserjeria/
+│   │   ├── Galería                      /services/events/gallery/
+│   │   └── Eventos realizados           /services/events/<slug>/   (si tienen tráfico)
+│   └── Conserjería                      /services/concierge/       /es/servicios/conserjeria/
 │       └── personal shopper, jet privado, yate, paquete vacacional, personal doméstico
 │
-├── Experiencias (tours)                 /en/experiences/              /es/experiencias/
-│   └── Tour                             /en/experiences/<slug>/       /es/experiencias/<slug>/
+├── Experiencias (tours)                 /experiences/              /es/experiencias/
+│   └── Tour                             /experiences/<slug>/       /es/experiencias/<slug>/
 │
-├── Zonas                                /en/areas/                    /es/zonas/
-│   └── Zona                             /en/areas/<slug>/             /es/zonas/<slug>/
+├── Zonas                                /areas/                    /es/zonas/
+│   └── Zona                             /areas/<slug>/             /es/zonas/<slug>/
 │       Sierra Blanca · Milla de Oro · Nueva Andalucía · Los Flamingos · La Alquería ·
 │       Guadalmina · Río Real · Estepona · (sin guía hoy: Benahavís, Sotogrande,
 │       El Madroñal, New Golden Mile)
 │
-├── Propietarios                         /en/owners/                   /es/propietarios/
-│   ├── Gestión de alquiler vacacional   /en/owners/vacation-rental-management/
-│   ├── Gestión de propiedades           /en/owners/property-management/
-│   └── Recursos para propietarios       /en/owners/resources/   (artículos del Journal)
+├── Propietarios                         /owners/                   /es/propietarios/
+│   ├── Gestión de alquiler vacacional   /owners/vacation-rental-management/
+│   ├── Gestión de propiedades           /owners/property-management/
+│   └── Recursos para propietarios       /owners/resources/   (artículos del Journal)
 │
-├── Journal                              /en/journal/                  /es/blog/
-│   ├── Entrada                          /en/journal/<slug>/           /es/blog/<slug>/
-│   └── Categoría                        /en/journal/category/<slug>/
+├── Journal                              /journal/                  /es/blog/
+│   ├── Entrada                          /journal/<slug>/           /es/blog/<slug>/
+│   └── Categoría                        /journal/category/<slug>/
 │
-├── Nosotros                             /en/about/                    /es/nosotros/
-├── Opiniones                            /en/reviews/                  /es/opiniones/
-├── Trabaja con nosotros                 /en/work-with-us/             /es/trabaja-con-nosotros/
-├── Contacto                             /en/contact/                  /es/contacto/
-├── Legal   /en/privacy-policy/ · /en/legal-notice/ · /en/terms-and-conditions/ · /en/cookie-policy/
-└── Utilidades (noindex)   /en/thank-you/ · 404 · búsqueda
+├── Nosotros                             /about/                    /es/nosotros/
+├── Opiniones                            /reviews/                  /es/opiniones/
+├── Trabaja con nosotros                 /work-with-us/             /es/trabaja-con-nosotros/
+├── Contacto                             /contact/                  /es/contacto/
+├── Legal   /privacy-policy/ · /legal-notice/ · /terms-and-conditions/ · /cookie-policy/
+└── Utilidades (noindex)   /thank-you/ · 404 · búsqueda
 ```
 
 **Qué cambia respecto a hoy**
@@ -97,20 +96,20 @@ Inicio                                   /en/                          /es/
 
 | Lo que hay hoy | URLs | Destino en la web nueva | Cómo |
 |---|---|---|---|
-| Portada y páginas | 22 | Su página equivalente; 4 de prueba se retiran (410) | mapa exacto |
-| Entradas del blog | 57 | `/en/journal/<mismo slug>/` | patrón |
-| Guías de zona (entradas) | 9 | `/en/areas/<zona>/` y `/en/areas/` | mapa exacto |
-| Fichas de propiedad que siguen en marOS | 18 | `/en/str/<nombre>/` | mapa exacto |
-| Fichas de villas que no están en marOS | 24 | Su zona si se sabe; si no, `/en/str/` | mapa exacto |
-| Tours | 19 | `/en/experiences/<mismo slug>/` (un duplicado se fusiona) | patrón |
-| Servicios (transporte, catering, eventos, lifestyle) | 17 | `/en/services/<tipo>/<mismo slug>/` | patrón |
-| Eventos realizados (galerías de fiestas y bodas) | 11 | `/en/services/events/<slug>/` | patrón |
-| Portadas de sección, landings y actividades sueltas de `/services/…` | 26 | Sección más cercana | mapa exacto |
-| Categorías del blog | 11 | `/en/journal/category/<slug>/` (`vrm` → Recursos propietarios) | patrón |
-| Etiquetas | 40 | `/en/journal/` | patrón |
+| Portada y páginas | 22 | 7 se quedan igual (portada, legales, gracias, zonas); 11 cambian; 4 de prueba se retiran (410) | mapa exacto |
+| Entradas del blog | 57 | `/journal/<mismo slug>/` | patrón |
+| Guías de zona (entradas) | 9 | `/areas/<zona>/` y `/areas/` | mapa exacto |
+| Fichas de propiedad que siguen en marOS | 18 | `/str/<nombre>/` | mapa exacto |
+| Fichas de villas que no están en marOS | 24 | Su zona si se sabe; si no, `/str/` | mapa exacto |
+| Tours | 19 | `/experiences/<mismo slug>/` (un duplicado se fusiona) | patrón |
+| Servicios (transporte, catering, eventos, lifestyle) | 17 | 13 se quedan igual; los 4 de lifestyle pasan a `/services/concierge/<slug>/` | patrón |
+| Eventos realizados (galerías de fiestas y bodas) | 11 | Se quedan igual en `/services/events/<slug>/` | — |
+| Portadas de sección, landings y actividades sueltas de `/services/…` | 26 | Sección más cercana (transporte, catering y eventos se quedan igual) | mapa exacto |
+| Categorías del blog | 11 | `/journal/category/<slug>/` (`vrm` → Recursos propietarios) | patrón |
+| Etiquetas | 40 | `/journal/` | patrón |
 | Categorías de servicios | 32 | Listado o zona equivalente | patrón + exactas |
-| Categoría de páginas | 1 | `/en/areas/` | exacta |
-| **Total** | **287** | 283 redirecciones 301 y 4 retiradas (410) | |
+| Categoría de páginas | 1 | `/areas/` | exacta |
+| **Total** | **287** | 34 sin cambio, 249 redirecciones 301 y 4 retiradas (410) | |
 
 Cada fila del inventario tiene `estado`: **propuesta** (regla clara) o **revisar** (63 filas que
 dependen de una decisión o de los datos de tráfico).
@@ -119,24 +118,24 @@ dependen de una decisión o de los datos de tráfico).
 
 | URL actual | Propiedad en marOS | Nueva |
 |---|---|---|
-| `/services/villas/villa-centauri/` | Villa Centauro | `/en/str/villa-centauro/` |
-| `/services/villas/villa-feliz/` | Villa Feliz | `/en/str/villa-feliz/` |
-| `/services/villas/villa-nido/` | Villa Nido | `/en/str/villa-nido/` |
-| `/services/villas/villa-michaela/` | Villa Michaela | `/en/str/villa-michaela/` |
-| `/services/villas/villa-panda-sea-views-heated-pool-in-sierra-blanca/` | Villa Panda | `/en/str/villa-panda/` |
-| `/services/villas/villa-concha-puerto-banus/` | Villa Concha | `/en/str/villa-concha/` |
-| `/services/villas/villa-flamingo-luxury-modern/` | Villa Flamingos (**confirmar**) | `/en/str/villa-flamingos/` |
-| `/services/villas/casa-masari/` | Casa Masari | `/en/str/casa-masari/` |
-| `/services/villas/casa-dama/` | Casa Dama | `/en/str/casa-dama/` |
-| `/services/villas/casa-principe/` | Casa Principe | `/en/str/casa-principe/` |
-| `/services/villas/casa-samara/` | Casa Samara | `/en/str/casa-samara/` |
-| `/services/villas/casa-rodeo-puerto-banus/` | Casa Rodeo | `/en/str/casa-rodeo/` |
-| `/services/apartments/casa-cifuentes/` | Cifuentes | `/en/str/casa-cifuentes/` |
-| `/services/apartments/casa-sould/` | Casa Soul | `/en/str/casa-soul/` |
-| `/services/apartments/casa-paraiso/` | Casa Paraiso | `/en/str/casa-paraiso/` |
-| `/services/apartments/casa-brisa/` | Casa Brisa | `/en/str/casa-brisa/` |
-| `/services/apartments/casa-coral/` | Casa Coral | `/en/str/casa-coral/` |
-| `/services/apartments/casa-acosta/` | Casa Acosta | `/en/str/casa-acosta/` |
+| `/services/villas/villa-centauri/` | Villa Centauro | `/str/villa-centauro/` |
+| `/services/villas/villa-feliz/` | Villa Feliz | `/str/villa-feliz/` |
+| `/services/villas/villa-nido/` | Villa Nido | `/str/villa-nido/` |
+| `/services/villas/villa-michaela/` | Villa Michaela | `/str/villa-michaela/` |
+| `/services/villas/villa-panda-sea-views-heated-pool-in-sierra-blanca/` | Villa Panda | `/str/villa-panda/` |
+| `/services/villas/villa-concha-puerto-banus/` | Villa Concha | `/str/villa-concha/` |
+| `/services/villas/villa-flamingo-luxury-modern/` | Villa Flamingos (**confirmar**) | `/str/villa-flamingos/` |
+| `/services/villas/casa-masari/` | Casa Masari | `/str/casa-masari/` |
+| `/services/villas/casa-dama/` | Casa Dama | `/str/casa-dama/` |
+| `/services/villas/casa-principe/` | Casa Principe | `/str/casa-principe/` |
+| `/services/villas/casa-samara/` | Casa Samara | `/str/casa-samara/` |
+| `/services/villas/casa-rodeo-puerto-banus/` | Casa Rodeo | `/str/casa-rodeo/` |
+| `/services/apartments/casa-cifuentes/` | Cifuentes | `/str/casa-cifuentes/` |
+| `/services/apartments/casa-sould/` | Casa Soul | `/str/casa-soul/` |
+| `/services/apartments/casa-paraiso/` | Casa Paraiso | `/str/casa-paraiso/` |
+| `/services/apartments/casa-brisa/` | Casa Brisa | `/str/casa-brisa/` |
+| `/services/apartments/casa-coral/` | Casa Coral | `/str/casa-coral/` |
+| `/services/apartments/casa-acosta/` | Casa Acosta | `/str/casa-acosta/` |
 
 Propiedades de marOS **sin ficha en la web actual** (URL nueva, sin redirección): Casa Ambar,
 Casa Torre y Villa Mares.
@@ -156,28 +155,30 @@ redirecciones más que en el destino.
 `villa-one`, `villa-banus`, `villa-adelfa-beach-side`.
 
 Propuesta: 301 a su zona cuando se deduce del nombre (Guadalmina, Los Flamingos, La Alquería,
-New Golden Mile) y al listado `/en/str/` en el resto, nunca a la portada. Si alguna es una casa
+New Golden Mile) y al listado `/str/` en el resto, nunca a la portada. Si alguna es una casa
 de marOS con otro nombre, o vuelve a ofrecerse, recupera ficha propia.
 
 ## 4. Reglas de redirección (orden de Cloudflare)
 
 1. **Host**: `marbellainstyle.com/*` → `https://www.marbellainstyle.com/*`, aplicado junto con
    las reglas siguientes para que haya **un solo salto**.
-2. **Mapa exacto** (Bulk Redirects, `redirects.csv`): las 283 URLs con destino concreto.
+2. **Mapa exacto** (Bulk Redirects, `redirects.csv`): las 249 URLs que cambian.
 3. **Patrones** como red de seguridad para lo que no esté en el mapa (URLs con parámetros,
-   traducciones no rastreadas): `/tag/*` → `/en/journal/`; `/services_cat/*` → `/en/services/`;
-   `/services/tours/*` → `/en/experiences/*`; `/de/*`, `/ru/*`, `/fr/*` → equivalente en inglés.
+   traducciones no rastreadas): `/tag/*` → `/journal/`; `/services_cat/*` → `/services/`;
+   `/services/tours/*` → `/experiences/*`; `/de/*`, `/ru/*`, `/fr/*` → equivalente en inglés.
 4. **Retiradas**: `/example-i/`, `/test/`, `/page-404-custom/` y `/no-access/` responden 410.
-5. **Raíz**: `/` → `/en/` (301). Detectar el idioma del navegador solo como sugerencia, nunca
-   como redirección automática, para que Google vea las dos versiones.
+5. **Raíz**: `/` es la portada en inglés, sin redirección. Detectar el idioma del navegador solo
+   como sugerencia, nunca como redirección automática, para que Google vea las dos versiones.
 
-`generar.py` ya comprueba que ningún destino es a la vez una URL antigua (sin cadenas). El CI de
+`generar.py` ya comprueba que ningún destino de un 301 es a su vez una URL redirigida (sin cadenas). El CI de
 la spec 002 (M6.2) añadirá que cada destino responda 200 en pruebas.
 
 ## 5. Para revisar con Julio
 
-1. **Prefijo `/en/`** para el inglés (D6). Cambia todas las URLs que hoy tienen tráfico; la
-   alternativa es dejar el inglés sin prefijo (`/str/…`, `/journal/…`) y solo `/es/` con prefijo.
+1. ~~Prefijo para el inglés~~ **Decidido (12/11)**: inglés sin prefijo. Queda abierto si las
+   entradas del blog se quedan en la raíz (`/<slug>/`, como hoy: 57 redirecciones menos) o pasan a
+   `/journal/<slug>/`, y si los tours se quedan en `/services/tours/` (19 menos) o pasan a
+   `/experiences/`.
 2. **Las 24 villas sin marOS**: ¿alguna sigue activa con otro nombre? ¿Villa Flamingos es
    `villa-flamingo-luxury-modern`?
 3. **Eventos realizados** (11 galerías de fiestas y bodas): ¿se mantienen como casos dentro de
