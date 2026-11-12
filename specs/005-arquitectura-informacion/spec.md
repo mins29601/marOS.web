@@ -19,7 +19,21 @@
 Mockups: lienzo de diseño «Mockups web Marbella in Style» (https://claude.ai/artifact/L4xhEP5zNB5F9KmJmpBS9W, privado; Julio puede compartirlo desde el menú Compartir). Son esquemas de
 media fidelidad para decidir estructura y contenido, no el diseño visual final.
 
-## Mapa del sitio (propuesta)
+## Proceso de diseño (aprobado por Julio el 12 de noviembre de 2026)
+
+Sin Figma. Tres pasos, cada uno documentado en spec-kit:
+
+1. **Wireframes**: cerrar los esquemas del lienzo con el feedback de Julio (estructura y
+   contenido, sin diseño visual). Referencia de estilo y estructura: Le Collectionist.
+2. **Atomic Design**: inventario de las piezas que se repiten, de menor a mayor (átomos: botón,
+   campo, etiqueta; moléculas: buscador, tarjeta de propiedad, tarjeta de tour, datos rápidos;
+   organismos: cabecera, pie, caja de reserva, galería, listado con filtros; plantillas: ficha de
+   propiedad, ficha de tour, zona, listado). Se documenta en una spec propia.
+3. **WordPress real**: los átomos se convierten en `theme.json` (colores, tipografía, espaciado,
+   estilos de bloques) y las moléculas y organismos en patrones y bloques. La «maqueta real» se
+   revisa directamente en pruebas, sin pasar por una herramienta de diseño.
+
+
 
 Las rutas son las del estudio de URLs (spec 002) y pueden cambiar. Se muestra en inglés y, entre
 paréntesis, en español.
