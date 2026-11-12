@@ -79,13 +79,39 @@ Páginas: `/`, `/resorts/amangiri`, `/villas`.
 
 ## R4. My Private Villas
 
-Solo se pudo leer el texto de la portada: «club» de propietarios que alquilan directo y más
-barato, vídeo del mes, oferta especial (con fechas pasadas), boletín. Sin estructura legible.
-El buscador (`/search/`, URL de Julio del 12/11) se carga con JavaScript y no se pudo leer
-sin navegador. Solo se ven los textos de un **formulario de solicitud en varios pasos**: lista de
-deseos, planes de viaje, con quién viajas, presupuesto y datos de contacto, más un chat en vivo.
-Es un enfoque de «te ayudamos a elegir» en vez de reserva directa.
-**Pendiente**: la URL de una villa concreta, o que Julio diga qué le gusta de esta web.
+Fuente: 9 capturas de Julio (12/11) del buscador (`/search/`) y de una ficha (Isla Sa Ferradura,
+Ibiza). El HTML se carga con JavaScript y no se pudo leer directamente.
+
+- **Menú**: Villas · Destinations · Collections · Concierge | Magazine; a la derecha
+  «Shortlist» (favoritos, botón negro) y «Contact».
+- **Buscador**: filtros en columna izquierda: «Where or what?» (destino o actividad), «When?»,
+  **precio por semana con histograma** (7.000–840.000 €), dormitorios y huéspedes con +/−,
+  **filtros rápidos en chips** (piscina climatizada, a pie de playa, a pie del pueblo, tenis,
+  chef privado, gimnasio, jacuzzi, bodas y eventos, aire acondicionado…) y «más filtros».
+  Arriba: «Send enquiry», «Map view», «solo ofertas», orden «Popular», «847 properties found».
+- **Tarjeta**: foto vertical grande, insignias lilas sobre la foto («World's Top Villas»,
+  «2026-2027 Specials»), corazón, zona, nombre, «6 BEDROOMS — 12 GUESTS», «From EUR … per week»
+  en rango.
+- **Ficha**: foto aérea a sangre con cabecera transparente, H1 grande y fino, «Gallery» y
+  «Video»; **subnavegación fija por anclas** (Overview, Services, Features, Bedrooms, Location,
+  FAQ, Reviews); migas y «Map view»; titular + párrafo corto + «View more»; **3 destacados con
+  icono** (embarcadero, 2 piscinas, spa); **caja lateral fija**: «When? Add dates», «añade fechas
+  para ver el precio exacto», rango semanal, «Send enquiry» (negro) y «Add to shortlist»
+  (contorno), con una opinión destacada debajo; servicios incluidos / a petición y niveles
+  Essential · Signature · Prestige; equipamiento interior / exterior; resumen de dormitorios +
+  «ver detalle»; mapa con **«ubicación aproximada por privacidad»**, «sobre la zona» y
+  **distancias en minutos en coche**; **FAQ en acordeón** + «¿Más preguntas? Habla con nuestros
+  expertos · Programar llamada»; carrusel de opiniones; similares; pie con boletín, sellos de
+  socios, dirección, WhatsApp y redes. Chat flotante.
+- **Estilo**: fondo blanco, negro + acento lila, titulares finos sin serifa, etiquetas en
+  mayúsculas espaciadas, botones rectos negros o de contorno, mucho aire.
+- **Copiar**: subnavegación por anclas en la ficha; caja fija que pide fechas antes del precio;
+  destacados con icono (3, no 8); distancias en minutos; aviso de ubicación aproximada; FAQ por
+  propiedad + «programar llamada»; lista de favoritos para comparar; chips de filtros rápidos e
+  histograma de precio.
+- **Evitar**: precios en rango por semana (nosotros damos precio cerrado), solo «solicitud» sin
+  reserva directa, insignias sobre las fotos, opiniones anónimas («Trusted client»), chat
+  flotante, sellos de socios en el pie.
 
 ## Conclusiones para nuestra web (propuesta, sin cambiar aún los mockups)
 
@@ -102,11 +128,14 @@ versión móvil como referencia principal; la de escritorio es la ampliación.
    en escritorio, como Aman). Máximo dos niveles; nada de megamenús de 80 enlaces.
 4. **Tarjeta de propiedad mínima**: foto, nombre, zona, «huéspedes · dormitorios · baños» y, solo
    con fechas elegidas, el total de la estancia. Sin insignias ni sellos.
-5. **Ficha**: galería por estancias, datos en una línea, tarjetas por dormitorio, servicios
+5. **Ficha**: subnavegación fija por anclas (como My Private Villas), galería por estancias,
+   datos en una línea, 3 destacados con icono, tarjetas por dormitorio, servicios
    incluidos y extras con precio, calendario con precio y estancia mínima, zona aproximada,
-   condiciones claras, opiniones con fecha. Precio cerrado (lo confirma marOS), nunca «indicativo».
-6. **Buscador** con flexibilidad de fechas (±días) y **temas con número** en Stay y en cada zona
-   (piscina climatizada, vistas al mar, familias, golf, mascotas).
+   distancias en minutos, condiciones claras, FAQ, opiniones con fecha. Precio cerrado (lo
+   confirma marOS), nunca «indicativo» ni en rango.
+6. **Buscador** con flexibilidad de fechas (±días), **temas con número** en Stay y en cada zona
+   (piscina climatizada, vistas al mar, familias, golf, mascotas) y filtros rápidos en chips. En
+   móvil, los filtros en una capa. Favoritos para comparar (sin cuenta, guardados en el navegador).
 7. **Texto corto**: párrafos breves; los textos largos de SEO van al final o en la guía de zona.
 8. **Paleta neutra cálida** y la fotografía como protagonista; mayúsculas solo en etiquetas.
 9. **Experto local** como hilo de marca: «habla con nosotros» con persona y horario, no un chat
