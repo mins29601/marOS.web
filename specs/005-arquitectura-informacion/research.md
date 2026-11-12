@@ -123,6 +123,16 @@ Ibiza). El HTML se carga con JavaScript y no se pudo leer directamente.
   reserva directa, insignias sobre las fotos, opiniones anónimas («Trusted client»), chat
   flotante, sellos de socios en el pie.
 
+## Lo que nos diferencia (Julio, 12 de noviembre de 2026)
+
+- **Pocas propiedades, todas gestionadas por nosotros.** No competimos en volumen (My Private
+  Villas: 847); competimos en conocerlas de primera mano.
+- **Los servicios se venden también a quien no se aloja con nosotros.** Concierge no es un
+  complemento de la ficha: es una línea de negocio con entrada propia.
+- **El carácter local hay que potenciarlo.**
+- **Instagram y vídeo**: hacemos muchos vídeos; cada propiedad tiene siempre varios vídeos de
+  presentación.
+
 ## Conclusiones para nuestra web (propuesta, sin cambiar aún los mockups)
 
 **Mobile first**: se diseña primero a 390 px y se amplía. Cada pantalla de la spec 005 tendrá su
@@ -151,6 +161,22 @@ versión móvil como referencia principal; la de escritorio es la ampliación.
 8. **Paleta neutra cálida** y la fotografía como protagonista; mayúsculas solo en etiquetas.
 9. **Experto local** como hilo de marca: «habla con nosotros» con persona y horario, no un chat
    genérico.
+
+10. **Catálogo corto, filtros ligeros.** Con pocas propiedades sobran el histograma de precio,
+    el orden y los ~15 filtros: bastan fechas, huéspedes y unos pocos temas en chips. El mapa,
+    opcional. Mejor tarjetas grandes y una buena portada de zona.
+11. **«Gestionadas por nosotros» como promesa visible**: en portada, en el listado y en la ficha
+    (quién la gestiona, persona de contacto, conocemos la casa). Sin sellos de terceros.
+12. **Servicios con peso propio**: en el menú principal y en la portada al nivel de los
+    alquileres, con páginas que funcionan sin reserva de alojamiento (solicitud directa). En la
+    ficha de propiedad, además, como extras.
+13. **Vídeo como protagonista**: en la ficha, el vídeo va junto a la galería (botón «Vídeo» en la
+    primera imagen y una sección de vídeos de la casa, en vertical para móvil). En portada y
+    zonas, una franja de vídeos cortos estilo Instagram enlazada a la cuenta. Los vídeos se
+    alojan fuera de IONOS (no en el servidor compartido) y se cargan solo al pulsar, para no
+    penalizar la velocidad (principio VII).
+14. **Lo local en todo**: guías de zona hechas por el equipo, recomendaciones propias y caras del
+    equipo; nada de textos genéricos.
 
 Estas conclusiones se aplicarán a los wireframes cuando Julio dé su feedback (spec 005, paso 1
 del proceso de diseño).
