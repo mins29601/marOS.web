@@ -39,32 +39,32 @@
   "deposit": 1500,
   "photos": [
     {
-      "url": "https://picsum.photos/seed/lodgify-373016-1/1600/1067",
+      "url": "mock:photos/lodgify-373016-1.jpg",
       "order": 1,
       "hash": "mock-lodgify-373016-1"
     },
     {
-      "url": "https://picsum.photos/seed/lodgify-373016-2/1600/1067",
+      "url": "mock:photos/lodgify-373016-2.jpg",
       "order": 2,
       "hash": "mock-lodgify-373016-2"
     },
     {
-      "url": "https://picsum.photos/seed/lodgify-373016-3/1600/1067",
+      "url": "mock:photos/lodgify-373016-3.jpg",
       "order": 3,
       "hash": "mock-lodgify-373016-3"
     },
     {
-      "url": "https://picsum.photos/seed/lodgify-373016-4/1600/1067",
+      "url": "mock:photos/lodgify-373016-4.jpg",
       "order": 4,
       "hash": "mock-lodgify-373016-4"
     },
     {
-      "url": "https://picsum.photos/seed/lodgify-373016-5/1600/1067",
+      "url": "mock:photos/lodgify-373016-5.jpg",
       "order": 5,
       "hash": "mock-lodgify-373016-5"
     }
   ],
   "updated_at": "2026-11-12T09:00:00Z",
-  "etag": "\"mock-lodgify-373016-1\"",
+  "etag": "\"mock-lodgify-373016-2\"",
   "web_url_hint": null
 }

@@ -39,32 +39,32 @@
   "deposit": 2000,
   "photos": [
     {
-      "url": "https://picsum.photos/seed/villa-concha-1/1600/1067",
+      "url": "mock:photos/villa-concha-1.jpg",
       "order": 1,
       "hash": "mock-villa-concha-1"
     },
     {
-      "url": "https://picsum.photos/seed/villa-concha-2/1600/1067",
+      "url": "mock:photos/villa-concha-2.jpg",
       "order": 2,
       "hash": "mock-villa-concha-2"
     },
     {
-      "url": "https://picsum.photos/seed/villa-concha-3/1600/1067",
+      "url": "mock:photos/villa-concha-3.jpg",
       "order": 3,
       "hash": "mock-villa-concha-3"
     },
     {
-      "url": "https://picsum.photos/seed/villa-concha-4/1600/1067",
+      "url": "mock:photos/villa-concha-4.jpg",
       "order": 4,
       "hash": "mock-villa-concha-4"
     },
     {
-      "url": "https://picsum.photos/seed/villa-concha-5/1600/1067",
+      "url": "mock:photos/villa-concha-5.jpg",
       "order": 5,
       "hash": "mock-villa-concha-5"
     }
   ],
   "updated_at": "2026-11-12T09:00:00Z",
-  "etag": "\"mock-villa-concha-1\"",
+  "etag": "\"mock-villa-concha-2\"",
   "web_url_hint": null
 }
