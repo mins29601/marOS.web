@@ -19,8 +19,8 @@ GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  
 
 | | Pruebas |
 |---|---|
-| URL | `https://staging.<temporal>` |
-| Quién entra | solo los emails de la lista de Access (código de un solo uso al email) |
+| URL | `https://staging.privatevillacollection.com` |
+| Quién entra | cualquier email `@marbellainstyle.com` (Access envía un código de un solo uso) |
 | Buscadores | `noindex` triple: ajuste de WordPress + cabecera `X-Robots-Tag` + `robots.txt` cerrado |
 | Servidor de IONOS | solo acepta tráfico que venga de Cloudflare (`.htaccess`) |
 | Correo de WordPress | bloqueado: se anota en el log, nunca sale a clientes |
@@ -31,15 +31,15 @@ GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  
 
 ## Antes de empezar
 
-- [ ] **Dominio temporal** decidido (en este documento, `<temporal>`).
-- [ ] **Emails** que pueden entrar en pruebas.
+- [x] **Dominio temporal**: `privatevillacollection.com` (Julio, 13/11).
+- [x] **Quién entra**: todos los emails `@marbellainstyle.com` (Julio, 13/11).
 - [ ] Acceso al panel de IONOS, a una cuenta de Cloudflare (gratis) y a GitHub como dueño del repo.
 - [ ] Las ramas de la planificación y del entorno local fusionadas en `main` (PR #1, #3 y #4, y la de
       este documento): GitHub solo deja lanzar a mano los workflows que ya están en `main`.
 
 ## 1. Dominio temporal en Cloudflare · [Tú], 15 min + espera
 
-1. IONOS → **Dominios y SSL** → comprar el dominio temporal. No hace falta correo ni web en él.
+1. IONOS → **Dominios y SSL** → comprar `privatevillacollection.com` (si aún no es tuyo). No hace falta correo ni web en él.
 2. Cloudflare → **Add a site** → el dominio → plan **Free**. Cloudflare muestra dos nameservers.
 3. IONOS → el dominio → **Nameservers** → «Usar nameservers propios» → pegar los dos de Cloudflare.
 4. Esperar el correo de Cloudflare «Your domain is now active» (minutos u horas).
@@ -49,7 +49,7 @@ GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  
 ## 2. Hosting en IONOS · [Tú], 20 min
 
 1. **Carpeta**: IONOS → Hosting → **Webspace** → crear la carpeta `staging` en la raíz.
-2. **Subdominio**: IONOS → el dominio temporal → Subdominios → crear `staging` → «Usar con
+2. **Subdominio**: IONOS → `privatevillacollection.com` → Subdominios → crear `staging` → «Usar con
    hosting» → carpeta `staging`. Como el DNS está en Cloudflare, IONOS te enseña la **IP del
    servidor**: apúntala.
 3. **PHP**: Hosting → **PHP** → para `staging`, la versión 8.3 o la más alta estable.
@@ -63,9 +63,9 @@ GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  
 1. Cloudflare → **DNS** → registro `A` `staging` → la IP del paso 2.2 → **Proxied** (nube naranja).
 2. Certificado entre Cloudflare e IONOS, por este orden de preferencia:
    - **Certificado de origen de Cloudflare** (SSL/TLS → Origin Server → Create, 15 años, para
-     `*.<temporal>` y `<temporal>`) importado en IONOS → SSL → «Subir certificado», si tu plan lo
+     `*.privatevillacollection.com` y `privatevillacollection.com`) importado en IONOS → SSL → «Subir certificado», si tu plan lo
      permite. No caduca ni depende de que IONOS pueda validar el dominio.
-   - Si IONOS no permite importarlo: certificado SSL de IONOS para `staging.<temporal>` emitido con
+   - Si IONOS no permite importarlo: certificado SSL de IONOS para `staging.privatevillacollection.com` emitido con
      la nube **gris** (solo DNS) y, una vez emitido, volver a naranja. Hay que vigilar su
      renovación anual.
 
@@ -91,9 +91,10 @@ Cloudflare → **Zero Trust** (gratis hasta 50 personas; pide un nombre de equip
 
 1. **Settings → Authentication**: dejar activado **One-time PIN** (código al email).
 2. **Access → Applications → Add → Self-hosted**: nombre «MIS pruebas», dominio
-   `staging.<temporal>`, sesión de 7 días.
-   - Política **Equipo** (Allow): Emails → la lista acordada (o «Emails ending in»
-     `@marbellainstyle.com`).
+   `staging.privatevillacollection.com`, sesión de 7 días.
+   - Política **Equipo** (Allow): **Emails ending in** `@marbellainstyle.com` (decisión de
+     Julio, 13/11). Como el correo está en Google Workspace, se puede añadir además
+     «Google» como forma de entrar (un clic, sin código); el código por email sirve igual.
    - Política **GitHub** (Service Auth): token de servicio del punto 3, para que la comprobación
      tras cada despliegue pueda entrar.
 3. **Access → Service Auth → Create service token** «github-smoke»: copia el *Client ID* y el
@@ -102,12 +103,12 @@ Cloudflare → **Zero Trust** (gratis hasta 50 personas; pide un nombre de equip
    solo para `/wp-json/mcp/*` y `/wp-json/maros/v1/webhook` (decisión D10), protegidas por
    contraseña de aplicación y firma.
 5. Opcional, segunda capa de noindex en Cloudflare: **Rules → Transform Rules → Response headers**
-   → si el host es `staging.<temporal>`, añadir `X-Robots-Tag: noindex, nofollow`.
+   → si el host es `staging.privatevillacollection.com`, añadir `X-Robots-Tag: noindex, nofollow`.
 
 ## 6. `wp-config.php` en el servidor · [Tú] o [Juntos], 10 min
 
 1. Copia [`config/wp-config.staging.example.php`](../../config/wp-config.staging.example.php).
-2. Rellena lo que va entre `<>`: los datos de la base del paso 2.4, `<temporal>` y la ruta
+2. Rellena lo que va entre `<>`: los datos de la base del paso 2.4 y la ruta
    absoluta de tu cuenta (la da `pwd` por SSH). Las claves `AUTH_KEY…` se generan en
    https://api.wordpress.org/secret-key/1.1/salt/.
 3. Súbelo como `staging/wp-config.php` con el **Webspace Explorer** de IONOS o por SFTP.
@@ -126,7 +127,7 @@ GitHub → `mins29601/marOS.web` → **Settings → Environments → New environ
 | `SSH_PORT` | `22` |
 | `WP_PATH` | `staging` |
 | `MIS_PATH` | `mis/staging` |
-| `SITE_URL` | `https://staging.<temporal>` |
+| `SITE_URL` | `https://staging.privatevillacollection.com` |
 | `WP_ADMIN_USER` | tu usuario de WordPress, p. ej. `julio` |
 | `WP_ADMIN_EMAIL` | tu email |
 | `DEPLOY_MODE` | `symlink` (o `copy` si el paso 4 dijo que no hay enlaces) |
@@ -152,7 +153,7 @@ Mientras `SSH_HOST` esté vacío, el despliegue automático no hace nada (no fal
 2. **Cron real**: IONOS → Hosting → **Cron jobs** (o `crontab -e` por SSH), cada 5 minutos:
    `php $HOME/bin/wp --path=$HOME/staging cron event run --due-now --quiet`
    (si IONOS trae WP-CLI propio, `wp` en lugar de `php $HOME/bin/wp`).
-3. Abre `https://staging.<temporal>`: Access te pide el email, llega un código y entras.
+3. Abre `https://staging.privatevillacollection.com`: Access te pide el email, llega un código y entras.
 
 Desde aquí, cada PR fusionado en `main` se despliega solo en pruebas (workflow **Deploy pruebas**)
 y al final comprueba que la web responde, que lleva `noindex` y que sin identificarse no se ve.
@@ -162,9 +163,9 @@ Para enseñar una rama antes de fusionarla: Actions → Deploy pruebas → Run w
 
 | Comprobación | Cómo |
 |---|---|
-| Sin permiso no se ve | ventana privada → `staging.<temporal>` → pide email |
-| No se indexa | `curl -sI https://staging.<temporal>` con token → `x-robots-tag: noindex, nofollow`; `/robots.txt` → `Disallow: /` |
-| El servidor no responde sin Cloudflare | `curl -sk --resolve staging.<temporal>:443:<IP de IONOS> https://staging.<temporal>/` → 403 |
+| Sin permiso no se ve | ventana privada → `staging.privatevillacollection.com` → pide email |
+| No se indexa | `curl -sI https://staging.privatevillacollection.com` con token → `x-robots-tag: noindex, nofollow`; `/robots.txt` → `Disallow: /` |
+| El servidor no responde sin Cloudflare | `curl -sk --resolve staging.privatevillacollection.com:443:<IP de IONOS> https://staging.privatevillacollection.com/` → 403 |
 | El correo no sale | enviar un formulario → no llega; aparece «Correo bloqueado» en `debug.log` |
 | marOS | aviso azul en el escritorio de WordPress: «Entorno staging · marOS: mock» |
 

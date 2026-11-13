@@ -14,8 +14,8 @@ producción a pruebas e instalar MCP Adapter en los dos entornos desde el inicio
 
 «El dominio no será el de marbellainstyle todavía. Usaremos uno temporal.» Por tanto:
 
-- La fase 1 se monta sobre un **dominio temporal** (nombre pendiente, `<temporal>` en este plan):
-  producción en `www.<temporal>` y pruebas en `staging.<temporal>`, los dos detrás de Cloudflare.
+- La fase 1 se monta sobre un **dominio temporal** (`privatevillacollection.com`, decidido por Julio el 13/11):
+  producción en `www.privatevillacollection.com` y pruebas en `staging.privatevillacollection.com`, los dos detrás de Cloudflare.
   Producción también queda protegida con Access hasta el lanzamiento.
 - Como el dominio temporal es nuevo, se da de alta en Cloudflare desde cero, sin riesgo de cortes.
 - **marbellainstyle.com no se toca en la fase 1.** Los pasos 0 y 1 (pasar sus DNS a Cloudflare sin
@@ -125,7 +125,7 @@ marOS.web/
 
 | | Pruebas | Producción |
 |---|---|---|
-| Host | `staging.<temporal>` | `www.<temporal>` hasta el lanzamiento; después `www.marbellainstyle.com` |
+| Host | `staging.privatevillacollection.com` | `www.privatevillacollection.com` hasta el lanzamiento; después `www.marbellainstyle.com` |
 | Carpeta IONOS | `~/staging/` | `~/production/` |
 | Base de datos | propia | propia |
 | marOS | pruebas | producción |
@@ -186,7 +186,7 @@ lo compruebo después.
 
 | # | Quién | Qué |
 |---|---|---|
-| 2.1 | [Tú] | En IONOS: crear las carpetas `production` y `staging`, dos bases de datos MySQL y asignar `www.<temporal>` y `staging.<temporal>` a sus carpetas |
+| 2.1 | [Tú] | En IONOS: crear las carpetas `production` y `staging`, dos bases de datos MySQL y asignar `www.privatevillacollection.com` y `staging.privatevillacollection.com` a sus carpetas |
 | 2.2 | [Tú] | Elegir PHP 8.3 para ambas carpetas |
 | 2.3 | [Tú] | Crear el usuario SSH/SFTP y añadir la clave pública que te daré (o pasarme usuario y método de acceso) |
 | 2.4 | [Juntos] | Certificado: SSL de IONOS si se puede validar con Cloudflare delante; si no, certificado de origen de Cloudflare importado en IONOS |
@@ -198,7 +198,7 @@ lo compruebo después.
 
 | # | Quién | Qué |
 |---|---|---|
-| 3.1 | [Tú] | Cloudflare Zero Trust → Access → aplicación para `staging.<temporal>` y `www.<temporal>` con los emails autorizados: Access pide el email al entrar y envía un código de un solo uso; solo entran los emails de la lista |
+| 3.1 | [Tú] | Cloudflare Zero Trust → Access → aplicación para `staging.privatevillacollection.com` y `www.privatevillacollection.com` con los emails autorizados: Access pide el email al entrar y envía un código de un solo uso; solo entran los emails de la lista |
 | 3.2 | [Tú] | Crear un token de servicio de Access para marOS pruebas (avisos a WordPress) y para el MCP; pasarme los ids, no los secretos |
 | 3.3 | [Claude] | mu-plugin `mis-entorno`: `noindex`, `X-Robots-Tag`, `robots.txt` cerrado y correo bloqueado en pruebas |
 | 3.4 | [Claude] | `.htaccess` que solo acepta IPs de Cloudflare en los dos entornos |

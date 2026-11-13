@@ -23,8 +23,8 @@ $table_prefix = 'mis_'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
 
 // ── Entorno ─────────────────────────────────────────────────────────────────────────────
 define( 'WP_ENVIRONMENT_TYPE', 'staging' );
-define( 'WP_HOME', 'https://staging.<temporal>' );
-define( 'WP_SITEURL', 'https://staging.<temporal>' );
+define( 'WP_HOME', 'https://staging.privatevillacollection.com' );
+define( 'WP_SITEURL', 'https://staging.privatevillacollection.com' );
 define( 'FORCE_SSL_ADMIN', true );
 define( 'DISABLE_WP_CRON', true );          // cron real de IONOS cada 5 minutos
 define( 'WP_DEBUG', true );

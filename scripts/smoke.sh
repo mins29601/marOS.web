@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Comprobaciones HTTP tras desplegar (spec 001, «Testing»).
-# Uso: SITE_URL=https://staging.<temporal> [CF_ACCESS_CLIENT_ID=… CF_ACCESS_CLIENT_SECRET=…] \
+# Uso: SITE_URL=https://staging.privatevillacollection.com [CF_ACCESS_CLIENT_ID=… CF_ACCESS_CLIENT_SECRET=…] \
 #      [EXPECT_NOINDEX=1] scripts/smoke.sh
 # Con Access delante, el runner entra con un token de servicio de Cloudflare Access.
 set -uo pipefail

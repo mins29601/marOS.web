@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-11
 
-**Status**: Borrador. Pruebas lista para montar (código y guía); pendientes el dominio temporal (Q6) y los emails de Access (Q5).
+**Status**: Borrador. Pruebas lista para montar (código y guía) en `staging.privatevillacollection.com`.
 
 **Fuentes**:
 
@@ -54,7 +54,7 @@ subdominio y su usuario SSH: producción y pruebas.
 
 **Acceptance Scenarios**:
 
-1. **Given** una persona sin permiso, **When** abre `staging.marbellainstyle.com`, **Then**
+1. **Given** una persona sin permiso, **When** abre `staging.privatevillacollection.com`, **Then**
    Cloudflare Access le pide identificarse y no ve la web.
 2. **Given** cualquier página de pruebas, **When** se pide, **Then** lleva `noindex` y la
    cabecera `X-Robots-Tag: noindex, nofollow`, y `robots.txt` lo prohíbe todo.
@@ -224,9 +224,11 @@ subdominio y su usuario SSH: producción y pruebas.
 - Mientras la API pública de marOS no exista, pruebas usa `MAROS_ENV=mock` con los JSON del repo
   (los mismos que en local); al estar lista, `MAROS_ENV=staging` y marOS pruebas. El mu-plugin
   `mis-entorno` impide en cualquier caso apuntar a marOS producción.
-- Q6: ¿Qué dominio temporal? Recomendación: uno nuevo registrado en IONOS y dado de alta en
-  Cloudflare, que no se parezca a la marca. → *pendiente*
-- Q5 (emails de Access) → *pendiente*.
+- Q6: ¿Qué dominio temporal? → **`privatevillacollection.com`** (Julio, 13/11, 13:55): pruebas en
+  `staging.privatevillacollection.com` y producción hasta el lanzamiento en
+  `www.privatevillacollection.com`.
+- Q5 (emails de Access) → **todos los emails `@marbellainstyle.com`** (Julio, 13/11, 13:55):
+  política de Access «Emails ending in `@marbellainstyle.com`».
 - Nada se cambia en las cuentas de IONOS ni de Cloudflare sin confirmación de Julio: los pasos de
   panel los hace Julio con la guía.
 

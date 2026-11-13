@@ -13,7 +13,7 @@ http://localhost:8888. Instalación y uso: [docs/runbooks/entorno-local.md](docs
 
 ## Pruebas (staging) en IONOS
 
-`https://staging.<temporal>`, privado con Cloudflare Access y sin indexar. Se despliega solo al
+`https://staging.privatevillacollection.com`, privado con Cloudflare Access y sin indexar. Se despliega solo al
 fusionar en `main`. Montaje paso a paso: [docs/runbooks/pruebas-ionos.md](docs/runbooks/pruebas-ionos.md).
 
 ## Specs (spec-kit)
