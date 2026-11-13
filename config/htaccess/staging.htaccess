@@ -1,0 +1,24 @@
+# Pruebas (staging) en IONOS. scripts/deploy.sh lo pone al principio del .htaccess del
+# servidor, entre las marcas MIS, sin tocar el bloque que gestiona WordPress.
+# Spec 001, US3 y FR-004.
+
+# 1. Nunca indexar (segunda capa; la primera es el mu-plugin mis-entorno).
+<IfModule mod_headers.c>
+	Header always set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+
+# 2. Solo se entra a través de Cloudflare (Access). Quien llame al servidor de IONOS
+#    directamente recibe 403. scripts/deploy.sh sustituye la línea de abajo por un
+#    «Require ip …» por cada rango publicado en https://www.cloudflare.com/ips/ en el
+#    momento de desplegar. Con DEPLOY_CF_ONLY=0 (primer arranque, antes de Cloudflare)
+#    se omite este bloque.
+#MIS_CLOUDFLARE_ONLY
+
+# 3. Ficheros que nunca se sirven.
+<FilesMatch "^(wp-config\.php|readme\.html|license\.txt|\.env.*|composer\.(json|lock))$">
+	Require all denied
+</FilesMatch>
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteRule ^xmlrpc\.php$ - [F,L]
+</IfModule>

@@ -1,0 +1,68 @@
+{
+  "id": "lodgify-000001",
+  "lodgify_id": 1,
+  "name": "Apartamento demo Puerto Banús",
+  "type": "apartment",
+  "publishable": true,
+  "max_guests": 4,
+  "bedrooms": 2,
+  "bathrooms": 2,
+  "beds": 3,
+  "zone": "puerto-banus",
+  "location": {
+    "area": "Puerto Banús",
+    "lat": 36.49,
+    "lng": -4.95,
+    "precision": "approx"
+  },
+  "amenities": [
+    "shared-pool",
+    "terrace",
+    "air-conditioning",
+    "wifi"
+  ],
+  "room_types": [
+    {
+      "id": 440099,
+      "name": "Apartamento",
+      "max_guests": 4,
+      "units": 1
+    }
+  ],
+  "fees": {
+    "cleaning": 120
+  },
+  "check_in": "15:00",
+  "check_out": "11:00",
+  "deposit": 500,
+  "photos": [
+    {
+      "url": "mock:photos/lodgify-000001-1.jpg",
+      "order": 1,
+      "hash": "mock-lodgify-000001-1"
+    },
+    {
+      "url": "mock:photos/lodgify-000001-2.jpg",
+      "order": 2,
+      "hash": "mock-lodgify-000001-2"
+    },
+    {
+      "url": "mock:photos/lodgify-000001-3.jpg",
+      "order": 3,
+      "hash": "mock-lodgify-000001-3"
+    },
+    {
+      "url": "mock:photos/lodgify-000001-4.jpg",
+      "order": 4,
+      "hash": "mock-lodgify-000001-4"
+    },
+    {
+      "url": "mock:photos/lodgify-000001-5.jpg",
+      "order": 5,
+      "hash": "mock-lodgify-000001-5"
+    }
+  ],
+  "updated_at": "2026-11-12T09:00:00Z",
+  "etag": "\"mock-lodgify-000001-2\"",
+  "web_url_hint": null
+}

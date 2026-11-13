@@ -1,0 +1,16 @@
+{
+  "name": "maros-web",
+  "private": true,
+  "description": "Web WordPress de Marbella in Style: herramientas de desarrollo",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "env:start": "wp-env start",
+    "env:stop": "wp-env stop",
+    "env:reset": "wp-env destroy && wp-env start",
+    "env:logs": "wp-env logs development",
+    "wp": "wp-env run cli wp"
+  },
+  "devDependencies": {
+    "@wordpress/env": "^10.30.0"
+  }
+}

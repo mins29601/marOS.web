@@ -1,0 +1,44 @@
+{
+  "data": [
+    {
+      "id": "lodgify-373016",
+      "name": "Villa Feliz",
+      "type": "villa",
+      "publishable": true,
+      "max_guests": 10,
+      "bedrooms": 5,
+      "bathrooms": 5,
+      "zone": "nueva-andalucia",
+      "updated_at": "2026-11-12T09:00:00Z",
+      "etag": "\"mock-lodgify-373016-2\""
+    },
+    {
+      "id": "villa-concha",
+      "name": "Villa Concha",
+      "type": "villa",
+      "publishable": true,
+      "max_guests": 8,
+      "bedrooms": 4,
+      "bathrooms": 4,
+      "zone": "sierra-blanca",
+      "updated_at": "2026-11-12T09:00:00Z",
+      "etag": "\"mock-villa-concha-2\""
+    },
+    {
+      "id": "lodgify-000001",
+      "name": "Apartamento demo Puerto Banús",
+      "type": "apartment",
+      "publishable": true,
+      "max_guests": 4,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "zone": "puerto-banus",
+      "updated_at": "2026-11-12T09:00:00Z",
+      "etag": "\"mock-lodgify-000001-2\""
+    }
+  ],
+  "meta": {
+    "count": 3,
+    "mock": true
+  }
+}

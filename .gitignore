@@ -1,0 +1,7 @@
+node_modules/
+.wp-env.override.json
+*.sql
+*.sql.gz
+.DS_Store
+vendor/
+paid-plugins/
