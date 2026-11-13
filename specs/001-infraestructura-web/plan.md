@@ -35,7 +35,7 @@ Pruebas se monta antes que producción para ver la maqueta real. Guía para los 
 | Arranque único: WordPress, Ollie y plugins de `.wp-env.json`, tema hijo, idiomas y contenido de ejemplo | `.github/workflows/bootstrap-staging.yml`, `scripts/bootstrap.sh`, `scripts/remote/bootstrap-remote.sh` |
 | Comprobación tras desplegar (200, `noindex`, `robots.txt`, Access) | `scripts/smoke.sh` |
 | `wp-config.php` de pruebas sin secretos | `config/wp-config.staging.example.php` |
-| `.htaccess`: solo IPs de Cloudflare (leídas al desplegar), `X-Robots-Tag`, ficheros prohibidos | `config/htaccess/staging.htaccess` |
+| `.htaccess`: solo peticiones con la cabecera secreta de Cloudflare (`X-MIS-Origin`; IONOS tiene proxy y no sirve filtrar por IP), `X-Robots-Tag`, ficheros prohibidos | `config/htaccess/staging.htaccess` |
 | `noindex` triple y correo bloqueado | `wp-content/mu-plugins/mis-entorno.php` |
 
 Disposición en IONOS: WordPress en `~/staging/`; el código del repo en
@@ -96,7 +96,7 @@ marOS.web/
 │   ├── plugins.md                # plugins y temas de terceros: versión, licencia, por qué
 │   ├── wp-config.production.example.php   # plantilla sin secretos
 │   ├── wp-config.staging.example.php
-│   ├── htaccess/                 # reglas de Apache: solo IPs de Cloudflare, cabeceras
+│   ├── htaccess/                 # reglas de Apache: cabecera secreta de Cloudflare, cabeceras
 │   └── cloudflare/               # reglas de caché, WAF, Access y redirecciones documentadas
 ├── redirects/
 │   └── redirects.csv             # mapa de URLs antiguas → nuevas (spec 002)
@@ -201,7 +201,7 @@ lo compruebo después.
 | 3.1 | [Tú] | Cloudflare Zero Trust → Access → aplicación para `staging.privatevillacollection.com` y `www.privatevillacollection.com` con los emails autorizados: Access pide el email al entrar y envía un código de un solo uso; solo entran los emails de la lista |
 | 3.2 | [Tú] | Crear un token de servicio de Access para marOS pruebas (avisos a WordPress) y para el MCP; pasarme los ids, no los secretos |
 | 3.3 | [Claude] | mu-plugin `mis-entorno`: `noindex`, `X-Robots-Tag`, `robots.txt` cerrado y correo bloqueado en pruebas |
-| 3.4 | [Claude] | `.htaccess` que solo acepta IPs de Cloudflare en los dos entornos |
+| 3.4 | [Claude] | `.htaccess` que solo acepta peticiones con la cabecera secreta de Cloudflare en los dos entornos |
 | 3.5 | [Tú] | Regla de transformación en Cloudflare que añade `X-Robots-Tag: noindex` a `staging.` (segunda capa) |
 
 ### Paso 4. Despliegue con Git

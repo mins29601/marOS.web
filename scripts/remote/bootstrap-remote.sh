@@ -29,6 +29,8 @@ else
 	wp theme activate marbellainstyle
 	wp rewrite structure '/%postname%/' --hard
 	SETUP="idiomas"; [[ "$SKIP_CONTENT" == "1" ]] || SETUP="idiomas contenido-inicial"
+	# Propiedades del mock (o de marOS pruebas): ficha, zona, equipamiento y fotos.
+	[[ "$SKIP_CONTENT" == "1" ]] || wp maros sync --publish || echo "  (aviso: wp maros sync falló)"
 	for s in $SETUP; do
 		f="$MIS/current/scripts/setup/$s.php"
 		if [[ -f "$f" ]]; then wp eval-file "$f"; fi

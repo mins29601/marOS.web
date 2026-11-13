@@ -43,8 +43,8 @@ jobs:
 
       - name: 2. Código del repo
         env:
-          DEPLOY_MODE: ${{ vars.DEPLOY_MODE || 'symlink' }}
-          DEPLOY_CF_ONLY: ${{ vars.DEPLOY_CF_ONLY || '1' }}
+          DEPLOY_MODE: ${{ vars.DEPLOY_MODE || 'copy' }}
+          ORIGIN_SECRET: ${{ secrets.ORIGIN_SECRET }}
           HTACCESS: config/htaccess/staging.htaccess
         run: scripts/deploy.sh
 

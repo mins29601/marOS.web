@@ -22,7 +22,7 @@ GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  
 | URL | `https://staging.privatevillacollection.com` |
 | Quién entra | cualquier email `@marbellainstyle.com`, con su cuenta de Google (un clic) o con un código de un solo uso al email |
 | Buscadores | `noindex` triple: ajuste de WordPress + cabecera `X-Robots-Tag` + `robots.txt` cerrado |
-| Servidor de IONOS | solo acepta tráfico que venga de Cloudflare (`.htaccess`) |
+| Servidor de IONOS | solo acepta peticiones con la cabecera secreta que añade Cloudflare (`X-MIS-Origin`, comprobada en `.htaccess`) |
 | Correo de WordPress | bloqueado: se anota en el log, nunca sale a clientes |
 | Datos de propiedades | al principio el **mock** del repo (las mismas propiedades de ejemplo que en local); cuando la API pública de marOS esté lista, **marOS pruebas** |
 | Código | se despliega solo, al fusionar en `main` (workflow «Deploy pruebas») |
@@ -118,7 +118,15 @@ Cloudflare → **Zero Trust** (gratis hasta 50 personas; pide un nombre de equip
 4. Más adelante, cuando conectemos el MCP de pruebas y los avisos de marOS: política **Bypass**
    solo para `/wp-json/mcp/*` y `/wp-json/maros/v1/webhook` (decisión D10), protegidas por
    contraseña de aplicación y firma.
-5. Opcional, segunda capa de noindex en Cloudflare: **Rules → Transform Rules → Response headers**
+5. **Cabecera secreta hacia IONOS** (sustituye al filtro por IPs, que no sirve porque IONOS
+   tiene un proxy delante de Apache): genera un secreto de 32 letras y números
+   (`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32 | pbcopy`) y:
+   - Cloudflare → privatevillacollection.com → **Rules → Transform Rules → Modify Request
+     Header → Create rule** «MIS origen»: si *Hostname* es igual a
+     `staging.privatevillacollection.com` → **Set static** `X-MIS-Origin` = el secreto.
+   - GitHub → environment `staging` → secreto **`ORIGIN_SECRET`** = el mismo secreto.
+   El siguiente despliegue lo exige en `.htaccess`; sin la regla de Cloudflare la web daría 403.
+6. Opcional, segunda capa de noindex en Cloudflare: **Rules → Transform Rules → Response headers**
    → si el host es `staging.privatevillacollection.com`, añadir `X-Robots-Tag: noindex, nofollow`.
 
 ## 6. `wp-config.php` en el servidor · [Tú] o [Juntos], 10 min
@@ -147,8 +155,7 @@ GitHub → `mins29601/marOS.web` → **Settings → Environments → New environ
 | `WP_ADMIN_USER` | tu usuario de WordPress, p. ej. `julio` |
 | `WP_ADMIN_EMAIL` | tu email |
 | `MIS_PHP` | `php8.4-cli` (el PHP de la terminal de IONOS es 4.4) |
-| `DEPLOY_MODE` | `symlink` (o `copy` si el paso 4 dijo que no hay enlaces) |
-| `DEPLOY_CF_ONLY` | `1` (`0` solo si hay que probar sin Cloudflare) |
+| `DEPLOY_MODE` | `copy` (en IONOS Apache no sirve los CSS y JS a través de enlaces simbólicos; comprobado el 13/11) |
 
 **Secretos** (Environment secrets):
 
@@ -158,6 +165,7 @@ GitHub → `mins29601/marOS.web` → **Settings → Environments → New environ
 | `SSH_KNOWN_HOSTS` | contenido de `~/.ssh/mis_staging_known_hosts` |
 | `WP_ADMIN_PASSWORD` | contraseña larga para tu usuario de WordPress de pruebas |
 | `CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET` | token «github-smoke» del paso 5.3 |
+| `ORIGIN_SECRET` | la cabecera secreta del paso 5.5 |
 
 Mientras `SSH_HOST` esté vacío, el despliegue automático no hace nada (no falla).
 
@@ -200,5 +208,4 @@ guardan las 5 últimas versiones en `~/mis/staging/releases/`.
 
 ## Pendiente de comprobar
 
-- Que IONOS no tenga otro proxy delante de Apache: si lo tuviera, el filtro por IPs de Cloudflare
-  bloquearía todo; se cambiaría por una cabecera secreta que añade Cloudflare.
+- ~~Filtro por IPs de Cloudflare~~: IONOS tiene un proxy delante de Apache y daba 403 a todo (13/11); sustituido por la cabecera secreta `X-MIS-Origin` (paso 5.5).

@@ -18,18 +18,26 @@ concurrency:
 
 jobs:
   deploy:
-    # Hasta que el entorno «staging» esté configurado, el workflow no hace nada.
-    if: ${{ vars.SSH_HOST != '' }}
     runs-on: ubuntu-latest
     environment:
       name: staging
       url: ${{ vars.SITE_URL }}
     steps:
+      # Hasta que el entorno «staging» esté configurado, no hace nada (las variables de un
+      # Environment solo se ven dentro del job, no en un «if» a nivel de job).
+      - name: ¿Entorno configurado?
+        id: cfg
+        run: |
+          if [ -n "${{ vars.SSH_HOST }}" ]; then echo "ok=1" >> "$GITHUB_OUTPUT"; else
+            echo "::notice::El entorno staging aún no está configurado; no se despliega."; fi
+
       - uses: actions/checkout@v4
+        if: steps.cfg.outputs.ok == '1'
         with:
           ref: ${{ inputs.ref || github.sha }}
 
       - name: Clave SSH de IONOS
+        if: steps.cfg.outputs.ok == '1'
         run: |
           install -m 700 -d ~/.ssh
           printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
@@ -37,6 +45,7 @@ jobs:
           printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
       - name: Desplegar
+        if: steps.cfg.outputs.ok == '1'
         env:
           SSH_HOST: ${{ vars.SSH_HOST }}
           SSH_USER: ${{ vars.SSH_USER }}
@@ -44,12 +53,13 @@ jobs:
           MIS_PHP: ${{ vars.MIS_PHP }}
           WP_PATH: ${{ vars.WP_PATH }}
           MIS_PATH: ${{ vars.MIS_PATH }}
-          DEPLOY_MODE: ${{ vars.DEPLOY_MODE || 'symlink' }}
-          DEPLOY_CF_ONLY: ${{ vars.DEPLOY_CF_ONLY || '1' }}
+          DEPLOY_MODE: ${{ vars.DEPLOY_MODE || 'copy' }}
+          ORIGIN_SECRET: ${{ secrets.ORIGIN_SECRET }}
           HTACCESS: config/htaccess/staging.htaccess
         run: GITHUB_SHA="$(git rev-parse HEAD)" scripts/deploy.sh
 
       - name: Comprobar (smoke)
+        if: steps.cfg.outputs.ok == '1'
         env:
           SITE_URL: ${{ vars.SITE_URL }}
           CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
@@ -58,7 +68,7 @@ jobs:
         run: scripts/smoke.sh
 
       - name: Resumen
-        if: always()
+        if: always() && steps.cfg.outputs.ok == '1'
         run: |
           echo "### Pruebas: ${{ vars.SITE_URL }}" >> "$GITHUB_STEP_SUMMARY"
           echo "Commit desplegado: \`$(git rev-parse --short=12 HEAD)\`" >> "$GITHUB_STEP_SUMMARY"
