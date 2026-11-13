@@ -50,9 +50,12 @@ GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  
 
 1. **Carpeta**: IONOS → Hosting → **Webspace** → crear la carpeta `staging` en la raíz.
 2. **Subdominio**: IONOS → `privatevillacollection.com` → Subdominios → crear `staging` → «Usar con
-   hosting» → carpeta `staging`. Como el DNS está en Cloudflare, IONOS te enseña la **IP del
-   servidor**: apúntala.
-3. **PHP**: Hosting → **PHP** → para `staging`, la versión 8.3 o la más alta estable.
+   hosting» → carpeta `staging`.
+   **IP del servidor** (hace falta en el paso 3): el panel no siempre la enseña. Búscala en
+   Cloudflare → DNS → Records (al añadir el sitio copió los registros `A` de IONOS), en IONOS →
+   Hosting → detalles del contrato, o en el registro `A` de `@` de marbellainstyle.com si la web
+   actual está en el mismo contrato.
+3. **PHP**: Hosting → **PHP** → para `staging`, la **8.4** (la 8.5 es muy nueva para algunos plugins). Local usa la misma en `.wp-env.json`.
 4. **Base de datos**: Hosting → **Bases de datos** → crear MySQL (8.x) con la descripción
    «MIS pruebas». Apunta **host, nombre, usuario y contraseña** solo en tu gestor de contraseñas.
 5. **SSH**: Hosting → **SFTP y SSH** → apunta el **servidor** (`access-….webspace-host.com`) y el
