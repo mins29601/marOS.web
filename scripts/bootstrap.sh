@@ -22,7 +22,8 @@ THEMES="$(jq -r '.themes[] | select(startswith("https://")) | capture("theme/(?<
 
 {
 	printf 'WP_ADMIN_PASSWORD=%q\n' "$WP_ADMIN_PASSWORD"
-	cat "$(dirname "$0")/remote/bootstrap-remote.sh"
+	printf 'MIS_PHP=%q\n' "${MIS_PHP:-}"
+	cat "$(dirname "$0")/remote/php-bin.sh" "$(dirname "$0")/remote/bootstrap-remote.sh"
 } | ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "bash -s -- $(printf '%q ' \
 	"$PHASE" "$WP_PATH" "$MIS_PATH" "$SITE_URL" "$SITE_TITLE" "$WP_ADMIN_USER" "$WP_ADMIN_EMAIL" \
 	"$PLUGINS" "$THEMES" "${MIS_SKIP_CONTENT:-0}")"

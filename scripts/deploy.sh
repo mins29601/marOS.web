@@ -12,6 +12,7 @@
 #   DEPLOY_CF_ONLY              «1» (por defecto): el .htaccess solo admite IPs de Cloudflare
 #   HTACCESS                    plantilla, p. ej. config/htaccess/staging.htaccess
 #   GITHUB_SHA                  commit que se despliega
+#   MIS_PHP                     opcional: binario de PHP 8 en el servidor (si no, se busca)
 set -euo pipefail
 
 : "${SSH_HOST:?}" "${SSH_USER:?}" "${WP_PATH:?}" "${MIS_PATH:?}" "${HTACCESS:?}"
@@ -66,7 +67,10 @@ tar -C "$BUILD" -czf - . | "${SSH[@]}" \
 	"rm -rf ~/$MIS_PATH/releases/$SHORT && mkdir -p ~/$MIS_PATH/releases/$SHORT && tar -xzf - -C ~/$MIS_PATH/releases/$SHORT"
 
 echo "→ Activando ($DEPLOY_MODE)"
-"${SSH[@]}" bash -s -- "$WP_PATH" "$MIS_PATH" "$SHORT" "$DEPLOY_MODE" <<'REMOTE_SCRIPT'
+{
+	printf 'MIS_PHP=%q\n' "${MIS_PHP:-}"
+	cat "$(dirname "$0")/remote/php-bin.sh"
+	cat <<'REMOTE_SCRIPT'
 set -euo pipefail
 WP="$HOME/$1"; MIS="$HOME/$2"; SHORT="$3"; MODE="$4"
 REL="$MIS/releases/$SHORT"
@@ -107,14 +111,17 @@ awk '/^# BEGIN MIS$/{skip=1} !skip{print} /^# END MIS$/{skip=0}' "$WP/.htaccess"
 cat "$REL/htaccess-mis" "$WP/.htaccess.rest" > "$WP/.htaccess.new"
 mv -f "$WP/.htaccess.new" "$WP/.htaccess"; rm -f "$WP/.htaccess.rest"
 
-# Tareas tras desplegar (si hay WP-CLI).
-WPCLI="$(command -v wp || echo "$HOME/bin/wp")"
-if [[ -x "$WPCLI" ]] || [[ -f "$WPCLI" ]]; then
-	php "$WPCLI" --path="$WP" cache flush || true
-	php "$WPCLI" --path="$WP" rewrite flush || true
+# La carpeta de versiones nunca se sirve por web (en IONOS el home es la raíz del webspace).
+printf 'Require all denied\n' > "$(dirname "$MIS")/.htaccess"
+
+# Tareas tras desplegar.
+if "$PHPBIN" "$WPCLI" --path="$WP" core is-installed 2>/dev/null; then
+	"$PHPBIN" "$WPCLI" --path="$WP" cache flush || true
+	"$PHPBIN" "$WPCLI" --path="$WP" rewrite flush || true
 fi
 
 # Se guardan las 5 últimas versiones.
 ls -1dt "$MIS"/releases/*/ | tail -n +6 | xargs -r rm -rf
 echo "✓ Versión $SHORT activa en $WP"
 REMOTE_SCRIPT
+} | "${SSH[@]}" "bash -s -- $(printf '%q ' "$WP_PATH" "$MIS_PATH" "$SHORT" "$DEPLOY_MODE")"

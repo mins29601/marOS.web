@@ -28,7 +28,7 @@ define( 'WP_SITEURL', 'https://staging.privatevillacollection.com' );
 define( 'FORCE_SSL_ADMIN', true );
 define( 'DISABLE_WP_CRON', true );          // cron real de IONOS cada 5 minutos
 define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_LOG', '<ruta fuera de la web>/logs/debug.log' );
+define( 'WP_DEBUG_LOG', '/homepages/29/d668976456/htdocs/mis/logs/debug.log' ); // ~/mis no se sirve por web
 define( 'WP_DEBUG_DISPLAY', false );
 define( 'DISALLOW_FILE_EDIT', true );       // el código solo llega por GitHub
 define( 'WP_AUTO_UPDATE_CORE', 'minor' );
@@ -49,7 +49,7 @@ define( 'MAROS_ENV', 'mock' );
 define( 'MAROS_API_BASE', '' );                 // con el mock no se usa
 define( 'MAROS_API_KEY', '<clave de marOS pruebas, o cualquier texto con el mock>' );
 define( 'MAROS_WEBHOOK_SECRET', '<secreto del webhook de marOS pruebas>' );
-define( 'MAROS_MOCK_DIR', '<ruta absoluta de la cuenta>/mis/staging/current/mock/maros-api' );
+define( 'MAROS_MOCK_DIR', '/homepages/29/d668976456/htdocs/mis/staging/current/mock/maros-api' );
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', __DIR__ . '/' );

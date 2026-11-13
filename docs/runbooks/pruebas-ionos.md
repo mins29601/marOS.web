@@ -125,7 +125,7 @@ Cloudflare → **Zero Trust** (gratis hasta 50 personas; pide un nombre de equip
 
 1. Copia [`config/wp-config.staging.example.php`](../../config/wp-config.staging.example.php).
 2. Rellena lo que va entre `<>`: los datos de la base del paso 2.4 y la ruta
-   absoluta de tu cuenta (la da `pwd` por SSH). Las claves `AUTH_KEY…` se generan en
+   absoluta de tu cuenta (`/homepages/29/d668976456/htdocs`, ya puesta en la plantilla). Las claves `AUTH_KEY…` se generan en
    https://api.wordpress.org/secret-key/1.1/salt/.
 3. Súbelo como `staging/wp-config.php` con el **Webspace Explorer** de IONOS o por SFTP.
    Es el único sitio donde vive la contraseña de la base.
@@ -167,8 +167,9 @@ Mientras `SSH_HOST` esté vacío, el despliegue automático no hace nada (no fal
    el tema hijo, configura Polylang (inglés sin prefijo, español en `/es/`) y carga las páginas,
    menús y propiedades de ejemplo, como en local.
 2. **Cron real**: IONOS → Hosting → **Cron jobs** (o `crontab -e` por SSH), cada 5 minutos:
-   `php $HOME/bin/wp --path=$HOME/staging cron event run --due-now --quiet`
-   (si IONOS trae WP-CLI propio, `wp` en lugar de `php $HOME/bin/wp`).
+   `/usr/bin/php8.4-cli /homepages/29/d668976456/htdocs/bin/wp-cli.phar --path=/homepages/29/d668976456/htdocs/staging cron event run --due-now --quiet`
+   (en IONOS el `php` de la terminal es PHP 4.4: hay que llamar al PHP 8 por su nombre; el
+   arranque deja WP-CLI en `~/bin/wp-cli.phar`).
 3. Abre `https://staging.privatevillacollection.com`: Access ofrece «Google» (un clic) o el código por email, y entras.
 
 Desde aquí, cada PR fusionado en `main` se despliega solo en pruebas (workflow **Deploy pruebas**)
@@ -190,8 +191,13 @@ Para enseñar una rama antes de fusionarla: Actions → Deploy pruebas → Run w
 Actions → **Deploy pruebas** → Run workflow → `ref` = el commit anterior. En el servidor se
 guardan las 5 últimas versiones en `~/mis/staging/releases/`.
 
-## Pendiente de comprobar en la primera conexión
+## Comprobado en la primera conexión (13/11)
 
-- Si IONOS admite claves SSH, enlaces simbólicos y cron en este plan (paso 4).
+- Claves SSH: sí. Enlaces simbólicos: sí. `crontab`: disponible. rsync y WP-CLI: instalados.
+- Home de la cuenta: `/homepages/29/d668976456/htdocs` (es la raíz del webspace; `~/mis/.htaccess` lo cierra a la web).
+- El `php` de la terminal es PHP 4.4: los scripts buscan solos `php8.x-cli` (`scripts/remote/php-bin.sh`).
+
+## Pendiente de comprobar
+
 - Que IONOS no tenga otro proxy delante de Apache: si lo tuviera, el filtro por IPs de Cloudflare
   bloquearía todo; se cambiaría por una cabecera secreta que añade Cloudflare.
