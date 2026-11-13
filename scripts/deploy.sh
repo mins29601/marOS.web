@@ -113,6 +113,7 @@ mv -f "$WP/.htaccess.new" "$WP/.htaccess"; rm -f "$WP/.htaccess.rest"
 
 # La carpeta de versiones nunca se sirve por web (en IONOS el home es la raíz del webspace).
 printf 'Require all denied\n' > "$(dirname "$MIS")/.htaccess"
+mkdir -p "$(dirname "$MIS")/logs"   # WP_DEBUG_LOG de wp-config
 
 # Tareas tras desplegar.
 if "$PHPBIN" "$WPCLI" --path="$WP" core is-installed 2>/dev/null; then
