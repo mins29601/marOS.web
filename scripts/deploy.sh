@@ -9,7 +9,8 @@
 #   WP_PATH                     carpeta de WordPress relativa al home, p. ej. «staging»
 #   MIS_PATH                    carpeta de versiones relativa al home, p. ej. «mis/staging»
 #   DEPLOY_MODE                 «symlink» (por defecto) o «copy» si IONOS no admite enlaces
-#   DEPLOY_CF_ONLY              «1» (por defecto): el .htaccess solo admite IPs de Cloudflare
+#   ORIGIN_SECRET               secreto que Cloudflare añade como cabecera X-MIS-Origin; sin él
+#                               el .htaccess no comprueba el origen (IONOS tiene proxy: no sirven IPs)
 #   HTACCESS                    plantilla, p. ej. config/htaccess/staging.htaccess
 #   GITHUB_SHA                  commit que se despliega
 #   MIS_PHP                     opcional: binario de PHP 8 en el servidor (si no, se busca)
@@ -18,7 +19,6 @@ set -euo pipefail
 : "${SSH_HOST:?}" "${SSH_USER:?}" "${WP_PATH:?}" "${MIS_PATH:?}" "${HTACCESS:?}"
 SSH_PORT="${SSH_PORT:-22}"
 DEPLOY_MODE="${DEPLOY_MODE:-symlink}"
-DEPLOY_CF_ONLY="${DEPLOY_CF_ONLY:-1}"
 SHA="${GITHUB_SHA:-$(git rev-parse HEAD)}"
 SHORT="${SHA:0:12}"
 REMOTE="${SSH_USER}@${SSH_HOST}"
@@ -40,14 +40,11 @@ echo "$SHA" > "$BUILD/REVISION"
 	echo "# BEGIN MIS"
 	while IFS= read -r line; do
 		if [[ "$line" == "#MIS_CLOUDFLARE_ONLY" ]]; then
-			if [[ "$DEPLOY_CF_ONLY" == "1" ]]; then
-				echo "<IfModule mod_authz_core.c>"
-				echo "	<RequireAny>"
-				for url in https://www.cloudflare.com/ips-v4 https://www.cloudflare.com/ips-v6; do
-					curl -fsS "$url" | sed '/^$/d; s/^/		Require ip /'
-					echo
-				done | sed '/^$/d'
-				echo "	</RequireAny>"
+			if [[ -n "${ORIGIN_SECRET:-}" ]]; then
+				echo "<IfModule mod_rewrite.c>"
+				echo "	RewriteEngine On"
+				echo "	RewriteCond %{HTTP:X-MIS-Origin} !^${ORIGIN_SECRET}\$"
+				echo "	RewriteRule ^ - [F,L]"
 				echo "</IfModule>"
 			fi
 		else
@@ -56,10 +53,11 @@ echo "$SHA" > "$BUILD/REVISION"
 	done < "$HTACCESS"
 	echo "# END MIS"
 } > "$BUILD/htaccess-mis"
-if [[ "$DEPLOY_CF_ONLY" == "1" ]] && ! grep -q "Require ip" "$BUILD/htaccess-mis"; then
-	echo "✗ No se pudo leer la lista de IPs de Cloudflare; no se despliega." >&2
+if [[ -n "${ORIGIN_SECRET:-}" && ! "$ORIGIN_SECRET" =~ ^[A-Za-z0-9]{24,}$ ]]; then
+	echo "✗ ORIGIN_SECRET debe tener solo letras y números (24 o más)." >&2
 	exit 1
 fi
+[[ -n "${ORIGIN_SECRET:-}" ]] || echo "⚠ Sin ORIGIN_SECRET: el servidor no comprueba que la petición venga de Cloudflare."
 
 echo "→ Subiendo a ~/$MIS_PATH/releases/$SHORT"
 # tar por SSH: no depende de que el servidor tenga rsync.

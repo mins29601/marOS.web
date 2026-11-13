@@ -7,11 +7,10 @@
 	Header always set X-Robots-Tag "noindex, nofollow"
 </IfModule>
 
-# 2. Solo se entra a través de Cloudflare (Access). Quien llame al servidor de IONOS
-#    directamente recibe 403. scripts/deploy.sh sustituye la línea de abajo por un
-#    «Require ip …» por cada rango publicado en https://www.cloudflare.com/ips/ en el
-#    momento de desplegar. Con DEPLOY_CF_ONLY=0 (primer arranque, antes de Cloudflare)
-#    se omite este bloque.
+# 2. Solo se entra a través de Cloudflare (Access). Cloudflare añade la cabecera secreta
+#    X-MIS-Origin (Transform Rule) y aquí se exige; quien llame al servidor de IONOS
+#    directamente recibe 403. scripts/deploy.sh sustituye la línea de abajo con el valor de
+#    ORIGIN_SECRET. No se filtra por IP: IONOS tiene un proxy delante de Apache (13/11).
 #MIS_CLOUDFLARE_ONLY
 
 # 3. Ficheros que nunca se sirven.

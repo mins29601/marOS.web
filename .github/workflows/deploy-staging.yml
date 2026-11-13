@@ -54,7 +54,7 @@ jobs:
           WP_PATH: ${{ vars.WP_PATH }}
           MIS_PATH: ${{ vars.MIS_PATH }}
           DEPLOY_MODE: ${{ vars.DEPLOY_MODE || 'symlink' }}
-          DEPLOY_CF_ONLY: ${{ vars.DEPLOY_CF_ONLY || '1' }}
+          ORIGIN_SECRET: ${{ secrets.ORIGIN_SECRET }}
           HTACCESS: config/htaccess/staging.htaccess
         run: GITHUB_SHA="$(git rev-parse HEAD)" scripts/deploy.sh
 
