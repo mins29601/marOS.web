@@ -43,6 +43,53 @@ add_action(
 	}
 );
 
+// Estilos de bloque de la marca (spec 006 §1). El CSS está en assets/css/mis.css.
+add_action(
+	'init',
+	static function () {
+		$styles = array(
+			'core/paragraph' => array(
+				'etiqueta'       => __( 'Etiqueta', 'marbellainstyle' ),
+				'enlace-accion'  => __( 'Enlace de acción', 'marbellainstyle' ),
+			),
+			'core/button'    => array(
+				'contorno-claro' => __( 'Contorno claro (sobre foto)', 'marbellainstyle' ),
+			),
+			'core/image'     => array(
+				'redonda'        => __( 'Redonda', 'marbellainstyle' ),
+			),
+			'core/group'     => array(
+				'tarjeta'        => __( 'Tarjeta', 'marbellainstyle' ),
+				'nota'           => __( 'Nota de aviso', 'marbellainstyle' ),
+			),
+		);
+		foreach ( $styles as $block => $variations ) {
+			foreach ( $variations as $name => $label ) {
+				register_block_style( $block, array( 'name' => $name, 'label' => $label ) );
+			}
+		}
+	}
+);
+
+/**
+ * [mis_logo variant="color|negro|oro|blanco"] Logo de la marca (T33) enlazado a Inicio.
+ * Color o negro sobre claro, oro sobre negro, blanco sobre foto u oro.
+ */
+add_shortcode(
+	'mis_logo',
+	static function ( $atts ) {
+		$atts    = shortcode_atts( array( 'variant' => 'color' ), $atts );
+		$variant = in_array( $atts['variant'], array( 'color', 'negro', 'oro', 'blanco' ), true ) ? $atts['variant'] : 'color';
+		$home    = function_exists( 'pll_home_url' ) ? pll_home_url() : home_url( '/' );
+		return sprintf(
+			'<a class="mis-logo" href="%1$s" rel="home"><img src="%2$s" width="216" height="83" alt="%3$s"></a>',
+			esc_url( $home ),
+			esc_url( get_stylesheet_directory_uri() . '/assets/logo/marbellainstyle-logo-' . $variant . '.svg' ),
+			esc_attr( get_bloginfo( 'name' ) ?: 'Marbella in Style' )
+		);
+	}
+);
+
 // Categoría propia para los patrones de marca (en /patterns se registran solos).
 add_action(
 	'init',
