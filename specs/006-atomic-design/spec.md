@@ -15,6 +15,8 @@
   distintivo «Exclusiva», colecciones, valoraciones estilo Airbnb, «También en» portales, vídeo,
   reserva en una sola pantalla (flujo C).
 - [S3] Conclusiones de las webs de referencia ([spec 005, research](../005-arquitectura-informacion/research.md)).
+- [S5] Guía de marca «Marbella in Style Brand Guideline Booklet» (Julio, 13/11/2026): logo,
+  colores y tipografías.
 - [S4] Constitución: WordPress estándar (II), rápido, accesible y multilingüe (VII).
 
 ## Resumen
@@ -22,7 +24,7 @@
 Inventario de las piezas que se repiten en los wireframes, de menor a mayor, para construirlas
 una sola vez. Cada pieza indica **en qué se convierte en WordPress**: un ajuste de `theme.json`,
 un estilo de bloque del núcleo, un patrón o, solo si no hay otra salida, un bloque propio.
-Regla: **bloques del núcleo primero** (encaja con el tema base recomendado, Ollie, D1, y con el
+Regla: **bloques del núcleo primero** (encaja con el tema base, Ollie, T32, y con el
 MCP, que edita bloques del núcleo sin plugins extra).
 
 Los valores visuales de este documento son **provisionales**: salen de los wireframes, que son
@@ -30,23 +32,68 @@ de media fidelidad. Se cierran al ver la maqueta real en pruebas (paso 3).
 
 ## 0. Fundamentos (tokens → `theme.json`)
 
-| Token | Valor provisional | Uso | En WordPress |
+Parten de la guía de marca [S5]. Lo que no está en la guía se marca como **propuesta**.
+
+### Logo
+
+Se mantiene (T33). Corona dorada + «Marbella in Style» en caligrafía + lema «VIP access to
+Marbella Life». Versiones: a color sobre claro, negro sobre claro, oro sobre negro, blanco sobre
+oro, blanco sobre foto (cabecera transparente). Solo el símbolo para favicon y avatares. Zona de
+respeto: la altura de la «i» alrededor. Nunca deformar, recolorear, sombrear, girar ni contornear.
+Se usa en SVG. **Pendiente**: archivos vectoriales.
+
+### Color
+
+| Token | Valor | Origen | Uso | Contraste |
+|---|---|---|---|---|
+| `gold` | `#A67C36` (Pantone 8385 C) | Guía, primario | Símbolo, iconos, fondos de oro, líneas, texto grande | 3,65:1 sobre marfil: **solo** texto ≥ 24 px o negrita ≥ 19 px, iconos y elementos gráficos |
+| `gold-text` | `#8A6528` | **Propuesta** (oro oscurecido) | Etiquetas y enlaces pequeños en oro | 5,1:1 sobre marfil (AA) |
+| `black` | `#252728` (Pantone 426 C) | Guía, primario | Texto, botón principal, pie | 11,3:1 sobre beige |
+| `ivory` | `#FBFBFB` | Guía, primario | Fondo general | |
+| `beige` | `#E5DFD5` | Guía, complementario | Bloques destacados, fondos de sección | |
+| `light-grey` | `#DDDCDC` | Guía, complementario | Líneas y bordes | |
+| `dark-grey` | `#777777` | Guía, complementario | Solo elementos gráficos | 4,33:1 sobre marfil: **no llega a AA** para texto |
+| `muted` | `#6E6E6E` | **Propuesta** (gris de la guía oscurecido) | Texto secundario | 4,9:1 sobre marfil |
+| `white` | `#FFFFFF` | | Tarjetas y cajas sobre marfil o beige | |
+
+El oro es el acento de la marca (T33): botón secundario o de contorno en oro sobre negro,
+distintivo «Exclusiva», estrellas de valoración, iconos. El botón principal sigue en negro
+(máximo contraste); se puede probar en pruebas un botón principal oro con texto negro
+(3,97:1, solo válido para texto grande).
+
+### Tipografía
+
+| Rol | Fuente | Regla | En WordPress |
 |---|---|---|---|
-| Color `base` | `#F3EEE7` (arena muy claro) | Fondo general | `settings.color.palette` |
-| Color `contrast` | `#1C1B19` (casi negro) | Texto, botón principal, pie | palette |
-| Color `surface` | `#FFFFFF` | Tarjetas, cajas, hojas | palette |
-| Color `sand` | `#E9E2D7` | Bloques destacados («Por qué con nosotros», asesor) | palette |
-| Color `line` | `#DDD5C9` | Líneas y bordes | palette |
-| Color `muted` | `#6B655B` | Texto secundario y etiquetas (contraste ≥ 4,5:1 sobre `base`, a verificar) | palette |
-| Acento | **Pendiente** | Hoy no hay: la foto pone el color (Aman). Decidir con la marca | palette |
-| Tipografía | Inter (provisional): títulos 300, texto 400, énfasis 500–600 | **Pendiente**: tipografía de marca o serif para títulos | `settings.typography.fontFamilies` (fuente local, sin Google Fonts en producción) |
-| Escala de texto | 11 · 13 · 15 · 18 · 22 · 30 · 34 · 52 px (móvil → escritorio con `clamp`) | | `fontSizes` fluidos |
-| Etiqueta | 11 px, mayúsculas, espaciado 0,12 em | Únicas mayúsculas permitidas | estilo de bloque «Etiqueta» para Párrafo |
-| Espaciado | 4 · 8 · 12 · 18 · 24 · 32 · 40 · 56 · 88 px | Márgenes 18 px en móvil, 56 px en escritorio | `spacing.spacingSizes` |
-| Radio | 0 (esquinas rectas) | Botones, tarjetas, campos | `border.radius` |
-| Sombra | Ninguna, salvo barra fija inferior | | |
-| Ancho | Contenido 760 px · amplio 1328 px | | `layout.contentSize` / `wideSize` |
-| Puntos de corte | 390 (diseño base) · 768 · 1024 · 1440 | Mobile first | CSS del tema |
+| Títulos y etiquetas | **Josefin Sans** (la guía la llama «Josephine Sans») | Siempre en mayúsculas con espaciado 0,1 em (guía) | `fontFamilies` con archivos propios (sin Google Fonts en producción, RGPD) |
+| Texto | **Poppins** | Respaldo: Arial (guía) | `fontFamilies` |
+
+Propuesta de ajuste (Julio está abierto a cambios): mantener las dos, pero usar Josefin Sans en
+mayúsculas para H1–H3, botones y etiquetas, y Poppins Light (300) en tamaño grande para frases
+destacadas y citas, para que los titulares largos en móvil no sean un bloque de mayúsculas. Se
+valida en pruebas con textos reales en inglés y español.
+
+| Escala (móvil → escritorio, `clamp`) | Valor |
+|---|---|
+| Etiqueta | 11–12 px · Josefin 600 · mayúsculas · 0,12 em |
+| Texto | 15–16 px · Poppins 400 · interlineado 1,6 |
+| H3 | 16–18 px · Josefin 600 · mayúsculas |
+| H2 | 22–30 px · Josefin 400 · mayúsculas · 0,1 em |
+| H1 | 30–52 px · Josefin 400 · mayúsculas · 0,1 em |
+
+### Iconos
+
+Pendiente D20. Recomendación: Phosphor, peso Light, en oro o negro, en SVG.
+
+### Otros tokens
+
+| Token | Valor provisional | En WordPress |
+|---|---|---|
+| Espaciado | 4 · 8 · 12 · 18 · 24 · 32 · 40 · 56 · 88 px; márgenes 18 px (móvil) y 56 px (escritorio) | `spacing.spacingSizes` |
+| Radio | 0 (esquinas rectas, como la guía y Aman) | `border.radius` |
+| Sombra | Ninguna, salvo la barra fija inferior | |
+| Ancho | Contenido 760 px · amplio 1328 px | `layout` |
+| Puntos de corte | 390 (base) · 768 · 1024 · 1440 | CSS del tema |
 
 ## 1. Átomos
 
@@ -149,12 +196,11 @@ de media fidelidad. Se cierran al ver la maqueta real en pruebas (paso 3).
 
 ## 7. Pendiente de decidir
 
-- **Q1**: Tipografía de marca (¿Inter, una serif para títulos, la tipografía del logo actual?).
-- **Q2**: Color de acento (¿ninguno, como Aman, o uno de la marca?).
-- **Q3**: Biblioteca de iconos.
-- **Q4**: Logo: ¿se mantiene el actual o se rediseña?
-- **Q5**: Tema base (D1): la recomendación es Ollie; las piezas de este documento usan bloques del
-  núcleo y servirían con cualquier tema de bloques.
+- **Q1**: Ajuste de tipografía (propuesta en §0); se valida en pruebas.
+- **Q2**: ~~Color de acento~~ Resuelta: oro de la marca (T33). Aprobar `gold-text` y `muted`.
+- **Q3**: Iconos (D20).
+- **Q4**: ~~Logo~~ Resuelta: se mantiene (T33). Faltan los archivos vectoriales.
+- **Q5**: ~~Tema base~~ Resuelta: Ollie (T32).
 
 ## Siguiente paso
 
