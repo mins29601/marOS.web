@@ -25,6 +25,7 @@ fusionar en `main`. Montaje paso a paso: [docs/runbooks/pruebas-ionos.md](docs/r
 | [003 marOS Connector](specs/003-maros-connector/spec.md) · [datos](specs/003-maros-connector/data-model.md) | Borrador |
 | [004 Modelo de contenido](specs/004-modelo-contenido/spec.md) · [campos de tours](specs/004-modelo-contenido/data-model.md) | Borrador |
 | [005 Arquitectura de información y mockups](specs/005-arquitectura-informacion/spec.md) | Borrador |
+| [006 Sistema de diseño (Atomic Design)](specs/006-atomic-design/spec.md) | Borrador |
 
 Flujo: `/speckit-specify` → `/speckit-clarify` → `/speckit-plan` → `/speckit-tasks` →
 `/speckit-implement`, cada spec en su rama y su pull request.

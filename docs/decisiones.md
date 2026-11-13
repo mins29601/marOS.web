@@ -34,6 +34,16 @@ recomendación de Claude; Julio decide.
 | T25 | 2026-11-12 | Antes del código: mockups, mapa del sitio, menús y navegación | Julio | spec 005 |
 | T26 | 2026-11-12 | Diseño sin Figma: wireframes → Atomic Design → theme.json y patrones en pruebas; referencia Le Collectionist | Julio | spec 005 |
 | T27 | 2026-11-12 | Diseño mobile first; referencias: Le Collectionist, Vacation Marbella, My Private Villas y el minimalismo de Aman | Julio | spec 005, research |
+| T28 | 2026-11-13 | Reserva en móvil: flujo C (una sola pantalla: cabecera de la casa, fechas y huéspedes, desglose, «Incluido», «¿Prefieres hablarlo?»; sin servicios extra) | Julio | spec 005 |
+| T29 | 2026-11-13 | Propietarios va en el menú desplegable (capa «Menú») y en el pie, no en la cabecera | Julio | spec 005 |
+| T30 | 2026-11-13 | Eventos y bodas, dentro de Servicios | Julio | spec 005 |
+| T31 | 2026-11-13 | Las notas de Airbnb, Booking y Vrbo las actualiza un agente a través del MCP | Julio | spec 003 |
+| T32 | 2026-11-13 | Tema base: **Ollie** (antes D1) | Julio | docs/decisiones.md |
+| T33 | 2026-11-13 | Se mantiene el logo; colores y tipografías parten de la guía de marca (abierto a ajustes de tipografía) | Julio | spec 006 |
+| T34 | 2026-11-13 | Blog: «Journal» en inglés (`/en/journal/`) y «Blog» en español (`/es/blog/`) | Julio | spec 005 |
+| T35 | 2026-11-13 | Iconos: Phosphor Light como base + extensión propia para los que falten | Julio | spec 006, iconos.md |
+| T36 | 2026-11-13 | Tipografía Josefin Sans + Poppins con el ajuste propuesto; colores de la guía con `gold-text` y `muted` a prueba | Julio | spec 006 |
+| T37 | 2026-11-13 | Dominio temporal de la fase 1: **`privatevillacollection.com`** (pruebas en `staging.`, producción en `www.` hasta el lanzamiento), en IONOS y dado de alta en Cloudflare. Access de pruebas: **todos los emails `@marbellainstyle.com`** | Julio | spec 001, runbook pruebas-ionos |
 | D2 | 2026-11-12 | Plugin de idiomas: **Polylang** (gratis). Cambia la decisión del 11/11 (WPML): la suscripción de WPML ha caducado y para en + es basta Polylang; Polylang Pro si hiciera falta | Julio («polylang está bien») | docs/decisiones.md |
 | D3 | 2026-11-11 | Plugin SEO: **Yoast SEO** (compatible con Polylang) | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D4 | 2026-11-12 | Formularios: **Contact Form 7** por el momento (cambia Gravity Forms). Las solicitudes **no se guardan en WordPress** (sin Flamingo): contacto, tours a medida, servicios y propietarios se envían por email (FluentSMTP, Turnstile); las solicitudes de reserva de propiedad van a marOS como reserva **Open** desde marOS Connector | Julio («usemos por el momento contact form 7»; «no quiero que las solicitudes se guarden en el WordPress») | docs/decisiones.md |
@@ -47,13 +57,11 @@ recomendación de Claude; Julio decide.
 | D15 | 2026-11-11 | Antes de la fase 3, botón Reservar: **Enlace a `stay.`** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D16 | 2026-11-11 | Campos editables de tours y servicios: **Secure Custom Fields** sobre metadatos registrados | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D17 | 2026-11-11 | Dónde se registran tours y servicios: **Plugin `mis-contenido`** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
-| D19 | 2026-11-13 | Dominio temporal de la fase 1: **`privatevillacollection.com`** (pruebas en `staging.`, producción en `www.` hasta el lanzamiento), en IONOS y dado de alta en Cloudflare. Access de pruebas: **todos los emails `@marbellainstyle.com`** | Julio | spec 001, runbook pruebas-ionos |
 
 ## Decisiones pendientes
 
 | # | Decisión | Opciones | Recomendación | Por qué |
 |---|---|---|---|---|
-| D1 | Tema base | Ollie · Kadence · Twenty Twenty-Five · GeneratePress | **Ollie** como padre + tema hijo `marbellainstyle` con patrones de marca | Criterios de Julio (12/11): fácil de gestionar, que funcione con el MCP y que permita muchos diseños sin reinventar la rueda. Ollie usa solo bloques del núcleo (MCP y sin dependencias) y trae biblioteca de patrones y estilos; Kadence tiene más diseños pero con bloques propios; Twenty Twenty-Five es el más estable pero con menos diseños listos |
 | D18 | Vídeos de propiedades (hoy en Instagram y TikTok). **Se decide al empezar el desarrollo** (Julio, 12/11) | Carátula en la web que abre el vídeo en Instagram/TikTok (propuesta de Julio) · Insertar los posts de Instagram/TikTok · Subir además el archivo original a un servicio de vídeo (Cloudflare Stream, Vimeo o YouTube oculto) · Alojarlos en IONOS | **Ficha: archivo original en Cloudflare Stream** (o Vimeo), campo «vídeos» de la propiedad en WordPress. **Portada y zonas: franja de Instagram/TikTok** que enlaza a las cuentas | Los posts insertados cargan scripts y cookies de Meta/TikTok (Complianz los bloquea hasta aceptar, así que muchos no los verían), son lentos en móvil, enseñan la interfaz de la red social y desaparecen si se borra el post. Stream ya va con Cloudflare, reproduce limpio y rápido y no pone cookies. IONOS compartido no sirve vídeo bien. **La carátula es buena opción para empezar** (sin coste, sin cookies, rápida), con el inconveniente de que en el móvil saca al cliente a la app justo cuando decide; la carátula se guarda como imagen en WordPress (las de Instagram caducan). Campos: URL del vídeo, plataforma y carátula, de modo que pasar luego a Stream solo añade un campo |
 | D6 | URLs | Ver «Estudio de URLs» en la spec 002 | **En estudio.** Propuesta de Julio: alquileres en `/en/str/<slug>/` y `/es/vft/<slug>/`, sin tipología | Decidir con datos de tráfico: cuántas URLs cambian y cuánto tráfico tienen |
 
