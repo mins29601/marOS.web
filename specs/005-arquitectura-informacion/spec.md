@@ -28,7 +28,7 @@ Sin Figma. Tres pasos, cada uno documentado en spec-kit:
 2. **Atomic Design**: inventario de las piezas que se repiten, de menor a mayor (átomos: botón,
    campo, etiqueta; moléculas: buscador, tarjeta de propiedad, tarjeta de tour, datos rápidos;
    organismos: cabecera, pie, caja de reserva, galería, listado con filtros; plantillas: ficha de
-   propiedad, ficha de tour, zona, listado). Se documenta en una spec propia.
+   propiedad, ficha de tour, zona, listado). Se documenta en la [spec 006](../006-atomic-design/spec.md).
 3. **WordPress real**: los átomos se convierten en `theme.json` (colores, tipografía, espaciado,
    estilos de bloques) y las moléculas y organismos en patrones y bloques. La «maqueta real» se
    revisa directamente en pruebas, sin pasar por una herramienta de diseño.
