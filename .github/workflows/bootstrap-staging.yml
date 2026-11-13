@@ -1,0 +1,53 @@
+# Arranque de PRUEBAS en IONOS (manual, una vez; se puede repetir sin romper nada).
+# Instala WordPress, Ollie y los plugins de .wp-env.json, despliega el código del repo y
+# ejecuta los ajustes de scripts/setup/. Spec 001, paso 2.5; runbook pruebas-ionos, paso 6.
+name: Arrancar pruebas
+
+on:
+  workflow_dispatch:
+    inputs:
+      contenido_inicial:
+        description: "Cargar el contenido de ejemplo (páginas, menús, propiedades del mock)"
+        type: boolean
+        default: true
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ vars.SITE_URL }}
+    env:
+      SSH_HOST: ${{ vars.SSH_HOST }}
+      SSH_USER: ${{ vars.SSH_USER }}
+      SSH_PORT: ${{ vars.SSH_PORT || '22' }}
+      WP_PATH: ${{ vars.WP_PATH }}
+      MIS_PATH: ${{ vars.MIS_PATH }}
+      SITE_URL: ${{ vars.SITE_URL }}
+      WP_ADMIN_USER: ${{ vars.WP_ADMIN_USER || 'julio' }}
+      WP_ADMIN_EMAIL: ${{ vars.WP_ADMIN_EMAIL }}
+      WP_ADMIN_PASSWORD: ${{ secrets.WP_ADMIN_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clave SSH de IONOS
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: 1. WordPress, Ollie y plugins
+        run: scripts/bootstrap.sh core
+
+      - name: 2. Código del repo
+        env:
+          DEPLOY_MODE: ${{ vars.DEPLOY_MODE || 'symlink' }}
+          DEPLOY_CF_ONLY: ${{ vars.DEPLOY_CF_ONLY || '1' }}
+          HTACCESS: config/htaccess/staging.htaccess
+        run: scripts/deploy.sh
+
+      - name: 3. Tema hijo, idiomas y contenido
+        run: |
+          if [ "${{ inputs.contenido_inicial }}" != "true" ]; then export MIS_SKIP_CONTENT=1; fi
+          scripts/bootstrap.sh setup

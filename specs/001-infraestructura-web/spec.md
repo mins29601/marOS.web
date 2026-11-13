@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-11
 
-**Status**: Borrador. Pendiente de las respuestas de Julio en Clarifications.
+**Status**: Borrador. Pruebas lista para montar (código y guía); pendientes el dominio temporal (Q6) y los emails de Access (Q5).
 
 **Fuentes**:
 
@@ -215,3 +215,18 @@ subdominio y su usuario SSH: producción y pruebas.
   (DNS de marbellainstyle.com a Cloudflare) pasa a la preparación del lanzamiento. Q3 y Q4 quedan
   sustituidas. *Pendiente*: nombre del dominio temporal.
 - Q5 (emails de Access): aclarado qué significa; *pendiente* la lista.
+
+### Session 2026-11-13 (pruebas primero)
+
+- Julio pide preparar ya la infraestructura de **pruebas** en IONOS para ver la maqueta real
+  (tema Ollie, Polylang con inglés sin prefijo y español en `/es/`). Se monta pruebas antes que
+  producción, con la guía [docs/runbooks/pruebas-ionos.md](../../docs/runbooks/pruebas-ionos.md).
+- Mientras la API pública de marOS no exista, pruebas usa `MAROS_ENV=mock` con los JSON del repo
+  (los mismos que en local); al estar lista, `MAROS_ENV=staging` y marOS pruebas. El mu-plugin
+  `mis-entorno` impide en cualquier caso apuntar a marOS producción.
+- Q6: ¿Qué dominio temporal? Recomendación: uno nuevo registrado en IONOS y dado de alta en
+  Cloudflare, que no se parezca a la marca. → *pendiente*
+- Q5 (emails de Access) → *pendiente*.
+- Nada se cambia en las cuentas de IONOS ni de Cloudflare sin confirmación de Julio: los pasos de
+  panel los hace Julio con la guía.
+

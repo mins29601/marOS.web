@@ -1,0 +1,63 @@
+# Despliegue a PRUEBAS (IONOS) al fusionar en main, o a mano con cualquier rama o commit.
+# Spec 001, US5 y FR-006. Configuración: GitHub → Settings → Environments → «staging»
+# (ver docs/runbooks/pruebas-ionos.md, paso 5).
+name: Deploy pruebas
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Rama o commit a desplegar en pruebas (vacío = el seleccionado arriba)"
+        required: false
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Hasta que el entorno «staging» esté configurado, el workflow no hace nada.
+    if: ${{ vars.SSH_HOST != '' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ vars.SITE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+
+      - name: Clave SSH de IONOS
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Desplegar
+        env:
+          SSH_HOST: ${{ vars.SSH_HOST }}
+          SSH_USER: ${{ vars.SSH_USER }}
+          SSH_PORT: ${{ vars.SSH_PORT || '22' }}
+          WP_PATH: ${{ vars.WP_PATH }}
+          MIS_PATH: ${{ vars.MIS_PATH }}
+          DEPLOY_MODE: ${{ vars.DEPLOY_MODE || 'symlink' }}
+          DEPLOY_CF_ONLY: ${{ vars.DEPLOY_CF_ONLY || '1' }}
+          HTACCESS: config/htaccess/staging.htaccess
+        run: GITHUB_SHA="$(git rev-parse HEAD)" scripts/deploy.sh
+
+      - name: Comprobar (smoke)
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+          EXPECT_NOINDEX: "1"
+        run: scripts/smoke.sh
+
+      - name: Resumen
+        if: always()
+        run: |
+          echo "### Pruebas: ${{ vars.SITE_URL }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit desplegado: \`$(git rev-parse --short=12 HEAD)\`" >> "$GITHUB_STEP_SUMMARY"

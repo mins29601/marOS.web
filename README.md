@@ -11,6 +11,11 @@ WordPress estándar en IONOS con Cloudflare delante, conectado a la API de marOS
 WordPress en tu Mac con la API de marOS simulada: `npm install && npm run env:start` →
 http://localhost:8888. Instalación y uso: [docs/runbooks/entorno-local.md](docs/runbooks/entorno-local.md).
 
+## Pruebas (staging) en IONOS
+
+`https://staging.<temporal>`, privado con Cloudflare Access y sin indexar. Se despliega solo al
+fusionar en `main`. Montaje paso a paso: [docs/runbooks/pruebas-ionos.md](docs/runbooks/pruebas-ionos.md).
+
 ## Specs (spec-kit)
 
 | Spec | Estado |

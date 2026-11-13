@@ -24,12 +24,30 @@ producción a pruebas e instalar MCP Adapter en los dos entornos desde el inicio
 - Todas las URLs se generan a partir de `home_url()`; el cambio de dominio en el lanzamiento es
   un `wp search-replace` más las redirecciones.
 
+## Pruebas primero (13 de noviembre de 2026)
+
+Pruebas se monta antes que producción para ver la maqueta real. Guía para los paneles:
+[docs/runbooks/pruebas-ionos.md](../../docs/runbooks/pruebas-ionos.md). Ya está en el repo:
+
+| Pieza | Archivo |
+|---|---|
+| Despliegue automático a pruebas al fusionar en `main` (o a mano con cualquier rama) | `.github/workflows/deploy-staging.yml`, `scripts/deploy.sh` |
+| Arranque único: WordPress, Ollie y plugins de `.wp-env.json`, tema hijo, idiomas y contenido de ejemplo | `.github/workflows/bootstrap-staging.yml`, `scripts/bootstrap.sh`, `scripts/remote/bootstrap-remote.sh` |
+| Comprobación tras desplegar (200, `noindex`, `robots.txt`, Access) | `scripts/smoke.sh` |
+| `wp-config.php` de pruebas sin secretos | `config/wp-config.staging.example.php` |
+| `.htaccess`: solo IPs de Cloudflare (leídas al desplegar), `X-Robots-Tag`, ficheros prohibidos | `config/htaccess/staging.htaccess` |
+| `noindex` triple y correo bloqueado | `wp-content/mu-plugins/mis-entorno.php` |
+
+Disposición en IONOS: WordPress en `~/staging/`; el código del repo en
+`~/mis/staging/releases/<commit>/` con `~/mis/staging/current` apuntando a la versión activa y
+enlaces simbólicos desde `wp-content` (o copia si IONOS no admite enlaces).
+
 ## Technical Context
 
 **Language/Version**: PHP 8.3 (la más alta estable que ofrezca IONOS), WordPress ≥ 6.9 (Abilities
 API en el núcleo, necesaria para MCP Adapter). JavaScript solo para bloques (`@wordpress/scripts`).
 
-**Primary Dependencies**: WP-CLI (comprobar en IONOS; si no está, se sube el `.phar`), rsync por
+**Primary Dependencies**: WP-CLI (comprobar en IONOS; si no está, se sube el `.phar`), tar y rsync por
 SSH, plugin oficial de Cloudflare (APO), MCP Adapter + Enable Abilities for MCP.
 
 **Storage**: MySQL/MariaDB de IONOS, una base por entorno.
@@ -94,7 +112,7 @@ marOS.web/
 ├── mock/
 │   └── maros-api/                # datos de ejemplo del contrato de la API de marOS
 ├── scripts/
-│   ├── deploy.sh                 # rsync a releases/<sha> + cambio atómico de enlace
+│   ├── deploy.sh                 # tar por SSH a releases/<sha> + cambio atómico de enlace
 │   ├── copy-prod-to-staging.sh   # WP-CLI: export, import, search-replace, ajustes de pruebas
 │   └── smoke.sh                  # comprobaciones HTTP tras desplegar
 ├── composer.json                 # solo herramientas de desarrollo (PHPCS, PHPStan, PHPUnit)
@@ -122,10 +140,10 @@ marOS.web/
 - **Secretos de despliegue**: GitHub Environments `staging` y `production`, cada uno con
   `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `SSH_KNOWN_HOSTS`, `WP_PATH`. `production` exige
   aprobación de Julio.
-- **Despliegue atómico**: el workflow sube con rsync a `~/<entorno>/releases/<sha>/` y cambia los
+- **Despliegue atómico**: el workflow sube por SSH (tar) a `~/mis/<entorno>/releases/<sha>/` y cambia los
   enlaces simbólicos de `wp-content/themes/marbellainstyle`, `plugins/maros-connector` y
   `mu-plugins`. Se guardan las 5 últimas versiones para volver atrás. Si IONOS no permite enlaces
-  simbólicos, rsync directo con `--delete-after`.
+  simbólicos, copia directa (`DEPLOY_MODE=copy`).
 - **Ramas**: `main` siempre desplegable; una rama por spec o tarea; PR con CI en verde.
 
 ## Plan de la fase 1
