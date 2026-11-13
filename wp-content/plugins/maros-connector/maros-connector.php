@@ -68,17 +68,17 @@ function maros_register_types(): void {
 			'menu_icon'    => 'dashicons-admin-home',
 			'menu_position'=> 20,
 			'has_archive'  => false,
-			// Propuesta de Julio (spec 002, estudio de URLs, D6 en estudio): base genérica sin tipología.
-			'rewrite'      => array( 'slug' => 'str', 'with_front' => false ),
+			// /stay/<slug>/ (Julio, 13/11): base genérica sin tipología, igual que la página Alojamiento.
+			'rewrite'      => array( 'slug' => 'stay', 'with_front' => false ),
 			'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields', 'revisions' ),
 			'taxonomies'   => array( 'zona', 'tipo-propiedad', 'equipamiento', 'coleccion' ),
 		)
 	);
 
 	$taxonomies = array(
-		'tipo-propiedad' => array( __( 'Property types', 'maros-connector' ), __( 'Property type', 'maros-connector' ), 'str/type' ),
-		'equipamiento'   => array( __( 'Amenities', 'maros-connector' ), __( 'Amenity', 'maros-connector' ), 'str/amenity' ),
-		'coleccion'      => array( __( 'Collections', 'maros-connector' ), __( 'Collection', 'maros-connector' ), 'str/collection' ),
+		'tipo-propiedad' => array( __( 'Property types', 'maros-connector' ), __( 'Property type', 'maros-connector' ), 'stay/type' ),
+		'equipamiento'   => array( __( 'Amenities', 'maros-connector' ), __( 'Amenity', 'maros-connector' ), 'stay/amenity' ),
+		'coleccion'      => array( __( 'Collections', 'maros-connector' ), __( 'Collection', 'maros-connector' ), 'stay/collection' ),
 	);
 	foreach ( $taxonomies as $tax => $labels ) {
 		register_taxonomy(
