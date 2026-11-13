@@ -110,6 +110,23 @@ touch "$WP/.htaccess"
 awk '/^# BEGIN MIS$/{skip=1} !skip{print} /^# END MIS$/{skip=0}' "$WP/.htaccess" > "$WP/.htaccess.rest"
 cat "$REL/htaccess-mis" "$WP/.htaccess.rest" > "$WP/.htaccess.new"
 mv -f "$WP/.htaccess.new" "$WP/.htaccess"; rm -f "$WP/.htaccess.rest"
+# WP-CLI no puede escribir las reglas de WordPress en IONOS («requires special configuration»):
+# si faltan, se añaden las estándar para que funcionen los enlaces permanentes.
+if ! grep -q "^# BEGIN WordPress" "$WP/.htaccess"; then
+	cat >> "$WP/.htaccess" <<'WPRULES'
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
+WPRULES
+fi
 
 # La carpeta de versiones nunca se sirve por web (en IONOS el home es la raíz del webspace).
 printf 'Require all denied\n' > "$(dirname "$MIS")/.htaccess"
