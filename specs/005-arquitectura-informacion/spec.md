@@ -28,7 +28,7 @@ Sin Figma. Tres pasos, cada uno documentado en spec-kit:
 2. **Atomic Design**: inventario de las piezas que se repiten, de menor a mayor (átomos: botón,
    campo, etiqueta; moléculas: buscador, tarjeta de propiedad, tarjeta de tour, datos rápidos;
    organismos: cabecera, pie, caja de reserva, galería, listado con filtros; plantillas: ficha de
-   propiedad, ficha de tour, zona, listado). Se documenta en una spec propia.
+   propiedad, ficha de tour, zona, listado). Se documenta en la [spec 006](../006-atomic-design/spec.md).
 3. **WordPress real**: los átomos se convierten en `theme.json` (colores, tipografía, espaciado,
    estilos de bloques) y las moléculas y organismos en patrones y bloques. La «maqueta real» se
    revisa directamente en pruebas, sin pasar por una herramienta de diseño.
@@ -103,11 +103,11 @@ ellas (Inicio → Alquileres → Ficha → Reservar C1 → C2 → C3; menú; ser
 
 - Q1: ~~Peso en Inicio~~ **Resuelta (12/11)**: alquileres y servicios al mismo nivel; los
   servicios también se venden a quien no se aloja con nosotros.
-- Q2: ¿«Owners» (captar propietarios) va en el menú principal o solo en el pie y en una landing?
+- Q2: **Resuelta (13/11)**: Propietarios en el menú desplegable y en el pie (T29). Antes: ¿«Owners» (captar propietarios) va en el menú principal o solo en el pie y en una landing?
   (mockup v2: en la capa «Menú» y en el pie)
-- Q3: ¿Eventos y bodas son una sección propia («Celebrate», como hoy) o parte de Concierge?
+- Q3: **Resuelta (13/11)**: dentro de Servicios (T30). Antes: ¿Eventos y bodas son una sección propia («Celebrate», como hoy) o parte de Concierge?
   (mockup: dentro de Concierge)
-- Q5: ~~Flujo de reserva~~ **En revisión (12/11)**: Julio descarta la lista de semanas (no hay
+- Q5: **Resuelta (13/11)**: flujo C (T28). Antes, en revisión (12/11): Julio descarta la lista de semanas (no hay
   mínimo de 7 noches ni día fijo de entrada) y los servicios dentro de la reserva; propone el
   flujo C en una sola pantalla.
-- Q4: ¿Nombre del blog: Blog, Journal o Guía de Marbella? (mockup: Journal)
+- Q4: **Resuelta (13/11)**: Journal en inglés y Blog en español (T34). Antes: ¿Nombre del blog: Blog, Journal o Guía de Marbella? (mockup: Journal)

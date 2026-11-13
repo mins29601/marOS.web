@@ -1,12 +1,12 @@
 # Entorno local (Mac) con wp-env
 
-WordPress en tu Mac que imita a **pruebas** (`staging.<temporal>`), con la API de marOS simulada.
+WordPress en tu Mac que imita a **pruebas** (`staging.privatevillacollection.com`), con la API de marOS simulada.
 Usa el mismo `.wp-env.json` que los tests de GitHub (spec 001, «Testing»).
 
 | | Local | Pruebas | Producción |
 |---|---|---|---|
-| URL | http://localhost:8888 | `staging.<temporal>` | `www.<temporal>` |
-| PHP / WordPress | 8.3 / última estable (hoy 7.1) | los de IONOS | los de IONOS |
+| URL | http://localhost:8888 | `staging.privatevillacollection.com` | `www.privatevillacollection.com` |
+| PHP / WordPress | 8.4 / última estable (hoy 7.1) | los de IONOS | los de IONOS |
 | `WP_ENVIRONMENT_TYPE` | `local` | `staging` | `production` |
 | marOS | **mock** (JSON de `mock/maros-api/`) | marOS pruebas | marOS producción |
 | Correo | bloqueado (se anota en el log) | bloqueado | normal |
@@ -108,7 +108,7 @@ cambia `MAROS_ENV`/`MAROS_API_BASE` a marOS pruebas.
 ```bash
 # en pruebas (por SSH): wp db export pruebas.sql && wp export (o WPvivid)
 npm run wp -- db import /var/www/html/pruebas.sql   # copia el .sql a la raíz del repo antes
-npm run wp -- search-replace 'https://staging.<temporal>' 'http://localhost:8888' --all-tables
+npm run wp -- search-replace 'https://staging.privatevillacollection.com' 'http://localhost:8888' --all-tables
 ```
 
 Nunca se sube nada desde local a pruebas o producción: el código va por Git y PR.
