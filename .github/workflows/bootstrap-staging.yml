@@ -21,6 +21,7 @@ jobs:
       SSH_HOST: ${{ vars.SSH_HOST }}
       SSH_USER: ${{ vars.SSH_USER }}
       SSH_PORT: ${{ vars.SSH_PORT || '22' }}
+      MIS_PHP: ${{ vars.MIS_PHP }}
       WP_PATH: ${{ vars.WP_PATH }}
       MIS_PATH: ${{ vars.MIS_PATH }}
       SITE_URL: ${{ vars.SITE_URL }}
