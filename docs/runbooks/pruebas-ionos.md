@@ -155,7 +155,7 @@ GitHub → `mins29601/marOS.web` → **Settings → Environments → New environ
 | `WP_ADMIN_USER` | tu usuario de WordPress, p. ej. `julio` |
 | `WP_ADMIN_EMAIL` | tu email |
 | `MIS_PHP` | `php8.4-cli` (el PHP de la terminal de IONOS es 4.4) |
-| `DEPLOY_MODE` | `symlink` (o `copy` si el paso 4 dijo que no hay enlaces) |
+| `DEPLOY_MODE` | `copy` (en IONOS Apache no sirve los CSS y JS a través de enlaces simbólicos; comprobado el 13/11) |
 
 **Secretos** (Environment secrets):
 

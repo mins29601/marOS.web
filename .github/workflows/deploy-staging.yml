@@ -53,7 +53,7 @@ jobs:
           MIS_PHP: ${{ vars.MIS_PHP }}
           WP_PATH: ${{ vars.WP_PATH }}
           MIS_PATH: ${{ vars.MIS_PATH }}
-          DEPLOY_MODE: ${{ vars.DEPLOY_MODE || 'symlink' }}
+          DEPLOY_MODE: ${{ vars.DEPLOY_MODE || 'copy' }}
           ORIGIN_SECRET: ${{ secrets.ORIGIN_SECRET }}
           HTACCESS: config/htaccess/staging.htaccess
         run: GITHUB_SHA="$(git rev-parse HEAD)" scripts/deploy.sh
