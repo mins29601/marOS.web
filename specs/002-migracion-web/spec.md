@@ -143,7 +143,7 @@ Preguntas que el estudio debe responder con datos de Search Console y del rastre
    simétrica y clara. Coste: **todas** las URLs inglesas actuales cambian y necesitan 301
    (inglés es el idioma con todo el tráfico). Alternativa: inglés sin prefijo, `/str/<slug>/` y
    `/es/vft/<slug>/`.
-2. **Base de alquileres**: `str`/`vft` (genérico, la URL no cambia si cambia la tipología) frente a
+2. **Decidido (Julio, 13/11): `/stay/` en inglés** (en lugar de `/str/`). ~~Base de alquileres~~: `str`/`vft` (genérico, la URL no cambia si cambia la tipología) frente a
    palabras que la gente busca (`/villas/`, `/rentals/`, `/es/alquiler-vacacional/`). Impacto en
    SEO de la palabra en la URL: pequeño; impacto en confianza y clics: a medir.
 3. **Tours y servicios**: mantener `/services/<tipo>/<slug>/` o simplificar.

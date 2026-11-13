@@ -27,7 +27,7 @@ que sobrevivan a un cambio de tema y no dependan de marOS.
 
 | Tipo | Clave | Origen | Ejemplos | URL propuesta (en / es) |
 |---|---|---|---|---|
-| **Propiedad** | `mis_property` | marOS + WP (spec 003) | villas, apartamentos | propuesta: `/en/str/<slug>/` · `/es/vft/<slug>/` (en estudio, spec 002) |
+| **Propiedad** | `mis_property` | marOS + WP (spec 003) | villas, apartamentos | `/stay/<slug>/` · `/es/vft/<slug>/` (en estudio, spec 002) |
 | **Tour / experiencia** | `mis_tour` | WP | Granada private tour, wine tour Ronda | `/services/tours/<slug>/` · `/es/servicios/tours/<slug>/` |
 | **Servicio** | `mis_service` | WP | chófer, traslados, chef privado, catering, bodas, eventos, conserjería, gestión de propiedades | `/services/<tipo>/<slug>/` · `/es/servicios/<tipo>/<slug>/` |
 | **Zona** | taxonomía `zona` con página de zona | WP | Sierra Blanca, Milla de Oro, Nueva Andalucía | `/areas/<slug>/` · `/es/zonas/<slug>/` |

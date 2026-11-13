@@ -7,7 +7,7 @@ Salida:
   redirects.csv   — formato Cloudflare Bulk Redirects (source_url,target_url,status_code).
 
 Las rutas nuevas siguen la spec 005 (mapa del sitio): inglés sin prefijo, español en /es/,
-alquileres en /str/ y /es/vft/. Si cambia una ruta, se cambian las constantes de abajo y se
+alquileres en /stay/ y /es/vft/. Si cambia una ruta, se cambian las constantes de abajo y se
 vuelve a ejecutar el script.
 
 Uso: python3 redirects/generar.py
@@ -23,7 +23,7 @@ HOST_NUEVO = "https://www.marbellainstyle.com"
 # Inglés sin prefijo de idioma (decisión de Julio, 12/11); el español va en /es/.
 EN = "/"
 INICIO = EN
-STR = EN + "str/"                      # alquileres (short term rentals)
+STR = EN + "stay/"                      # alquileres (alojamiento)
 AREAS = EN + "areas/"
 EXP = EN + "experiences/"
 SRV = EN + "services/"
@@ -101,7 +101,7 @@ POSTS_REVISAR = {
 PAGINAS = {
     "/": (INICIO, "mantener", "Portada en inglés; el español en /es/"),
     "/contact-us/": (EN + "contact/", "mantener", ""),
-    "/blog/": (JOURNAL, "mantener", "Nombre del blog pendiente (Q4 de la spec 005)"),
+    "/blog/": (JOURNAL, "mantener", "Journal en inglés, Blog en español (Julio, 13/11)"),
     "/privacy-policy/": (EN + "privacy-policy/", "mantener", ""),
     "/terms-and-conditions/": (EN + "terms-and-conditions/", "mantener", ""),
     "/legal-notice/": (EN + "legal-notice/", "mantener", ""),

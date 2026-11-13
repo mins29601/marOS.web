@@ -21,15 +21,15 @@ decisión D6 sigue en estudio), se cambia una constante del script y se vuelven 
 ## 1. Supuestos
 
 - **Inglés sin prefijo de idioma y español en `/es/`** (decisión de Julio, 12/11), como hoy.
-  Alquileres en `/str/` y `/es/vft/`, como propuso Julio. Así, 34 URLs actuales (páginas legales,
+  Alquileres en `/stay/` (Julio, 13/11; antes `/str/`) y `/es/vft/`. Así, 34 URLs actuales (páginas legales,
   transporte, catering y eventos) **no cambian** y no necesitan redirección.
 - **Dominio final** `https://www.marbellainstyle.com` (hoy el canonical es sin `www`). El dominio
   temporal de la fase 1 no afecta a este mapa.
 - **Idiomas con Polylang** (Julio, 12/11, en lugar de WPML). Polylang deja el idioma por defecto
   sin prefijo y el español en `/es/`, así que el mapa no cambia. Lo único que exige la versión
   **Pro** (o código propio en el plugin de contenido) es traducir las bases de las URLs:
-  `/str/` ↔ `/es/vft/`, `/services/` ↔ `/es/servicios/`, `/areas/` ↔ `/es/zonas/`. Con Polylang
-  gratis, el español tendría que usar las mismas bases que el inglés (`/es/str/…`).
+  `/stay/` ↔ `/es/vft/`, `/services/` ↔ `/es/servicios/`, `/areas/` ↔ `/es/zonas/`. Con Polylang
+  gratis, el español tendría que usar las mismas bases que el inglés (`/es/stay/…`).
 - Solo **inglés y español**. Alemán, ruso y francés redirigen a la página equivalente en inglés.
 - El sitemap actual solo lista inglés. Las URLs en `/es/` (y `/de/`, `/ru/`, `/fr/`) se añadirán
   al inventario con el rastreo completo (plan M0.3).
@@ -42,10 +42,10 @@ migrar el contenido.
 ```text
 Inicio                                   /                          /es/
 │
-├── Alojamiento (Stay)                   /str/                      /es/vft/
-│   ├── Ficha de propiedad               /str/<slug>/               /es/vft/<slug>/
-│   ├── Reservar (flujo C)               /str/<slug>/book/          /es/vft/<slug>/reservar/
-│   └── Colecciones (pestañas)           /str/?collection=<c>       (filtro, no indexable)
+├── Alojamiento (Stay)                   /stay/                     /es/vft/
+│   ├── Ficha de propiedad               /stay/<slug>/               /es/vft/<slug>/
+│   ├── Reservar (flujo C)               /stay/<slug>/book/          /es/vft/<slug>/reservar/
+│   └── Colecciones (pestañas)           /stay/?collection=<c>       (filtro, no indexable)
 │       Exclusivas · Familias · Golf · Grupos · (candidatas: Primera línea, Villas para eventos)
 │
 ├── Servicios (Concierge)                /services/                 /es/servicios/
@@ -104,8 +104,8 @@ Inicio                                   /                          /es/
 | Portada y páginas | 22 | 7 se quedan igual (portada, legales, gracias, zonas); 11 cambian; 4 de prueba se retiran (410) | mapa exacto |
 | Entradas del blog | 57 | `/journal/<mismo slug>/` | patrón |
 | Guías de zona (entradas) | 9 | `/areas/<zona>/` y `/areas/` | mapa exacto |
-| Fichas de propiedad que siguen en marOS | 18 | `/str/<nombre>/` | mapa exacto |
-| Fichas de villas que no están en marOS | 24 | Su zona si se sabe; si no, `/str/` | mapa exacto |
+| Fichas de propiedad que siguen en marOS | 18 | `/stay/<nombre>/` | mapa exacto |
+| Fichas de villas que no están en marOS | 24 | Su zona si se sabe; si no, `/stay/` | mapa exacto |
 | Tours | 19 | `/experiences/<mismo slug>/` (un duplicado se fusiona) | patrón |
 | Servicios (transporte, catering, eventos, lifestyle) | 17 | 13 se quedan igual; los 4 de lifestyle pasan a `/services/concierge/<slug>/` | patrón |
 | Eventos realizados (galerías de fiestas y bodas) | 11 | Se quedan igual en `/services/events/<slug>/` | — |
@@ -123,24 +123,24 @@ dependen de una decisión o de los datos de tráfico).
 
 | URL actual | Propiedad en marOS | Nueva |
 |---|---|---|
-| `/services/villas/villa-centauri/` | Villa Centauro | `/str/villa-centauro/` |
-| `/services/villas/villa-feliz/` | Villa Feliz | `/str/villa-feliz/` |
-| `/services/villas/villa-nido/` | Villa Nido | `/str/villa-nido/` |
-| `/services/villas/villa-michaela/` | Villa Michaela | `/str/villa-michaela/` |
-| `/services/villas/villa-panda-sea-views-heated-pool-in-sierra-blanca/` | Villa Panda | `/str/villa-panda/` |
-| `/services/villas/villa-concha-puerto-banus/` | Villa Concha | `/str/villa-concha/` |
-| `/services/villas/villa-flamingo-luxury-modern/` | Villa Flamingos (**confirmar**) | `/str/villa-flamingos/` |
-| `/services/villas/casa-masari/` | Casa Masari | `/str/casa-masari/` |
-| `/services/villas/casa-dama/` | Casa Dama | `/str/casa-dama/` |
-| `/services/villas/casa-principe/` | Casa Principe | `/str/casa-principe/` |
-| `/services/villas/casa-samara/` | Casa Samara | `/str/casa-samara/` |
-| `/services/villas/casa-rodeo-puerto-banus/` | Casa Rodeo | `/str/casa-rodeo/` |
-| `/services/apartments/casa-cifuentes/` | Cifuentes | `/str/casa-cifuentes/` |
-| `/services/apartments/casa-sould/` | Casa Soul | `/str/casa-soul/` |
-| `/services/apartments/casa-paraiso/` | Casa Paraiso | `/str/casa-paraiso/` |
-| `/services/apartments/casa-brisa/` | Casa Brisa | `/str/casa-brisa/` |
-| `/services/apartments/casa-coral/` | Casa Coral | `/str/casa-coral/` |
-| `/services/apartments/casa-acosta/` | Casa Acosta | `/str/casa-acosta/` |
+| `/services/villas/villa-centauri/` | Villa Centauro | `/stay/villa-centauro/` |
+| `/services/villas/villa-feliz/` | Villa Feliz | `/stay/villa-feliz/` |
+| `/services/villas/villa-nido/` | Villa Nido | `/stay/villa-nido/` |
+| `/services/villas/villa-michaela/` | Villa Michaela | `/stay/villa-michaela/` |
+| `/services/villas/villa-panda-sea-views-heated-pool-in-sierra-blanca/` | Villa Panda | `/stay/villa-panda/` |
+| `/services/villas/villa-concha-puerto-banus/` | Villa Concha | `/stay/villa-concha/` |
+| `/services/villas/villa-flamingo-luxury-modern/` | Villa Flamingos (**confirmar**) | `/stay/villa-flamingos/` |
+| `/services/villas/casa-masari/` | Casa Masari | `/stay/casa-masari/` |
+| `/services/villas/casa-dama/` | Casa Dama | `/stay/casa-dama/` |
+| `/services/villas/casa-principe/` | Casa Principe | `/stay/casa-principe/` |
+| `/services/villas/casa-samara/` | Casa Samara | `/stay/casa-samara/` |
+| `/services/villas/casa-rodeo-puerto-banus/` | Casa Rodeo | `/stay/casa-rodeo/` |
+| `/services/apartments/casa-cifuentes/` | Cifuentes | `/stay/casa-cifuentes/` |
+| `/services/apartments/casa-sould/` | Casa Soul | `/stay/casa-soul/` |
+| `/services/apartments/casa-paraiso/` | Casa Paraiso | `/stay/casa-paraiso/` |
+| `/services/apartments/casa-brisa/` | Casa Brisa | `/stay/casa-brisa/` |
+| `/services/apartments/casa-coral/` | Casa Coral | `/stay/casa-coral/` |
+| `/services/apartments/casa-acosta/` | Casa Acosta | `/stay/casa-acosta/` |
 
 Propiedades de marOS **sin ficha en la web actual** (URL nueva, sin redirección): Casa Ambar,
 Casa Torre y Villa Mares.
@@ -160,7 +160,7 @@ redirecciones más que en el destino.
 `villa-one`, `villa-banus`, `villa-adelfa-beach-side`.
 
 Propuesta: 301 a su zona cuando se deduce del nombre (Guadalmina, Los Flamingos, La Alquería,
-New Golden Mile) y al listado `/str/` en el resto, nunca a la portada. Si alguna es una casa
+New Golden Mile) y al listado `/stay/` en el resto, nunca a la portada. Si alguna es una casa
 de marOS con otro nombre, o vuelve a ofrecerse, recupera ficha propia.
 
 ## 4. Reglas de redirección (orden de Cloudflare)

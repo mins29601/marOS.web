@@ -151,8 +151,8 @@ través del proxy del plugin.
 - **FR-001**: El plugin MUST registrar el tipo de contenido `propiedad` (clave `mis_property`) y
   las taxonomías `tipo-propiedad` (villa, apartamento… según la categoría que dé marOS, nunca
   fijada en el código), `zona` y `equipamiento` (amenities). La URL pública depende del tipo
-  (propuesta de Julio: base genérica sin tipología, `/en/str/<slug>/` y `/es/vft/<slug>/`;
-  pendiente del estudio de URLs de la spec 002, decisión D6). Los tours y servicios no son de este
+  (base genérica sin tipología: `/stay/<slug>/` y `/es/vft/<slug>/`, decisiones T28 y T29;
+  ver [mapa del sitio](../005-arquitectura-informacion/mapa-del-sitio.md)). Los tours y servicios no son de este
   tipo: ver spec 004. Campos en [data-model.md](./data-model.md).
 - **FR-002**: Los campos operativos MUST ser de solo lectura en el editor y en la REST de
   WordPress; solo los escribe la sincronización.

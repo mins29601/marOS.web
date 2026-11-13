@@ -13,7 +13,7 @@
 - [S2] Inventario y menú actual de la web ([spec 002, research](../002-migracion-web/research.md), R5).
 - [S3] Modelo de contenido ([spec 004](../004-modelo-contenido/spec.md)): propiedades, tours,
   servicios, zonas, blog.
-- [S4] Decisiones: inglés y español; propiedades en una base genérica (`str` / `vft`, en estudio);
+- [S4] Decisiones: inglés y español; propiedades en una base genérica (`/stay/` en inglés, decidido el 13/11; `/es/vft/` en español);
   tours con FareHarbor; reservas de alojamiento con marOS (fase 3; antes, `stay.`).
 
 Mockups: lienzo de diseño «Mockups web Marbella in Style» (https://claude.ai/artifact/L4xhEP5zNB5F9KmJmpBS9W, privado; Julio puede compartirlo desde el menú Compartir). Son esquemas de
@@ -42,9 +42,9 @@ paréntesis, en español.
 
 ```text
 Inicio  /  (/es/)
-├── Stay · Alquileres            /str/            (/es/vft/)
-│   ├── Ficha de propiedad       /str/<slug>/     (/es/vft/<slug>/)
-│   └── Resultados de búsqueda   /str/?checkin=…  (mismo listado con filtros)
+├── Stay · Alquileres            /stay/            (/es/vft/)
+│   ├── Ficha de propiedad       /stay/<slug>/     (/es/vft/<slug>/)
+│   └── Resultados de búsqueda   /stay/?checkin=…  (mismo listado con filtros)
 ├── Areas · Zonas                /areas/          (/es/zonas/)
 │   └── Zona                     /areas/<slug>/   — propiedades, tours y guía de la zona
 ├── Experiences · Experiencias   /experiences/    (/es/experiencias/)  [tours]
@@ -112,4 +112,5 @@ ellas (Inicio → Alquileres → Ficha → Reservar C1 → C2 → C3; menú; ser
 - Q5: ~~Flujo de reserva~~ **En revisión (12/11)**: Julio descarta la lista de semanas (no hay
   mínimo de 7 noches ni día fijo de entrada) y los servicios dentro de la reserva; propone el
   flujo C en una sola pantalla.
-- Q4: ¿Nombre del blog: Blog, Journal o Guía de Marbella? (mockup: Journal)
+- Q4: ~~Nombre del blog~~ **Resuelta (13/11)**: «Journal» en inglés (`/journal/`) y «Blog» en
+  español (`/es/blog/`).

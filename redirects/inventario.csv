@@ -66,7 +66,7 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /total-solar-eclipse-2027-in-marbella-your-front-row-seat-to-the-event-of-the-decade/,post,Journal,/journal/total-solar-eclipse-2027-in-marbella-your-front-row-seat-to-the-event-of-the-decade/,301,mantener,,propuesta,
 /new-10-vat-on-short-holiday-rentals-in-spain-what-marbella-villa-owners-should-know/,post,Journal (Propietarios),/journal/new-10-vat-on-short-holiday-rentals-in-spain-what-marbella-villa-owners-should-know/,301,mantener,,propuesta,Se lista también en /owners/resources/
 /contact-us/,page,Páginas,/contact/,301,mantener,,propuesta,
-/blog/,page,Páginas,/journal/,301,mantener,,propuesta,Nombre del blog pendiente (Q4 de la spec 005)
+/blog/,page,Páginas,/journal/,301,mantener,,propuesta,"Journal en inglés, Blog en español (Julio, 13/11)"
 /example-i/,page,Legal/utilidades,,410,retirar,,propuesta,Página de prueba
 /privacy-policy/,page,Páginas,/privacy-policy/,200,misma URL,,propuesta,
 /page-404-custom/,page,Legal/utilidades,,410,retirar,,propuesta,La 404 la pone el tema nuevo
@@ -118,19 +118,19 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services/tours/private-wine-tasting-in-marbella/,portfolio,Experiencias,/experiences/private-wine-tasting-in-marbella/,301,mantener,,propuesta,
 /services/tours/wine-tour-marbella/,portfolio,Experiencias,/experiences/wine-tour-marbella/,301,mantener,,propuesta,
 /services/transport/marbella-airport-transfers/,portfolio,Servicios,/services/transport/marbella-airport-transfers/,200,misma URL,,propuesta,
-/services/villas/,portfolio,Alquileres,/str/,301,mantener,,propuesta,Portada de Alquileres
+/services/villas/,portfolio,Alquileres,/stay/,301,mantener,,propuesta,Portada de Alquileres
 /services/villas/marbella-villa-owners/,portfolio,Propietarios,/owners/,301,fusionar,,propuesta,Es contenido para propietarios
-/services/villas/villa-mirador/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-mirador/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
 /services/tours/marbella-golf-holidays/,portfolio,Experiencias,/experiences/marbella-golf-holidays/,301,mantener,,propuesta,
-/services/accommodation/,portfolio,Alquileres,/str/,301,fusionar,,propuesta,
-/services/hotels/,portfolio,Alquileres,/str/,301,fusionar,,revisar,Ya no ofrecemos hoteles; revisar si tiene tráfico
+/services/accommodation/,portfolio,Alquileres,/stay/,301,fusionar,,propuesta,
+/services/hotels/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,Ya no ofrecemos hoteles; revisar si tiene tráfico
 /services/holidays/,portfolio,Servicios,/services/concierge/marbella-villa-holiday-package/,301,fusionar,,propuesta,
 /services/mice/,portfolio,Servicios,/services/events/,301,fusionar,,propuesta,Eventos de empresa
 /services/tours/mijas-private-tour/,portfolio,Experiencias,/experiences/mijas-private-tour/,301,mantener,,propuesta,
 /services/tours/marbella-tapas-tour/,portfolio,Experiencias,/experiences/marbella-tapas-tour/,301,mantener,,propuesta,
-/services/villas/modern-villa-marbella/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/marbella-modern-villa-oliva/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/beach-villas/,portfolio,Alquileres,/str/,301,fusionar,,propuesta,Candidata a colección «Primera línea»
+/services/villas/modern-villa-marbella/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/marbella-modern-villa-oliva/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/beach-villas/,portfolio,Alquileres,/stay/,301,fusionar,,propuesta,Candidata a colección «Primera línea»
 /services/wedding-villas/,portfolio,Servicios,/services/events/wedding-planner-marbella/,301,fusionar,,revisar,Revisar: o colección «Villas para eventos»
 /services/event-venues/,portfolio,Servicios,/services/events/,301,fusionar,,propuesta,
 /services/events/,portfolio,Servicios,/services/events/,200,misma URL,,propuesta,
@@ -148,11 +148,11 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services/events/marbella-summer-party/,portfolio,Servicios (eventos realizados),/services/events/marbella-summer-party/,200,misma URL,,revisar,"Galería de un evento: mantener si tiene tráfico; si no, 301 a Eventos"
 /services/events/40th-birthday-party-tropical/,portfolio,Servicios (eventos realizados),/services/events/40th-birthday-party-tropical/,200,misma URL,,revisar,"Galería de un evento: mantener si tiene tráfico; si no, 301 a Eventos"
 /services/events/corporate-white-party/,portfolio,Servicios (eventos realizados),/services/events/corporate-white-party/,200,misma URL,,revisar,"Galería de un evento: mantener si tiene tráfico; si no, 301 a Eventos"
-/services/villas/private-villas/,portfolio,Alquileres,/str/,301,fusionar,,propuesta,
-/services/villas/marbella-banus-modern-villa/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/private-villas/,portfolio,Alquileres,/stay/,301,fusionar,,propuesta,
+/services/villas/marbella-banus-modern-villa/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
 /services/events/marbella-events-finca-fantasia/,portfolio,Servicios (eventos realizados),/services/events/marbella-events-finca-fantasia/,200,misma URL,,revisar,"Galería de un evento: mantener si tiene tráfico; si no, 301 a Eventos"
-/services/villas/luxury-modern-villa-monteros-marbella/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/luxury-modern-villa-marbella-golf/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/luxury-modern-villa-monteros-marbella/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/luxury-modern-villa-marbella-golf/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
 /services/mountain-4x4-safari-4hours/,portfolio,Experiencias,/experiences/mountain-4x4-safari/,301,mantener,,revisar,"Revisar si sigue en venta; si no, 301 a Experiencias"
 /services/canyoning-level1-4hours/,portfolio,Experiencias,/experiences/canyoning/,301,mantener,,revisar,"Revisar si sigue en venta; si no, 301 a Experiencias"
 /services/catering/christmas/,portfolio,Servicios,/services/catering/christmas/,200,misma URL,,propuesta,
@@ -162,45 +162,45 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services/events/great-gatsby-marbella/,portfolio,Servicios (eventos realizados),/services/events/great-gatsby-marbella/,200,misma URL,,revisar,"Galería de un evento: mantener si tiene tráfico; si no, 301 a Eventos"
 /services/events/white-party-marbella/,portfolio,Servicios (eventos realizados),/services/events/white-party-marbella/,200,misma URL,,revisar,"Galería de un evento: mantener si tiene tráfico; si no, 301 a Eventos"
 /services/villas/beachfront-villa-new-golden-mile/,portfolio,Alquileres,/areas/new-golden-mile/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-flamingo-luxury-modern/,portfolio,Alquileres,/str/villa-flamingos/,301,mantener,villa-flamingos,revisar,Confirmar que es Villa Flamingos (en marOS no viene de Lodgify)
-/services/villas/villa-feliz/,portfolio,Alquileres,/str/villa-feliz/,301,mantener,lodgify-373016,propuesta,
+/services/villas/villa-flamingo-luxury-modern/,portfolio,Alquileres,/stay/villa-flamingos/,301,mantener,villa-flamingos,revisar,Confirmar que es Villa Flamingos (en marOS no viene de Lodgify)
+/services/villas/villa-feliz/,portfolio,Alquileres,/stay/villa-feliz/,301,mantener,lodgify-373016,propuesta,
 /services/villas/villa-palace-guadalmina/,portfolio,Alquileres,/areas/guadalmina/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-soule/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-nido/,portfolio,Alquileres,/str/villa-nido/,301,mantener,lodgify-405724,propuesta,
-/services/villas/villa-roma/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-mocca/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-michaela/,portfolio,Alquileres,/str/villa-michaela/,301,mantener,lodgify-410050,propuesta,
+/services/villas/villa-soule/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-nido/,portfolio,Alquileres,/stay/villa-nido/,301,mantener,lodgify-405724,propuesta,
+/services/villas/villa-roma/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-mocca/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-michaela/,portfolio,Alquileres,/stay/villa-michaela/,301,mantener,lodgify-410050,propuesta,
 /services/villas/villa-resort-flamingos/,portfolio,Alquileres,/areas/los-flamingos/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/finca-fantasia/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-rio/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/casa-sotogrande/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-goya/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/finca-fantasia/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-rio/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/casa-sotogrande/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-goya/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
 /services/tours/marbella-puerto-banus-night-life-walking-tour/,portfolio,Experiencias,/experiences/marbella-puerto-banus-night-life-walking-tour/,301,mantener,,propuesta,
 /services/villas/villa-resort-alqueria/,portfolio,Alquileres,/areas/la-alqueria/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-alpha/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-dorada/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-cala/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-paraiso/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-one/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-alpha/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-dorada/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-cala/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-paraiso/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-one/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
 /services/tours/reviews/,portfolio,Opiniones,/reviews/,301,fusionar,,propuesta,
 /services/villas/reviews/,portfolio,Opiniones,/reviews/,301,fusionar,,propuesta,
-/services/villas/villa-banus/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/apartments/,portfolio,Alquileres,/str/,301,fusionar,,propuesta,Sin tipología en la URL: filtro «Apartamentos» del listado
-/services/villas/villa-adelfa-beach-side/,portfolio,Alquileres,/str/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
-/services/villas/villa-concha-puerto-banus/,portfolio,Alquileres,/str/villa-concha/,301,mantener,villa-concha,propuesta,En marOS no viene de Lodgify (id villa-concha)
-/services/villas/villa-panda-sea-views-heated-pool-in-sierra-blanca/,portfolio,Alquileres,/str/villa-panda/,301,mantener,lodgify-732302,propuesta,
-/services/villas/casa-masari/,portfolio,Alquileres,/str/casa-masari/,301,mantener,lodgify-676451,propuesta,
-/services/villas/casa-dama/,portfolio,Alquileres,/str/casa-dama/,301,mantener,lodgify-780716,propuesta,
-/services/villas/casa-principe/,portfolio,Alquileres,/str/casa-principe/,301,mantener,lodgify-657962,propuesta,
-/services/villas/casa-samara/,portfolio,Alquileres,/str/casa-samara/,301,mantener,lodgify-791473,propuesta,
-/services/apartments/casa-cifuentes/,portfolio,Alquileres,/str/casa-cifuentes/,301,mantener,lodgify-658210,propuesta,En marOS se llama «Cifuentes»
-/services/apartments/casa-sould/,portfolio,Alquileres,/str/casa-soul/,301,mantener,lodgify-790411,propuesta,El slug actual tiene una errata (sould)
-/services/apartments/casa-paraiso/,portfolio,Alquileres,/str/casa-paraiso/,301,mantener,lodgify-792097,propuesta,
-/services/apartments/casa-brisa/,portfolio,Alquileres,/str/casa-brisa/,301,mantener,lodgify-795663,propuesta,
-/services/villas/villa-centauri/,portfolio,Alquileres,/str/villa-centauro/,301,mantener,lodgify-802366,propuesta,
-/services/villas/casa-rodeo-puerto-banus/,portfolio,Alquileres,/str/casa-rodeo/,301,mantener,lodgify-847728,propuesta,
-/services/apartments/casa-coral/,portfolio,Alquileres,/str/casa-coral/,301,mantener,lodgify-822651,propuesta,
-/services/apartments/casa-acosta/,portfolio,Alquileres,/str/casa-acosta/,301,mantener,lodgify-580341,propuesta,
+/services/villas/villa-banus/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/apartments/,portfolio,Alquileres,/stay/,301,fusionar,,propuesta,Sin tipología en la URL: filtro «Apartamentos» del listado
+/services/villas/villa-adelfa-beach-side/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,"No está en marOS: ¿ya no se ofrece o tiene otro nombre? Si vuelve, ficha propia"
+/services/villas/villa-concha-puerto-banus/,portfolio,Alquileres,/stay/villa-concha/,301,mantener,villa-concha,propuesta,En marOS no viene de Lodgify (id villa-concha)
+/services/villas/villa-panda-sea-views-heated-pool-in-sierra-blanca/,portfolio,Alquileres,/stay/villa-panda/,301,mantener,lodgify-732302,propuesta,
+/services/villas/casa-masari/,portfolio,Alquileres,/stay/casa-masari/,301,mantener,lodgify-676451,propuesta,
+/services/villas/casa-dama/,portfolio,Alquileres,/stay/casa-dama/,301,mantener,lodgify-780716,propuesta,
+/services/villas/casa-principe/,portfolio,Alquileres,/stay/casa-principe/,301,mantener,lodgify-657962,propuesta,
+/services/villas/casa-samara/,portfolio,Alquileres,/stay/casa-samara/,301,mantener,lodgify-791473,propuesta,
+/services/apartments/casa-cifuentes/,portfolio,Alquileres,/stay/casa-cifuentes/,301,mantener,lodgify-658210,propuesta,En marOS se llama «Cifuentes»
+/services/apartments/casa-sould/,portfolio,Alquileres,/stay/casa-soul/,301,mantener,lodgify-790411,propuesta,El slug actual tiene una errata (sould)
+/services/apartments/casa-paraiso/,portfolio,Alquileres,/stay/casa-paraiso/,301,mantener,lodgify-792097,propuesta,
+/services/apartments/casa-brisa/,portfolio,Alquileres,/stay/casa-brisa/,301,mantener,lodgify-795663,propuesta,
+/services/villas/villa-centauri/,portfolio,Alquileres,/stay/villa-centauro/,301,mantener,lodgify-802366,propuesta,
+/services/villas/casa-rodeo-puerto-banus/,portfolio,Alquileres,/stay/casa-rodeo/,301,mantener,lodgify-847728,propuesta,
+/services/apartments/casa-coral/,portfolio,Alquileres,/stay/casa-coral/,301,mantener,lodgify-822651,propuesta,
+/services/apartments/casa-acosta/,portfolio,Alquileres,/stay/casa-acosta/,301,mantener,lodgify-580341,propuesta,
 /services/villas/property-management-in-marbella-with-local-care/,portfolio,Propietarios,/owners/property-management/,301,fusionar,,propuesta,
 /category/business/,category,Journal,/journal/category/business/,301,mantener,,revisar,Revisar: reducir categorías (hoy 11) al lanzar
 /category/culture/,category,Journal,/journal/category/culture/,301,mantener,,revisar,Revisar: reducir categorías (hoy 11) al lanzar
@@ -258,16 +258,16 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services_cat/events/,services_cat,Listados,/services/events/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/lifestyle/,services_cat,Listados,/services/concierge/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/catering/,services_cat,Listados,/services/catering/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/villas/,services_cat,Listados,/str/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/villas/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/holidays/,services_cat,Listados,/services/concierge/marbella-villa-holiday-package/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/accommodation/,services_cat,Listados,/str/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/beach-villas/,services_cat,Listados,/str/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/wedding-villas/,services_cat,Listados,/str/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/accommodation/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/beach-villas/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/wedding-villas/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/gallery/,services_cat,Listados,/services/events/gallery/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/nature-adventure/,services_cat,Listados,/experiences/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/day-tours/,services_cat,Listados,/experiences/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/food-drink/,services_cat,Listados,/services/catering/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/private-villa/,services_cat,Listados,/str/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/private-villa/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/guide/,services_cat,Listados,/areas/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/alqueria/,services_cat,Listados,/areas/la-alqueria/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/flamingos/,services_cat,Listados,/areas/los-flamingos/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
@@ -280,9 +280,9 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services_cat/el-madronal/,services_cat,Zonas,/areas/el-madronal/,301,fusionar,,revisar,Zona sin guía hoy: crear la página de zona o 301 a /areas/
 /services_cat/nueva-andalucia/,services_cat,Listados,/areas/nueva-andalucia/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/guia-zona-2/,services_cat,Listados,/areas/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/modern-villas/,services_cat,Listados,/str/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/modern-villas/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/milla-de-oro-2/,services_cat,Listados,/areas/milla-de-oro/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/6-bedroom/,services_cat,Listados,/str/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/6-bedroom/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/new-golden-mile/,services_cat,Zonas,/areas/new-golden-mile/,301,fusionar,,revisar,Zona sin guía hoy: crear la página de zona o 301 a /areas/
-/services_cat/apartments/,services_cat,Listados,/str/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/apartments/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /page_category/area/,page_category,Zonas,/areas/,301,fusionar,,propuesta,
