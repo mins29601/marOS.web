@@ -2,24 +2,38 @@
   "id": "lodgify-000001",
   "lodgify_id": 1,
   "name": "Apartamento demo Puerto Banús",
-  "type": "apartment",
-  "publishable": true,
+  "type": {
+    "id": "apartment",
+    "name": "Apartamento"
+  },
   "max_guests": 4,
   "bedrooms": 2,
   "bathrooms": 2,
   "beds": 3,
-  "zone": "puerto-banus",
   "location": {
     "area": "Puerto Banús",
+    "municipality": "Marbella",
     "lat": 36.49,
     "lng": -4.95,
     "precision": "approx"
   },
   "amenities": [
-    "shared-pool",
-    "terrace",
-    "air-conditioning",
-    "wifi"
+    {
+      "code": "shared-pool",
+      "name": "Piscina comunitaria"
+    },
+    {
+      "code": "terrace",
+      "name": "Terraza"
+    },
+    {
+      "code": "air-conditioning",
+      "name": "Aire acondicionado"
+    },
+    {
+      "code": "wifi",
+      "name": "Wi-Fi"
+    }
   ],
   "room_types": [
     {
@@ -29,40 +43,53 @@
       "units": 1
     }
   ],
-  "fees": {
-    "cleaning": 120
-  },
-  "check_in": "15:00",
-  "check_out": "11:00",
-  "deposit": 500,
   "photos": [
     {
       "url": "mock:photos/lodgify-000001-1.jpg",
       "order": 1,
-      "hash": "mock-lodgify-000001-1"
+      "hash": "mock-lodgify-000001-1",
+      "caption": ""
     },
     {
       "url": "mock:photos/lodgify-000001-2.jpg",
       "order": 2,
-      "hash": "mock-lodgify-000001-2"
+      "hash": "mock-lodgify-000001-2",
+      "caption": ""
     },
     {
       "url": "mock:photos/lodgify-000001-3.jpg",
       "order": 3,
-      "hash": "mock-lodgify-000001-3"
+      "hash": "mock-lodgify-000001-3",
+      "caption": ""
     },
     {
       "url": "mock:photos/lodgify-000001-4.jpg",
       "order": 4,
-      "hash": "mock-lodgify-000001-4"
+      "hash": "mock-lodgify-000001-4",
+      "caption": ""
     },
     {
       "url": "mock:photos/lodgify-000001-5.jpg",
       "order": 5,
-      "hash": "mock-lodgify-000001-5"
+      "hash": "mock-lodgify-000001-5",
+      "caption": ""
     }
   ],
+  "currency": "EUR",
+  "deposit": 500,
+  "fees": [
+    {
+      "name": "Cleaning",
+      "type": "Cleaning",
+      "amount": 120
+    }
+  ],
+  "price_from": {
+    "amount": 180,
+    "currency": "EUR"
+  },
+  "check_in": "15:00",
+  "check_out": "11:00",
   "updated_at": "2026-11-12T09:00:00Z",
-  "etag": "\"mock-lodgify-000001-2\"",
-  "web_url_hint": null
+  "etag": "\"21967c358888d6ff23a5872033b1add3\""
 }

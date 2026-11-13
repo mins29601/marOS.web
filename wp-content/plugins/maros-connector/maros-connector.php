@@ -1,26 +1,39 @@
 <?php
 /**
  * Plugin Name:       marOS Connector
- * Description:       Propiedades (villas, apartamentos…) cargadas desde la API de marOS (spec 003). Versión mínima: tipo Propiedad, taxonomías, campos operativos y sincronización por WP-CLI.
- * Version:           0.1.0
+ * Description:       Propiedades (villas, apartamentos…) cargadas desde la API de marOS (spec 003): ficha, fotos, calendario y tarifas, con cron, cola, avisos firmados y pantalla de estado.
+ * Version:           0.2.0
  * Requires at least: 6.9
  * Requires PHP:      8.3
  * Text Domain:       maros-connector
  * License:           GPL-2.0-or-later
  *
- * Pendiente (spec 003): webhook firmado, cola y cron, calendario y tarifas en tablas propias,
- * proxy de presupuesto y reserva, Abilities del MCP, purga de APO.
+ * Pendiente (spec 003): proxy de presupuesto y reserva, solicitudes Open, bloques de búsqueda y
+ * calendario, Abilities del MCP, purga de APO.
  *
  * @package MarbellaInStyle
  */
 
 defined( 'ABSPATH' ) || exit;
 
-const MAROS_CONNECTOR_VERSION = '0.1.0';
+const MAROS_CONNECTOR_VERSION = '0.2.0';
 
 require_once __DIR__ . '/includes/class-maros-client.php';
+require_once __DIR__ . '/includes/class-maros-log.php';
+require_once __DIR__ . '/includes/class-maros-calendar.php';
 require_once __DIR__ . '/includes/class-maros-sync.php';
+require_once __DIR__ . '/includes/class-maros-scheduler.php';
+require_once __DIR__ . '/includes/class-maros-webhook.php';
 require_once __DIR__ . '/includes/bindings.php';
+
+Maros_Scheduler::init();
+Maros_Webhook::init();
+add_action( 'plugins_loaded', array( 'Maros_Calendar', 'maybe_install' ) );
+
+if ( is_admin() ) {
+	require_once __DIR__ . '/includes/class-maros-admin.php';
+	Maros_Admin::init();
+}
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once __DIR__ . '/includes/class-maros-cli.php';
@@ -50,6 +63,13 @@ function maros_property_fields(): array {
 		'maros_deposit'    => 'number',
 		'maros_cleaning'   => 'number',
 		'maros_gallery'    => 'string', // Ids de adjuntos separados por comas.
+		'maros_currency'   => 'string',
+		'maros_price_from' => 'number', // Precio «desde» por noche que da marOS; nunca se calcula aquí.
+		'maros_room_types' => 'string', // JSON: [{id, name, max_guests, units}].
+		'maros_synced_at'  => 'string',
+		'maros_calendar_etag'      => 'string',
+		'maros_calendar_synced_at' => 'string',
+		'maros_withdrawn'  => 'integer', // 1 si ya no es publicable en marOS.
 	);
 }
 
@@ -128,6 +148,10 @@ register_activation_hook(
 	__FILE__,
 	static function () {
 		maros_register_types();
+		Maros_Calendar::install();
+		Maros_Scheduler::ensure_scheduled();
 		flush_rewrite_rules();
 	}
 );
+
+register_deactivation_hook( __FILE__, array( 'Maros_Scheduler', 'unschedule' ) );

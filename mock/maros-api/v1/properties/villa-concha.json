@@ -2,26 +2,46 @@
   "id": "villa-concha",
   "lodgify_id": null,
   "name": "Villa Concha",
-  "type": "villa",
-  "publishable": true,
+  "type": {
+    "id": "villa",
+    "name": "Villa"
+  },
   "max_guests": 8,
   "bedrooms": 4,
   "bathrooms": 4,
   "beds": 5,
-  "zone": "sierra-blanca",
   "location": {
     "area": "Sierra Blanca",
+    "municipality": "Marbella",
     "lat": 36.52,
     "lng": -4.9,
     "precision": "approx"
   },
   "amenities": [
-    "private-pool",
-    "heated-pool",
-    "sea-view",
-    "gym",
-    "wifi",
-    "parking"
+    {
+      "code": "private-pool",
+      "name": "Piscina privada"
+    },
+    {
+      "code": "heated-pool",
+      "name": "Piscina climatizada"
+    },
+    {
+      "code": "sea-view",
+      "name": "Vistas al mar"
+    },
+    {
+      "code": "gym",
+      "name": "Gimnasio"
+    },
+    {
+      "code": "wifi",
+      "name": "Wi-Fi"
+    },
+    {
+      "code": "parking",
+      "name": "Aparcamiento"
+    }
   ],
   "room_types": [
     {
@@ -31,40 +51,53 @@
       "units": 1
     }
   ],
-  "fees": {
-    "cleaning": 300
-  },
-  "check_in": "16:00",
-  "check_out": "11:00",
-  "deposit": 2000,
   "photos": [
     {
       "url": "mock:photos/villa-concha-1.jpg",
       "order": 1,
-      "hash": "mock-villa-concha-1"
+      "hash": "mock-villa-concha-1",
+      "caption": ""
     },
     {
       "url": "mock:photos/villa-concha-2.jpg",
       "order": 2,
-      "hash": "mock-villa-concha-2"
+      "hash": "mock-villa-concha-2",
+      "caption": ""
     },
     {
       "url": "mock:photos/villa-concha-3.jpg",
       "order": 3,
-      "hash": "mock-villa-concha-3"
+      "hash": "mock-villa-concha-3",
+      "caption": ""
     },
     {
       "url": "mock:photos/villa-concha-4.jpg",
       "order": 4,
-      "hash": "mock-villa-concha-4"
+      "hash": "mock-villa-concha-4",
+      "caption": ""
     },
     {
       "url": "mock:photos/villa-concha-5.jpg",
       "order": 5,
-      "hash": "mock-villa-concha-5"
+      "hash": "mock-villa-concha-5",
+      "caption": ""
     }
   ],
+  "currency": "EUR",
+  "deposit": 2000,
+  "fees": [
+    {
+      "name": "Cleaning",
+      "type": "Cleaning",
+      "amount": 300
+    }
+  ],
+  "price_from": {
+    "amount": 750,
+    "currency": "EUR"
+  },
+  "check_in": "16:00",
+  "check_out": "11:00",
   "updated_at": "2026-11-12T09:00:00Z",
-  "etag": "\"mock-villa-concha-2\"",
-  "web_url_hint": null
+  "etag": "\"3207d2a19f6288d7330d875ec6a90ec8\""
 }

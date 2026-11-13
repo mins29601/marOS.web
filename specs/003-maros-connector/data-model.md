@@ -52,9 +52,21 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 | Tabla | Columnas | Notas |
 |---|---|---|
 | `{prefix}maros_calendar` | `property_id`, `room_type_id`, `date`, `available`, `min_stay`, `closed_arrival`, `closed_departure`, `synced_at` | Solo fechas futuras (hasta 18 meses, como marOS). Índice por `date, available` |
-| `{prefix}maros_rates` | `property_id`, `room_type_id`, `date`, `amount`, `currency`, `synced_at` | Para el precio «desde» y para ordenar; el precio final siempre lo da marOS |
+| `{prefix}maros_rates` | `property_id`, `room_type_id`, `date`, `min_stay`, `max_stay`, `amount`, `currency`, `synced_at` | Una fila por tramo de estancia, como Lodgify. Para ordenar y filtrar por precio; el precio final siempre lo da marOS |
 
 Cada carga de una propiedad reemplaza su calendario entero en una transacción (todo o nada).
+`property_id` es el id de marOS (igual en todos los idiomas).
+
+## Cómo se mantiene al día (plugin 0.2)
+
+| Cuándo | Qué hace |
+|---|---|
+| Cada 5 min (cron real de IONOS → `maros_tick`) | Procesa la cola. Cada 15 min además lee la lista de marOS y encola las propiedades cuyo `etag` (ficha) o `calendar_etag` haya cambiado |
+| Aviso firmado de marOS (`/wp-json/maros/v1/webhook`) | Encola la propiedad; responde 202 |
+| 03:30 de Madrid (`maros_nightly`) | Relee todo aunque no haya cambiado y borra los días pasados |
+| Fallo | Reintento a los 5, 10, 20… min (máx. 6 h); la web sigue con los últimos datos; aviso en el escritorio si pasan 26 h sin respuesta |
+| Propiedad que deja de estar en la lista | Pasa a borrador, se borra su calendario y, si estaba publicada, aviso para poner la redirección |
+| Fotos | Como mucho 40 nuevas por pasada; el resto en la siguiente |
 
 ## Datos que NO se guardan en WordPress
 

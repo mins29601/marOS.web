@@ -4,8 +4,9 @@
 
 **Created**: 2026-11-11
 
-**Status**: Borrador de diseño. Depende del contrato de la API de marOS (spec 013 fase C y spec
-026 de `mins29601/marOS`); mientras no exista, se trabaja contra un mock.
+**Status**: En desarrollo. Versión 0.2 del plugin (13/11): ficha, fotos, calendario y tarifas desde
+`/api/v1/catalog/…` de marOS (spec 030 de `mins29601/marOS`), cola, cron, avisos firmados y
+pantalla «marOS». Presupuesto y reserva dependen de la spec 026 de marOS; mientras, el mock.
 
 **Fuentes**:
 
