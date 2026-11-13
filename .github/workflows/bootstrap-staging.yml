@@ -50,5 +50,5 @@ jobs:
 
       - name: 3. Tema hijo, idiomas y contenido
         run: |
-          if [ "${{ inputs.contenido_inicial }}" != "true" ]; then export MIS_SKIP_CONTENT=1; fi
+          if [ "${{ inputs.contenido_inicial }}" = "false" ]; then export MIS_SKIP_CONTENT=1; fi
           scripts/bootstrap.sh setup
