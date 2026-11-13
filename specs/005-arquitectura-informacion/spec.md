@@ -35,26 +35,28 @@ Sin Figma. Tres pasos, cada uno documentado en spec-kit:
 
 
 
+Mapa del sitio completo, con el inventario de la web actual y a dónde va cada URL: [mapa-del-sitio.md](mapa-del-sitio.md).
+
 Las rutas son las del estudio de URLs (spec 002) y pueden cambiar. Se muestra en inglés y, entre
 paréntesis, en español.
 
 ```text
-Inicio  /en/  (/es/)
-├── Stay · Alquileres            /en/str/            (/es/vft/)
-│   ├── Ficha de propiedad       /en/str/<slug>/     (/es/vft/<slug>/)
-│   └── Resultados de búsqueda   /en/str/?checkin=…  (mismo listado con filtros)
-├── Areas · Zonas                /en/areas/          (/es/zonas/)
-│   └── Zona                     /en/areas/<slug>/   — propiedades, tours y guía de la zona
-├── Experiences · Experiencias   /en/experiences/    (/es/experiencias/)  [tours]
+Inicio  /  (/es/)
+├── Stay · Alquileres            /str/            (/es/vft/)
+│   ├── Ficha de propiedad       /str/<slug>/     (/es/vft/<slug>/)
+│   └── Resultados de búsqueda   /str/?checkin=…  (mismo listado con filtros)
+├── Areas · Zonas                /areas/          (/es/zonas/)
+│   └── Zona                     /areas/<slug>/   — propiedades, tours y guía de la zona
+├── Experiences · Experiencias   /experiences/    (/es/experiencias/)  [tours]
 │   └── Tour                     …/<slug>/           — reserva con FareHarbor
-├── Concierge · Servicios        /en/services/       (/es/servicios/)
+├── Concierge · Servicios        /services/       (/es/servicios/)
 │   ├── Transporte, Chef y catering, Eventos y bodas, Conserjería
 │   └── Servicio                 …/<tipo>/<slug>/    — formulario de solicitud
-├── Owners · Propietarios        /en/owners/         (/es/propietarios/)
+├── Owners · Propietarios        /owners/         (/es/propietarios/)
 │   ├── Gestión de alquiler vacacional
 │   ├── Gestión de propiedades
 │   └── Recursos para propietarios
-├── Journal · Blog               /en/journal/        (/es/blog/)
+├── Journal · Blog               /journal/        (/es/blog/)
 │   └── Entrada, categorías
 ├── About · Nosotros, Opiniones, Trabaja con nosotros
 ├── Contact · Contacto
