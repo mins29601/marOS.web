@@ -20,7 +20,7 @@ GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  
 | | Pruebas |
 |---|---|
 | URL | `https://staging.privatevillacollection.com` |
-| Quién entra | cualquier email `@marbellainstyle.com` (Access envía un código de un solo uso) |
+| Quién entra | cualquier email `@marbellainstyle.com`, con su cuenta de Google (un clic) o con un código de un solo uso al email |
 | Buscadores | `noindex` triple: ajuste de WordPress + cabecera `X-Robots-Tag` + `robots.txt` cerrado |
 | Servidor de IONOS | solo acepta tráfico que venga de Cloudflare (`.htaccess`) |
 | Correo de WordPress | bloqueado: se anota en el log, nunca sale a clientes |
@@ -89,12 +89,22 @@ el despliegue pasaría a usar la contraseña como secreto de GitHub.
 
 Cloudflare → **Zero Trust** (gratis hasta 50 personas; pide un nombre de equipo, p. ej. `mis`).
 
-1. **Settings → Authentication**: dejar activado **One-time PIN** (código al email).
+1. **Settings → Authentication**: entrar con **Google** (decisión de Julio, 13/11) y dejar
+   **One-time PIN** (código al email) como alternativa.
+   - Google Cloud Console (con tu cuenta de Workspace) → proyecto «MIS Access» → **APIs y
+     servicios → Pantalla de consentimiento OAuth**: tipo **Interno** (solo cuentas de
+     @marbellainstyle.com).
+   - **Credenciales → Crear ID de cliente OAuth** → Aplicación web → URI de redirección
+     autorizado: `https://<equipo>.cloudflareaccess.com/cdn-cgi/access/callback` (el `<equipo>`
+     es el nombre de equipo de Zero Trust).
+   - Cloudflare → Authentication → **Add new → Google** → pegar el *Client ID* y el *Client
+     secret* → **Test**.
+   - En la aplicación del punto 2, marcar Google y One-time PIN como formas de entrar (con
+     «Instant Auth» desactivado, la pantalla ofrece las dos).
 2. **Access → Applications → Add → Self-hosted**: nombre «MIS pruebas», dominio
    `staging.privatevillacollection.com`, sesión de 7 días.
    - Política **Equipo** (Allow): **Emails ending in** `@marbellainstyle.com` (decisión de
-     Julio, 13/11). Como el correo está en Google Workspace, se puede añadir además
-     «Google» como forma de entrar (un clic, sin código); el código por email sirve igual.
+     Julio, 13/11). La política se aplica entre por Google o por código.
    - Política **GitHub** (Service Auth): token de servicio del punto 3, para que la comprobación
      tras cada despliegue pueda entrar.
 3. **Access → Service Auth → Create service token** «github-smoke»: copia el *Client ID* y el
@@ -153,7 +163,7 @@ Mientras `SSH_HOST` esté vacío, el despliegue automático no hace nada (no fal
 2. **Cron real**: IONOS → Hosting → **Cron jobs** (o `crontab -e` por SSH), cada 5 minutos:
    `php $HOME/bin/wp --path=$HOME/staging cron event run --due-now --quiet`
    (si IONOS trae WP-CLI propio, `wp` en lugar de `php $HOME/bin/wp`).
-3. Abre `https://staging.privatevillacollection.com`: Access te pide el email, llega un código y entras.
+3. Abre `https://staging.privatevillacollection.com`: Access ofrece «Google» (un clic) o el código por email, y entras.
 
 Desde aquí, cada PR fusionado en `main` se despliega solo en pruebas (workflow **Deploy pruebas**)
 y al final comprueba que la web responde, que lleva `noindex` y que sin identificarse no se ve.

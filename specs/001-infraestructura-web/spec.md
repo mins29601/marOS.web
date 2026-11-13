@@ -231,4 +231,5 @@ subdominio y su usuario SSH: producción y pruebas.
   política de Access «Emails ending in `@marbellainstyle.com`».
 - Nada se cambia en las cuentas de IONOS ni de Cloudflare sin confirmación de Julio: los pasos de
   panel los hace Julio con la guía.
-
+- Forma de entrar en Access: **Google** (cuentas de Workspace) con el código por email como
+  alternativa (Julio, 13/11, 13:57).
