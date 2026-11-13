@@ -202,7 +202,7 @@ guardan las 5 últimas versiones en `~/mis/staging/releases/`.
 
 ## Comprobado en la primera conexión (13/11)
 
-- Claves SSH: sí. Enlaces simbólicos: sí. `crontab`: disponible. rsync y WP-CLI: instalados.
+- Claves SSH: sí. Enlaces simbólicos: se crean, pero Apache no sirve CSS/JS a través de ellos (por eso `DEPLOY_MODE=copy`). `crontab`: funciona (cron de WordPress puesto el 13/11, cada 5 minutos). rsync y WP-CLI: instalados.
 - Home de la cuenta: `/kunden/homepages/29/d668976456/htdocs` (es la raíz del webspace; `~/mis/.htaccess` lo cierra a la web).
 - El `php` de la terminal es PHP 4.4: los scripts buscan solos `php8.4-cli` (hay de la 4.4 a la 8.6; `scripts/remote/php-bin.sh`). Servidor SSH: `home668976456.1and1-data.host`, usuario `u88262191`. La carpeta de pruebas es `~/marbellainstyle/staging`.
 
