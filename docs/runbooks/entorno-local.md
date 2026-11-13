@@ -1,12 +1,12 @@
 # Entorno local (Mac) con wp-env
 
-WordPress en tu Mac que imita a **pruebas** (`staging.<temporal>`), con la API de marOS simulada.
+WordPress en tu Mac que imita a **pruebas** (`staging.privatevillacollection.com`), con la API de marOS simulada.
 Usa el mismo `.wp-env.json` que los tests de GitHub (spec 001, «Testing»).
 
 | | Local | Pruebas | Producción |
 |---|---|---|---|
-| URL | http://localhost:8888 | `staging.<temporal>` | `www.<temporal>` |
-| PHP / WordPress | 8.3 / última estable (hoy 7.1) | los de IONOS | los de IONOS |
+| URL | http://localhost:8888 | `staging.privatevillacollection.com` | `www.privatevillacollection.com` |
+| PHP / WordPress | 8.4 / última estable (hoy 7.1) | los de IONOS | los de IONOS |
 | `WP_ENVIRONMENT_TYPE` | `local` | `staging` | `production` |
 | marOS | **mock** (JSON de `mock/maros-api/`) | marOS pruebas | marOS producción |
 | Correo | bloqueado (se anota en el log) | bloqueado | normal |
@@ -53,6 +53,21 @@ npm run env:start    # la primera vez tarda unos minutos (descarga imágenes)
 - Cuando existan, se añaden a `.wp-env.json` `./wp-content/plugins/maros-connector` y
   `./wp-content/plugins/mis-contenido`.
 
+## 3b. Primera versión de la web (contenido de ejemplo)
+
+Con el entorno arrancado, dos comandos dejan la web navegable en inglés y español:
+
+```bash
+npm run wp -- maros sync --publish
+npm run wp -- eval-file wp-content/mis-scripts/setup/contenido-inicial.php
+```
+
+- `wp maros sync` carga las propiedades del mock (ficha, tipo, zona, equipamiento y fotos) en
+  inglés y español. Se puede repetir: solo actualiza lo que cambia (etag).
+- `contenido-inicial.php` crea zonas, tipos de servicio, 2 experiencias, 4 servicios, las páginas
+  del mapa del sitio (spec 005), los formularios de Contact Form 7 y los menús de cada idioma. Es
+  idempotente y los textos son de ejemplo.
+
 ## 4. La API de marOS simulada
 
 Base: `http://localhost:8888/wp-json/maros-mock` (desde dentro del contenedor:
@@ -93,7 +108,7 @@ cambia `MAROS_ENV`/`MAROS_API_BASE` a marOS pruebas.
 ```bash
 # en pruebas (por SSH): wp db export pruebas.sql && wp export (o WPvivid)
 npm run wp -- db import /var/www/html/pruebas.sql   # copia el .sql a la raíz del repo antes
-npm run wp -- search-replace 'https://staging.<temporal>' 'http://localhost:8888' --all-tables
+npm run wp -- search-replace 'https://staging.privatevillacollection.com' 'http://localhost:8888' --all-tables
 ```
 
 Nunca se sube nada desde local a pruebas o producción: el código va por Git y PR.

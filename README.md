@@ -11,6 +11,11 @@ WordPress estándar en IONOS con Cloudflare delante, conectado a la API de marOS
 WordPress en tu Mac con la API de marOS simulada: `npm install && npm run env:start` →
 http://localhost:8888. Instalación y uso: [docs/runbooks/entorno-local.md](docs/runbooks/entorno-local.md).
 
+## Pruebas (staging) en IONOS
+
+`https://staging.privatevillacollection.com`, privado con Cloudflare Access y sin indexar. Se despliega solo al
+fusionar en `main`. Montaje paso a paso: [docs/runbooks/pruebas-ionos.md](docs/runbooks/pruebas-ionos.md).
+
 ## Specs (spec-kit)
 
 | Spec | Estado |
@@ -20,6 +25,7 @@ http://localhost:8888. Instalación y uso: [docs/runbooks/entorno-local.md](docs
 | [003 marOS Connector](specs/003-maros-connector/spec.md) · [datos](specs/003-maros-connector/data-model.md) | Borrador |
 | [004 Modelo de contenido](specs/004-modelo-contenido/spec.md) · [campos de tours](specs/004-modelo-contenido/data-model.md) | Borrador |
 | [005 Arquitectura de información y mockups](specs/005-arquitectura-informacion/spec.md) | Borrador |
+| [006 Sistema de diseño (Atomic Design)](specs/006-atomic-design/spec.md) | Borrador |
 
 Flujo: `/speckit-specify` → `/speckit-clarify` → `/speckit-plan` → `/speckit-tasks` →
 `/speckit-implement`, cada spec en su rama y su pull request.

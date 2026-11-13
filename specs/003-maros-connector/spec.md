@@ -175,6 +175,9 @@ través del proxy del plugin.
   y salida y comprobación de permisos: `maros/list-properties`, `maros/get-property`,
   `maros/update-property-copy`, `maros/create-landing`, `maros/sync-status`, `maros/resync-property`,
   `maros/check-availability` (sobre los datos de WordPress).
+  Además `maros/update-portal-ratings` (Julio, 13/11): un agente actualiza por el MCP la nota, el
+  nº de opiniones y la URL de cada portal (Airbnb, Booking.com, Vrbo) de una propiedad. Solo toca
+  esos campos, se publica directamente (no es contenido editorial) y queda registrado (principio VIII).
 - **FR-007**: El entorno de marOS MUST venir de constantes de `wp-config.php`: `MAROS_ENV`,
   `MAROS_API_BASE`, `MAROS_API_KEY`, `MAROS_WEBHOOK_SECRET`.
 - **FR-008**: El plugin MUST tener una pantalla «marOS» con estado: entorno, última

@@ -29,6 +29,21 @@ add_filter(
 );
 add_filter( 'pre_option_blog_public', '__return_zero' );
 
+// Segunda y tercera capa de noindex: cabecera HTTP y robots.txt cerrado (spec 001, US3).
+add_action(
+	'send_headers',
+	static function () {
+		header( 'X-Robots-Tag: noindex, nofollow', true );
+	}
+);
+add_filter(
+	'robots_txt',
+	static function (): string {
+		return "User-agent: *\nDisallow: /\n";
+	},
+	PHP_INT_MAX
+);
+
 // 2. Correo saliente bloqueado: se anota en el log en vez de enviarse.
 add_filter(
 	'pre_wp_mail',

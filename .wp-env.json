@@ -1,7 +1,7 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
 	"core": null,
-	"phpVersion": "8.3",
+	"phpVersion": "8.4",
 	"port": 8888,
 	"testsPort": 8889,
 	"themes": [
@@ -19,7 +19,9 @@
 		"https://downloads.wordpress.org/plugin/wpvivid-backuprestore.zip",
 		"https://downloads.wordpress.org/plugin/cloudflare.zip",
 		"https://downloads.wordpress.org/plugin/mcp-adapter.zip",
-		"https://downloads.wordpress.org/plugin/enable-abilities-for-mcp.zip"
+		"https://downloads.wordpress.org/plugin/enable-abilities-for-mcp.zip",
+		"./wp-content/plugins/mis-contenido",
+		"./wp-content/plugins/maros-connector"
 	],
 	"mappings": {
 		"wp-content/mu-plugins": "./wp-content/mu-plugins",
@@ -35,7 +37,8 @@
 		"MAROS_ENV": "mock",
 		"MAROS_API_BASE": "http://localhost/wp-json/maros-mock",
 		"MAROS_API_KEY": "mock-local-no-secreta",
-		"MAROS_WEBHOOK_SECRET": "mock-local-no-secreta"
+		"MAROS_WEBHOOK_SECRET": "mock-local-no-secreta",
+		"WP_DEVELOPMENT_MODE": "theme"
 	},
 	"lifecycleScripts": {
 		"afterStart": "npx wp-env run cli wp rewrite structure '/%postname%/' --hard && npx wp-env run cli wp theme activate marbellainstyle && npx wp-env run cli wp plugin deactivate cloudflare && npx wp-env run cli wp language core install es_ES && npx wp-env run cli wp eval-file wp-content/mis-scripts/setup/idiomas.php"

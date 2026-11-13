@@ -10,7 +10,7 @@
       "bathrooms": 5,
       "zone": "nueva-andalucia",
       "updated_at": "2026-11-12T09:00:00Z",
-      "etag": "\"mock-lodgify-373016-1\""
+      "etag": "\"mock-lodgify-373016-2\""
     },
     {
       "id": "villa-concha",
@@ -22,7 +22,7 @@
       "bathrooms": 4,
       "zone": "sierra-blanca",
       "updated_at": "2026-11-12T09:00:00Z",
-      "etag": "\"mock-villa-concha-1\""
+      "etag": "\"mock-villa-concha-2\""
     },
     {
       "id": "lodgify-000001",
@@ -34,7 +34,7 @@
       "bathrooms": 2,
       "zone": "puerto-banus",
       "updated_at": "2026-11-12T09:00:00Z",
-      "etag": "\"mock-lodgify-000001-1\""
+      "etag": "\"mock-lodgify-000001-2\""
     }
   ],
   "meta": {

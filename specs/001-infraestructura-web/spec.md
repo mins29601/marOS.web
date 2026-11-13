@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-11
 
-**Status**: Borrador. Pendiente de las respuestas de Julio en Clarifications.
+**Status**: Borrador. Pruebas lista para montar (código y guía) en `staging.privatevillacollection.com`.
 
 **Fuentes**:
 
@@ -54,7 +54,7 @@ subdominio y su usuario SSH: producción y pruebas.
 
 **Acceptance Scenarios**:
 
-1. **Given** una persona sin permiso, **When** abre `staging.marbellainstyle.com`, **Then**
+1. **Given** una persona sin permiso, **When** abre `staging.privatevillacollection.com`, **Then**
    Cloudflare Access le pide identificarse y no ve la web.
 2. **Given** cualquier página de pruebas, **When** se pide, **Then** lleva `noindex` y la
    cabecera `X-Robots-Tag: noindex, nofollow`, y `robots.txt` lo prohíbe todo.
@@ -215,3 +215,21 @@ subdominio y su usuario SSH: producción y pruebas.
   (DNS de marbellainstyle.com a Cloudflare) pasa a la preparación del lanzamiento. Q3 y Q4 quedan
   sustituidas. *Pendiente*: nombre del dominio temporal.
 - Q5 (emails de Access): aclarado qué significa; *pendiente* la lista.
+
+### Session 2026-11-13 (pruebas primero)
+
+- Julio pide preparar ya la infraestructura de **pruebas** en IONOS para ver la maqueta real
+  (tema Ollie, Polylang con inglés sin prefijo y español en `/es/`). Se monta pruebas antes que
+  producción, con la guía [docs/runbooks/pruebas-ionos.md](../../docs/runbooks/pruebas-ionos.md).
+- Mientras la API pública de marOS no exista, pruebas usa `MAROS_ENV=mock` con los JSON del repo
+  (los mismos que en local); al estar lista, `MAROS_ENV=staging` y marOS pruebas. El mu-plugin
+  `mis-entorno` impide en cualquier caso apuntar a marOS producción.
+- Q6: ¿Qué dominio temporal? → **`privatevillacollection.com`** (Julio, 13/11, 13:55): pruebas en
+  `staging.privatevillacollection.com` y producción hasta el lanzamiento en
+  `www.privatevillacollection.com`.
+- Q5 (emails de Access) → **todos los emails `@marbellainstyle.com`** (Julio, 13/11, 13:55):
+  política de Access «Emails ending in `@marbellainstyle.com`».
+- Nada se cambia en las cuentas de IONOS ni de Cloudflare sin confirmación de Julio: los pasos de
+  panel los hace Julio con la guía.
+- Forma de entrar en Access: **Google** (cuentas de Workspace) con el código por email como
+  alternativa (Julio, 13/11, 13:57).

@@ -37,9 +37,11 @@ $mis_options['force_lang']   = 1; // Idioma por carpeta (/es/).
 $mis_options['hide_default'] = 1; // Inglés sin prefijo (provisional, D6).
 $mis_options['rewrite']      = 1; // Sin /language/ en la URL.
 $mis_options['browser']      = 0; // Sin redirección por idioma del navegador (mejor para SEO y caché APO).
+$mis_options['redirect_lang'] = 1; // Portada de cada idioma en /es/, no en /es/inicio/.
 update_option( 'polylang', $mis_options );
 
 $mis_languages->update_default( 'en' );
+$mis_languages->clean_cache();
 PLL()->model->set_language_in_mass();
 flush_rewrite_rules( true );
 
