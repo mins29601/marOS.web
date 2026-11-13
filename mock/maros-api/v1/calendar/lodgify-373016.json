@@ -1,0 +1,28 @@
+{
+  "currency": "EUR",
+  "rate": 900,
+  "rate_high": 1800,
+  "min_stay": 4,
+  "min_stay_high": 7,
+  "high_season_months": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "booked_offsets": [
+    {
+      "from_day": 3,
+      "nights": 5
+    },
+    {
+      "from_day": 20,
+      "nights": 10
+    },
+    {
+      "from_day": 60,
+      "nights": 7
+    }
+  ],
+  "_nota": "Plantilla del mock: el calendario se genera para 18 meses desde hoy; booked_offsets son días desde hoy."
+}

@@ -63,7 +63,7 @@ Leyenda: **[Tú]** · **[Claude]** · **[Juntos]**.
 
 | # | Quién | Qué |
 |---|---|---|
-| M4.1 | [Claude] | Script de carga con WP-CLI, idempotente (clave: URL o id antiguo), que enlaza las traducciones en/es en WPML y conserva slug, fecha y autor |
+| M4.1 | [Claude] | Script de carga con WP-CLI, idempotente (clave: URL o id antiguo), que enlaza las traducciones en/es en Polylang (`pll_save_post_translations`) y conserva slug, fecha y autor |
 | M4.2 | [Claude] | Las propiedades llegan de marOS (spec 003, o del mock); el script les añade los textos de marketing emparejados en M1.3 |
 | M4.3 | [Claude] | Opiniones (Site Reviews) exportadas e importadas, asignadas a su propiedad, tour o servicio |
 | M4.4 | [Claude] | Menús, pie, páginas legales y formularios recreados (el texto legal lo revisa quien corresponda) |

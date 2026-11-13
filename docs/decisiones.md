@@ -43,9 +43,10 @@ recomendación de Claude; Julio decide.
 | T34 | 2026-11-13 | Blog: «Journal» en inglés (`/en/journal/`) y «Blog» en español (`/es/blog/`) | Julio | spec 005 |
 | T35 | 2026-11-13 | Iconos: Phosphor Light como base + extensión propia para los que falten | Julio | spec 006, iconos.md |
 | T36 | 2026-11-13 | Tipografía Josefin Sans + Poppins con el ajuste propuesto; colores de la guía con `gold-text` y `muted` a prueba | Julio | spec 006 |
-| D2 | 2026-11-11 | Plugin de idiomas: **WPML** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
-| D3 | 2026-11-11 | Plugin SEO: **Yoast SEO** (+ el módulo de WPML para SEO) | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
-| D4 | 2026-11-11 | Formularios: **Gravity Forms** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| T37 | 2026-11-13 | Dominio temporal de la fase 1: **`privatevillacollection.com`** (pruebas en `staging.`, producción en `www.` hasta el lanzamiento), en IONOS y dado de alta en Cloudflare. Access de pruebas: **todos los emails `@marbellainstyle.com`** | Julio | spec 001, runbook pruebas-ionos |
+| D2 | 2026-11-12 | Plugin de idiomas: **Polylang** (gratis). Cambia la decisión del 11/11 (WPML): la suscripción de WPML ha caducado y para en + es basta Polylang; Polylang Pro si hiciera falta | Julio («polylang está bien») | docs/decisiones.md |
+| D3 | 2026-11-11 | Plugin SEO: **Yoast SEO** (compatible con Polylang) | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
+| D4 | 2026-11-12 | Formularios: **Contact Form 7** por el momento (cambia Gravity Forms). Las solicitudes **no se guardan en WordPress** (sin Flamingo): contacto, tours a medida, servicios y propietarios se envían por email (FluentSMTP, Turnstile); las solicitudes de reserva de propiedad van a marOS como reserva **Open** desde marOS Connector | Julio («usemos por el momento contact form 7»; «no quiero que las solicitudes se guarden en el WordPress») | docs/decisiones.md |
 | D5 | 2026-11-11 | Caché: **APO solo**, sin WP Rocket | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D8 | 2026-11-11 | Cookies / consentimiento: **Complianz** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D9 | 2026-11-11 | Copia producción → pruebas: **Script WP-CLI** en GitHub Actions; WPvivid Pro como respaldo y para copias de seguridad | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
