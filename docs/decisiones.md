@@ -40,6 +40,9 @@ recomendación de Claude; Julio decide.
 | T31 | 2026-11-13 | Las notas de Airbnb, Booking y Vrbo las actualiza un agente a través del MCP | Julio | spec 003 |
 | T32 | 2026-11-13 | Tema base: **Ollie** (antes D1) | Julio | docs/decisiones.md |
 | T33 | 2026-11-13 | Se mantiene el logo; colores y tipografías parten de la guía de marca (abierto a ajustes de tipografía) | Julio | spec 006 |
+| T34 | 2026-11-13 | Blog: «Journal» en inglés (`/en/journal/`) y «Blog» en español (`/es/blog/`) | Julio | spec 005 |
+| T35 | 2026-11-13 | Iconos: Phosphor Light como base + extensión propia para los que falten | Julio | spec 006, iconos.md |
+| T36 | 2026-11-13 | Tipografía Josefin Sans + Poppins con el ajuste propuesto; colores de la guía con `gold-text` y `muted` a prueba | Julio | spec 006 |
 | D2 | 2026-11-11 | Plugin de idiomas: **WPML** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D3 | 2026-11-11 | Plugin SEO: **Yoast SEO** (+ el módulo de WPML para SEO) | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
 | D4 | 2026-11-11 | Formularios: **Gravity Forms** | Julio («todo ok», a propuesta de Claude) | docs/decisiones.md |
@@ -59,8 +62,6 @@ recomendación de Claude; Julio decide.
 | # | Decisión | Opciones | Recomendación | Por qué |
 |---|---|---|---|---|
 | D18 | Vídeos de propiedades (hoy en Instagram y TikTok). **Se decide al empezar el desarrollo** (Julio, 12/11) | Carátula en la web que abre el vídeo en Instagram/TikTok (propuesta de Julio) · Insertar los posts de Instagram/TikTok · Subir además el archivo original a un servicio de vídeo (Cloudflare Stream, Vimeo o YouTube oculto) · Alojarlos en IONOS | **Ficha: archivo original en Cloudflare Stream** (o Vimeo), campo «vídeos» de la propiedad en WordPress. **Portada y zonas: franja de Instagram/TikTok** que enlaza a las cuentas | Los posts insertados cargan scripts y cookies de Meta/TikTok (Complianz los bloquea hasta aceptar, así que muchos no los verían), son lentos en móvil, enseñan la interfaz de la red social y desaparecen si se borra el post. Stream ya va con Cloudflare, reproduce limpio y rápido y no pone cookies. IONOS compartido no sirve vídeo bien. **La carátula es buena opción para empezar** (sin coste, sin cookies, rápida), con el inconveniente de que en el móvil saca al cliente a la app justo cuando decide; la carátula se guarda como imagen en WordPress (las de Instagram caducan). Campos: URL del vídeo, plataforma y carátula, de modo que pasar luego a Stream solo añade un campo |
-| D19 | Nombre del blog | Blog · Journal · Guía de Marbella | **Guía de Marbella / Marbella Guide** | Refuerza lo local (lo que nos diferencia), coincide con lo que se busca («guía Marbella», «Marbella guide»), funciona igual en los dos idiomas y agrupa las guías de zona. «Journal» suena premium pero en español no tiene traducción natural; «Blog» es claro pero genérico |
-| D20 | Iconos | Tabler · Phosphor · Lucide · propios | **Phosphor, peso Light**, en oro o negro | Trazo fino que casa con Josefin Sans y con el lujo discreto; 6 pesos, ~1.500 iconos, licencia MIT. Iconos propios solo para unos pocos (equipamiento clave) si hace falta más adelante |
 | D6 | URLs | Ver «Estudio de URLs» en la spec 002 | **En estudio.** Propuesta de Julio: alquileres en `/en/str/<slug>/` y `/es/vft/<slug>/`, sin tipología | Decidir con datos de tráfico: cuántas URLs cambian y cuánto tráfico tienen |
 
 Las filas D… de «Decisiones tomadas» conservan su número original; su justificación está en el historial de este archivo.

@@ -110,4 +110,4 @@ ellas (Inicio → Alquileres → Ficha → Reservar C1 → C2 → C3; menú; ser
 - Q5: **Resuelta (13/11)**: flujo C (T28). Antes, en revisión (12/11): Julio descarta la lista de semanas (no hay
   mínimo de 7 noches ni día fijo de entrada) y los servicios dentro de la reserva; propone el
   flujo C en una sola pantalla.
-- Q4 (D19, recomendado «Guía de Marbella»): ¿Nombre del blog: Blog, Journal o Guía de Marbella? (mockup: Journal)
+- Q4: **Resuelta (13/11)**: Journal en inglés y Blog en español (T34). Antes: ¿Nombre del blog: Blog, Journal o Guía de Marbella? (mockup: Journal)

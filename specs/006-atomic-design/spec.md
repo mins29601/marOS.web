@@ -40,7 +40,7 @@ Se mantiene (T33). Corona dorada + «Marbella in Style» en caligrafía + lema �
 Marbella Life». Versiones: a color sobre claro, negro sobre claro, oro sobre negro, blanco sobre
 oro, blanco sobre foto (cabecera transparente). Solo el símbolo para favicon y avatares. Zona de
 respeto: la altura de la «i» alrededor. Nunca deformar, recolorear, sombrear, girar ni contornear.
-Se usa en SVG. **Pendiente**: archivos vectoriales.
+Se usa en SVG (ver Q4).
 
 ### Color
 
@@ -83,7 +83,7 @@ valida en pruebas con textos reales en inglés y español.
 
 ### Iconos
 
-Pendiente D20. Recomendación: Phosphor, peso Light, en oro o negro, en SVG.
+Phosphor Light + extensión propia (T35). Mapa de iconos y reglas: [iconos.md](iconos.md).
 
 ### Otros tokens
 
@@ -196,10 +196,10 @@ Pendiente D20. Recomendación: Phosphor, peso Light, en oro o negro, en SVG.
 
 ## 7. Pendiente de decidir
 
-- **Q1**: Ajuste de tipografía (propuesta en §0); se valida en pruebas.
+- **Q1**: ~~Tipografía~~ Aprobada la propuesta de §0 (T36); se valida en pruebas.
 - **Q2**: ~~Color de acento~~ Resuelta: oro de la marca (T33). Aprobar `gold-text` y `muted`.
-- **Q3**: Iconos (D20).
-- **Q4**: ~~Logo~~ Resuelta: se mantiene (T33). Faltan los archivos vectoriales.
+- **Q3**: ~~Iconos~~ Resuelta (T35).
+- **Q4**: ~~Logo~~ Resuelta: se mantiene (T33). SVG en `wp-content/themes/marbellainstyle/assets/logo/` (color, negro, oro, blanco y símbolo), sacados del `.ai` original (`docs/marca/`). Pendiente optimizarlos (SVGO) al montar el tema.
 - **Q5**: ~~Tema base~~ Resuelta: Ollie (T32).
 
 ## Siguiente paso
