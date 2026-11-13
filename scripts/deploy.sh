@@ -99,7 +99,9 @@ else
 		n="$(basename "$p")"; swap "${p%/}" "$WP/wp-content/plugins/$n"
 	done
 	mkdir -p "$WP/wp-content/mu-plugins"
-	cp -f "$REL"/wp-content/mu-plugins/*.php "$WP/wp-content/mu-plugins/"
+	for f in "$REL"/wp-content/mu-plugins/*.php; do
+		n="$(basename "$f")"; rm -f "$WP/wp-content/mu-plugins/$n"; cp "$f" "$WP/wp-content/mu-plugins/$n"
+	done
 	ln -sfn "$REL" "$MIS/current" 2>/dev/null || true
 fi
 
