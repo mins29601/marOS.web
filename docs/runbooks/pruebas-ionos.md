@@ -64,13 +64,16 @@ GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  
 ## 3. DNS y certificado · [Tú] con mi guía
 
 1. Cloudflare → **DNS** → registro `A` `staging` → la IP del paso 2.2 → **Proxied** (nube naranja).
-2. Certificado entre Cloudflare e IONOS, por este orden de preferencia:
-   - **Certificado de origen de Cloudflare** (SSL/TLS → Origin Server → Create, 15 años, para
-     `*.privatevillacollection.com` y `privatevillacollection.com`) importado en IONOS → SSL → «Subir certificado», si tu plan lo
-     permite. No caduca ni depende de que IONOS pueda validar el dominio.
-   - Si IONOS no permite importarlo: certificado SSL de IONOS para `staging.privatevillacollection.com` emitido con
-     la nube **gris** (solo DNS) y, una vez emitido, volver a naranja. Hay que vigilar su
-     renovación anual.
+2. **Comprobar la IP sin certificado**: Cloudflare → SSL/TLS → modo **Flexible** un momento y
+   abrir un `prueba.html` subido a la carpeta `staging` (comprobado el 13/11: la IP de IONOS es
+   `217.160.0.178`).
+3. **Certificado de IONOS** (IONOS no permite importar el certificado de origen de Cloudflare,
+   comprobado el 13/11): Dominios & SSL → SSL → «El certificado se instalará automáticamente en
+   la infraestructura gestionada por IONOS» → `staging.privatevillacollection.com` (o el comodín).
+   Si pide un registro DNS de validación, se añade en Cloudflare con la nube gris y se deja para
+   las renovaciones.
+4. Con el certificado activo: Cloudflare → SSL/TLS → **Full (strict)**. Vigilar la renovación
+   anual (si fallara, Cloudflare daría error 526).
 
 ## 4. Clave SSH para GitHub · [Juntos], 10 min
 
@@ -190,6 +193,5 @@ guardan las 5 últimas versiones en `~/mis/staging/releases/`.
 ## Pendiente de comprobar en la primera conexión
 
 - Si IONOS admite claves SSH, enlaces simbólicos y cron en este plan (paso 4).
-- Si IONOS permite importar el certificado de origen de Cloudflare (paso 3).
 - Que IONOS no tenga otro proxy delante de Apache: si lo tuviera, el filtro por IPs de Cloudflare
   bloquearía todo; se cambiaría por una cabecera secreta que añade Cloudflare.
