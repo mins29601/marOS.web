@@ -11,7 +11,7 @@ Leyenda: **[Tú]** lo haces en un panel · **[Claude]** ya está en el repo o lo
 ## Cómo queda
 
 ```text
-Persona autorizada ──► Cloudflare (DNS · SSL · Access: email + código) ──► IONOS ~/staging
+Persona autorizada ──► Cloudflare (DNS · SSL · Access: email + código) ──► IONOS ~/marbellainstyle/staging
                                                                              WordPress + Ollie
 GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  ──────► tema hijo, plugins
                                                                              propios, mu-plugins
@@ -48,7 +48,7 @@ GitHub (main) ── Actions por SSH ──► ~/mis/staging/releases/<commit>  
 
 ## 2. Hosting en IONOS · [Tú], 20 min
 
-1. **Carpeta**: IONOS → Hosting → **Webspace** → crear la carpeta `staging` en la raíz.
+1. **Carpeta**: IONOS → Hosting → **Webspace** → crear la carpeta `staging` (en esta cuenta: `marbellainstyle/staging`).
 2. **Subdominio**: IONOS → `privatevillacollection.com` → Subdominios → crear `staging` → «Usar con
    hosting» → carpeta `staging`.
    **IP del servidor** (hace falta en el paso 3): el panel no siempre la enseña. Búscala en
@@ -127,7 +127,7 @@ Cloudflare → **Zero Trust** (gratis hasta 50 personas; pide un nombre de equip
 2. Rellena lo que va entre `<>`: los datos de la base del paso 2.4 y la ruta
    absoluta de tu cuenta (`/kunden/homepages/29/d668976456/htdocs`, ya puesta en la plantilla). Las claves `AUTH_KEY…` se generan en
    https://api.wordpress.org/secret-key/1.1/salt/.
-3. Súbelo como `staging/wp-config.php` con el **Webspace Explorer** de IONOS o por SFTP.
+3. Súbelo como `marbellainstyle/staging/wp-config.php` con el **Webspace Explorer** de IONOS o por SFTP.
    Es el único sitio donde vive la contraseña de la base.
 
 ## 7. Entorno «staging» en GitHub · [Tú], 10 min
@@ -141,7 +141,7 @@ GitHub → `mins29601/marOS.web` → **Settings → Environments → New environ
 | `SSH_HOST` | `home668976456.1and1-data.host` |
 | `SSH_USER` | `u88262191` |
 | `SSH_PORT` | `22` |
-| `WP_PATH` | `staging` |
+| `WP_PATH` | `marbellainstyle/staging` |
 | `MIS_PATH` | `mis/staging` |
 | `SITE_URL` | `https://staging.privatevillacollection.com` |
 | `WP_ADMIN_USER` | tu usuario de WordPress, p. ej. `julio` |
@@ -168,7 +168,7 @@ Mientras `SSH_HOST` esté vacío, el despliegue automático no hace nada (no fal
    el tema hijo, configura Polylang (inglés sin prefijo, español en `/es/`) y carga las páginas,
    menús y propiedades de ejemplo, como en local.
 2. **Cron real**: IONOS → Hosting → **Cron jobs** (o `crontab -e` por SSH), cada 5 minutos:
-   `/usr/bin/php8.4-cli /kunden/homepages/29/d668976456/htdocs/bin/wp-cli.phar --path=/kunden/homepages/29/d668976456/htdocs/staging cron event run --due-now --quiet`
+   `/usr/bin/php8.4-cli /kunden/homepages/29/d668976456/htdocs/bin/wp-cli.phar --path=/kunden/homepages/29/d668976456/htdocs/marbellainstyle/staging cron event run --due-now --quiet`
    (en IONOS el `php` de la terminal es PHP 4.4: hay que llamar al PHP 8 por su nombre; el
    arranque deja WP-CLI en `~/bin/wp-cli.phar`).
 3. Abre `https://staging.privatevillacollection.com`: Access ofrece «Google» (un clic) o el código por email, y entras.
@@ -196,7 +196,7 @@ guardan las 5 últimas versiones en `~/mis/staging/releases/`.
 
 - Claves SSH: sí. Enlaces simbólicos: sí. `crontab`: disponible. rsync y WP-CLI: instalados.
 - Home de la cuenta: `/kunden/homepages/29/d668976456/htdocs` (es la raíz del webspace; `~/mis/.htaccess` lo cierra a la web).
-- El `php` de la terminal es PHP 4.4: los scripts buscan solos `php8.4-cli` (hay de la 4.4 a la 8.6; `scripts/remote/php-bin.sh`). Servidor SSH: `home668976456.1and1-data.host`, usuario `u88262191`.
+- El `php` de la terminal es PHP 4.4: los scripts buscan solos `php8.4-cli` (hay de la 4.4 a la 8.6; `scripts/remote/php-bin.sh`). Servidor SSH: `home668976456.1and1-data.host`, usuario `u88262191`. La carpeta de pruebas es `~/marbellainstyle/staging`.
 
 ## Pendiente de comprobar
 

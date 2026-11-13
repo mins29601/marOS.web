@@ -2,7 +2,7 @@
 /**
  * Plantilla de wp-config.php para PRUEBAS (staging) en IONOS. Sin secretos.
  *
- * Se copia una sola vez al servidor como ~/staging/wp-config.php (fuera de la carpeta
+ * Se copia una sola vez al servidor como ~/marbellainstyle/staging/wp-config.php (fuera de la carpeta
  * pública si IONOS lo permite) y se rellenan los valores entre <>. Nunca se sube al repo
  * con valores reales. Spec 001, plan («Cómo se gestionan producción y pruebas»).
  *
