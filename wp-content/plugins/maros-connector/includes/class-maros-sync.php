@@ -311,6 +311,9 @@ class Maros_Sync {
 		$slug = is_array( $type ) ? (string) ( $type['id'] ?? '' ) : (string) $type;
 		$name = is_array( $type ) ? (string) ( $type['name'] ?? $slug ) : $slug;
 		$slug = sanitize_title( $slug );
+		if ( '' === $slug ) {
+			return array( '', array( 'Property', 'Propiedad' ) );
+		}
 		return array( $slug, self::TYPES[ $slug ] ?? array( $name ?: ucfirst( $slug ), $name ?: ucfirst( $slug ) ) );
 	}
 
