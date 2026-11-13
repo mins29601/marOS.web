@@ -150,8 +150,21 @@ register_activation_hook(
 		maros_register_types();
 		Maros_Calendar::install();
 		Maros_Scheduler::ensure_scheduled();
-		flush_rewrite_rules();
+		// Las reglas se regeneran en la siguiente carga, cuando Polylang ya ha añadido las de idioma
+		// (al activar desde WP-CLI, un flush aquí dejaba /es/stay/… en 404).
+		update_option( 'maros_flush_rewrite', 1, false );
 	}
+);
+
+add_action(
+	'init',
+	static function () {
+		if ( get_option( 'maros_flush_rewrite' ) ) {
+			delete_option( 'maros_flush_rewrite' );
+			flush_rewrite_rules( false );
+		}
+	},
+	999
 );
 
 register_deactivation_hook( __FILE__, array( 'Maros_Scheduler', 'unschedule' ) );

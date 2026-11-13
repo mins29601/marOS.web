@@ -283,8 +283,15 @@ class Maros_Sync {
 			return false;
 		}
 		$was_public = false;
+		$urls       = array();
 		foreach ( $posts as $post_id ) {
-			$was_public = $was_public || 'publish' === get_post_status( $post_id );
+			if ( 'publish' === get_post_status( $post_id ) ) {
+				$was_public = true;
+				// La URL pública se guarda antes de pasar a borrador: después sería ?p=… (todas las traducciones).
+				$urls[] = get_permalink( $post_id );
+			}
+		}
+		foreach ( $posts as $post_id ) {
 			wp_update_post( array( 'ID' => $post_id, 'post_status' => 'draft' ) );
 			update_post_meta( $post_id, 'maros_withdrawn', 1 );
 			update_post_meta( $post_id, 'maros_calendar_etag', '' );
@@ -300,7 +307,7 @@ class Maros_Sync {
 		);
 		if ( $was_public ) {
 			$notices                = get_option( 'maros_notices', array() );
-			$notices[ $maros_id ]   = array( 'name' => $name, 'url' => get_permalink( $posts[0] ), 'time' => time() );
+			$notices[ $maros_id ]   = array( 'name' => $name, 'url' => implode( ' · ', $urls ), 'time' => time() );
 			update_option( 'maros_notices', $notices, false );
 		}
 		return true;
