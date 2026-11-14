@@ -75,10 +75,14 @@ function maros_property_fields(): array {
 		'maros_pool'                => 'string', // none | private | communal | both (expediente, features.pool).
 		'maros_pool_heating'        => 'string', // yes | no | ''.
 		'maros_pool_heating_amount' => 'number', // Precio de calefacción de la piscina.
-		'maros_pool_heating_freq'   => 'string', // PerDay | PerStay (como las tasas de Lodgify).
+		'maros_pool_heating_freq'   => 'string', // PerStay | PerWeek (marOS spec 032); PerDay si viene de una tasa de Lodgify.
+		'maros_pool_heating_included'   => 'string', // yes (incluida en el precio) | no | ''.
+		'maros_pool_heating_mandatory'  => 'string', // yes (se suma siempre) | no (la pide el huésped) | ''.
+		'maros_pool_heating_min_nights' => 'integer', // 7 con PerWeek.
+		'maros_pools'               => 'string', // JSON: [{access, covered, heated, heating}] tal como lo da marOS.
 		'maros_extra_cleaning'       => 'number', // Limpieza adicional durante la estancia.
 		'maros_extra_cleaning_linen' => 'number', // Limpieza adicional con cambio de sábanas y toallas.
-		'maros_arrival'             => 'string', // host | self_check_in | ''.
+		'maros_self_check_in'       => 'string', // yes (ofrece llegada autónoma, como opción) | no | ''.
 		'maros_pets'                => 'string', // yes | no | '' (Lodgify, pets_allowed).
 		'maros_pets_fee'            => 'number', // Suplemento por mascota.
 		'maros_pets_fee_freq'       => 'string', // PerStay | PerDay.

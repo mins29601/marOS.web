@@ -49,12 +49,12 @@ Comprobado en el código de marOS el 14/11 (spec 030 y `src/api/catalog.js`):
 
 | Dato | Campo WP | En marOS hoy | En la API del catálogo hoy | Campo propuesto en la ficha de la API |
 |---|---|---|---|---|
-| Piscina privada o comunitaria | `maros_pool` | **Sí**: expediente, Características → piscina (`none`/`private`/`communal`/`both`) | No | `pool` |
-| Piscina climatizable y precio | `maros_pool_heating`, `_amount`, `_freq` | No (solo si Lodgify la tiene como tasa) | Solo dentro de `fees` si es una tasa de Lodgify | `pool_heating: {available, amount, frequency}` |
+| Piscina privada o comunitaria, exterior o cubierta | `maros_pool`, `maros_pools` | **Sí** (spec 032 de marOS): una entrada por piscina | **Sí** (marOS#117): `pool` y `pools[]` | (ya está) |
+| Piscina climatizable y precio | `maros_pool_heating`, `_amount`, `_freq`, `_included`, `_mandatory`, `_min_nights` | **Sí** (spec 032): incluida o coste adicional, por estancia o por semana (mínimo una semana, proporcional después), opcional u obligatoria | **Sí** (marOS#117): `pool_heating` | (ya está) |
 | Limpieza de salida | `maros_cleaning` | Sí (tasa de Lodgify) | **Sí**: `fees[]` tipo `CleaningFee` | (ya está) |
 | Limpieza adicional (normal / con cambio de sábanas) | `maros_extra_cleaning`, `_linen` | No | No | `extra_cleaning: {standard, with_linen}` |
 | Fianza | `maros_deposit` | Sí | **Sí**: `deposit` | (ya está) |
-| Llegada con host o self check-in | `maros_arrival` | No | No | `arrival: host \| self_check_in` |
+| Self check-in (opción además de la recepción) | `maros_self_check_in` | **Sí** (spec 032) | **Sí** (marOS#117): `self_check_in` | (ya está) |
 | Admite mascotas | `maros_pets` | **Sí**: Lodgify `pets_allowed` por tipo de alojamiento (a menudo vacío) | No | `pets.allowed` |
 | Suplemento por mascota | `maros_pets_fee`, `_freq` | No (solo si Lodgify la tiene como tasa) | Solo dentro de `fees` | `pets: {allowed, fee, frequency}` |
 | Admite eventos | `maros_events` | No | No | `events_allowed` |
@@ -64,13 +64,14 @@ Comprobado en el código de marOS el 14/11 (spec 030 y `src/api/catalog.js`):
 | Vídeos | `mis_videos` | No | No | Se quedan en WP |
 
 Mientras marOS no tenga el campo propio, la sincronización usa la tasa de Lodgify cuyo tipo o nombre
-encaje («heat/climat/calefac» para la piscina, «pet/mascota» para mascotas). Todas las tasas se
+encaje (para la piscina, «pool/piscina» junto a «heat/climat/calefac», para no confundirla con la
+calefacción de la casa; «pet/mascota» para mascotas). Todas las tasas se
 guardan además tal cual en `maros_fees`. Los vínculos de bloque `maros/property` con las claves
-`pool`, `pool_heating`, `arrival`, `pets`, `events` y `license` muestran el dato en EN y ES, y no
+`pool`, `pool_heating`, `self_check_in`, `pets`, `events` y `license` muestran el dato en EN y ES, y no
 muestran nada si está vacío. El precio de la climatización no se escribe en el texto: «el coste se
 indica para tus fechas» (PC-15 §2.3).
 
-Para que lleguen hace falta un cambio en marOS (pedido en mins29601/marOS#116 para climatización y self check-in, Julio 14/11): añadir al expediente los datos que no existen
+Piscinas, climatización y self check-in ya los da marOS con la spec 032 (mins29601/marOS#117, que cierra #116; Julio 14/11). Para el resto hace falta otro cambio en marOS: añadir al expediente los datos que no existen
 (climatización y su precio, limpiezas adicionales, tipo de llegada, mascotas y suplemento, eventos,
 registro turístico) y sacar en la ficha del catálogo los que ya existen (`pool`, `pets.allowed`).
 
@@ -82,7 +83,7 @@ Las fichas se importan en orden, una a una, y con cada una se revisa si al model
 | # | Propiedad | Id de marOS | Estado | Qué faltó |
 |---|---|---|---|---|
 | 1 | Villa Nido | `lodgify-405724` | Mock con los datos reales de la muestra de Lodgify de marOS (spec 025/030, 12–13/11), sin fotos; falta la carga real desde marOS pruebas | Los campos de la tabla anterior |
-| 2 | Villa Flamingos | `villa-flamingos` | Pendiente de mins29601/marOS#116 (climatización y self check-in en el expediente y la API). Tiene piscina climatizada: sirve para comprobar que el dato llega (Julio, 14/11) | — |
+| 2 | Villa Flamingos | `villa-flamingos` | Pendiente de fusionar mins29601/marOS#117 (climatización y self check-in en el expediente y la API). Tiene piscina climatizada: sirve para comprobar que el dato llega (Julio, 14/11) | — |
 
 ## Taxonomías
 

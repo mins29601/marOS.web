@@ -400,20 +400,25 @@ class Maros_Sync {
 	private static function text_facts( array $d ): array {
 		$pool    = (string) ( $d['pool'] ?? '' );
 		$heating = is_array( $d['pool_heating'] ?? null ) ? $d['pool_heating'] : null;
-		$heat_fee = $heating ? null : self::fee_matching( $d, '/heat|climat|calefac/i' );
+		// Solo una tasa que hable de la piscina: «Heating» o «Calefacción» a secas es la de la casa.
+		$heat_fee = $heating ? null : self::fee_matching( $d, '/(pool|piscina).*(heat|climat|calefac)|(heat|climat|calefac).*(pool|piscina)/i' );
 		$pets    = is_array( $d['pets'] ?? null ) ? $d['pets'] : array();
 		$pet_fee = isset( $pets['fee'] ) ? null : self::fee_matching( $d, '/\bpet|mascota/i' );
 		$extra   = is_array( $d['extra_cleaning'] ?? null ) ? $d['extra_cleaning'] : array();
-		$arrival = (string) ( $d['arrival'] ?? '' );
 
 		return array(
 			'maros_pool'                 => in_array( $pool, array( 'none', 'private', 'communal', 'both' ), true ) ? $pool : '',
 			'maros_pool_heating'         => $heating ? self::flag( $heating['available'] ?? null ) : ( $heat_fee ? 'yes' : '' ),
 			'maros_pool_heating_amount'  => (float) ( $heating['amount'] ?? $heat_fee['amount'] ?? 0 ),
 			'maros_pool_heating_freq'    => (string) ( $heating['frequency'] ?? $heat_fee['frequency'] ?? '' ),
+			// marOS spec 032: incluida en el precio u obligatoria; PerWeek = mínimo 7 noches y proporcional después.
+			'maros_pool_heating_included'  => $heating ? self::flag( $heating['included'] ?? null ) : '',
+			'maros_pool_heating_mandatory' => $heating ? self::flag( $heating['mandatory'] ?? null ) : '',
+			'maros_pool_heating_min_nights' => (int) ( $heating['minimum_nights'] ?? 0 ),
+			'maros_pools'                => wp_json_encode( array_values( array_filter( is_array( $d['pools'] ?? null ) ? $d['pools'] : array(), 'is_array' ) ) ),
 			'maros_extra_cleaning'       => (float) ( $extra['standard'] ?? 0 ),
 			'maros_extra_cleaning_linen' => (float) ( $extra['with_linen'] ?? 0 ),
-			'maros_arrival'              => in_array( $arrival, array( 'host', 'self_check_in' ), true ) ? $arrival : '',
+			'maros_self_check_in'        => self::flag( $d['self_check_in'] ?? null ),
 			'maros_pets'                 => self::flag( $pets['allowed'] ?? $d['pets_allowed'] ?? null ),
 			'maros_pets_fee'             => (float) ( $pets['fee'] ?? $pet_fee['amount'] ?? 0 ),
 			'maros_pets_fee_freq'        => (string) ( $pets['frequency'] ?? $pet_fee['frequency'] ?? '' ),

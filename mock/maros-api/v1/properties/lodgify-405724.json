@@ -60,9 +60,10 @@
   "check_in": null,
   "check_out": null,
   "pool": null,
+  "pools": [],
   "pool_heating": null,
+  "self_check_in": null,
   "extra_cleaning": null,
-  "arrival": null,
   "pets": {
     "allowed": null,
     "fee": null,

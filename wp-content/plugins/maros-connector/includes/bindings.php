@@ -79,16 +79,13 @@ function maros_property_binding_value( array $args, $block_instance ) {
 			if ( 'yes' !== $m( 'maros_pool_heating' ) ) {
 				return '';
 			}
+			if ( 'yes' === $m( 'maros_pool_heating_included' ) ) {
+				return esc_html( $es ? 'Piscina climatizada, incluida en el precio' : 'Heated pool, included in the price' );
+			}
 			return esc_html( $es ? 'Piscina climatizable (el coste se indica para tus fechas)' : 'Pool heating available (cost shown for your dates)' );
-		case 'arrival':
-			$arrival = (string) $m( 'maros_arrival' );
-			if ( 'host' === $arrival ) {
-				return esc_html( $es ? 'Te recibimos en persona a tu llegada' : 'We welcome you in person on arrival' );
-			}
-			if ( 'self_check_in' === $arrival ) {
-				return esc_html( $es ? 'Llegada autónoma (self check-in)' : 'Self check-in' );
-			}
-			return '';
+		case 'self_check_in':
+			// Es una opción además de la recepción en persona (marOS spec 032): solo se dice si la hay.
+			return 'yes' === $m( 'maros_self_check_in' ) ? esc_html( $es ? 'Opción de llegada autónoma (self check-in)' : 'Self check-in available' ) : '';
 		case 'pets':
 			$pets = (string) $m( 'maros_pets' );
 			if ( 'no' === $pets ) {
