@@ -12,6 +12,17 @@
       "calendar_etag": "\"mock-cal-lodgify-000001-1\""
     },
     {
+      "id": "villa-concha",
+      "name": "Villa Concha",
+      "type": {
+        "id": "villa",
+        "name": "Villa"
+      },
+      "updated_at": "2026-11-12T09:00:00Z",
+      "etag": "\"3207d2a19f6288d7330d875ec6a90ec8\"",
+      "calendar_etag": "\"mock-cal-villa-concha-1\""
+    },
+    {
       "id": "lodgify-373016",
       "name": "Villa Feliz",
       "type": {
@@ -23,15 +34,15 @@
       "calendar_etag": "\"mock-cal-lodgify-373016-1\""
     },
     {
-      "id": "villa-concha",
-      "name": "Villa Concha",
+      "id": "lodgify-405724",
+      "name": "Villa Nido",
       "type": {
         "id": "villa",
         "name": "Villa"
       },
-      "updated_at": "2026-11-12T09:00:00Z",
-      "etag": "\"3207d2a19f6288d7330d875ec6a90ec8\"",
-      "calendar_etag": "\"mock-cal-villa-concha-1\""
+      "updated_at": "2026-11-13T03:00:00.000Z",
+      "etag": "\"1b629e7f86c78c71070dfbce9482bfba\"",
+      "calendar_etag": "\"mock-cal-lodgify-405724-1\""
     }
   ],
   "mock": true

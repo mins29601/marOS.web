@@ -65,6 +65,52 @@ function maros_property_binding_value( array $args, $block_instance ) {
 		case 'deposit':
 			$deposit = (float) $m( 'maros_deposit' );
 			return $deposit ? esc_html( sprintf( $es ? 'Fianza: %s €' : 'Security deposit: €%s', number_format_i18n( $deposit ) ) ) : '';
+		case 'pool':
+			$labels = array(
+				'private'  => array( 'Private pool', 'Piscina privada' ),
+				'communal' => array( 'Communal pool', 'Piscina comunitaria' ),
+				'both'     => array( 'Private and communal pool', 'Piscina privada y comunitaria' ),
+				'none'     => array( 'No pool', 'Sin piscina' ),
+			);
+			$label = $labels[ (string) $m( 'maros_pool' ) ] ?? null;
+			return $label ? esc_html( $label[ $es ? 1 : 0 ] ) : '';
+		case 'pool_heating':
+			// El precio exacto se da en el presupuesto para las fechas del huésped (PC-15 §2.3, I2).
+			if ( 'yes' !== $m( 'maros_pool_heating' ) ) {
+				return '';
+			}
+			return esc_html( $es ? 'Piscina climatizable (el coste se indica para tus fechas)' : 'Pool heating available (cost shown for your dates)' );
+		case 'arrival':
+			$arrival = (string) $m( 'maros_arrival' );
+			if ( 'host' === $arrival ) {
+				return esc_html( $es ? 'Te recibimos en persona a tu llegada' : 'We welcome you in person on arrival' );
+			}
+			if ( 'self_check_in' === $arrival ) {
+				return esc_html( $es ? 'Llegada autónoma (self check-in)' : 'Self check-in' );
+			}
+			return '';
+		case 'pets':
+			$pets = (string) $m( 'maros_pets' );
+			if ( 'no' === $pets ) {
+				return esc_html( $es ? 'No se admiten mascotas' : 'No pets allowed' );
+			}
+			if ( 'yes' !== $pets ) {
+				return '';
+			}
+			$fee = (float) $m( 'maros_pets_fee' );
+			if ( ! $fee ) {
+				return esc_html( $es ? 'Se admiten mascotas' : 'Pets welcome' );
+			}
+			return esc_html( sprintf( $es ? 'Se admiten mascotas (suplemento de %s €)' : 'Pets welcome (€%s supplement)', number_format_i18n( $fee ) ) );
+		case 'events':
+			$events = (string) $m( 'maros_events' );
+			if ( '' === $events ) {
+				return '';
+			}
+			return esc_html( 'yes' === $events ? ( $es ? 'Se admiten eventos, consúltanos' : 'Events allowed on request' ) : ( $es ? 'No se admiten fiestas ni eventos' : 'No parties or events' ) );
+		case 'license':
+			$license = (string) $m( 'maros_license' );
+			return $license ? esc_html( sprintf( $es ? 'Registro turístico: %s' : 'Tourist licence: %s', $license ) ) : '';
 		case 'booking_url':
 			return esc_url( MIS_STAY_URL );
 		default:

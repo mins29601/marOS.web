@@ -367,10 +367,59 @@ class Maros_Sync {
 			'maros_price_from'  => (float) ( $d['price_from']['amount'] ?? 0 ),
 			'maros_room_types'  => wp_json_encode( array_values( is_array( $d['room_types'] ?? null ) ? $d['room_types'] : array() ) ),
 			'maros_synced_at'   => gmdate( 'c' ),
-		);
+			'maros_fees'        => wp_json_encode( array_values( self::fees( $d ) ) ),
+		) + self::text_facts( $d );
 		foreach ( $map as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
 		}
+	}
+
+	private static function fees( array $d ): array {
+		return array_filter( is_array( $d['fees'] ?? null ) && array_is_list( $d['fees'] ) ? $d['fees'] : array(), 'is_array' );
+	}
+
+	/** Primera tasa de Lodgify cuyo tipo o nombre encaja; para lo que marOS aún no da en su campo. */
+	private static function fee_matching( array $d, string $pattern ): ?array {
+		foreach ( self::fees( $d ) as $fee ) {
+			if ( preg_match( $pattern, ( $fee['type'] ?? '' ) . ' ' . ( $fee['name'] ?? '' ) ) ) {
+				return $fee;
+			}
+		}
+		return null;
+	}
+
+	/** true/false de marOS → yes/no; ausente o null → '' («marOS no lo sabe»). */
+	private static function flag( $value ): string {
+		return is_bool( $value ) ? ( $value ? 'yes' : 'no' ) : '';
+	}
+
+	/**
+	 * Datos que los textos de la ficha no repiten y leen de aquí (PC-15 §5). Contrato propuesto a
+	 * marOS en data-model.md («Datos para los textos»); mientras no llegan, quedan vacíos.
+	 */
+	private static function text_facts( array $d ): array {
+		$pool    = (string) ( $d['pool'] ?? '' );
+		$heating = is_array( $d['pool_heating'] ?? null ) ? $d['pool_heating'] : null;
+		$heat_fee = $heating ? null : self::fee_matching( $d, '/heat|climat|calefac/i' );
+		$pets    = is_array( $d['pets'] ?? null ) ? $d['pets'] : array();
+		$pet_fee = isset( $pets['fee'] ) ? null : self::fee_matching( $d, '/\bpet|mascota/i' );
+		$extra   = is_array( $d['extra_cleaning'] ?? null ) ? $d['extra_cleaning'] : array();
+		$arrival = (string) ( $d['arrival'] ?? '' );
+
+		return array(
+			'maros_pool'                 => in_array( $pool, array( 'none', 'private', 'communal', 'both' ), true ) ? $pool : '',
+			'maros_pool_heating'         => $heating ? self::flag( $heating['available'] ?? null ) : ( $heat_fee ? 'yes' : '' ),
+			'maros_pool_heating_amount'  => (float) ( $heating['amount'] ?? $heat_fee['amount'] ?? 0 ),
+			'maros_pool_heating_freq'    => (string) ( $heating['frequency'] ?? $heat_fee['frequency'] ?? '' ),
+			'maros_extra_cleaning'       => (float) ( $extra['standard'] ?? 0 ),
+			'maros_extra_cleaning_linen' => (float) ( $extra['with_linen'] ?? 0 ),
+			'maros_arrival'              => in_array( $arrival, array( 'host', 'self_check_in' ), true ) ? $arrival : '',
+			'maros_pets'                 => self::flag( $pets['allowed'] ?? $d['pets_allowed'] ?? null ),
+			'maros_pets_fee'             => (float) ( $pets['fee'] ?? $pet_fee['amount'] ?? 0 ),
+			'maros_pets_fee_freq'        => (string) ( $pets['frequency'] ?? $pet_fee['frequency'] ?? '' ),
+			'maros_events'               => self::flag( $d['events_allowed'] ?? null ),
+			'maros_license'              => sanitize_text_field( (string) ( $d['tourist_license'] ?? '' ) ),
+		);
 	}
 
 	private static function set_terms( int $post_id, array $d, string $lang ): void {

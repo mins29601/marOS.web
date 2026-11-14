@@ -70,6 +70,30 @@ function maros_property_fields(): array {
 		'maros_calendar_etag'      => 'string',
 		'maros_calendar_synced_at' => 'string',
 		'maros_withdrawn'  => 'integer', // 1 si ya no es publicable en marOS.
+		'maros_fees'       => 'string', // JSON: todas las tasas de Lodgify tal como las da marOS.
+		// Datos que piden los textos de las fichas (PC-15 §5, Julio 14/11). Vacío = marOS aún no lo da.
+		'maros_pool'                => 'string', // none | private | communal | both (expediente, features.pool).
+		'maros_pool_heating'        => 'string', // yes | no | ''.
+		'maros_pool_heating_amount' => 'number', // Precio de calefacción de la piscina.
+		'maros_pool_heating_freq'   => 'string', // PerDay | PerStay (como las tasas de Lodgify).
+		'maros_extra_cleaning'       => 'number', // Limpieza adicional durante la estancia.
+		'maros_extra_cleaning_linen' => 'number', // Limpieza adicional con cambio de sábanas y toallas.
+		'maros_arrival'             => 'string', // host | self_check_in | ''.
+		'maros_pets'                => 'string', // yes | no | '' (Lodgify, pets_allowed).
+		'maros_pets_fee'            => 'number', // Suplemento por mascota.
+		'maros_pets_fee_freq'       => 'string', // PerStay | PerDay.
+		'maros_events'              => 'string', // yes | no | '' (se admiten eventos).
+		'maros_license'             => 'string', // Número de registro turístico (VFT/…).
+	);
+}
+
+/**
+ * Campos que se editan en WordPress (no vienen de marOS). Los puede cambiar quien edita la propiedad.
+ */
+function maros_property_editorial_fields(): array {
+	return array(
+		// JSON: [{url, platform: instagram|youtube|tiktok, cover: id de adjunto}]. Cómo se muestran: D18.
+		'mis_videos' => 'string',
 	);
 }
 
@@ -130,6 +154,48 @@ function maros_register_types(): void {
 	}
 }
 
+add_action(
+	'init',
+	static function () {
+		foreach ( maros_property_editorial_fields() as $key => $type ) {
+			register_post_meta(
+				'mis_property',
+				$key,
+				array(
+					'type'              => $type,
+					'single'            => true,
+					'show_in_rest'      => true,
+					'sanitize_callback' => 'maros_sanitize_videos',
+					'auth_callback'     => static fn( $allowed, $meta_key, $post_id ) => current_user_can( 'edit_post', $post_id ),
+				)
+			);
+		}
+	},
+	6
+);
+
+/**
+ * Deja solo vídeos con URL https de plataformas conocidas.
+ */
+function maros_sanitize_videos( $value ): string {
+	$list = is_string( $value ) ? json_decode( $value, true ) : $value;
+	$out  = array();
+	foreach ( is_array( $list ) ? $list : array() as $video ) {
+		$url  = esc_url_raw( (string) ( $video['url'] ?? '' ), array( 'https' ) );
+		$host = (string) wp_parse_url( $url, PHP_URL_HOST );
+		$platform = match ( true ) {
+			(bool) preg_match( '/(^|\.)instagram\.com$/', $host ) => 'instagram',
+			(bool) preg_match( '/(^|\.)(youtube\.com|youtu\.be)$/', $host ) => 'youtube',
+			(bool) preg_match( '/(^|\.)tiktok\.com$/', $host ) => 'tiktok',
+			default => '',
+		};
+		if ( $url && $platform ) {
+			$out[] = array( 'url' => $url, 'platform' => $platform, 'cover' => (int) ( $video['cover'] ?? 0 ) );
+		}
+	}
+	return (string) wp_json_encode( $out );
+}
+
 add_filter(
 	'pll_get_post_types',
 	static fn( array $types ): array => $types + array( 'mis_property' => 'mis_property' )
@@ -138,10 +204,10 @@ add_filter(
 	'pll_get_taxonomies',
 	static fn( array $tax ): array => $tax + array( 'tipo-propiedad' => 'tipo-propiedad', 'equipamiento' => 'equipamiento', 'coleccion' => 'coleccion' )
 );
-// Los campos operativos son iguales en todos los idiomas (spec 003).
+// Los campos operativos y los vídeos son iguales en todos los idiomas (spec 003).
 add_filter(
 	'pll_copy_post_metas',
-	static fn( array $metas ): array => array_merge( $metas, array_keys( maros_property_fields() ) )
+	static fn( array $metas ): array => array_merge( $metas, array_keys( maros_property_fields() ), array_keys( maros_property_editorial_fields() ) )
 );
 
 register_activation_hook(
