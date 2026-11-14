@@ -70,7 +70,7 @@ guardan además tal cual en `maros_fees`. Los vínculos de bloque `maros/propert
 muestran nada si está vacío. El precio de la climatización no se escribe en el texto: «el coste se
 indica para tus fechas» (PC-15 §2.3).
 
-Para que lleguen hace falta un cambio en marOS: añadir al expediente los datos que no existen
+Para que lleguen hace falta un cambio en marOS (pedido en mins29601/marOS#116 para climatización y self check-in, Julio 14/11): añadir al expediente los datos que no existen
 (climatización y su precio, limpiezas adicionales, tipo de llegada, mascotas y suplemento, eventos,
 registro turístico) y sacar en la ficha del catálogo los que ya existen (`pool`, `pets.allowed`).
 
@@ -82,6 +82,7 @@ Las fichas se importan en orden, una a una, y con cada una se revisa si al model
 | # | Propiedad | Id de marOS | Estado | Qué faltó |
 |---|---|---|---|---|
 | 1 | Villa Nido | `lodgify-405724` | Mock con los datos reales de la muestra de Lodgify de marOS (spec 025/030, 12–13/11), sin fotos; falta la carga real desde marOS pruebas | Los campos de la tabla anterior |
+| 2 | Villa Flamingos | `villa-flamingos` | Pendiente de mins29601/marOS#116 (climatización y self check-in en el expediente y la API). Tiene piscina climatizada: sirve para comprobar que el dato llega (Julio, 14/11) | — |
 
 ## Taxonomías
 
