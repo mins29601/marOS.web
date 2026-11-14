@@ -226,3 +226,10 @@ través del proxy del plugin.
   FR-003, FR-003b).
 - «Antes de la reserva habrá que confirmar en tiempo real con la API» (Julio, 22:13) → el
   presupuesto final y la reserva (fase 3) llaman a marOS en el momento (US3b, US4).
+
+### Session 2026-11-14 (Julio, importación de fichas)
+
+- «Se podría ir haciendo la importación en orden […] desde marOS también podríamos tener detalles
+  importantes, como si una casa tiene piscina calefactada y qué precio tiene» → importación una a
+  una con `wp maros sync --id=…` y campos nuevos para los textos (data-model, «Datos para los
+  textos de la ficha»). Vídeos de Instagram y YouTube en WP; no hay planos.

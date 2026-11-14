@@ -33,9 +33,57 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 | Opiniones destacadas | WP | sí | Pendiente Q1 |
 | Gestión: exclusiva (gestión directa) o colaborador | WP | no | Distintivo «Exclusiva» en tarjetas y ficha (Julio, 12/11). **Pendiente**: si marOS sabe quién gestiona cada casa, pasa a origen M |
 | Persona de contacto (nombre, foto) | WP | sí | «[Nombre] será tu contacto» |
-| Vídeos (enlace, plataforma, carátula) | WP | sí | Hoy en Instagram y TikTok; dónde se alojan se decide al desarrollar (D18) |
+| Vídeos (enlace, plataforma, carátula) | WP | no | Campo `mis_videos` (JSON), igual en todos los idiomas. Instagram y YouTube (los más antiguos); también TikTok. No hay planos (Julio, 14/11). Cómo se muestran: D18 |
 | Valoración media, nº de opiniones y subvaloraciones (limpieza, exactitud, comunicación, ubicación, llegada, calidad-precio) | WP | no | Se calcula de las opiniones propias (Site Reviews, D11). Origen de las opiniones: **pendiente** |
 | Presencia en portales: Airbnb, Booking.com, Vrbo (URL, nota, nº de opiniones, fecha de actualización) | WP | no | Se muestra «También en…» (Julio, 12/11). Los portales no dan API pública de notas: se actualizan a mano o con el MCP |
+
+## Datos para los textos de la ficha (Julio, 14/11)
+
+Los textos de cada ficha no repiten cifras que pueden cambiar (guía PC-15 de `marOS.content`, §5):
+las leen de estos campos. Julio: «desde marOS también podríamos tener detalles importantes, como
+si una casa tiene piscina calefactada y qué precio tiene; eso debería estar en marOS y así poderlo
+importar a través de la API». Son campos de marOS (solo lectura en WP) y quedan vacíos mientras la
+API no los dé; un campo vacío significa «marOS no lo sabe» y el texto no lo menciona.
+
+Comprobado en el código de marOS el 14/11 (spec 030 y `src/api/catalog.js`):
+
+| Dato | Campo WP | En marOS hoy | En la API del catálogo hoy | Campo propuesto en la ficha de la API |
+|---|---|---|---|---|
+| Piscina privada o comunitaria, exterior o cubierta | `maros_pool`, `maros_pools` | **Sí** (spec 032 de marOS): una entrada por piscina | **Sí** (marOS#117): `pool` y `pools[]` | (ya está) |
+| Piscina climatizable y precio | `maros_pool_heating`, `_amount`, `_freq`, `_included`, `_mandatory`, `_min_nights` | **Sí** (spec 032): incluida o coste adicional, por estancia o por semana (mínimo una semana, proporcional después), opcional u obligatoria | **Sí** (marOS#117): `pool_heating` | (ya está) |
+| Limpieza de salida | `maros_cleaning` | Sí (tasa de Lodgify) | **Sí**: `fees[]` tipo `CleaningFee` | (ya está) |
+| Limpieza adicional (normal / con cambio de sábanas) | `maros_extra_cleaning`, `_linen` | No | No | `extra_cleaning: {standard, with_linen}` |
+| Fianza | `maros_deposit` | Sí | **Sí**: `deposit` | (ya está) |
+| Self check-in (opción además de la recepción) | `maros_self_check_in` | **Sí** (spec 032) | **Sí** (marOS#117): `self_check_in` | (ya está) |
+| Admite mascotas | `maros_pets` | **Sí**: Lodgify `pets_allowed` por tipo de alojamiento (a menudo vacío) | No | `pets.allowed` |
+| Suplemento por mascota | `maros_pets_fee`, `_freq` | No (solo si Lodgify la tiene como tasa) | Solo dentro de `fees` | `pets: {allowed, fee, frequency}` |
+| Admite eventos | `maros_events` | No | No | `events_allowed` |
+| Número de registro turístico | `maros_license` | No como campo (como mucho, un documento del expediente) | No | `tourist_license` |
+| Zona | taxonomía `zona`, `maros_area` | Sí: urbanización y municipio del expediente | **Sí**: `location.area`, `location.municipality` | (ya está; no hay slug de zona: WP lo saca del nombre) |
+| Horario de entrada y salida | `maros_check_in`, `maros_check_out` | No (spec 030, FR-006) | `null` | `check_in`, `check_out` (o se editan en WP) |
+| Vídeos | `mis_videos` | No | No | Se quedan en WP |
+
+Mientras marOS no tenga el campo propio, la sincronización usa la tasa de Lodgify cuyo tipo o nombre
+encaje (para la piscina, «pool/piscina» junto a «heat/climat/calefac», para no confundirla con la
+calefacción de la casa; «pet/mascota» para mascotas). Todas las tasas se
+guardan además tal cual en `maros_fees`. Los vínculos de bloque `maros/property` con las claves
+`pool`, `pool_heating`, `self_check_in`, `pets`, `events` y `license` muestran el dato en EN y ES, y no
+muestran nada si está vacío. El precio de la climatización no se escribe en el texto: «el coste se
+indica para tus fechas» (PC-15 §2.3).
+
+Piscinas, climatización y self check-in ya los da marOS con la spec 032 (mins29601/marOS#117, que cierra #116; Julio 14/11). Para el resto hace falta otro cambio en marOS: añadir al expediente los datos que no existen
+(climatización y su precio, limpiezas adicionales, tipo de llegada, mascotas y suplemento, eventos,
+registro turístico) y sacar en la ficha del catálogo los que ya existen (`pool`, `pets.allowed`).
+
+## Importación una a una (Julio, 14/11)
+
+Las fichas se importan en orden, una a una, y con cada una se revisa si al modelo le falta algo.
+`wp maros sync --id=<id de marOS>` carga solo esa propiedad, en borrador.
+
+| # | Propiedad | Id de marOS | Estado | Qué faltó |
+|---|---|---|---|---|
+| 1 | Villa Nido | `lodgify-405724` | Mock con los datos reales de la muestra de Lodgify de marOS (spec 025/030, 12–13/11), sin fotos; falta la carga real desde marOS pruebas | Los campos de la tabla anterior |
+| 2 | Villa Flamingos | `villa-flamingos` | Pendiente de fusionar mins29601/marOS#117 (climatización y self check-in en el expediente y la API). Tiene piscina climatizada: sirve para comprobar que el dato llega (Julio, 14/11) | — |
 
 ## Taxonomías
 

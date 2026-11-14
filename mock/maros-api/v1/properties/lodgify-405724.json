@@ -1,0 +1,76 @@
+{
+  "id": "lodgify-405724",
+  "lodgify_id": 405724,
+  "name": "Villa Nido",
+  "type": {
+    "id": "villa",
+    "name": "Villa"
+  },
+  "max_guests": 8,
+  "bedrooms": 4,
+  "bathrooms": 5,
+  "beds": 5,
+  "location": {
+    "area": "Nueva Andalucía",
+    "municipality": "Marbella",
+    "lat": 36.5,
+    "lng": -4.95,
+    "precision": "approx"
+  },
+  "amenities": [
+    {
+      "code": "RoomsBalcony",
+      "name": "Balcón"
+    },
+    {
+      "code": "wifi",
+      "name": "Wi-Fi"
+    },
+    {
+      "code": "parking",
+      "name": "Parking"
+    }
+  ],
+  "room_types": [
+    {
+      "id": "471672",
+      "name": "Villa",
+      "max_guests": 8,
+      "units": 1,
+      "bedrooms": 4,
+      "bathrooms": 5
+    }
+  ],
+  "photos": [],
+  "currency": "EUR",
+  "deposit": 1500,
+  "fees": [
+    {
+      "name": "Limpieza",
+      "type": "CleaningFee",
+      "frequency": "PerStay",
+      "rate_type": "Fixed",
+      "amount": 750
+    }
+  ],
+  "price_from": {
+    "amount": 546,
+    "currency": "EUR"
+  },
+  "check_in": null,
+  "check_out": null,
+  "pool": null,
+  "pools": [],
+  "pool_heating": null,
+  "self_check_in": null,
+  "extra_cleaning": null,
+  "pets": {
+    "allowed": null,
+    "fee": null,
+    "frequency": null
+  },
+  "events_allowed": null,
+  "tourist_license": null,
+  "updated_at": "2026-11-13T03:00:00.000Z",
+  "etag": "\"1b629e7f86c78c71070dfbce9482bfba\""
+}
