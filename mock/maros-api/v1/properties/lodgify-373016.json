@@ -2,26 +2,46 @@
   "id": "lodgify-373016",
   "lodgify_id": 373016,
   "name": "Villa Feliz",
-  "type": "villa",
-  "publishable": true,
+  "type": {
+    "id": "villa",
+    "name": "Villa"
+  },
   "max_guests": 10,
   "bedrooms": 5,
   "bathrooms": 5,
   "beds": 6,
-  "zone": "nueva-andalucia",
   "location": {
     "area": "Nueva Andalucía",
+    "municipality": "Marbella",
     "lat": 36.5,
     "lng": -4.96,
     "precision": "approx"
   },
   "amenities": [
-    "private-pool",
-    "sea-view",
-    "air-conditioning",
-    "wifi",
-    "parking",
-    "bbq"
+    {
+      "code": "private-pool",
+      "name": "Piscina privada"
+    },
+    {
+      "code": "sea-view",
+      "name": "Vistas al mar"
+    },
+    {
+      "code": "air-conditioning",
+      "name": "Aire acondicionado"
+    },
+    {
+      "code": "wifi",
+      "name": "Wi-Fi"
+    },
+    {
+      "code": "parking",
+      "name": "Aparcamiento"
+    },
+    {
+      "code": "bbq",
+      "name": "Barbacoa"
+    }
   ],
   "room_types": [
     {
@@ -31,40 +51,53 @@
       "units": 1
     }
   ],
-  "fees": {
-    "cleaning": 350
-  },
-  "check_in": "16:00",
-  "check_out": "11:00",
-  "deposit": 1500,
   "photos": [
     {
       "url": "mock:photos/lodgify-373016-1.jpg",
       "order": 1,
-      "hash": "mock-lodgify-373016-1"
+      "hash": "mock-lodgify-373016-1",
+      "caption": ""
     },
     {
       "url": "mock:photos/lodgify-373016-2.jpg",
       "order": 2,
-      "hash": "mock-lodgify-373016-2"
+      "hash": "mock-lodgify-373016-2",
+      "caption": ""
     },
     {
       "url": "mock:photos/lodgify-373016-3.jpg",
       "order": 3,
-      "hash": "mock-lodgify-373016-3"
+      "hash": "mock-lodgify-373016-3",
+      "caption": ""
     },
     {
       "url": "mock:photos/lodgify-373016-4.jpg",
       "order": 4,
-      "hash": "mock-lodgify-373016-4"
+      "hash": "mock-lodgify-373016-4",
+      "caption": ""
     },
     {
       "url": "mock:photos/lodgify-373016-5.jpg",
       "order": 5,
-      "hash": "mock-lodgify-373016-5"
+      "hash": "mock-lodgify-373016-5",
+      "caption": ""
     }
   ],
+  "currency": "EUR",
+  "deposit": 1500,
+  "fees": [
+    {
+      "name": "Cleaning",
+      "type": "Cleaning",
+      "amount": 350
+    }
+  ],
+  "price_from": {
+    "amount": 900,
+    "currency": "EUR"
+  },
+  "check_in": "16:00",
+  "check_out": "11:00",
   "updated_at": "2026-11-12T09:00:00Z",
-  "etag": "\"mock-lodgify-373016-2\"",
-  "web_url_hint": null
+  "etag": "\"29f67d694087712c7b184cbaeb4c23d4\""
 }

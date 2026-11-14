@@ -185,6 +185,24 @@ Desde aquí, cada PR fusionado en `main` se despliega solo en pruebas (workflow 
 y al final comprueba que la web responde, que lleva `noindex` y que sin identificarse no se ve.
 Para enseñar una rama antes de fusionarla: Actions → Deploy pruebas → Run workflow → `ref`.
 
+## Conectar con marOS pruebas · [Tú] 5 min + [Claude]
+
+Cuando marOS pruebas tenga la API del catálogo (spec 030 de `mins29601/marOS`):
+
+1. **[Tú]** En marOS pruebas: Configuración → **Agentes** → nuevo agente «Web staging»,
+   responsable tú, alcance **«Leer el catálogo publicable»**, todas las propiedades. Copia la
+   clave (`maros_stg_…`): solo se muestra una vez.
+2. **[Tú]** En la ficha de cada propiedad que quieras ver en la web, marca **«Publicable en la web»**.
+3. **[Tú]** En `wp-config.php` de pruebas (por SSH o con el administrador de archivos de IONOS):
+   `MAROS_ENV` = `'staging'`, `MAROS_API_BASE` = `'https://<marOS pruebas>/api'`,
+   `MAROS_API_KEY` = la clave. La clave no se pega en el chat ni en GitHub.
+4. **[Claude]** `wp maros status` por SSH (o Propiedades → marOS): debe decir cuántas propiedades
+   publicables hay. Después `wp maros sync`: las propiedades nacen en **borrador**; las
+   propiedades de ejemplo del mock se quedan y se retiran (pasan a borrador) en la primera sincronización.
+
+Desde ahí el cron de 5 minutos lee la lista de marOS cada 15 minutos y vuelve a cargar lo que
+cambie; a las 03:30 relee todo. Si marOS no responde en 26 horas, el escritorio lo avisa.
+
 ## Comprobaciones (spec 001, US3)
 
 | Comprobación | Cómo |
