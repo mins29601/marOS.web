@@ -6,9 +6,9 @@
  * Version:     0.1.0
  *
  * Rutas (todas bajo /wp-json/maros-mock):
- *   GET  /v1/properties
- *   GET  /v1/properties/{id}
- *   GET  /v1/properties/{id}/calendar   (calendario y tarifas por noche, lo que sincroniza WP)
+ *   GET  /v1/catalog/properties                 (propiedades publicables en la web)
+ *   GET  /v1/catalog/properties/{id}            (ficha)
+ *   GET  /v1/catalog/properties/{id}/calendar   (calendario y tarifas por noche, lo que sincroniza WP)
  *   GET  /v1/availability?property_id&from&to&guests
  *   POST /v1/quotes
  *   POST /v1/bookings
@@ -81,7 +81,7 @@ add_action(
 
 		register_rest_route(
 			$ns,
-			'/v1/properties',
+			'/v1/catalog/properties',
 			array(
 				'methods'             => 'GET',
 				'permission_callback' => $auth,
@@ -93,7 +93,7 @@ add_action(
 
 		register_rest_route(
 			$ns,
-			'/v1/properties/(?P<id>[a-z0-9\-]+)',
+			'/v1/catalog/properties/(?P<id>[a-z0-9\-]+)',
 			array(
 				'methods'             => 'GET',
 				'permission_callback' => $auth,
@@ -106,7 +106,7 @@ add_action(
 
 		register_rest_route(
 			$ns,
-			'/v1/properties/(?P<id>[a-z0-9\-]+)/calendar',
+			'/v1/catalog/properties/(?P<id>[a-z0-9\-]+)/calendar',
 			array(
 				'methods'             => 'GET',
 				'permission_callback' => $auth,
@@ -174,7 +174,7 @@ add_action(
 					if ( in_array( false, array_column( $days, 'available' ), true ) ) {
 						return mis_maros_mock_error( 'unavailable', 'Fechas no disponibles', 409 );
 					}
-					$rent     = array_sum( array_column( $days, 'rate' ) );
+					$rent     = array_sum( array_map( static fn( $d ) => $d['rates'][0]['price'] ?? 0, $days ) );
 					$cleaning = (float) ( $property['fees']['cleaning'] ?? 0 );
 					$net      = $rent + $cleaning;
 					$vat      = round( $net * 0.10, 2 );
@@ -258,22 +258,35 @@ function mis_maros_mock_calendar( string $id ): array {
 
 	$days  = array();
 	$today = strtotime( gmdate( 'Y-m-d' ) );
+	$room  = (int) ( mis_maros_mock_read( 'v1/properties/' . $id . '.json' )['room_types'][0]['id'] ?? 1 );
 	for ( $i = 0; $i < 548; $i++ ) {
-		$ts    = $today + $i * DAY_IN_SECONDS;
-		$month = (int) gmdate( 'n', $ts );
-		$high  = in_array( $month, $tpl['high_season_months'] ?? array( 6, 7, 8 ), true );
-		$days[] = array(
-			'date'      => gmdate( 'Y-m-d', $ts ),
-			'available' => empty( $booked[ $i ] ),
-			'min_stay'  => $high ? ( $tpl['min_stay_high'] ?? 7 ) : ( $tpl['min_stay'] ?? 3 ),
-			'rate'      => (float) ( $high ? $tpl['rate_high'] : $tpl['rate'] ),
+		$ts       = $today + $i * DAY_IN_SECONDS;
+		$month    = (int) gmdate( 'n', $ts );
+		$high     = in_array( $month, $tpl['high_season_months'] ?? array( 6, 7, 8 ), true );
+		$min_stay = $high ? ( $tpl['min_stay_high'] ?? 7 ) : ( $tpl['min_stay'] ?? 3 );
+		$rate     = (float) ( $high ? $tpl['rate_high'] : $tpl['rate'] );
+		$days[]   = array(
+			'room_type_id' => $room,
+			'date'         => gmdate( 'Y-m-d', $ts ),
+			'available'    => empty( $booked[ $i ] ),
+			'closed'       => false,
+			'check_in'     => true,
+			'check_out'    => true,
+			'min_stay'     => $min_stay,
+			// Como Lodgify: un precio por tramo de estancia; las estancias largas, algo más baratas.
+			'rates'        => array(
+				array( 'min_stay' => $min_stay, 'max_stay' => 13, 'price' => $rate ),
+				array( 'min_stay' => 14, 'max_stay' => null, 'price' => round( $rate * 0.9, 2 ) ),
+			),
 		);
 	}
 
 	return array(
 		'property_id' => $id,
 		'currency'    => $tpl['currency'] ?? 'EUR',
-		'generated_at' => gmdate( 'c' ),
+		'from'        => $days[0]['date'],
+		'to'          => $days[ count( $days ) - 1 ]['date'],
+		'etag'        => '"mock-cal-' . $id . '-1"',
 		'days'        => $days,
 	);
 }

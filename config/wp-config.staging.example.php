@@ -43,12 +43,16 @@ if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && 'https' === $_SERVER['HTTP_X
 }
 
 // ── marOS ───────────────────────────────────────────────────────────────────────────────
-// Mientras la API pública de marOS no esté lista, pruebas usa el mock del repo (los mismos
-// JSON que en local). Después: MAROS_ENV=staging y la URL de marOS pruebas.
+// Con el mock, pruebas usa los JSON del repo (los mismos que en local). Para conectar con marOS
+// pruebas (runbook pruebas-ionos, «Conectar con marOS pruebas»):
+//   MAROS_ENV      'staging'
+//   MAROS_API_BASE 'https://<worker de marOS pruebas>/api'   (sin /v1; el plugin lo añade)
+//   MAROS_API_KEY  clave del agente «Web staging» de marOS (Agentes → alcance «Leer el catálogo
+//                  publicable»). Empieza por maros_stg_. Solo vive aquí, nunca en el repo.
 define( 'MAROS_ENV', 'mock' );
 define( 'MAROS_API_BASE', '' );                 // con el mock no se usa
 define( 'MAROS_API_KEY', '<clave de marOS pruebas, o cualquier texto con el mock>' );
-define( 'MAROS_WEBHOOK_SECRET', '<secreto del webhook de marOS pruebas>' );
+define( 'MAROS_WEBHOOK_SECRET', '<secreto de los avisos de marOS pruebas, cuando existan>' );
 define( 'MAROS_MOCK_DIR', '/kunden/homepages/29/d668976456/htdocs/mis/staging/current/mock/maros-api' );
 
 if ( ! defined( 'ABSPATH' ) ) {

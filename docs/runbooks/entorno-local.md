@@ -62,8 +62,11 @@ npm run wp -- maros sync --publish
 npm run wp -- eval-file wp-content/mis-scripts/setup/contenido-inicial.php
 ```
 
-- `wp maros sync` carga las propiedades del mock (ficha, tipo, zona, equipamiento y fotos) en
-  inglés y español. Se puede repetir: solo actualiza lo que cambia (etag).
+- `wp maros sync` carga las propiedades del mock (ficha, tipo, zona, equipamiento, fotos,
+  calendario y tarifas) en inglés y español. Se puede repetir: solo actualiza lo que cambia (etag).
+  Otros comandos: `wp maros status` (estado y últimos eventos), `wp maros tick` (la tarea de
+  5 minutos ahora mismo) y `wp maros sync --id=<id> --force`. El estado también se ve en
+  **Propiedades → marOS**, con el botón «Sincronizar ahora».
 - `contenido-inicial.php` crea zonas, tipos de servicio, 2 experiencias, 4 servicios, las páginas
   del mapa del sitio (spec 005), los formularios de Contact Form 7 y los menús de cada idioma. Es
   idempotente y los textos son de ejemplo.
@@ -75,9 +78,9 @@ Base: `http://localhost:8888/wp-json/maros-mock` (desde dentro del contenedor:
 
 ```bash
 KEY=mock-local-no-secreta
-curl -s -H "Authorization: Bearer $KEY" http://localhost:8888/wp-json/maros-mock/v1/properties
-curl -s -H "Authorization: Bearer $KEY" http://localhost:8888/wp-json/maros-mock/v1/properties/lodgify-373016
-curl -s -H "Authorization: Bearer $KEY" "http://localhost:8888/wp-json/maros-mock/v1/properties/villa-concha/calendar"
+curl -s -H "Authorization: Bearer $KEY" http://localhost:8888/wp-json/maros-mock/v1/catalog/properties
+curl -s -H "Authorization: Bearer $KEY" http://localhost:8888/wp-json/maros-mock/v1/catalog/properties/lodgify-373016
+curl -s -H "Authorization: Bearer $KEY" "http://localhost:8888/wp-json/maros-mock/v1/catalog/properties/villa-concha/calendar"
 curl -s -H "Authorization: Bearer $KEY" "http://localhost:8888/wp-json/maros-mock/v1/availability?property_id=villa-concha&from=2027-03-01&to=2027-03-08"
 curl -s -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
   -d '{"property_id":"villa-concha","arrival":"2027-03-01","departure":"2027-03-08","guests":{"adults":4}}' \
@@ -86,9 +89,9 @@ curl -s -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
 
 | Ruta | Qué devuelve |
 |---|---|
-| `GET /v1/properties` | Lista de propiedades publicables (3: Villa Feliz, Villa Concha, un apartamento de prueba) |
-| `GET /v1/properties/{id}` | Ficha: tipo, capacidad, dormitorios, baños, zona aproximada, servicios, fotos, tipos de alojamiento |
-| `GET /v1/properties/{id}/calendar` | 18 meses de disponibilidad, estancia mínima y tarifa por noche (lo que sincroniza WordPress) |
+| `GET /v1/catalog/properties` | Lista de propiedades publicables con su `etag` y `calendar_etag` (3: Villa Feliz, Villa Concha, un apartamento de prueba) |
+| `GET /v1/catalog/properties/{id}` | Ficha: tipo, capacidad, dormitorios, baños, zona aproximada, servicios, fotos, tipos de alojamiento, precio «desde» |
+| `GET /v1/catalog/properties/{id}/calendar` | 18 meses de disponibilidad, estancia mínima y tarifas por tramo de estancia (lo que sincroniza WordPress) |
 | `GET /v1/availability` | Días entre `from` y `to` y si están todos libres |
 | `POST /v1/quotes` | Presupuesto desglosado (alojamiento, limpieza, IVA); 409 si hay días ocupados |
 | `POST /v1/bookings` | Reserva `tentative` con `payment_url` simulada; no guarda datos del huésped |
@@ -99,9 +102,10 @@ Los datos están en `mock/maros-api/v1/`. Para cambiar precios u ocupación, edi
 propiedad, crea `properties/<id>.json`, añádela a `properties.json` y, si quieres, su
 `calendar/<id>.json`.
 
-**Es una propuesta del contrato** (arquitectura 3.2 + spec 003), no el contrato de marOS. Cuando
-marOS publique la API v1 (issue #89 de marOS), se ajustan estos JSON a lo que devuelva y se
-cambia `MAROS_ENV`/`MAROS_API_BASE` a marOS pruebas.
+Las tres rutas del catálogo tienen la misma forma que las de marOS (`/api/v1/catalog/…`, spec 030
+de `mins29601/marOS`). Presupuesto y reservas siguen siendo una propuesta (issue #89 de marOS).
+Para probar contra marOS pruebas en local, pon en `.wp-env.override.json` `MAROS_ENV=staging`,
+`MAROS_API_BASE` y `MAROS_API_KEY` (ese archivo no se sube).
 
 ## 5. Traer contenido de pruebas (cuando exista)
 
