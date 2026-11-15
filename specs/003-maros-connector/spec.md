@@ -4,8 +4,9 @@
 
 **Created**: 2026-11-11
 
-**Status**: Borrador de diseño. Depende del contrato de la API de marOS (spec 013 fase C y spec
-026 de `mins29601/marOS`); mientras no exista, se trabaja contra un mock.
+**Status**: En desarrollo. Versión 0.2 del plugin (13/11): ficha, fotos, calendario y tarifas desde
+`/api/v1/catalog/…` de marOS (spec 030 de `mins29601/marOS`), cola, cron, avisos firmados y
+pantalla «marOS». Presupuesto y reserva dependen de la spec 026 de marOS; mientras, el mock.
 
 **Fuentes**:
 
@@ -139,7 +140,7 @@ través del proxy del plugin.
   propias); se identifican por hash para no duplicarlas; una foto que desaparece en marOS se quita
   de la galería, no de la biblioteca.
 - Precio «desde»: solo si marOS lo da; nunca se calcula en WordPress.
-- WPML: los campos operativos son iguales en todos los idiomas («copiar» en WPML); los textos se
+- Polylang (D2): los campos operativos son iguales en todos los idiomas (se sincronizan entre traducciones con el filtro `pll_copy_post_metas`); los textos se
   traducen.
 - Villa Concha y Villa Flamingos tienen ids de marOS que no son `lodgify-<id>`: el plugin usa
   siempre el id de marOS como clave, sea cual sea.
@@ -151,7 +152,7 @@ través del proxy del plugin.
 - **FR-001**: El plugin MUST registrar el tipo de contenido `propiedad` (clave `mis_property`) y
   las taxonomías `tipo-propiedad` (villa, apartamento… según la categoría que dé marOS, nunca
   fijada en el código), `zona` y `equipamiento` (amenities). La URL pública depende del tipo
-  (base genérica sin tipología: `/stay/<slug>/` y `/es/vft/<slug>/`, decisiones T28 y T29;
+  (base genérica sin tipología: `/stay/<slug>/` y `/es/vft/<slug>/`, decisiones T38 y T39;
   ver [mapa del sitio](../005-arquitectura-informacion/mapa-del-sitio.md)). Los tours y servicios no son de este
   tipo: ver spec 004. Campos en [data-model.md](./data-model.md).
 - **FR-002**: Los campos operativos MUST ser de solo lectura en el editor y en la REST de
@@ -175,6 +176,9 @@ través del proxy del plugin.
   y salida y comprobación de permisos: `maros/list-properties`, `maros/get-property`,
   `maros/update-property-copy`, `maros/create-landing`, `maros/sync-status`, `maros/resync-property`,
   `maros/check-availability` (sobre los datos de WordPress).
+  Además `maros/update-portal-ratings` (Julio, 13/11): un agente actualiza por el MCP la nota, el
+  nº de opiniones y la URL de cada portal (Airbnb, Booking.com, Vrbo) de una propiedad. Solo toca
+  esos campos, se publica directamente (no es contenido editorial) y queda registrado (principio VIII).
 - **FR-007**: El entorno de marOS MUST venir de constantes de `wp-config.php`: `MAROS_ENV`,
   `MAROS_API_BASE`, `MAROS_API_KEY`, `MAROS_WEBHOOK_SECRET`.
 - **FR-008**: El plugin MUST tener una pantalla «marOS» con estado: entorno, última
@@ -222,3 +226,10 @@ través del proxy del plugin.
   FR-003, FR-003b).
 - «Antes de la reserva habrá que confirmar en tiempo real con la API» (Julio, 22:13) → el
   presupuesto final y la reserva (fase 3) llaman a marOS en el momento (US3b, US4).
+
+### Session 2026-11-14 (Julio, importación de fichas)
+
+- «Se podría ir haciendo la importación en orden […] desde marOS también podríamos tener detalles
+  importantes, como si una casa tiene piscina calefactada y qué precio tiene» → importación una a
+  una con `wp maros sync --id=…` y campos nuevos para los textos (data-model, «Datos para los
+  textos de la ficha»). Vídeos de Instagram y YouTube en WP; no hay planos.

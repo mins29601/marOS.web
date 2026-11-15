@@ -180,8 +180,8 @@ la spec 002 (M6.2) añadirá que cada destino responda 200 en pruebas.
 
 ## 5. Para revisar con Julio
 
-1. ~~Prefijo para el inglés~~ **Decidido**: inglés sin prefijo (T28), alquileres en `/stay/`
-   (T29), blog en `/journal/` y tours en `/experiences/` (T31). Provisional: `/es/vft/` para los
+1. ~~Prefijo para el inglés~~ **Decidido**: inglés sin prefijo (T38), alquileres en `/stay/`
+   (T39), blog en `/journal/` y tours en `/experiences/` (T40). Provisional: `/es/vft/` para los
    alquileres en español; se puede cambiar sin coste hasta el lanzamiento (después, con 301).
 2. **Las 24 villas sin marOS**: ¿alguna sigue activa con otro nombre? ¿Villa Flamingos es
    `villa-flamingo-luxury-modern`?

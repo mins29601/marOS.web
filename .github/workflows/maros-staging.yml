@@ -1,0 +1,68 @@
+# marOS en PRUEBAS (IONOS), a mano: estado de la conexión o importación de UNA propiedad.
+# Sirve para importar las fichas una a una (Julio, 14/11) sin entrar por SSH, y deja en el
+# resumen lo que llegó de marOS para revisarlo. Spec 003; runbook pruebas-ionos, «Conectar con marOS pruebas».
+name: marOS en pruebas
+
+on:
+  workflow_dispatch:
+    inputs:
+      accion:
+        description: "status = ver la conexión · sync = importar la propiedad del id"
+        type: choice
+        options: [status, sync]
+        default: status
+      id:
+        description: "Id de marOS de la propiedad (p. ej. villa-flamingos). Solo con sync"
+        required: false
+
+concurrency:
+  group: maros-staging
+  cancel-in-progress: false
+
+jobs:
+  maros:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ vars.SITE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comprobar el id
+        env:
+          ACCION: ${{ inputs.accion }}
+          MAROS_ID: ${{ inputs.id }}
+        run: |
+          if [ "$ACCION" = "sync" ] && ! printf '%s' "$MAROS_ID" | grep -Eq '^[a-z0-9-]{1,80}$'; then
+            echo "::error::Con sync hace falta un id de marOS (minúsculas, números y guiones)."; exit 1
+          fi
+
+      - name: Clave SSH de IONOS
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Ejecutar en pruebas
+        env:
+          SSH_HOST: ${{ vars.SSH_HOST }}
+          SSH_USER: ${{ vars.SSH_USER }}
+          SSH_PORT: ${{ vars.SSH_PORT || '22' }}
+          MIS_PHP: ${{ vars.MIS_PHP }}
+          WP_PATH: ${{ vars.WP_PATH }}
+          ACCION: ${{ inputs.accion }}
+          MAROS_ID: ${{ inputs.id }}
+        run: |
+          set -o pipefail
+          {
+            printf 'MIS_PHP=%q\n' "$MIS_PHP"
+            cat scripts/remote/php-bin.sh scripts/remote/maros-remote.sh
+          } | ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" \
+              "bash -s -- $(printf '%q ' "$WP_PATH" "$ACCION" "$MAROS_ID")" | tee salida.txt
+          {
+            echo "### marOS en pruebas: $ACCION ${MAROS_ID}"
+            echo '```'
+            cat salida.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

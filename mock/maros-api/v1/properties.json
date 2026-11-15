@@ -1,0 +1,49 @@
+{
+  "properties": [
+    {
+      "id": "lodgify-000001",
+      "name": "Apartamento demo Puerto Banús",
+      "type": {
+        "id": "apartment",
+        "name": "Apartamento"
+      },
+      "updated_at": "2026-11-12T09:00:00Z",
+      "etag": "\"21967c358888d6ff23a5872033b1add3\"",
+      "calendar_etag": "\"mock-cal-lodgify-000001-1\""
+    },
+    {
+      "id": "villa-concha",
+      "name": "Villa Concha",
+      "type": {
+        "id": "villa",
+        "name": "Villa"
+      },
+      "updated_at": "2026-11-12T09:00:00Z",
+      "etag": "\"3207d2a19f6288d7330d875ec6a90ec8\"",
+      "calendar_etag": "\"mock-cal-villa-concha-1\""
+    },
+    {
+      "id": "lodgify-373016",
+      "name": "Villa Feliz",
+      "type": {
+        "id": "villa",
+        "name": "Villa"
+      },
+      "updated_at": "2026-11-12T09:00:00Z",
+      "etag": "\"29f67d694087712c7b184cbaeb4c23d4\"",
+      "calendar_etag": "\"mock-cal-lodgify-373016-1\""
+    },
+    {
+      "id": "lodgify-405724",
+      "name": "Villa Nido",
+      "type": {
+        "id": "villa",
+        "name": "Villa"
+      },
+      "updated_at": "2026-11-13T03:00:00.000Z",
+      "etag": "\"1b629e7f86c78c71070dfbce9482bfba\"",
+      "calendar_etag": "\"mock-cal-lodgify-405724-1\""
+    }
+  ],
+  "mock": true
+}

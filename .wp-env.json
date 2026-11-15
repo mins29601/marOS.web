@@ -1,0 +1,46 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
+	"core": null,
+	"phpVersion": "8.4",
+	"port": 8888,
+	"testsPort": 8889,
+	"themes": [
+		"https://downloads.wordpress.org/theme/ollie.zip",
+		"./wp-content/themes/marbellainstyle"
+	],
+	"plugins": [
+		"https://downloads.wordpress.org/plugin/wordpress-seo.zip",
+		"https://downloads.wordpress.org/plugin/polylang.zip",
+		"https://downloads.wordpress.org/plugin/complianz-gdpr.zip",
+		"https://downloads.wordpress.org/plugin/contact-form-7.zip",
+		"https://downloads.wordpress.org/plugin/secure-custom-fields.zip",
+		"https://downloads.wordpress.org/plugin/site-reviews.zip",
+		"https://downloads.wordpress.org/plugin/fluent-smtp.zip",
+		"https://downloads.wordpress.org/plugin/wpvivid-backuprestore.zip",
+		"https://downloads.wordpress.org/plugin/cloudflare.zip",
+		"https://downloads.wordpress.org/plugin/mcp-adapter.zip",
+		"https://downloads.wordpress.org/plugin/enable-abilities-for-mcp.zip",
+		"./wp-content/plugins/mis-contenido",
+		"./wp-content/plugins/maros-connector"
+	],
+	"mappings": {
+		"wp-content/mu-plugins": "./wp-content/mu-plugins",
+		"wp-content/maros-mock": "./mock/maros-api",
+		"wp-content/mis-scripts": "./scripts"
+	},
+	"config": {
+		"WP_ENVIRONMENT_TYPE": "local",
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"SCRIPT_DEBUG": true,
+		"DISABLE_WP_CRON": false,
+		"MAROS_ENV": "mock",
+		"MAROS_API_BASE": "http://localhost/wp-json/maros-mock",
+		"MAROS_API_KEY": "mock-local-no-secreta",
+		"MAROS_WEBHOOK_SECRET": "mock-local-no-secreta",
+		"WP_DEVELOPMENT_MODE": "theme"
+	},
+	"lifecycleScripts": {
+		"afterStart": "npx wp-env run cli wp rewrite structure '/%postname%/' --hard && npx wp-env run cli wp theme activate marbellainstyle && npx wp-env run cli wp plugin deactivate cloudflare && npx wp-env run cli wp language core install es_ES && npx wp-env run cli wp eval-file wp-content/mis-scripts/setup/idiomas.php"
+	}
+}
