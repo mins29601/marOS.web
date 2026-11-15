@@ -8,6 +8,13 @@ wp maros status
 
 if [[ "$ACCION" == "sync" ]]; then
 	[[ "$ID" =~ ^[a-z0-9-]{1,80}$ ]] || { echo "✗ Id no válido"; exit 1; }
+	echo "→ JSON que devuelve marOS: ficha (las fotos se resumen en su número)"
+	MAROS_ID="$ID" wp eval '$d = Maros_Client::get_property( getenv( "MAROS_ID" ) ); if ( is_wp_error( $d ) ) { echo "✗ ", $d->get_error_message(), "\n"; return; } if ( isset( $d["photos"] ) && is_array( $d["photos"] ) ) { $d["photos"] = count( $d["photos"] ) . " fotos" . ( $d["photos"] ? ", la primera: " . ( $d["photos"][0]["url"] ?? "" ) : "" ); } echo wp_json_encode( $d, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ), "\n";' || true
+	echo
+	echo "→ JSON que devuelve marOS: calendario (resumen y los dos primeros días)"
+	MAROS_ID="$ID" wp eval '$c = Maros_Client::get_calendar( getenv( "MAROS_ID" ) ); if ( is_wp_error( $c ) ) { echo "✗ ", $c->get_error_message(), "\n"; return; } $days = is_array( $c["days"] ?? null ) ? $c["days"] : array(); $c["days"] = array_slice( $days, 0, 2 ); $c["_dias"] = count( $days ); $c["_libres"] = count( array_filter( $days, static fn( $x ) => ! empty( $x["available"] ) ) ); echo wp_json_encode( $c, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ), "\n";' || true
+	echo
+	echo "→ Importación"
 	wp maros sync --id="$ID" --force
 	echo
 	echo "→ Propiedades con maros_id=$ID"
