@@ -18,13 +18,17 @@ if [[ "$ACCION" == "sync" ]]; then
 		echo
 		echo "→ Datos de marOS guardados (post $POST)"
 		# Solo campos operativos: nada de huéspedes ni de dirección llega a WordPress (principio X de marOS).
+		# Sin terminal, WP-CLI separa las columnas con tabuladores.
 		wp post meta list "$POST" --format=table --fields=meta_key,meta_value \
-			| grep -E '^\| (meta_key|maros_)' | grep -vE 'maros_(gallery|room_types|fees|pools) ' || true
+			| grep -E '^maros_' | grep -vE '^maros_(gallery|room_types|fees|pools)\s' | sort || true
 		echo
 		echo "→ Piscinas (maros_pools) y tasas (maros_fees)"
 		wp post meta get "$POST" maros_pools || true
 		wp post meta get "$POST" maros_fees || true
 		echo
 		echo "→ Fotos en la galería: $(wp post meta get "$POST" maros_gallery | tr ',' '\n' | grep -c . || true)"
+		echo
+		echo "→ Últimos 15 avisos del plugin (el más reciente primero)"
+		wp option get maros_log --format=json 2>/dev/null | "$PHPBIN" -r '$l=json_decode(stream_get_contents(STDIN),true)?:[];foreach(array_slice($l,0,15) as $e){echo "  ",gmdate("Y-m-d H:i",(int)($e["time"]??0))," [",$e["level"]??"","] ",$e["message"]??"","\n";}' || true
 	fi
 fi
