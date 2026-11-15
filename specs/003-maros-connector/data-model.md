@@ -78,12 +78,25 @@ registro turístico) y sacar en la ficha del catálogo los que ya existen (`pool
 ## Importación una a una (Julio, 14/11)
 
 Las fichas se importan en orden, una a una, y con cada una se revisa si al modelo le falta algo.
-`wp maros sync --id=<id de marOS>` carga solo esa propiedad, en borrador.
+`wp maros sync --id=<id de marOS>` carga solo esa propiedad, en borrador. En pruebas, sin SSH:
+Actions → **marOS en pruebas** → `sync` y el id; el resumen del workflow enseña lo que llegó.
 
 | # | Propiedad | Id de marOS | Estado | Qué faltó |
 |---|---|---|---|---|
 | 1 | Villa Nido | `lodgify-405724` | Mock con los datos reales de la muestra de Lodgify de marOS (spec 025/030, 12–13/11), sin fotos; falta la carga real desde marOS pruebas | Los campos de la tabla anterior |
-| 2 | Villa Flamingos | `villa-flamingos` | Pendiente de fusionar mins29601/marOS#117 (climatización y self check-in en el expediente y la API). Tiene piscina climatizada: sirve para comprobar que el dato llega (Julio, 14/11) | — |
+| 2 | Villa Flamingos | `villa-flamingos` | marOS#117 fusionado y expediente rellenado (Julio, 15/11). En marOS pruebas: piscina privada exterior, climatizable, 350 € por semana (mínimo 7 noches), opcional; sin self check-in. Falta la carga en pruebas con el workflow «marOS en pruebas» | — |
+
+### Piscinas y self check-in en marOS pruebas (lectura del 15/11)
+
+| Propiedad | Piscina | Climatizable | Self check-in |
+|---|---|---|---|
+| Casa Acosta, Ambar, Brisa, Coral, Dama, Rodeo, Torre | comunitaria | no | no |
+| Casa Masari, Paraiso, Principe, Samara | comunitaria | no | sí |
+| Casa Soul | privada y comunitaria | no | no |
+| Cifuentes | comunitaria | sí, incluida en el precio | no |
+| Villa Centauro, Concha, Feliz, Michaela, Nido | privada | no | no |
+| Villa Flamingos, Villa Panda | privada | sí, 350 € por semana, opcional | no |
+| Villa Mares | **sin rellenar** | — | — |
 
 ## Taxonomías
 
