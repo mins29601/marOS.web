@@ -175,7 +175,9 @@ add_shortcode(
 			'crib'     => array( 'Cot', 'Cuna' ),
 		);
 		// Lo propio de un dormitorio va primero (lista de Julio, marOS spec 039); el resto, después.
-		$first = array( 'walk_in_closet', 'private_terrace', 'balcony', 'sea_view', 'mountain_view', 'garden_view', 'direct_pool_access', 'patio_garden_access', 'independent_access', 'sitting_area', 'desk', 'wardrobe', 'tv', 'air_conditioning' );
+		// Lo básico que tiene cualquier dormitorio (perchas, ropa de cama…) va al final, en «+N más».
+		$first = array( 'sea_view', 'mountain_view', 'garden_view', 'private_terrace', 'balcony', 'patio_balcony', 'direct_pool_access', 'patio_garden_access', 'independent_access', 'private_entrance', 'walk_in_closet', 'sitting_area', 'desk', 'dedicated_workspace', 'tv', 'indoor_fireplace', 'air_conditioning', 'heating', 'safe', 'wardrobe' );
+		$last  = array( 'hangers', 'bed_linens', 'extra_pillows_blankets', 'clothing_storage', 'blackout_shades', 'iron', 'hair_dryer' );
 		$max   = 5;
 		$icon  = static fn( string $d ) => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $d . '</svg>';
 		$bed_i = $icon( '<path d="M3 18V7"/><path d="M21 18v-6a3 3 0 0 0-3-3h-8v6"/><path d="M3 15h18"/><circle cx="6.5" cy="11.5" r="1.8"/>' );
@@ -220,10 +222,15 @@ add_shortcode(
 			$amenities = is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array();
 			usort(
 				$amenities,
-				static function ( $a, $b ) use ( $first ) {
-					$x = array_search( $a['code'] ?? '', $first, true );
-					$y = array_search( $b['code'] ?? '', $first, true );
-					return ( false === $x ? 99 : $x ) <=> ( false === $y ? 99 : $y );
+				static function ( $a, $b ) use ( $first, $last ) {
+					$rank = static function ( string $code ) use ( $first, $last ): int {
+						$i = array_search( $code, $first, true );
+						if ( false !== $i ) {
+							return $i;
+						}
+						return in_array( $code, $last, true ) ? 200 : 100;
+					};
+					return $rank( (string) ( $a['code'] ?? '' ) ) <=> $rank( (string) ( $b['code'] ?? '' ) );
 				}
 			);
 			$shown = array_slice( $amenities, 0, $max );
