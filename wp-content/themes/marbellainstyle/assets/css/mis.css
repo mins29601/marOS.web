@@ -378,3 +378,14 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .wpcf7 input[type=submit]:hover { background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); }
 .wpcf7 .wpcf7-acceptance input { width: auto; min-height: 0; margin-right: 0.5rem; }
 .wpcf7 .wpcf7-acceptance .wpcf7-list-item-label { font-family: var(--wp--preset--font-family--primary); font-size: 0.8125rem; font-weight: 400; letter-spacing: 0; text-transform: none; }
+
+/* Opiniones en la ficha ([maros_reviews], spec 003 FR-006b) */
+.mis-reviews { padding-top: var(--wp--preset--spacing--medium); }
+.mis-reviews__summary { font-size: var(--wp--preset--font-size--medium); margin-block: 0 1.25rem; }
+.mis-reviews__average { font-weight: 600; }
+.mis-reviews__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
+.mis-review { border-top: 1px solid var(--mis-line); padding-top: 1rem; }
+.mis-review p { margin-block: 0 0.35rem; }
+.mis-review__stars { color: var(--wp--preset--color--main); letter-spacing: 0.1em; margin-left: 0.25rem; }
+.mis-review__meta { font-size: var(--wp--preset--font-size--small); }
+.mis-review__text p { margin-block: 0.5rem 0; }

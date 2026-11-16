@@ -2,21 +2,22 @@
 /**
  * Plugin Name:       marOS Connector
  * Description:       Propiedades (villas, apartamentos…) cargadas desde la API de marOS (spec 003): ficha, fotos, calendario y tarifas, con cron, cola, avisos firmados y pantalla de estado.
- * Version:           0.2.0
+ * Version:           0.3.0
  * Requires at least: 6.9
  * Requires PHP:      8.3
  * Text Domain:       maros-connector
  * License:           GPL-2.0-or-later
  *
  * Pendiente (spec 003): proxy de presupuesto y reserva, solicitudes Open, bloques de búsqueda y
- * calendario, Abilities del MCP, purga de APO.
+ * calendario, el resto de Abilities del MCP, purga de APO. Ya hay: maros/list-properties y
+ * maros/publish-review (opiniones de Airbnb que envía un agente).
  *
  * @package MarbellaInStyle
  */
 
 defined( 'ABSPATH' ) || exit;
 
-const MAROS_CONNECTOR_VERSION = '0.2.0';
+const MAROS_CONNECTOR_VERSION = '0.3.0';
 
 require_once __DIR__ . '/includes/class-maros-client.php';
 require_once __DIR__ . '/includes/class-maros-log.php';
@@ -25,9 +26,11 @@ require_once __DIR__ . '/includes/class-maros-sync.php';
 require_once __DIR__ . '/includes/class-maros-scheduler.php';
 require_once __DIR__ . '/includes/class-maros-webhook.php';
 require_once __DIR__ . '/includes/bindings.php';
+require_once __DIR__ . '/includes/class-maros-reviews.php';
 
 Maros_Scheduler::init();
 Maros_Webhook::init();
+Maros_Reviews::init();
 add_action( 'plugins_loaded', array( 'Maros_Calendar', 'maybe_install' ) );
 
 if ( is_admin() ) {
