@@ -90,6 +90,40 @@ add_shortcode(
 	}
 );
 
+/**
+ * [mis_search] Buscador de la portada: fechas y huéspedes (mockup M1/E1).
+ * Envía a Alojamiento con ?checkin=AAAA-MM-DD&checkout=AAAA-MM-DD&guests=N, las rutas del
+ * estudio de URLs (spec 005). El filtrado lo hará el buscador de marOS Connector; mientras
+ * tanto el listado muestra todas las casas.
+ */
+add_shortcode(
+	'mis_search',
+	static function () {
+		$guests = '';
+		for ( $n = 1; $n <= 16; $n++ ) {
+			$guests .= sprintf( '<option value="%1$d"%2$s>%1$d</option>', $n, 2 === $n ? ' selected' : '' );
+		}
+		$today = wp_date( 'Y-m-d' );
+		return sprintf(
+			'<form class="mis-search" role="search" method="get" action="%1$s">'
+			. '<div class="mis-search__field"><label for="mis-checkin">%2$s</label><input id="mis-checkin" type="date" name="checkin" min="%8$s"></div>'
+			. '<div class="mis-search__field"><label for="mis-checkout">%3$s</label><input id="mis-checkout" type="date" name="checkout" min="%8$s"></div>'
+			. '<div class="mis-search__field mis-search__field--guests"><label for="mis-guests">%4$s</label><select id="mis-guests" name="guests">%5$s</select></div>'
+			. '<button class="mis-search__submit wp-element-button" type="submit">%6$s</button>'
+			. '<p class="mis-search__hint">%7$s</p>'
+			. '</form>',
+			esc_url( mis_page_url( 'stay' ) ),
+			esc_html( mis_t( 'Arrival', 'Llegada' ) ),
+			esc_html( mis_t( 'Departure', 'Salida' ) ),
+			esc_html( mis_t( 'Guests', 'Huéspedes' ) ),
+			$guests,
+			esc_html( mis_t( 'See available homes', 'Ver casas disponibles' ) ),
+			esc_html( mis_t( 'Flexible dates? Leave them empty and we will show you every home.', '¿Fechas flexibles? Déjalas en blanco y te enseñamos todas las casas.' ) ),
+			esc_attr( $today )
+		);
+	}
+);
+
 // Categoría propia para los patrones de marca (en /patterns se registran solos).
 add_action(
 	'init',

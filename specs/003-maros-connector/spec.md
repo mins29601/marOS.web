@@ -152,7 +152,7 @@ través del proxy del plugin.
 - **FR-001**: El plugin MUST registrar el tipo de contenido `propiedad` (clave `mis_property`) y
   las taxonomías `tipo-propiedad` (villa, apartamento… según la categoría que dé marOS, nunca
   fijada en el código), `zona` y `equipamiento` (amenities). La URL pública depende del tipo
-  (base genérica sin tipología: `/stay/<slug>/` y `/es/vft/<slug>/`, decisiones T38 y T39;
+  (base genérica sin tipología: `/stay/<slug>/` y `/es/vft/<slug>/`, decisiones T39 y T40;
   ver [mapa del sitio](../005-arquitectura-informacion/mapa-del-sitio.md)). Los tours y servicios no son de este
   tipo: ver spec 004. Campos en [data-model.md](./data-model.md).
 - **FR-002**: Los campos operativos MUST ser de solo lectura en el editor y en la REST de
@@ -179,6 +179,15 @@ través del proxy del plugin.
   Además `maros/update-portal-ratings` (Julio, 13/11): un agente actualiza por el MCP la nota, el
   nº de opiniones y la URL de cada portal (Airbnb, Booking.com, Vrbo) de una propiedad. Solo toca
   esos campos, se publica directamente (no es contenido editorial) y queda registrado (principio VIII).
+- **FR-006b**: Opiniones de portales por el MCP (Julio, 16/11): un agente saca las opiniones de
+  Airbnb y las envía con `maros/publish-review` (propiedad por id de WordPress, marOS o Lodgify;
+  portal, id de la opinión en el portal, autor, ciudad o país, fecha, mes de estancia, estrellas
+  1–5, título, texto e idioma). Se guardan en Site Reviews (D11) asignadas a la propiedad y a sus
+  traducciones, sin duplicar (clave portal + id, o autor + fecha + texto), y se rechaza el texto
+  con email o teléfono (principio VI). Entran publicadas o pendientes según `MIS_REVIEWS_STATUS`
+  (por defecto `publish`, como las notas de portales) y cada llamada queda en el registro de
+  marOS. `maros/list-properties` da los ids. La ficha las muestra con `[maros_reviews]`: nota
+  media, número y las últimas 6 con nombre, lugar, mes, portal, estrellas y texto.
 - **FR-007**: El entorno de marOS MUST venir de constantes de `wp-config.php`: `MAROS_ENV`,
   `MAROS_API_BASE`, `MAROS_API_KEY`, `MAROS_WEBHOOK_SECRET`.
 - **FR-008**: El plugin MUST tener una pantalla «marOS» con estado: entorno, última
@@ -209,7 +218,7 @@ través del proxy del plugin.
 
 ### Session 2026-11-11 (preguntas abiertas)
 
-- Q1: ¿Las opiniones (Site Reviews) siguen en WordPress o vendrán de marOS/Lodgify? → *pendiente*
+- Q1: ¿Las opiniones (Site Reviews) siguen en WordPress o vendrán de marOS/Lodgify? → En WordPress (Site Reviews); las de Airbnb las publica un agente por el MCP (Julio, 16/11: «a través del mcp de la web se deberían poder publicar reseñas, que las saca un agente de airbnb»), FR-006b
 - Q2: ¿Ruta por tipo (`/villas/<slug>/`, `/apartments/<slug>/`) o la actual `/services/villas/<slug>/`? → *pendiente* (D6)
 
 ### Session 2026-11-11 (respuestas de Julio, 22:01)

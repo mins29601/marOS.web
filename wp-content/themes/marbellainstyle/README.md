@@ -38,4 +38,4 @@ Cabecera sobre foto: clase `mis-header--overlay` en el grupo de la cabecera.
 ## Logo
 
 `[mis_logo variant="color|negro|oro|blanco"]`. Color en la cabecera, blanco en la capa «Menú», oro en el pie.
-Los SVG pesan ~72 KB cada uno: pendiente optimizarlos con SVGO (Q4 de la spec 006).
+Optimizados (coordenadas a 2 decimales y en relativo, colores en hexadecimal, sin el marco de la mesa de trabajo ni trazados fuera de la vista): unos 24 KB el logo y 2 KB el símbolo, antes 72 KB cada uno. Comparados píxel a píxel con los originales a 6 aumentos: sin diferencias visibles.
