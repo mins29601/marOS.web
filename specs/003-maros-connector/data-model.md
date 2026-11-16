@@ -30,11 +30,11 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 | Puntos fuertes, FAQ, «ideal para» | WP | sí | |
 | Orden de galería, imagen destacada, alt | WP | sí | |
 | SEO (title, meta, OG, schema) | WP | sí | Plugin SEO (D3) |
-| Opiniones destacadas | WP | sí | Pendiente Q1 |
+| Opiniones | WP | no (se ven en todos los idiomas, en el idioma original) | Site Reviews, asignadas a la propiedad y sus traducciones. Las de Airbnb llegan por el MCP (`maros/publish-review`, FR-006b) con metadatos `_mis_review_source`, `_source_id`, `_language`, `_location`, `_stay_date` |
 | Gestión: exclusiva (gestión directa) o colaborador | WP | no | Distintivo «Exclusiva» en tarjetas y ficha (Julio, 12/11). **Pendiente**: si marOS sabe quién gestiona cada casa, pasa a origen M |
 | Persona de contacto (nombre, foto) | WP | sí | «[Nombre] será tu contacto» |
 | Vídeos (enlace, plataforma, carátula) | WP | no | Campo `mis_videos` (JSON), igual en todos los idiomas. Instagram y YouTube (los más antiguos); también TikTok. No hay planos (Julio, 14/11). Cómo se muestran: D18 |
-| Valoración media, nº de opiniones y subvaloraciones (limpieza, exactitud, comunicación, ubicación, llegada, calidad-precio) | WP | no | Se calcula de las opiniones propias (Site Reviews, D11). Origen de las opiniones: **pendiente** |
+| Valoración media, nº de opiniones y subvaloraciones (limpieza, exactitud, comunicación, ubicación, llegada, calidad-precio) | WP | no | Se calcula de las opiniones propias (Site Reviews, D11). Origen: Airbnb por el MCP (FR-006b) y las que se importen de la web actual |
 | Presencia en portales: Airbnb, Booking.com, Vrbo (URL, nota, nº de opiniones, fecha de actualización) | WP | no | Se muestra «También en…» (Julio, 12/11). Los portales no dan API pública de notas: se actualizan a mano o con el MCP |
 
 ## Datos para los textos de la ficha (Julio, 14/11)
