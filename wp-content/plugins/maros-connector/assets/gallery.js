@@ -94,7 +94,7 @@
 		} else if ( t.hasAttribute( 'data-mis-goto' ) ) {
 			var sec = document.getElementById( t.getAttribute( 'data-mis-goto' ) );
 			if ( sec ) {
-				scroller.scrollTop += sec.getBoundingClientRect().top - scroller.getBoundingClientRect().top - ( tour.querySelector( '.mis-tour__chips' ) || { offsetHeight: 0 } ).offsetHeight;
+				scroller.scrollTop += sec.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
 			}
 		} else {
 			viewer( t.getAttribute( 'data-mis-photo' ) );
