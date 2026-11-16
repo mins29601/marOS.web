@@ -584,7 +584,7 @@ class Maros_Sync {
 						array_filter( is_array( $room['beds'] ?? null ) ? $room['beds'] : array(), 'is_array' )
 					)
 				),
-				'en_suite'  => is_array( $room['en_suite'] ?? null ) ? array( 'bathtub' => ! empty( $room['en_suite']['bathtub'] ) ) : null,
+				'en_suite'  => is_array( $room['en_suite'] ?? null ) ? array( 'bathtub' => ! empty( $room['en_suite']['bathtub'] ), 'shower' => ! empty( $room['en_suite']['shower'] ) ) : null,
 				'amenities' => array_values(
 					array_map(
 						static fn( $a ) => array( 'code' => sanitize_key( (string) ( $a['code'] ?? '' ) ) ) + $pair( $a ),

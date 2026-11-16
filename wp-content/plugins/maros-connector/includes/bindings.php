@@ -206,9 +206,15 @@ add_shortcode(
 			}
 			$items = array();
 			if ( is_array( $room['en_suite'] ?? null ) ) {
-				$text    = ! empty( $room['en_suite']['bathtub'] )
-					? ( $es ? 'Baño en-suite con bañera' : 'En-suite bathroom with bathtub' )
-					: ( $es ? 'Baño en-suite' : 'En-suite bathroom' );
+				$tub     = ! empty( $room['en_suite']['bathtub'] );
+				$shower  = ! empty( $room['en_suite']['shower'] );
+				$text    = $tub && $shower
+					? ( $es ? 'Baño en-suite con bañera y ducha' : 'En-suite bathroom with bathtub and shower' )
+					: ( $tub
+						? ( $es ? 'Baño en-suite con bañera' : 'En-suite bathroom with bathtub' )
+						: ( $shower
+							? ( $es ? 'Baño en-suite con ducha' : 'En-suite bathroom with shower' )
+							: ( $es ? 'Baño en-suite' : 'En-suite bathroom' ) ) );
 				$items[] = '<li>' . $bath . '<span>' . esc_html( $text ) . '</span></li>';
 			}
 			$amenities = is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array();

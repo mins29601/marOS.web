@@ -117,7 +117,8 @@
         }
       ],
       "en_suite": {
-        "bathtub": false
+        "bathtub": false,
+        "shower": true
       },
       "amenities": [
         {
@@ -153,7 +154,8 @@
         }
       ],
       "en_suite": {
-        "bathtub": false
+        "bathtub": false,
+        "shower": true
       },
       "amenities": [
         {
@@ -189,7 +191,8 @@
         }
       ],
       "en_suite": {
-        "bathtub": false
+        "bathtub": false,
+        "shower": true
       },
       "amenities": [
         {
@@ -225,7 +228,8 @@
         }
       ],
       "en_suite": {
-        "bathtub": true
+        "bathtub": true,
+        "shower": false
       },
       "amenities": [
         {
@@ -276,7 +280,8 @@
         }
       ],
       "en_suite": {
-        "bathtub": false
+        "bathtub": false,
+        "shower": true
       },
       "amenities": [
         {
