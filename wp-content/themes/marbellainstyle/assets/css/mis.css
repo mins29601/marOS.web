@@ -291,6 +291,32 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-amenities { columns: 2; column-gap: 2rem; padding-left: 0; list-style: none; }
 .mis-amenities li { margin-bottom: 0.6rem; break-inside: avoid; padding-left: 1.25rem; position: relative; }
 .mis-amenities li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 8px; height: 1px; background: var(--wp--preset--color--primary); }
+/* Distribución de dormitorios (marOS spec 040; maqueta de Julio del 16-11-2026): una fila horizontal. */
+.mis-sleeping__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
+.mis-sleeping__head h2 { margin: 0; }
+.mis-sleeping__nav { display: none; gap: 0.5rem; }
+.mis-sleeping__btn { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); color: var(--wp--preset--color--main); cursor: pointer; }
+.mis-sleeping__btn:hover, .mis-sleeping__btn:focus-visible { border-color: var(--wp--preset--color--main); }
+.mis-sleeping__track { list-style: none; margin: 0 calc(var(--wp--preset--spacing--medium) * -1); padding: 0 var(--wp--preset--spacing--medium) 0.5rem; display: flex; gap: 0.75rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--wp--preset--spacing--medium); scrollbar-width: thin; }
+.mis-sleeping__card { flex: 0 0 min(280px, 78vw); scroll-snap-align: start; display: flex; flex-direction: column; background: var(--wp--preset--color--primary-alt-accent); border: 1px solid var(--mis-line); }
+.mis-sleeping__media { position: relative; }
+.mis-sleeping__img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+.mis-sleeping__img--empty { background: var(--wp--preset--color--tertiary); }
+.mis-sleeping__badge { position: absolute; top: 12px; left: 12px; background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 8px; }
+.mis-sleeping__body { padding: 1.125rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.mis-sleeping__title { margin: 0; font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--medium); font-weight: 600; }
+.mis-sleeping__floor { margin: -0.5rem 0 0; font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wp--preset--color--primary-alt); }
+.mis-sleeping__beds { margin: 0; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; }
+.mis-sleeping__beds svg, .mis-sleeping__list svg { flex-shrink: 0; color: var(--wp--preset--color--primary); }
+.mis-sleeping__list { list-style: none; margin: 0; padding: 0.75rem 0 0; border-top: 1px solid var(--wp--preset--color--tertiary); display: flex; flex-direction: column; gap: 0.5rem; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--main-accent); }
+.mis-sleeping__list li { display: flex; align-items: flex-start; gap: 0.5rem; }
+.mis-sleeping__list svg { margin-top: 2px; }
+.mis-sleeping__more { color: var(--wp--preset--color--secondary); }
+@media (min-width: 768px) {
+	.mis-sleeping__nav { display: flex; }
+	.mis-sleeping__track { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; gap: 1.5rem; }
+	.mis-sleeping__card { flex-basis: 300px; }
+}
 .mis-sticky-cta {
 	position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
 	background: var(--wp--preset--color--base);

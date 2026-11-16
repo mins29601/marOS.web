@@ -241,6 +241,8 @@ class Maros_Sync {
 		}
 
 		$complete = $photos ? self::sync_photos( $ids, $data['photos'] ?? array() ) : true;
+		// marOS spec 040: dormitorios para «Sleeping arrangements», con la foto de cada uno en Medios.
+		$complete = self::sync_bedrooms( $ids, $data['sleeping_arrangements'] ?? array(), $photos ) && $complete;
 
 		// El etag se guarda al final: si algo queda a medias (fotos), la próxima pasada lo repite.
 		foreach ( $ids as $post_id ) {
@@ -534,6 +536,66 @@ class Maros_Sync {
 			if ( $gallery && ! has_post_thumbnail( $post_id ) ) {
 				set_post_thumbnail( $post_id, $gallery[0] );
 			}
+		}
+		return $complete;
+	}
+
+	/**
+	 * Guarda los dormitorios de marOS (spec 040) en maros_sleeping, en los dos idiomas, con el id
+	 * de Medios de la primera foto de cada uno. Las fotos suelen ser las de la galería (mismo hash).
+	 *
+	 * @return bool false si queda alguna foto por descargar en otra pasada.
+	 */
+	private static function sync_bedrooms( array $ids, $rooms, bool $photos ): bool {
+		$text     = static fn( $v ) => sanitize_text_field( (string) $v );
+		$pair     = static fn( $v ) => array( 'en' => sanitize_text_field( (string) ( $v['en'] ?? '' ) ), 'es' => sanitize_text_field( (string) ( $v['es'] ?? '' ) ) );
+		$out      = array();
+		$complete = true;
+		foreach ( is_array( $rooms ) && array_is_list( $rooms ) ? $rooms : array() as $room ) {
+			if ( ! is_array( $room ) ) {
+				continue;
+			}
+			$att   = 0;
+			$first = null;
+			foreach ( is_array( $room['photos'] ?? null ) ? $room['photos'] : array() as $p ) {
+				if ( is_array( $p ) && ! empty( $p['url'] ) && ( ! $first || ( $p['order'] ?? 0 ) < ( $first['order'] ?? 0 ) ) ) {
+					$first = $p;
+				}
+			}
+			if ( $first ) {
+				$hash = (string) ( $first['hash'] ?? md5( $first['url'] ) );
+				$att  = self::find_attachment_by_hash( $hash );
+				if ( ! $att && $photos ) {
+					if ( self::$photo_budget > 0 ) {
+						--self::$photo_budget;
+						$att = self::download_photo( $first, $hash, $ids['en'] );
+					}
+					$complete = $complete && $att > 0;
+				}
+			}
+			$floor = is_array( $room['floor'] ?? null ) ? $room['floor'] : null;
+			$out[] = array(
+				'number'    => max( 1, (int) ( $room['number'] ?? count( $out ) + 1 ) ),
+				'master'    => ! empty( $room['master'] ),
+				'floor'     => $floor ? $pair( $floor ) : null,
+				'beds'      => array_values(
+					array_map(
+						static fn( $b ) => array( 'type' => $text( $b['type'] ?? '' ), 'count' => max( 1, (int) ( $b['count'] ?? 1 ) ) ),
+						array_filter( is_array( $room['beds'] ?? null ) ? $room['beds'] : array(), 'is_array' )
+					)
+				),
+				'en_suite'  => is_array( $room['en_suite'] ?? null ) ? array( 'bathtub' => ! empty( $room['en_suite']['bathtub'] ) ) : null,
+				'amenities' => array_values(
+					array_map(
+						static fn( $a ) => array( 'code' => sanitize_key( (string) ( $a['code'] ?? '' ) ) ) + $pair( $a ),
+						array_filter( is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array(), 'is_array' )
+					)
+				),
+				'photo'     => $att,
+			);
+		}
+		foreach ( $ids as $post_id ) {
+			update_post_meta( $post_id, 'maros_sleeping', wp_slash( wp_json_encode( $out ) ) );
 		}
 		return $complete;
 	}
