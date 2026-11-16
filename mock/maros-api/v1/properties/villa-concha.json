@@ -98,6 +98,213 @@
   },
   "check_in": "16:00",
   "check_out": "11:00",
+  "sleeping_arrangements": [
+    {
+      "number": 1,
+      "name": "Dormitorio 1",
+      "master": false,
+      "floor": {
+        "level": 0,
+        "en": "Ground floor",
+        "es": "Planta baja"
+      },
+      "beds": [
+        {
+          "type": "queen",
+          "count": 1,
+          "width": 160,
+          "length": 200
+        }
+      ],
+      "en_suite": {
+        "bathtub": false,
+        "shower": true
+      },
+      "amenities": [
+        {
+          "code": "patio_garden_access",
+          "en": "Access to patio or garden",
+          "es": "Acceso al patio o jardín"
+        }
+      ],
+      "photos": [
+        {
+          "url": "mock:photos/villa-concha-1.jpg",
+          "order": 1,
+          "hash": "mock-villa-concha-1",
+          "caption": ""
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Dormitorio 2",
+      "master": false,
+      "floor": {
+        "level": 0,
+        "en": "Ground floor",
+        "es": "Planta baja"
+      },
+      "beds": [
+        {
+          "type": "queen",
+          "count": 1,
+          "width": 160,
+          "length": 200
+        }
+      ],
+      "en_suite": {
+        "bathtub": false,
+        "shower": true
+      },
+      "amenities": [
+        {
+          "code": "independent_access",
+          "en": "Independent access",
+          "es": "Acceso independiente"
+        }
+      ],
+      "photos": [
+        {
+          "url": "mock:photos/villa-concha-2.jpg",
+          "order": 1,
+          "hash": "mock-villa-concha-2",
+          "caption": ""
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "name": "Dormitorio 3",
+      "master": false,
+      "floor": {
+        "level": 0,
+        "en": "Ground floor",
+        "es": "Planta baja"
+      },
+      "beds": [
+        {
+          "type": "queen",
+          "count": 1,
+          "width": 160,
+          "length": 200
+        }
+      ],
+      "en_suite": {
+        "bathtub": false,
+        "shower": true
+      },
+      "amenities": [
+        {
+          "code": "direct_pool_access",
+          "en": "Direct pool access",
+          "es": "Acceso directo a la piscina"
+        }
+      ],
+      "photos": [
+        {
+          "url": "mock:photos/villa-concha-3.jpg",
+          "order": 1,
+          "hash": "mock-villa-concha-3",
+          "caption": ""
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "name": "Dormitorio principal",
+      "master": true,
+      "floor": {
+        "level": 1,
+        "en": "First floor",
+        "es": "Primera planta"
+      },
+      "beds": [
+        {
+          "type": "king",
+          "count": 1,
+          "width": 180,
+          "length": 200
+        }
+      ],
+      "en_suite": {
+        "bathtub": true,
+        "shower": false
+      },
+      "amenities": [
+        {
+          "code": "walk_in_closet",
+          "en": "Walk-in wardrobe",
+          "es": "Vestidor"
+        },
+        {
+          "code": "private_terrace",
+          "en": "Private terrace",
+          "es": "Terraza privada"
+        },
+        {
+          "code": "sea_view",
+          "en": "Sea view",
+          "es": "Vistas al mar"
+        },
+        {
+          "code": "sitting_area",
+          "en": "Sitting area",
+          "es": "Zona de estar"
+        }
+      ],
+      "photos": [
+        {
+          "url": "mock:photos/villa-concha-4.jpg",
+          "order": 1,
+          "hash": "mock-villa-concha-4",
+          "caption": ""
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "name": "Dormitorio 5",
+      "master": false,
+      "floor": {
+        "level": 1,
+        "en": "First floor",
+        "es": "Primera planta"
+      },
+      "beds": [
+        {
+          "type": "queen",
+          "count": 1,
+          "width": 160,
+          "length": 200
+        }
+      ],
+      "en_suite": {
+        "bathtub": false,
+        "shower": true
+      },
+      "amenities": [
+        {
+          "code": "private_terrace",
+          "en": "Private terrace",
+          "es": "Terraza privada"
+        },
+        {
+          "code": "sea_view",
+          "en": "Sea view",
+          "es": "Vistas al mar"
+        }
+      ],
+      "photos": [
+        {
+          "url": "mock:photos/villa-concha-5.jpg",
+          "order": 1,
+          "hash": "mock-villa-concha-5",
+          "caption": ""
+        }
+      ]
+    }
+  ],
   "updated_at": "2026-11-12T09:00:00Z",
-  "etag": "\"3207d2a19f6288d7330d875ec6a90ec8\""
+  "etag": "\"mock-villa-concha-sleeping-1\""
 }

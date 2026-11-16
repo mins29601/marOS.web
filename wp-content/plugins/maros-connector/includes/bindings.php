@@ -149,3 +149,115 @@ add_shortcode(
 		return '<ul class="mis-amenities">' . implode( '', $items ) . '</ul>';
 	}
 );
+
+/**
+ * [maros_sleeping] Distribución de dormitorios (marOS spec 040): una fila de tarjetas con
+ * desplazamiento horizontal, una por dormitorio, con foto, planta, camas, baño en-suite y
+ * comodidades. Maqueta aprobada por Julio el 16-11-2026.
+ */
+add_shortcode(
+	'maros_sleeping',
+	static function () {
+		$post_id = get_the_ID();
+		$rooms   = json_decode( (string) get_post_meta( $post_id, 'maros_sleeping', true ), true );
+		if ( ! is_array( $rooms ) || ! $rooms ) {
+			return '';
+		}
+		$es   = maros_is_es( (int) $post_id );
+		$lang = $es ? 'es' : 'en';
+		$beds = array(
+			'single'   => array( 'Single bed', 'Cama individual' ),
+			'double'   => array( 'Double bed', 'Cama doble' ),
+			'queen'    => array( 'Queen-size bed', 'Cama queen' ),
+			'king'     => array( 'King-size bed', 'Cama king' ),
+			'sofa_bed' => array( 'Sofa bed', 'Sofá cama' ),
+			'bunk'     => array( 'Bunk bed', 'Litera' ),
+			'crib'     => array( 'Cot', 'Cuna' ),
+		);
+		// Lo propio de un dormitorio va primero (lista de Julio, marOS spec 039); el resto, después.
+		// Lo básico que tiene cualquier dormitorio (perchas, ropa de cama…) va al final, en «+N más».
+		$first = array( 'sea_view', 'mountain_view', 'garden_view', 'private_terrace', 'balcony', 'patio_balcony', 'direct_pool_access', 'patio_garden_access', 'independent_access', 'private_entrance', 'walk_in_closet', 'sitting_area', 'desk', 'dedicated_workspace', 'tv', 'indoor_fireplace', 'air_conditioning', 'heating', 'safe', 'wardrobe' );
+		$last  = array( 'hangers', 'bed_linens', 'extra_pillows_blankets', 'clothing_storage', 'blackout_shades', 'iron', 'hair_dryer' );
+		$max   = 5;
+		$icon  = static fn( string $d ) => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $d . '</svg>';
+		$bed_i = $icon( '<path d="M3 18V7"/><path d="M21 18v-6a3 3 0 0 0-3-3h-8v6"/><path d="M3 15h18"/><circle cx="6.5" cy="11.5" r="1.8"/>' );
+		$bath  = $icon( '<path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V5a2 2 0 0 1 3.5-1.3"/><path d="M7 19l-1 2M17 19l1 2"/>' );
+		$check = $icon( '<path d="M5 12l4 4 10-10"/>' );
+
+		$cards = '';
+		foreach ( $rooms as $room ) {
+			$n     = (int) ( $room['number'] ?? 0 );
+			$title = sprintf( $es ? 'Dormitorio %d' : 'Bedroom %d', $n );
+			$img   = ! empty( $room['photo'] ) ? wp_get_attachment_image( (int) $room['photo'], 'medium_large', false, array( 'class' => 'mis-sleeping__img', 'loading' => 'lazy', 'alt' => $title ) ) : '';
+			$html  = '<li class="mis-sleeping__card"><div class="mis-sleeping__media">' . ( $img ?: '<div class="mis-sleeping__img mis-sleeping__img--empty" aria-hidden="true"></div>' );
+			if ( ! empty( $room['master'] ) ) {
+				$html .= '<span class="mis-sleeping__badge">' . esc_html( $es ? 'Principal' : 'Master' ) . '</span>';
+			}
+			$html .= '</div><div class="mis-sleeping__body"><h3 class="mis-sleeping__title">' . esc_html( $title ) . '</h3>';
+			if ( ! empty( $room['floor'][ $lang ] ) ) {
+				$html .= '<p class="mis-sleeping__floor">' . esc_html( $room['floor'][ $lang ] ) . '</p>';
+			}
+			$bed_text = array();
+			foreach ( is_array( $room['beds'] ?? null ) ? $room['beds'] : array() as $b ) {
+				$label      = $beds[ $b['type'] ?? '' ][ $es ? 1 : 0 ] ?? ( $es ? 'Cama' : 'Bed' );
+				$count      = (int) ( $b['count'] ?? 1 );
+				$bed_text[] = $count > 1 ? $count . ' × ' . $label : $label;
+			}
+			if ( $bed_text ) {
+				$html .= '<p class="mis-sleeping__beds">' . $bed_i . '<span>' . esc_html( implode( ' · ', $bed_text ) ) . '</span></p>';
+			}
+			$items = array();
+			if ( is_array( $room['en_suite'] ?? null ) ) {
+				$tub     = ! empty( $room['en_suite']['bathtub'] );
+				$shower  = ! empty( $room['en_suite']['shower'] );
+				$text    = $tub && $shower
+					? ( $es ? 'Baño en-suite con bañera y ducha' : 'En-suite bathroom with bathtub and shower' )
+					: ( $tub
+						? ( $es ? 'Baño en-suite con bañera' : 'En-suite bathroom with bathtub' )
+						: ( $shower
+							? ( $es ? 'Baño en-suite con ducha' : 'En-suite bathroom with shower' )
+							: ( $es ? 'Baño en-suite' : 'En-suite bathroom' ) ) );
+				$items[] = '<li>' . $bath . '<span>' . esc_html( $text ) . '</span></li>';
+			}
+			$amenities = is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array();
+			usort(
+				$amenities,
+				static function ( $a, $b ) use ( $first, $last ) {
+					$rank = static function ( string $code ) use ( $first, $last ): int {
+						$i = array_search( $code, $first, true );
+						if ( false !== $i ) {
+							return $i;
+						}
+						return in_array( $code, $last, true ) ? 200 : 100;
+					};
+					return $rank( (string) ( $a['code'] ?? '' ) ) <=> $rank( (string) ( $b['code'] ?? '' ) );
+				}
+			);
+			$shown = array_slice( $amenities, 0, $max );
+			foreach ( $shown as $a ) {
+				if ( ! empty( $a[ $lang ] ) ) {
+					$items[] = '<li>' . $check . '<span>' . esc_html( $a[ $lang ] ) . '</span></li>';
+				}
+			}
+			$rest = count( $amenities ) - count( $shown );
+			if ( $rest > 0 ) {
+				$items[] = '<li class="mis-sleeping__more"><span>' . esc_html( sprintf( $es ? '+ %d comodidades más' : '+ %d more amenities', $rest ) ) . '</span></li>';
+			}
+			if ( $items ) {
+				$html .= '<ul class="mis-sleeping__list">' . implode( '', $items ) . '</ul>';
+			}
+			$cards .= $html . '</div></li>';
+		}
+
+		$id   = 'mis-sleeping-' . $post_id;
+		$prev = $es ? 'Dormitorios anteriores' : 'Previous bedrooms';
+		$next = $es ? 'Más dormitorios' : 'More bedrooms';
+		$nav  = count( $rooms ) > 1
+			? '<div class="mis-sleeping__nav"><button type="button" class="mis-sleeping__btn" data-dir="-1" aria-controls="' . esc_attr( $id ) . '" aria-label="' . esc_attr( $prev ) . '">' . $icon( '<path d="M15 6l-6 6 6 6"/>' ) . '</button><button type="button" class="mis-sleeping__btn" data-dir="1" aria-controls="' . esc_attr( $id ) . '" aria-label="' . esc_attr( $next ) . '">' . $icon( '<path d="M9 6l6 6-6 6"/>' ) . '</button></div>'
+			: '';
+		$js   = '<script>document.querySelectorAll(".mis-sleeping__btn").forEach(function(b){b.addEventListener("click",function(){var t=document.getElementById(b.getAttribute("aria-controls"));if(!t)return;var c=t.querySelector(".mis-sleeping__card");t.scrollBy({left:(c?c.offsetWidth+24:300)*Number(b.dataset.dir),behavior:"smooth"});});});</script>';
+
+		$head = '<div class="mis-sleeping__head"><h2 class="wp-block-heading has-large-font-size">' . esc_html( $es ? 'Distribución' : 'Sleeping arrangements' ) . '</h2>' . $nav . '</div>';
+		return '<section id="bedrooms" class="mis-sleeping">' . $head . '<ul class="mis-sleeping__track" id="' . esc_attr( $id ) . '" tabindex="0" aria-label="' . esc_attr( $es ? 'Dormitorios' : 'Bedrooms' ) . '">' . $cards . '</ul></section>' . ( $nav ? $js : '' );
+	}
+);
