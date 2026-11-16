@@ -213,11 +213,8 @@ foreach ( $forms as $slug => $f ) {
 WP_CLI::log( 'Páginas…' );
 $no_title = array( 'page_template' => 'page-no-title' );
 
+// La portada (título y buscador) la pone la plantilla front-page.html del tema.
 $home_en = mis_section(
-	mis_intro( 'Marbella · Villas, services & experiences', 'Your home in Marbella, cared for by people who live here', 'Hand-picked villas and apartments we manage ourselves, plus the chefs, drivers and experiences that make the stay.', 1 )
-	. mis_button( 'Find your stay', '/stay/' ),
-	'tertiary'
-) . mis_section(
 	'<!-- wp:columns {"className":"mis-pillars"} --><div class="wp-block-columns mis-pillars">'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Stay', 3, 'medium' ) . mis_p( 'Villas and apartments managed by our own team.', 'mis-muted' ) . mis_p( '<a href="/stay/">See the homes →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Concierge', 3, 'medium' ) . mis_p( 'Chefs, drivers, events. Also if you are not staying with us.', 'mis-muted' ) . mis_p( '<a href="/services/">See the services →</a>' ) . '</div><!-- /wp:column -->'
@@ -229,11 +226,8 @@ $home_en = mis_section(
   . mis_section( mis_intro( 'Areas', 'Where to stay in Marbella' ) . '<!-- wp:categories {"taxonomy":"zona","className":"mis-terms-list","showEmpty":true} /-->' . "\n", 'tertiary' )
   . mis_section( mis_intro( 'Talk to us', 'Prefer to plan it with a person?', 'Write to us or call: one person from our team will help you from the first message to check-out.' ) . mis_button( 'Contact us', '/contact/' ) );
 
+// La portada (título y buscador) la pone la plantilla front-page.html del tema.
 $home_es = mis_section(
-	mis_intro( 'Marbella · Villas, servicios y experiencias', 'Tu casa en Marbella, cuidada por quienes viven aquí', 'Villas y apartamentos seleccionados que gestionamos nosotros, y los chefs, chóferes y experiencias que hacen la estancia.', 1 )
-	. mis_button( 'Busca tu alojamiento', '/es/alojamiento/' ),
-	'tertiary'
-) . mis_section(
 	'<!-- wp:columns {"className":"mis-pillars"} --><div class="wp-block-columns mis-pillars">'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Alojamiento', 3, 'medium' ) . mis_p( 'Villas y apartamentos gestionados por nuestro equipo.', 'mis-muted' ) . mis_p( '<a href="/es/alojamiento/">Ver las casas →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Servicios', 3, 'medium' ) . mis_p( 'Chefs, chóferes, eventos. También si no te alojas con nosotros.', 'mis-muted' ) . mis_p( '<a href="/es/servicios/">Ver los servicios →</a>' ) . '</div><!-- /wp:column -->'
