@@ -243,6 +243,8 @@ class Maros_Sync {
 		$complete = $photos ? self::sync_photos( $ids, $data['photos'] ?? array() ) : true;
 		// marOS spec 040: dormitorios para «Sleeping arrangements», con la foto de cada uno en Medios.
 		$complete = self::sync_bedrooms( $ids, $data['sleeping_arrangements'] ?? array(), $photos ) && $complete;
+		// marOS spec 041: estancias con fotos para la galería por estancias (maqueta B, Julio 16-11-2026).
+		$complete = self::sync_tour( $ids, $data['photo_tour'] ?? array(), $photos ) && $complete;
 
 		// El etag se guarda al final: si algo queda a medias (fotos), la próxima pasada lo repite.
 		foreach ( $ids as $post_id ) {
@@ -596,6 +598,65 @@ class Maros_Sync {
 		}
 		foreach ( $ids as $post_id ) {
 			update_post_meta( $post_id, 'maros_sleeping', wp_slash( wp_json_encode( $out ) ) );
+		}
+		return $complete;
+	}
+
+	/**
+	 * Guarda las estancias con fotos de marOS (spec 041) en maros_tour, en los dos idiomas, con los
+	 * ids de Medios de sus fotos en orden. Casi siempre son fotos de la galería (mismo hash), así que
+	 * no se descargan otra vez.
+	 *
+	 * @return bool false si queda alguna foto por descargar en otra pasada.
+	 */
+	private static function sync_tour( array $ids, $rooms, bool $photos ): bool {
+		$pair     = static fn( $v ) => array( 'en' => sanitize_text_field( (string) ( $v['en'] ?? '' ) ), 'es' => sanitize_text_field( (string) ( $v['es'] ?? '' ) ) );
+		$number   = static fn( $v ) => is_numeric( $v ) && (int) $v > 0 ? (int) $v : null;
+		$out      = array();
+		$complete = true;
+		foreach ( is_array( $rooms ) && array_is_list( $rooms ) ? $rooms : array() as $room ) {
+			if ( ! is_array( $room ) ) {
+				continue;
+			}
+			$list = array_values( array_filter( is_array( $room['photos'] ?? null ) ? $room['photos'] : array(), static fn( $p ) => is_array( $p ) && ! empty( $p['url'] ) ) );
+			usort( $list, static fn( $a, $b ) => ( $a['order'] ?? 0 ) <=> ( $b['order'] ?? 0 ) );
+			$atts = array();
+			foreach ( $list as $p ) {
+				$hash = (string) ( $p['hash'] ?? md5( $p['url'] ) );
+				$att  = self::find_attachment_by_hash( $hash );
+				if ( ! $att && $photos ) {
+					if ( self::$photo_budget > 0 ) {
+						--self::$photo_budget;
+						$att = self::download_photo( $p, $hash, $ids['en'] );
+					}
+					$complete = $complete && $att > 0;
+				}
+				if ( $att && ! in_array( $att, $atts, true ) ) {
+					$atts[] = $att;
+				}
+			}
+			if ( ! $atts ) {
+				continue;
+			}
+			$floor = is_array( $room['floor'] ?? null ) ? $room['floor'] : null;
+			$out[] = array(
+				'name'        => sanitize_text_field( (string) ( $room['name'] ?? '' ) ),
+				'type'        => sanitize_key( (string) ( $room['type'] ?? '' ) ),
+				'outdoor'     => ! empty( $room['outdoor'] ),
+				'floor'       => $floor ? $pair( $floor ) : null,
+				'bedroom'     => $number( $room['bedroom'] ?? null ),
+				'en_suite_of' => $number( $room['en_suite_of'] ?? null ),
+				'amenities'   => array_values(
+					array_map(
+						static fn( $a ) => array( 'code' => sanitize_key( (string) ( $a['code'] ?? '' ) ) ) + $pair( $a ),
+						array_filter( is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array(), 'is_array' )
+					)
+				),
+				'photos'      => $atts,
+			);
+		}
+		foreach ( $ids as $post_id ) {
+			update_post_meta( $post_id, 'maros_tour', wp_slash( wp_json_encode( $out ) ) );
 		}
 		return $complete;
 	}
