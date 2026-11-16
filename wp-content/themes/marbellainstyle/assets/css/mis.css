@@ -266,16 +266,79 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 
 /* ------------------------------------------------------------------ Ficha */
 
+.mis-gallery-wrap { position: relative; }
 .mis-gallery { display: grid; gap: 6px; grid-template-columns: 1fr 1fr; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); }
-.mis-gallery__img { width: 100%; height: 100%; min-height: 0; object-fit: cover; aspect-ratio: 4 / 3; display: block; }
-.mis-gallery > :first-child { grid-column: 1 / -1; aspect-ratio: 4 / 3; }
+.mis-gallery__item { display: block; padding: 0; border: 0; background: var(--wp--preset--color--tertiary); cursor: zoom-in; overflow: hidden; min-height: 0; aspect-ratio: 4 / 3; }
+.mis-gallery__img { width: 100%; height: 100%; min-height: 0; object-fit: cover; display: block; transition: transform .6s ease; }
+.mis-gallery__item:hover .mis-gallery__img { transform: scale(1.02); }
+.mis-gallery__item:focus-visible { outline: 2px solid var(--wp--preset--color--primary); outline-offset: -2px; }
+.mis-gallery > :first-child { grid-column: 1 / -1; }
 .mis-gallery > :nth-child(n+4) { display: none; }
-@media (min-width: 768px) { .mis-gallery { margin-inline: 0; } .mis-gallery > :nth-child(n+4) { display: block; } .mis-gallery > :nth-child(n+6) { display: none; } }
+@media (min-width: 768px) { .mis-gallery { margin-inline: 0; } .mis-gallery > :nth-child(n+4) { display: block; } }
 @media (min-width: 1024px) {
 	.mis-gallery { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); height: min(660px, 72vh); overflow: hidden; }
-	.mis-gallery > :first-child { grid-column: 1; grid-row: 1 / 3; aspect-ratio: auto; }
-	.mis-gallery__img { aspect-ratio: auto; }
+	.mis-gallery > :first-child { grid-column: 1; grid-row: 1 / 3; }
+	.mis-gallery__item { aspect-ratio: auto; }
 }
+/* Botón «Ver las N fotos» sobre la cabecera */
+.mis-gallery__all {
+	position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 0.5rem;
+	padding: 10px 14px; border: 1px solid var(--wp--preset--color--main); background: var(--wp--preset--color--primary-alt-accent); color: var(--wp--preset--color--main);
+	font-family: var(--mis-label-font); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+}
+.mis-gallery__all:hover, .mis-gallery__all:focus-visible { background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); }
+@media (min-width: 1024px) { .mis-gallery__all { right: 20px; bottom: 20px; padding: 12px 18px; } }
+
+/* Galería completa por estancias (marOS spec 041): capa a pantalla completa */
+html.mis-tour-open { overflow: hidden; }
+.mis-tour { position: fixed; inset: 0; width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; border: 0; background: var(--wp--preset--color--base); color: var(--wp--preset--color--main); }
+.mis-tour[open] { display: flex; flex-direction: column; }
+.mis-tour::backdrop { background: var(--wp--preset--color--base); }
+.mis-tour__bar { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem var(--wp--preset--spacing--medium); padding-top: max(0.75rem, env(safe-area-inset-top, 0px)); border-bottom: 1px solid var(--mis-line); }
+.mis-tour__close, .mis-lb__close { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--mis-line); background: transparent; color: inherit; cursor: pointer; flex-shrink: 0; }
+.mis-tour__close:hover, .mis-tour__close:focus-visible { border-color: var(--wp--preset--color--main); }
+.mis-tour__title { margin: 0; font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mis-tour__title span { color: var(--wp--preset--color--secondary); }
+.mis-tour__scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--wp--preset--spacing--medium) 3rem; }
+.mis-tour__chips { position: sticky; top: 0; z-index: 2; display: flex; gap: 0.75rem; overflow-x: auto; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding: 0.875rem var(--wp--preset--spacing--medium); background: var(--wp--preset--color--base); border-bottom: 1px solid var(--mis-line); scrollbar-width: none; }
+.mis-tour__chips::-webkit-scrollbar { display: none; }
+.mis-tour__chip { flex: 0 0 112px; display: grid; gap: 4px; align-content: start; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; font-family: inherit; font-size: 0.75rem; line-height: 1.3; }
+.mis-tour__chip small { color: var(--wp--preset--color--secondary); font-size: 0.6875rem; }
+.mis-tour__thumb { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--wp--preset--color--tertiary); }
+.mis-tour__chip:hover .mis-tour__thumb, .mis-tour__chip:focus-visible .mis-tour__thumb { outline: 2px solid var(--wp--preset--color--main); outline-offset: 2px; }
+.mis-tour__sec { display: grid; gap: 0.875rem; padding-block: 1.75rem; border-bottom: 1px solid var(--mis-line); }
+.mis-tour__sec:last-child { border-bottom: 0; }
+.mis-tour__head h3 { margin: 0; font-size: var(--wp--preset--font-size--medium); }
+.mis-tour__head p { margin: 0.375rem 0 0; font-size: var(--wp--preset--font-size--small); line-height: 1.6; color: var(--wp--preset--color--secondary); max-width: 46ch; }
+.mis-tour__grid { display: grid; gap: 6px; grid-template-columns: 1fr 1fr; }
+.mis-tour__item { display: block; padding: 0; border: 0; background: var(--wp--preset--color--tertiary); cursor: zoom-in; aspect-ratio: 3 / 2; overflow: hidden; }
+.mis-tour__item:nth-child(3n+1) { grid-column: 1 / -1; }
+.mis-tour__item:focus-visible { outline: 2px solid var(--wp--preset--color--primary); outline-offset: 2px; }
+.mis-tour__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (min-width: 1024px) {
+	.mis-tour__scroll { padding-inline: max(var(--wp--preset--spacing--medium), calc((100% - 1200px) / 2)); }
+	.mis-tour__chips { margin-inline: 0; padding-inline: 0; }
+	.mis-tour__sec { grid-template-columns: minmax(240px, 320px) 1fr; gap: 2.5rem; align-items: start; padding-block: 2.5rem; }
+	.mis-tour__head { position: sticky; top: 140px; }
+}
+
+/* Visor a pantalla completa */
+.mis-lb { position: absolute; inset: 0; z-index: 5; display: grid; grid-template-rows: auto 1fr auto; background: #0e0f10; color: #fff; }
+.mis-lb[hidden] { display: none; }
+.mis-lb__bar { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem var(--wp--preset--spacing--medium); padding-top: max(0.75rem, env(safe-area-inset-top, 0px)); font-size: var(--wp--preset--font-size--small); font-variant-numeric: tabular-nums; }
+.mis-lb__close { border-color: rgba(255, 255, 255, .35); }
+.mis-lb__stage { position: relative; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 0 56px; }
+.mis-lb__img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; user-select: none; }
+.mis-lb__nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .4); background: rgba(14, 15, 16, .55); color: #fff; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.mis-lb__nav:first-child { left: 8px; }
+.mis-lb__nav:last-child { right: 8px; }
+.mis-lb__nav:hover, .mis-lb__nav:focus-visible, .mis-lb__close:hover, .mis-lb__close:focus-visible { border-color: #fff; }
+.mis-lb__caption { margin: 0; padding: 0.75rem var(--wp--preset--spacing--medium); padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px)); text-align: center; font-size: var(--wp--preset--font-size--small); color: rgba(255, 255, 255, .8); min-height: 1.5em; }
+@media (max-width: 767px) { .mis-lb__stage { padding: 0; } .mis-lb__nav { display: none; } }
+@media (prefers-reduced-motion: reduce) { .mis-gallery__img { transition: none; } }
+
+/* Las fotos de Sleeping arrangements abren el visor */
+.mis-sleeping__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
 
 /* Subnavegación por anclas: pestañas en mayúsculas, fija bajo la cabecera */
 .mis-anchors {

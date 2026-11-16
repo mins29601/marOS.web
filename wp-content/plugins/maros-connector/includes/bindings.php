@@ -15,6 +15,42 @@ if ( ! defined( 'MIS_STAY_URL' ) ) {
 	define( 'MIS_STAY_URL', 'https://stay.marbellainstyle.com/' );
 }
 
+/**
+ * Comodidades de una estancia en el orden de la web: lo propio de la estancia primero (lista de
+ * Julio, marOS spec 039) y lo básico que tiene cualquier dormitorio (perchas, ropa de cama…) al final.
+ * Lo que no está en ninguna lista queda en medio, en el orden de marOS.
+ */
+function maros_sort_amenities( array $amenities ): array {
+	$first = array( 'sea_view', 'mountain_view', 'garden_view', 'private_terrace', 'balcony', 'patio_balcony', 'direct_pool_access', 'patio_garden_access', 'independent_access', 'private_entrance', 'walk_in_closet', 'bathtub', 'shower', 'sitting_area', 'desk', 'dedicated_workspace', 'tv', 'indoor_fireplace', 'air_conditioning', 'heating', 'safe', 'wardrobe' );
+	$last  = array( 'hangers', 'bed_linens', 'extra_pillows_blankets', 'clothing_storage', 'blackout_shades', 'iron', 'hair_dryer' );
+	$rank  = static function ( $a ) use ( $first, $last ): int {
+		$code = (string) ( $a['code'] ?? '' );
+		$i    = array_search( $code, $first, true );
+		if ( false !== $i ) {
+			return $i;
+		}
+		return in_array( $code, $last, true ) ? 200 : 100;
+	};
+	usort( $amenities, static fn( $a, $b ) => $rank( $a ) <=> $rank( $b ) );
+	return $amenities;
+}
+
+/** «Cama king», «2 × Cama individual»… para una cama de marOS (spec 040). */
+function maros_bed_label( array $bed, bool $es ): string {
+	$beds  = array(
+		'single'   => array( 'Single bed', 'Cama individual' ),
+		'double'   => array( 'Double bed', 'Cama doble' ),
+		'queen'    => array( 'Queen-size bed', 'Cama queen' ),
+		'king'     => array( 'King-size bed', 'Cama king' ),
+		'sofa_bed' => array( 'Sofa bed', 'Sofá cama' ),
+		'bunk'     => array( 'Bunk bed', 'Litera' ),
+		'crib'     => array( 'Cot', 'Cuna' ),
+	);
+	$label = $beds[ $bed['type'] ?? '' ][ $es ? 1 : 0 ] ?? ( $es ? 'Cama' : 'Bed' );
+	$count = (int) ( $bed['count'] ?? 1 );
+	return $count > 1 ? $count . ' × ' . $label : $label;
+}
+
 function maros_is_es( int $post_id = 0 ): bool {
 	if ( function_exists( 'pll_get_post_language' ) && $post_id ) {
 		return 'es' === pll_get_post_language( $post_id );
@@ -117,25 +153,6 @@ function maros_property_binding_value( array $args, $block_instance ) {
 }
 
 /**
- * [maros_gallery] Galería de la propiedad (fotos de marOS, en el orden de marOS).
- */
-add_shortcode(
-	'maros_gallery',
-	static function () {
-		$post_id = get_the_ID();
-		$ids     = array_filter( array_map( 'intval', explode( ',', (string) get_post_meta( $post_id, 'maros_gallery', true ) ) ) );
-		if ( ! $ids ) {
-			return '';
-		}
-		$html = '<div class="mis-gallery">';
-		foreach ( $ids as $i => $id ) {
-			$html .= wp_get_attachment_image( $id, 0 === $i ? 'large' : 'medium_large', false, array( 'class' => 'mis-gallery__img', 'loading' => 0 === $i ? 'eager' : 'lazy' ) );
-		}
-		return $html . '</div>';
-	}
-);
-
-/**
  * [maros_amenities] Equipamiento como lista.
  */
 add_shortcode(
@@ -165,19 +182,6 @@ add_shortcode(
 		}
 		$es   = maros_is_es( (int) $post_id );
 		$lang = $es ? 'es' : 'en';
-		$beds = array(
-			'single'   => array( 'Single bed', 'Cama individual' ),
-			'double'   => array( 'Double bed', 'Cama doble' ),
-			'queen'    => array( 'Queen-size bed', 'Cama queen' ),
-			'king'     => array( 'King-size bed', 'Cama king' ),
-			'sofa_bed' => array( 'Sofa bed', 'Sofá cama' ),
-			'bunk'     => array( 'Bunk bed', 'Litera' ),
-			'crib'     => array( 'Cot', 'Cuna' ),
-		);
-		// Lo propio de un dormitorio va primero (lista de Julio, marOS spec 039); el resto, después.
-		// Lo básico que tiene cualquier dormitorio (perchas, ropa de cama…) va al final, en «+N más».
-		$first = array( 'sea_view', 'mountain_view', 'garden_view', 'private_terrace', 'balcony', 'patio_balcony', 'direct_pool_access', 'patio_garden_access', 'independent_access', 'private_entrance', 'walk_in_closet', 'sitting_area', 'desk', 'dedicated_workspace', 'tv', 'indoor_fireplace', 'air_conditioning', 'heating', 'safe', 'wardrobe' );
-		$last  = array( 'hangers', 'bed_linens', 'extra_pillows_blankets', 'clothing_storage', 'blackout_shades', 'iron', 'hair_dryer' );
 		$max   = 5;
 		$icon  = static fn( string $d ) => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $d . '</svg>';
 		$bed_i = $icon( '<path d="M3 18V7"/><path d="M21 18v-6a3 3 0 0 0-3-3h-8v6"/><path d="M3 15h18"/><circle cx="6.5" cy="11.5" r="1.8"/>' );
@@ -189,6 +193,10 @@ add_shortcode(
 			$n     = (int) ( $room['number'] ?? 0 );
 			$title = sprintf( $es ? 'Dormitorio %d' : 'Bedroom %d', $n );
 			$img   = ! empty( $room['photo'] ) ? wp_get_attachment_image( (int) $room['photo'], 'medium_large', false, array( 'class' => 'mis-sleeping__img', 'loading' => 'lazy', 'alt' => $title ) ) : '';
+			if ( $img ) {
+				// Abre el visor de la galería (spec 041) en esta foto.
+				$img = '<button type="button" class="mis-sleeping__open" data-mis-photo="' . (int) $room['photo'] . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver fotos: %s' : 'View photos: %s', $title ) ) . '">' . $img . '</button>';
+			}
 			$html  = '<li class="mis-sleeping__card"><div class="mis-sleeping__media">' . ( $img ?: '<div class="mis-sleeping__img mis-sleeping__img--empty" aria-hidden="true"></div>' );
 			if ( ! empty( $room['master'] ) ) {
 				$html .= '<span class="mis-sleeping__badge">' . esc_html( $es ? 'Principal' : 'Master' ) . '</span>';
@@ -199,9 +207,7 @@ add_shortcode(
 			}
 			$bed_text = array();
 			foreach ( is_array( $room['beds'] ?? null ) ? $room['beds'] : array() as $b ) {
-				$label      = $beds[ $b['type'] ?? '' ][ $es ? 1 : 0 ] ?? ( $es ? 'Cama' : 'Bed' );
-				$count      = (int) ( $b['count'] ?? 1 );
-				$bed_text[] = $count > 1 ? $count . ' × ' . $label : $label;
+				$bed_text[] = maros_bed_label( $b, $es );
 			}
 			if ( $bed_text ) {
 				$html .= '<p class="mis-sleeping__beds">' . $bed_i . '<span>' . esc_html( implode( ' · ', $bed_text ) ) . '</span></p>';
@@ -220,19 +226,7 @@ add_shortcode(
 				$items[] = '<li>' . $bath . '<span>' . esc_html( $text ) . '</span></li>';
 			}
 			$amenities = is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array();
-			usort(
-				$amenities,
-				static function ( $a, $b ) use ( $first, $last ) {
-					$rank = static function ( string $code ) use ( $first, $last ): int {
-						$i = array_search( $code, $first, true );
-						if ( false !== $i ) {
-							return $i;
-						}
-						return in_array( $code, $last, true ) ? 200 : 100;
-					};
-					return $rank( (string) ( $a['code'] ?? '' ) ) <=> $rank( (string) ( $b['code'] ?? '' ) );
-				}
-			);
+			$amenities = maros_sort_amenities( $amenities );
 			$shown = array_slice( $amenities, 0, $max );
 			foreach ( $shown as $a ) {
 				if ( ! empty( $a[ $lang ] ) ) {
