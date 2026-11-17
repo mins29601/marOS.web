@@ -16,6 +16,60 @@ if ( ! defined( 'MIS_STAY_URL' ) ) {
 }
 
 /**
+ * Enlace de reserva de una propiedad en la web de Lodgify: /<idioma>/<id de Lodgify>, que Lodgify
+ * redirige a la ficha con su slug (comprobado el 17-11-2026). Si la visita llega del buscador
+ * (?checkin, ?checkout, ?guests) se pasan como arrival, departure y adults. Sin id de Lodgify,
+ * la portada de reservas.
+ */
+function maros_booking_url( int $post_id ): string {
+	$lodgify = (int) get_post_meta( $post_id, 'maros_lodgify_id', true );
+	if ( ! $lodgify ) {
+		return MIS_STAY_URL;
+	}
+	$url  = trailingslashit( MIS_STAY_URL ) . ( maros_is_es( $post_id ) ? 'es' : 'en' ) . '/' . $lodgify;
+	$args = array();
+	foreach ( array( 'checkin' => 'arrival', 'checkout' => 'departure' ) as $from => $to ) {
+		$date = sanitize_text_field( wp_unslash( $_GET[ $from ] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) ) {
+			$args[ $to ] = $date;
+		}
+	}
+	$guests = absint( $_GET['guests'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification
+	if ( $guests ) {
+		$args['adults'] = $guests;
+	}
+	return $args ? add_query_arg( $args, $url ) : $url;
+}
+
+/**
+ * Los enlaces a las fichas desde el listado conservan la búsqueda (fechas y huéspedes) para que
+ * «Check availability» la lleve a Lodgify.
+ */
+add_filter(
+	'post_type_link',
+	static function ( string $link, WP_Post $post ): string {
+		// En la propia ficha no: el canónico y los hreflang deben quedar limpios.
+		if ( 'mis_property' !== $post->post_type || is_admin() || is_singular( 'mis_property' ) ) {
+			return $link;
+		}
+		$args = array();
+		foreach ( array( 'checkin', 'checkout' ) as $k ) {
+			$v = sanitize_text_field( wp_unslash( $_GET[ $k ] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			if ( preg_match( '/^\d{4}-\d{2}-\d{2}$/', $v ) ) {
+				$args[ $k ] = $v;
+			}
+		}
+		$guests = absint( $_GET['guests'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( $guests ) {
+			$args['guests'] = $guests;
+		}
+		return $args ? add_query_arg( $args, $link ) : $link;
+	},
+	10,
+	2
+);
+
+/**
  * Comodidades de una estancia en el orden de la web: lo propio de la estancia primero (lista de
  * Julio, marOS spec 039) y lo básico que tiene cualquier dormitorio (perchas, ropa de cama…) al final.
  * Lo que no está en ninguna lista queda en medio, en el orden de marOS.
@@ -100,7 +154,17 @@ function maros_property_binding_value( array $args, $block_instance ) {
 			$terms = get_the_terms( $post_id, 'tipo-propiedad' );
 			return esc_html( $terms && ! is_wp_error( $terms ) ? $terms[0]->name : '' );
 		case 'checkin':
-			return esc_html( sprintf( $es ? 'Entrada desde las %s · salida antes de las %s' : 'Check-in from %s · check-out by %s', $m( 'maros_check_in' ), $m( 'maros_check_out' ) ) );
+			// Sin horas en marOS no se dice nada (antes salía «Check-in from · check-out by»).
+			$in    = trim( (string) $m( 'maros_check_in' ) );
+			$out   = trim( (string) $m( 'maros_check_out' ) );
+			$parts = array();
+			if ( '' !== $in ) {
+				$parts[] = sprintf( $es ? 'Entrada desde las %s' : 'Check-in from %s', $in );
+			}
+			if ( '' !== $out ) {
+				$parts[] = sprintf( $es ? 'salida antes de las %s' : 'check-out by %s', $out );
+			}
+			return $parts ? esc_html( ucfirst( implode( ' · ', $parts ) ) ) : '';
 		case 'deposit':
 			$deposit = (float) $m( 'maros_deposit' );
 			return $deposit ? esc_html( sprintf( $es ? 'Fianza: %s €' : 'Security deposit: €%s', number_format_i18n( $deposit ) ) ) : '';
@@ -148,11 +212,52 @@ function maros_property_binding_value( array $args, $block_instance ) {
 			$license = (string) $m( 'maros_license' );
 			return $license ? esc_html( sprintf( $es ? 'Registro turístico: %s' : 'Tourist licence: %s', $license ) ) : '';
 		case 'booking_url':
-			return esc_url( MIS_STAY_URL );
+			return esc_url( maros_booking_url( (int) $post_id ) );
 		default:
 			$value = $m( (string) ( $args['key'] ?? '' ) );
 			return is_scalar( $value ) ? esc_html( (string) $value ) : '';
 	}
+}
+
+/**
+ * Quita de la lista de comodidades lo que Lodgify da como recuento («4 King bed», «5 Bathroom»):
+ * ya está en los datos y en la distribución, y a menudo no coincide. Si una etiqueta empieza por
+ * otra («Parking» y «Parking Included») queda solo la más larga.
+ *
+ * @param WP_Term[] $terms
+ * @return WP_Term[]
+ */
+function maros_clean_amenities( array $terms ): array {
+	$terms = array_values( array_filter( $terms, static fn( $t ) => ! preg_match( '/^\d+\s/', (string) $t->name ) ) );
+	$names = array_map( static fn( $t ) => strtolower( trim( (string) $t->name ) ), $terms );
+	return array_values(
+		array_filter(
+			$terms,
+			static function ( $t ) use ( $names ): bool {
+				$n = strtolower( trim( (string) $t->name ) );
+				foreach ( $names as $other ) {
+					if ( $other !== $n && str_starts_with( $other, $n . ' ' ) ) {
+						return false;
+					}
+				}
+				return true;
+			}
+		)
+	);
+}
+
+/**
+ * Etiqueta en mayúscula solo al principio («Fire Extinguisher» → «Fire extinguisher»). Las siglas
+ * (TV, A/C, Wi-Fi) se dejan como vienen.
+ */
+function maros_amenity_label( string $name ): string {
+	$words = explode( ' ', trim( $name ) );
+	foreach ( $words as $i => $w ) {
+		if ( $i > 0 && preg_match( '/^\p{Lu}\p{Ll}+$/u', $w ) ) {
+			$words[ $i ] = mb_strtolower( $w );
+		}
+	}
+	return implode( ' ', $words );
 }
 
 /**
@@ -167,6 +272,7 @@ add_shortcode(
 			return '';
 		}
 		$es = maros_is_es( (int) get_the_ID() );
+		$terms = maros_clean_amenities( $terms );
 		// Lo que más pregunta el huésped va entre las diez primeras (la secadora, Julio 17-11-2026).
 		$first = array( 'private_pool', 'heated_pool', 'shared_pool', 'sea_view', 'air_conditioning', 'wifi', 'parking', 'dryer', 'washer', 'dishwasher', 'bbq', 'gym', 'terrace' );
 		$rank  = static function ( $t ) use ( $first ) {
@@ -174,7 +280,7 @@ add_shortcode(
 			return false === $pos ? count( $first ) : $pos;
 		};
 		usort( $terms, static fn( $a, $b ) => array( $rank( $a ), $a->name ) <=> array( $rank( $b ), $b->name ) );
-		$items = array_map( static fn( $t ) => '<li>' . maros_icon_svg( maros_amenity_icon( $t->slug ), 22 ) . '<span>' . esc_html( $t->name ) . '</span></li>', $terms );
+		$items = array_map( static fn( $t ) => '<li>' . maros_icon_svg( maros_amenity_icon( $t->slug ), 22 ) . '<span>' . esc_html( maros_amenity_label( $t->name ) ) . '</span></li>', $terms );
 		$html  = '<ul class="mis-amenities">' . implode( '', $items ) . '</ul>';
 		if ( count( $items ) > 10 ) {
 			$html .= '<button type="button" class="mis-amenities__all" onclick="this.previousElementSibling.classList.add(\'is-open\');this.remove();">' . esc_html( sprintf( $es ? 'Ver las %d comodidades' : 'Show all %d amenities', count( $items ) ) ) . '</button>';

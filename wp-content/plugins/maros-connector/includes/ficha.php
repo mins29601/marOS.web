@@ -204,14 +204,20 @@ add_shortcode(
 	}
 );
 
-/** [maros_price_line] «From €1,450 / night» para el pie fijo del móvil, en una línea. */
+/**
+ * [maros_price_line] «From €1,450 / night» en una línea: en el pie fijo del móvil y en la caja de
+ * reserva de escritorio (con fallback="0", que no dice nada si no hay precio).
+ */
 add_shortcode(
 	'maros_price_line',
-	static function () {
+	static function ( $atts = array() ) {
 		$post_id = (int) get_the_ID();
 		$es      = maros_is_es( $post_id );
 		$price   = (float) get_post_meta( $post_id, 'maros_price_from', true );
 		if ( $price <= 0 ) {
+			if ( '0' === (string) ( $atts['fallback'] ?? '1' ) ) {
+				return '';
+			}
 			return '<p class="mis-price-line">' . esc_html( $es ? 'Reserva directa · mejor precio' : 'Direct booking · best price' ) . '</p>';
 		}
 		$cur    = (string) get_post_meta( $post_id, 'maros_currency', true ) ?: 'EUR';

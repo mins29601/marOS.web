@@ -150,6 +150,8 @@ a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 
 /* Cabecera sobre foto (Inicio): parte «header-overlay», transparente y blanca sobre la portada */
 .wp-block-template-part:has(> .mis-header--overlay) { position: absolute; top: 0; left: 0; right: 0; z-index: 50; }
+/* La cabecera va fuera del flujo: lo siguiente no lleva el hueco entre bloques (dejaba una franja de 20 px sobre la portada) */
+.wp-site-blocks > .wp-block-template-part:has(> .mis-header--overlay) + * { margin-block-start: 0; }
 .admin-bar .wp-block-template-part:has(> .mis-header--overlay) { top: var(--wp-admin--admin-bar--height, 0px); }
 .mis-header--overlay { background: transparent; border-bottom: 0; }
 .mis-header--overlay,
@@ -216,7 +218,7 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-contact-actions { display: flex; gap: 0.75rem; margin: 1rem 0; }
 .mis-contact-actions a { flex: 1; display: inline-flex; align-items: center; justify-content: center; min-height: var(--mis-touch); border: 1px solid currentColor; text-decoration: none; font-family: var(--mis-label-font); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
 .mis-overlay__cta { margin-top: auto; }
-.mis-overlay__cta .wp-element-button { width: 100%; background: #fff; color: var(--wp--preset--color--main); border-color: #fff; }
+.mis-overlay__cta .wp-element-button { display: block; box-sizing: border-box; width: 100%; text-align: center; background: #fff; color: var(--wp--preset--color--main); border-color: #fff; }
 .mis-overlay__cta .wp-element-button:hover { background: var(--wp--preset--color--border-light); color: var(--wp--preset--color--main); }
 @media (min-width: 1024px) { .mis-overlay__cta { max-width: 1328px; width: 100%; margin: auto auto 0; } .mis-overlay__cta .wp-element-button { width: auto; } }
 
@@ -255,7 +257,7 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .wp-block-post-template.is-layout-grid { column-gap: 1.25rem; row-gap: 2.5rem; }
 
 /* Lista de zonas */
-.mis-terms-list { list-style: none; padding: 0; display: grid; gap: 1px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); background: var(--mis-line); border: 1px solid var(--mis-line); }
+.mis-terms-list { list-style: none; padding: 0; display: grid; gap: 1px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); background: var(--mis-line); border: 1px solid var(--mis-line); }
 .mis-terms-list li { background: var(--wp--preset--color--base); }
 .mis-terms-list a { display: block; padding: 1.5rem; font-family: var(--wp--preset--font-family--heading); font-size: var(--wp--preset--font-size--medium); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
 .mis-terms-list a:hover { background: var(--wp--preset--color--primary-alt-accent); }
@@ -399,7 +401,7 @@ html.mis-tour-open { overflow: hidden; }
 }
 .mis-anchors a:hover,
 .mis-anchors a[aria-current] { color: var(--wp--preset--color--main); border-bottom-color: var(--wp--preset--color--main); }
-:where(#overview, #amenities, #conditions, #location, #faq) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
+:where(#overview, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, .mis-keys) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
 
 /* Caja de reserva (escritorio) y barra fija (móvil) */
 .mis-booking-box { border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); padding: 1.5rem; }
@@ -469,6 +471,8 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-hero .wp-block-cover__background { background: linear-gradient(to top, rgba(37, 39, 40, .75), rgba(37, 39, 40, .15) 60%, rgba(37, 39, 40, .35)) !important; opacity: 1 !important; }
 .mis-hero h1,
 .mis-hero__title { font-size: clamp(2.125rem, 1.4rem + 3vw, 3.5rem); color: #fff; max-width: 20ch; line-height: 1.12; }
+/* El diseño «constrained» centra a los hijos con ancho máximo: el título va alineado a la izquierda, como la etiqueta y el buscador */
+.mis-hero .wp-block-cover__inner-container > :is(h1, .mis-hero__title, .mis-search) { margin-left: 0 !important; margin-right: auto !important; }
 .mis-front > .wp-block-post-content { margin-top: 0; }
 /* La portada pone el H1: la antigua introducción del contenido (con su propio H1) sobra */
 .mis-front > .wp-block-post-content > .wp-block-group:first-child:has(h1) { display: none; }
@@ -485,7 +489,9 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-search input:focus,
 .mis-search select:focus { outline: none; }
 .mis-search__field:focus-within { box-shadow: inset 0 -2px 0 var(--wp--preset--color--main); }
-.mis-search__submit { grid-column: 1 / -1; width: 100%; min-height: 56px; }
+/* El shortcode pasa por wpautop y envuelve el botón en un <p>: que no cuente como celda */
+.mis-search > p:not([class]) { display: contents; }
+.mis-search__submit { grid-column: 1 / -1; justify-self: stretch; box-sizing: border-box; width: 100%; min-height: 56px; }
 .mis-search__hint { grid-column: 1 / -1; margin: 0; padding: 0.625rem 1rem; font-size: 0.75rem; line-height: 1.4; color: var(--wp--preset--color--secondary); background: var(--wp--preset--color--tertiary); }
 @media (min-width: 768px) {
 	.mis-search { grid-template-columns: 1fr 1fr 0.8fr auto; }
