@@ -35,6 +35,9 @@ function maros_sort_amenities( array $amenities ): array {
 	return $amenities;
 }
 
+/** Comodidades de un dormitorio que se enseñan en su tarjeta: lo que lo distingue de los demás. */
+const MAROS_SPECIAL_ROOM_AMENITIES = array( 'sea_view', 'mountain_view', 'golf_view', 'garden_view', 'pool_view', 'private_terrace', 'balcony', 'patio_balcony', 'direct_pool_access', 'patio_garden_access', 'independent_access', 'private_entrance', 'walk_in_closet', 'sitting_area', 'dedicated_workspace', 'indoor_fireplace' );
+
 /** «Cama king», «2 × Cama individual»… para una cama de marOS (spec 040). */
 function maros_bed_label( array $bed, bool $es ): string {
 	$beds  = array(
@@ -153,7 +156,8 @@ function maros_property_binding_value( array $args, $block_instance ) {
 }
 
 /**
- * [maros_amenities] Equipamiento como lista.
+ * [maros_amenities] «Features and amenities»: comodidades de Lodgify con su icono, en dos columnas.
+ * Se ven diez; el resto, con «Show all N amenities».
  */
 add_shortcode(
 	'maros_amenities',
@@ -162,8 +166,13 @@ add_shortcode(
 		if ( ! $terms || is_wp_error( $terms ) ) {
 			return '';
 		}
-		$items = array_map( static fn( $t ) => '<li>' . esc_html( $t->name ) . '</li>', $terms );
-		return '<ul class="mis-amenities">' . implode( '', $items ) . '</ul>';
+		$es    = maros_is_es( (int) get_the_ID() );
+		$items = array_map( static fn( $t ) => '<li>' . maros_icon( maros_icon_paths( maros_amenity_icon( $t->slug ) ) ) . '<span>' . esc_html( $t->name ) . '</span></li>', $terms );
+		$html  = '<ul class="mis-amenities">' . implode( '', $items ) . '</ul>';
+		if ( count( $items ) > 10 ) {
+			$html .= '<button type="button" class="mis-amenities__all" onclick="this.previousElementSibling.classList.add(\'is-open\');this.remove();">' . esc_html( sprintf( $es ? 'Ver las %d comodidades' : 'Show all %d amenities', count( $items ) ) ) . '</button>';
+		}
+		return $html;
 	}
 );
 
@@ -182,7 +191,7 @@ add_shortcode(
 		}
 		$es   = maros_is_es( (int) $post_id );
 		$lang = $es ? 'es' : 'en';
-		$max   = 5;
+		$max   = 3;
 		$icon  = static fn( string $d ) => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $d . '</svg>';
 		$bed_i = $icon( '<path d="M3 18V7"/><path d="M21 18v-6a3 3 0 0 0-3-3h-8v6"/><path d="M3 15h18"/><circle cx="6.5" cy="11.5" r="1.8"/>' );
 		$bath  = $icon( '<path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V5a2 2 0 0 1 3.5-1.3"/><path d="M7 19l-1 2M17 19l1 2"/>' );
@@ -225,17 +234,18 @@ add_shortcode(
 							: ( $es ? 'Baño en-suite' : 'En-suite bathroom' ) ) );
 				$items[] = '<li>' . $bath . '<span>' . esc_html( $text ) . '</span></li>';
 			}
-			$amenities = is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array();
-			$amenities = maros_sort_amenities( $amenities );
-			$shown = array_slice( $amenities, 0, $max );
-			foreach ( $shown as $a ) {
+			// Solo lo especial del dormitorio (Julio 17-11-2026): vistas, terraza, accesos, vestidor…
+			// Lo que tiene cualquier dormitorio (aire, perchas, ropa de cama…) no se enseña aquí.
+			$special = array_values(
+				array_filter(
+					maros_sort_amenities( is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array() ),
+					static fn( $a ) => in_array( (string) ( $a['code'] ?? '' ), MAROS_SPECIAL_ROOM_AMENITIES, true )
+				)
+			);
+			foreach ( array_slice( $special, 0, $max ) as $a ) {
 				if ( ! empty( $a[ $lang ] ) ) {
 					$items[] = '<li>' . $check . '<span>' . esc_html( $a[ $lang ] ) . '</span></li>';
 				}
-			}
-			$rest = count( $amenities ) - count( $shown );
-			if ( $rest > 0 ) {
-				$items[] = '<li class="mis-sleeping__more"><span>' . esc_html( sprintf( $es ? '+ %d comodidades más' : '+ %d more amenities', $rest ) ) . '</span></li>';
 			}
 			if ( $items ) {
 				$html .= '<ul class="mis-sleeping__list">' . implode( '', $items ) . '</ul>';

@@ -27,6 +27,7 @@ require_once __DIR__ . '/includes/class-maros-scheduler.php';
 require_once __DIR__ . '/includes/class-maros-webhook.php';
 require_once __DIR__ . '/includes/bindings.php';
 require_once __DIR__ . '/includes/gallery.php';
+require_once __DIR__ . '/includes/ficha.php';
 require_once __DIR__ . '/includes/class-maros-reviews.php';
 
 Maros_Scheduler::init();
@@ -60,6 +61,7 @@ function maros_property_fields(): array {
 		'maros_bathrooms'  => 'integer',
 		'maros_beds'       => 'integer',
 		'maros_area'       => 'string',
+		'maros_municipality' => 'string', // Municipio (marOS location.municipality), para las migas de pan.
 		'maros_lat'        => 'number',
 		'maros_lng'        => 'number',
 		'maros_check_in'   => 'string',

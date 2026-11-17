@@ -82,10 +82,11 @@ add_shortcode(
 		$variant = in_array( $atts['variant'], array( 'color', 'negro', 'oro', 'blanco' ), true ) ? $atts['variant'] : 'color';
 		$home    = function_exists( 'pll_home_url' ) ? pll_home_url() : home_url( '/' );
 		return sprintf(
-			'<a class="mis-logo" href="%1$s" rel="home"><img src="%2$s" width="216" height="83" alt="%3$s"></a>',
+			'<a class="mis-logo mis-logo--%4$s" href="%1$s" rel="home"><img src="%2$s" width="216" height="83" alt="%3$s"></a>',
 			esc_url( $home ),
 			esc_url( get_stylesheet_directory_uri() . '/assets/logo/marbellainstyle-logo-' . $variant . '.svg' ),
-			esc_attr( get_bloginfo( 'name' ) ?: 'Marbella in Style' )
+			esc_attr( get_bloginfo( 'name' ) ?: 'Marbella in Style' ),
+			esc_attr( $variant )
 		);
 	}
 );

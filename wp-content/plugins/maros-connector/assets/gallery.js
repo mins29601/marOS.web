@@ -78,11 +78,13 @@
 	}
 
 	document.addEventListener( 'click', function ( e ) {
-		var t = e.target.closest( '[data-mis-open], [data-mis-close], [data-mis-lb-close], [data-mis-step], [data-mis-goto], [data-mis-photo]' );
+		var t = e.target.closest( '[data-mis-slide], [data-mis-open], [data-mis-close], [data-mis-lb-close], [data-mis-step], [data-mis-goto], [data-mis-photo]' );
 		if ( ! t ) {
 			return;
 		}
-		if ( t.hasAttribute( 'data-mis-open' ) ) {
+		if ( t.hasAttribute( 'data-mis-slide' ) ) {
+			slide( Number( t.getAttribute( 'data-mis-slide' ) ) );
+		} else if ( t.hasAttribute( 'data-mis-open' ) ) {
 			open();
 			scroller.scrollTop = 0;
 		} else if ( t.hasAttribute( 'data-mis-close' ) ) {
@@ -118,6 +120,37 @@
 			show( index - 1 );
 		}
 	} );
+
+	// Carrusel de la cabecera: flechas, teclado y contador «1/N» (el deslizar es nativo, scroll-snap).
+	var carousel = wrap.querySelector( '.mis-carousel' );
+	var current = wrap.querySelector( '.mis-carousel__index' );
+	function slide( d ) {
+		if ( ! carousel ) {
+			return;
+		}
+		var w = carousel.clientWidth;
+		var n = Math.round( carousel.scrollLeft / w ) + d;
+		var last = carousel.children.length - 1;
+		n = n < 0 ? last : ( n > last ? 0 : n );
+		carousel.scrollTo( { left: n * w, behavior: Math.abs( d ) > 0 && ( n === 0 || n === last ) && Math.abs( n * w - carousel.scrollLeft ) > 2 * w ? 'auto' : 'smooth' } );
+	}
+	if ( carousel ) {
+		var raf = 0;
+		carousel.addEventListener( 'scroll', function () {
+			cancelAnimationFrame( raf );
+			raf = requestAnimationFrame( function () {
+				if ( current ) {
+					current.textContent = String( Math.round( carousel.scrollLeft / carousel.clientWidth ) + 1 );
+				}
+			} );
+		}, { passive: true } );
+		carousel.addEventListener( 'keydown', function ( e ) {
+			if ( 'ArrowRight' === e.key || 'ArrowLeft' === e.key ) {
+				e.preventDefault();
+				slide( 'ArrowRight' === e.key ? 1 : -1 );
+			}
+		} );
+	}
 
 	// Deslizar en móvil.
 	var x0 = null;
