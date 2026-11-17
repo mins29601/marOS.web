@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       MIS Contenido
  * Description:       Tipos de contenido de Marbella in Style que se editan en WordPress: tours, servicios y zonas (spec 004).
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 6.9
  * Requires PHP:      8.3
  * Text Domain:       mis-contenido
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const MIS_CONTENIDO_VERSION = '0.1.0';
+const MIS_CONTENIDO_VERSION = '0.1.1';
 
 /**
  * Campos de los tours (spec 004, data-model). Se registran como metadatos con esquema para que
@@ -46,7 +46,7 @@ function mis_service_fields(): array {
 add_action( 'init', 'mis_contenido_register', 5 );
 
 function mis_contenido_register(): void {
-	// Tours primero: sus reglas (services/tours/…) deben ir antes que las de servicios.
+	// Tours en /experiences/<slug>/ (T41, mapa del sitio de la spec 005).
 	register_post_type(
 		'mis_tour',
 		array(
@@ -60,7 +60,7 @@ function mis_contenido_register(): void {
 			'menu_icon'    => 'dashicons-palmtree',
 			'menu_position'=> 21,
 			'has_archive'  => false,
-			'rewrite'      => array( 'slug' => 'services/tours', 'with_front' => false ),
+			'rewrite'      => array( 'slug' => 'experiences', 'with_front' => false ),
 			'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields', 'revisions' ),
 			'taxonomies'   => array( 'zona', 'tipo-tour' ),
 		)
@@ -129,7 +129,7 @@ function mis_contenido_register(): void {
 			'hierarchical'      => true,
 			'show_in_rest'      => true,
 			'show_admin_column' => true,
-			'rewrite'           => array( 'slug' => 'services/tours/type', 'with_front' => false ),
+			'rewrite'           => array( 'slug' => 'experiences/type', 'with_front' => false ),
 		)
 	);
 
