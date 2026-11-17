@@ -9,62 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-/** Icono de trazo fino (24×24) con el tamaño dado. */
-function maros_icon( string $paths, int $size = 22 ): string {
-	return '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $paths . '</svg>';
-}
-
-/** Trazos de los iconos de la ficha. */
-function maros_icon_paths( string $name ): string {
-	$icons = array(
-		'pool'    => '<path d="M2 17c2 0 2-1.5 4-1.5S8 17 10 17s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M2 21c2 0 2-1.5 4-1.5S8 21 10 21s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/><path d="M8 14V5a2 2 0 0 1 4 0M16 14V5a2 2 0 0 0-4 0M8 9h8"/>',
-		'view'    => '<path d="M2 19l6-9 4 5 3-4 7 8z"/><circle cx="17" cy="6" r="2"/>',
-		'bed'     => '<path d="M3 18V7"/><path d="M21 18v-6a3 3 0 0 0-3-3h-8v6"/><path d="M3 15h18"/><circle cx="6.5" cy="11.5" r="1.8"/>',
-		'key'     => '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/>',
-		'gym'     => '<path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/>',
-		'wifi'    => '<path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/>',
-		'snow'    => '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/>',
-		'parking' => '<rect x="3" y="3" width="18" height="18"/><path d="M10 17V7h3a3 3 0 0 1 0 6h-3"/>',
-		'bbq'     => '<path d="M4 10h16a8 8 0 0 1-16 0zM8 18l-2 3M16 18l2 3M9 6c0-1 1-1 1-2M14 6c0-1 1-1 1-2"/>',
-		'terrace' => '<path d="M3 10h18M6 10v10M18 10v10M12 3v7"/>',
-		'sauna'   => '<path d="M4 20h16M6 20V9h12v11M9 6c0-1 1-1 1-2M14 6c0-1 1-1 1-2"/>',
-		'tv'      => '<rect x="3" y="5" width="18" height="12"/><path d="M8 21h8"/>',
-		'kitchen' => '<path d="M5 3v8a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 0-3 2-3 5s1 4 3 4v9"/>',
-		'washer'  => '<rect x="4" y="3" width="16" height="18"/><circle cx="12" cy="13" r="4"/><path d="M7 6h2"/>',
-		'heat'    => '<path d="M12 3c3 4 5 6 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/>',
-		'safe'    => '<rect x="3" y="4" width="18" height="16"/><circle cx="12" cy="12" r="3"/>',
-		'garden'  => '<path d="M12 21v-8M12 13c-4 0-6-3-6-7 4 0 6 3 6 7zM12 13c4 0 6-3 6-7-4 0-6 3-6 7z"/>',
-		'check'   => '<path d="M5 12l4 4 10-10"/>',
-	);
-	return $icons[ $name ] ?? $icons['check'];
-}
-
-/** Icono para una comodidad de Lodgify según su código («private-pool», «wifi»…). */
-function maros_amenity_icon( string $slug ): string {
-	$rules = array(
-		'pool'    => '/pool|piscina/',
-		'wifi'    => '/wifi|internet/',
-		'snow'    => '/air|aire|cooling/',
-		'parking' => '/parking|garage|aparcamiento/',
-		'bbq'     => '/bbq|barbecue|grill|barbacoa/',
-		'gym'     => '/gym|fitness|gimnasio/',
-		'terrace' => '/terrace|balcon|patio|terraza|dining/',
-		'view'    => '/view|vistas/',
-		'sauna'   => '/sauna|jacuzzi|hot-tub|spa/',
-		'tv'      => '/tv|television|cable/',
-		'kitchen' => '/kitchen|cocina|oven|microwave|coffee/',
-		'washer'  => '/wash|laundry|dryer|lavadora/',
-		'heat'    => '/heat|fireplace|calefaccion/',
-		'safe'    => '/safe|caja-fuerte/',
-		'garden'  => '/garden|jardin/',
-	);
-	foreach ( $rules as $icon => $re ) {
-		if ( preg_match( $re, $slug ) ) {
-			return $icon;
-		}
-	}
-	return 'check';
-}
+// Iconos: includes/icons.php (maros_icon_svg, maros_amenity_icon).
 
 /**
  * [maros_breadcrumbs] All properties › Marbella › Nueva Andalucía, en una línea que se desliza en
@@ -159,7 +104,7 @@ function maros_key_features( int $post_id, bool $es ): array {
 	if ( in_array( $pool, array( 'private', 'both' ), true ) || ( '' === $pool && preg_grep( '/private-pool/', $slugs ) ) ) {
 		$heated = 'yes' === $m( 'maros_pool_heating' ) || (bool) preg_grep( '/heated-pool/', $slugs );
 		$out[]  = array(
-			'icon'  => 'pool',
+			'icon'  => $heated ? 'heated_pool' : 'pool',
 			'title' => $heated ? ( $es ? 'Piscina privada climatizada' : 'Private heated pool' ) : ( $es ? 'Piscina privada' : 'Private pool' ),
 			'text'  => $heated
 				? ( 'yes' === $m( 'maros_pool_heating_included' ) ? ( $es ? 'Climatización incluida en el precio' : 'Heating included in the price' ) : ( $es ? 'Climatización bajo petición' : 'Heating available on request' ) )
@@ -253,7 +198,7 @@ add_shortcode(
 		}
 		$html = '';
 		foreach ( $items as $f ) {
-			$html .= '<li>' . maros_icon( maros_icon_paths( $f['icon'] ), 30 ) . '<div><strong>' . esc_html( $f['title'] ) . '</strong>' . ( '' !== $f['text'] ? '<span>' . esc_html( $f['text'] ) . '</span>' : '' ) . '</div></li>';
+			$html .= '<li>' . maros_icon_svg( maros_amenity_icon( $f['icon'] ), 30 ) . '<div><strong>' . esc_html( $f['title'] ) . '</strong>' . ( '' !== $f['text'] ? '<span>' . esc_html( $f['text'] ) . '</span>' : '' ) . '</div></li>';
 		}
 		return '<section class="mis-keys"><h2 class="wp-block-heading has-large-font-size">' . esc_html( $es ? 'Lo más destacado' : 'Key features' ) . '</h2><ul class="mis-keys__list">' . $html . '</ul></section>';
 	}
