@@ -105,19 +105,24 @@ add_shortcode(
 		$name  = get_the_title( $post_id );
 		$order = array_values( array_unique( array_merge( ...array_map( static fn( $s ) => $s['photos'], $sections ) ) ) );
 		$total = count( $order );
-		$hero  = array_slice( array_values( array_unique( array_filter( array_map( 'intval', explode( ',', (string) get_post_meta( $post_id, 'maros_gallery', true ) ) ) ) ) ), 0, 5 ) ?: array_slice( $order, 0, 5 );
+		$lodgify = array_values( array_unique( array_filter( array_map( 'intval', explode( ',', (string) get_post_meta( $post_id, 'maros_gallery', true ) ) ) ) ) );
+		$hero    = array_values( array_unique( array_merge( array_intersect( $lodgify, $order ), $order ) ) );
 		$id    = 'mis-tour-' . $post_id;
 		$icon  = static fn( string $d, int $s = 18 ) => '<svg width="' . $s . '" height="' . $s . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $d . '</svg>';
 		$alt   = static fn( int $att ) => trim( (string) get_post_meta( $att, '_wp_attachment_image_alt', true ) ) ?: $name;
 
-		$html = '<div class="mis-gallery-wrap" data-mis-tour="' . esc_attr( $id ) . '"><div class="mis-gallery">';
+		// Carrusel a sangre (formato Le Collectionist, Julio 17-11-2026): todas las fotos en el orden
+		// de Lodgify, flechas, deslizar y «1/N», que abre la galería por estancias.
+		$html = '<div class="mis-gallery-wrap mis-hero-gallery" data-mis-tour="' . esc_attr( $id ) . '"><div class="mis-carousel" tabindex="0" aria-roledescription="carousel" aria-label="' . esc_attr( sprintf( $es ? 'Fotos de %s' : 'Photos of %s', $name ) ) . '">';
 		foreach ( $hero as $i => $att ) {
-			$img   = wp_get_attachment_image( $att, 0 === $i ? 'large' : 'medium_large', false, array( 'class' => 'mis-gallery__img', 'loading' => 0 === $i ? 'eager' : 'lazy' ) );
-			$html .= '<button type="button" class="mis-gallery__item" data-mis-photo="' . (int) $att . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver foto %1$d de %2$d' : 'View photo %1$d of %2$d', array_search( $att, $order, true ) + 1, $total ) ) . '">' . $img . '</button>';
+			$img   = wp_get_attachment_image( $att, 'large', false, array( 'class' => 'mis-carousel__img', 'loading' => 0 === $i ? 'eager' : 'lazy', 'fetchpriority' => 0 === $i ? 'high' : 'auto', 'sizes' => '100vw' ) );
+			$html .= '<button type="button" class="mis-carousel__slide" data-mis-photo="' . (int) $att . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver foto %1$d de %2$d' : 'View photo %1$d of %2$d', $i + 1, $total ) ) . '">' . $img . '</button>';
 		}
 		$html .= '</div>';
 		if ( $total > 1 ) {
-			$html .= '<button type="button" class="mis-gallery__all" data-mis-open>' . $icon( '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>', 16 ) . '<span>' . esc_html( sprintf( $es ? 'Ver las %d fotos' : 'Show all %d photos', $total ) ) . '</span></button>';
+			$html .= '<button type="button" class="mis-carousel__nav mis-carousel__nav--prev" data-mis-slide="-1" aria-label="' . esc_attr( $es ? 'Foto anterior' : 'Previous photo' ) . '">' . $icon( '<path d="M15 6l-6 6 6 6"/>', 22 ) . '</button>';
+			$html .= '<button type="button" class="mis-carousel__nav mis-carousel__nav--next" data-mis-slide="1" aria-label="' . esc_attr( $es ? 'Foto siguiente' : 'Next photo' ) . '">' . $icon( '<path d="M9 6l6 6-6 6"/>', 22 ) . '</button>';
+			$html .= '<button type="button" class="mis-carousel__count" data-mis-open aria-label="' . esc_attr( sprintf( $es ? 'Ver las %d fotos' : 'Show all %d photos', $total ) ) . '"><span class="mis-carousel__index">1</span>/' . $total . '</button>';
 		}
 
 		// Capa a pantalla completa: tira de estancias, secciones y visor.

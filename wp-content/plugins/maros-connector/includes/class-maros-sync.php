@@ -41,6 +41,18 @@ class Maros_Sync {
 		'terrace'          => array( 'Terrace', 'Terraza' ),
 	);
 
+	/**
+	 * Versión de lo que la web guarda de cada ficha. Se sube cuando la web empieza a guardar un dato
+	 * nuevo (2: municipio para las migas de pan), para que todas las fichas se relean una vez
+	 * aunque su etag en marOS no haya cambiado.
+	 */
+	private const FORMAT = '2';
+
+	/** Etag de marOS tal como se guarda en maros_etag: con la versión de formato de la web. */
+	private static function stamp( string $etag ): string {
+		return '' === $etag ? '' : $etag . '#' . self::FORMAT;
+	}
+
 	/** Fotos que se descargan como mucho en una pasada; el resto, en la siguiente (cron de 5 min). */
 	private const PHOTO_BUDGET = 40;
 
@@ -109,7 +121,7 @@ class Maros_Sync {
 		foreach ( $list as $summary ) {
 			$post = self::find_by_maros_id( $summary['id'] );
 			if ( ! $post
-				|| get_post_meta( $post, 'maros_etag', true ) !== (string) ( $summary['etag'] ?? '' )
+				|| get_post_meta( $post, 'maros_etag', true ) !== self::stamp( (string) ( $summary['etag'] ?? '' ) )
 				|| get_post_meta( $post, 'maros_calendar_etag', true ) !== (string) ( $summary['calendar_etag'] ?? '' )
 				|| get_post_meta( $post, 'maros_withdrawn', true ) ) {
 				Maros_Scheduler::enqueue( $summary['id'], 'cambio en marOS' );
@@ -130,7 +142,7 @@ class Maros_Sync {
 	public static function sync_property( string $maros_id, ?array $summary = null, bool $publish = false, bool $photos = true, bool $force = false ) {
 		$existing   = self::find_by_maros_id( $maros_id );
 		$same_card  = $existing && ! $force && $summary && '' !== (string) ( $summary['etag'] ?? '' )
-			&& get_post_meta( $existing, 'maros_etag', true ) === (string) $summary['etag']
+			&& get_post_meta( $existing, 'maros_etag', true ) === self::stamp( (string) $summary['etag'] )
 			&& ! get_post_meta( $existing, 'maros_withdrawn', true );
 		$outcome    = 'skipped';
 
@@ -199,7 +211,7 @@ class Maros_Sync {
 		$etag      = (string) ( $data['etag'] ?? $data['_etag'] ?? '' );
 		$withdrawn = $existing && get_post_meta( $existing, 'maros_withdrawn', true );
 
-		if ( $existing && ! $withdrawn && '' !== $etag && get_post_meta( $existing, 'maros_etag', true ) === $etag ) {
+		if ( $existing && ! $withdrawn && '' !== $etag && get_post_meta( $existing, 'maros_etag', true ) === self::stamp( $etag ) ) {
 			return 'skipped';
 		}
 
@@ -248,7 +260,7 @@ class Maros_Sync {
 
 		// El etag se guarda al final: si algo queda a medias (fotos), la próxima pasada lo repite.
 		foreach ( $ids as $post_id ) {
-			update_post_meta( $post_id, 'maros_etag', $complete ? $etag : '' );
+			update_post_meta( $post_id, 'maros_etag', $complete && '' !== $etag ? self::stamp( $etag ) : '' );
 		}
 		if ( ! $complete && class_exists( 'Maros_Scheduler' ) ) {
 			Maros_Scheduler::enqueue( $maros_id, 'fotos pendientes' );
@@ -361,6 +373,7 @@ class Maros_Sync {
 			'maros_bathrooms'   => (int) ( $d['bathrooms'] ?? 0 ),
 			'maros_beds'        => (int) ( $d['beds'] ?? 0 ),
 			'maros_area'        => (string) ( $d['location']['area'] ?? '' ),
+			'maros_municipality' => (string) ( $d['location']['municipality'] ?? '' ),
 			'maros_lat'         => (float) ( $d['location']['lat'] ?? 0 ),
 			'maros_lng'         => (float) ( $d['location']['lng'] ?? 0 ),
 			'maros_check_in'    => (string) ( $d['check_in'] ?? '' ),

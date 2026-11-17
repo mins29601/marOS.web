@@ -267,27 +267,68 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 /* ------------------------------------------------------------------ Ficha */
 
 .mis-gallery-wrap { position: relative; }
-.mis-gallery { display: grid; gap: 6px; grid-template-columns: 1fr 1fr; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); }
-.mis-gallery__item { display: block; padding: 0; border: 0; background: var(--wp--preset--color--tertiary); cursor: zoom-in; overflow: hidden; min-height: 0; aspect-ratio: 4 / 3; }
-.mis-gallery__img { width: 100%; height: 100%; min-height: 0; object-fit: cover; display: block; transition: transform .6s ease; }
-.mis-gallery__item:hover .mis-gallery__img { transform: scale(1.02); }
-.mis-gallery__item:focus-visible { outline: 2px solid var(--wp--preset--color--primary); outline-offset: -2px; }
-.mis-gallery > :first-child { grid-column: 1 / -1; }
-.mis-gallery > :nth-child(n+4) { display: none; }
-@media (min-width: 768px) { .mis-gallery { margin-inline: 0; } .mis-gallery > :nth-child(n+4) { display: block; } }
-@media (min-width: 1024px) {
-	.mis-gallery { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); height: min(660px, 72vh); overflow: hidden; }
-	.mis-gallery > :first-child { grid-column: 1; grid-row: 1 / 3; }
-	.mis-gallery__item { aspect-ratio: auto; }
-}
-/* Botón «Ver las N fotos» sobre la cabecera */
-.mis-gallery__all {
-	position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 0.5rem;
-	padding: 10px 14px; border: 1px solid var(--wp--preset--color--main); background: var(--wp--preset--color--primary-alt-accent); color: var(--wp--preset--color--main);
-	font-family: var(--mis-label-font); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
-}
-.mis-gallery__all:hover, .mis-gallery__all:focus-visible { background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); }
-@media (min-width: 1024px) { .mis-gallery__all { right: 20px; bottom: 20px; padding: 12px 18px; } }
+.mis-hero-gallery { margin-block-start: 0 !important; }
+/* Carrusel a sangre de la ficha (formato Le Collectionist, Julio 17-11-2026) */
+.mis-carousel { display: flex; height: clamp(440px, 72svh, 760px); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; background: var(--wp--preset--color--main); overscroll-behavior-x: contain; }
+.mis-carousel::-webkit-scrollbar { display: none; }
+.mis-carousel:focus-visible { outline: 2px solid var(--wp--preset--color--primary); outline-offset: -2px; }
+.mis-carousel__slide { flex: 0 0 100%; height: 100%; padding: 0; border: 0; background: none; scroll-snap-align: start; scroll-snap-stop: always; cursor: zoom-in; }
+.mis-carousel__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mis-carousel__nav { position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 50%; border: 0; background: rgba(37, 39, 40, .45); color: #fff; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.mis-carousel__nav:hover, .mis-carousel__nav:focus-visible { background: rgba(37, 39, 40, .75); }
+.mis-carousel__nav--prev { left: 16px; }
+.mis-carousel__nav--next { right: 16px; }
+.mis-carousel__count { position: absolute; right: 16px; bottom: 16px; border: 0; background: rgba(37, 39, 40, .6); color: #fff; padding: 6px 12px; font-family: var(--wp--preset--font-family--primary); font-size: 0.9375rem; font-variant-numeric: tabular-nums; cursor: pointer; }
+.mis-carousel__count:hover, .mis-carousel__count:focus-visible { background: rgba(37, 39, 40, .85); }
+@media (max-width: 767px) { .mis-carousel__nav { width: 40px; height: 40px; } .mis-carousel__nav--prev { left: 10px; } .mis-carousel__nav--next { right: 10px; } }
+@media (min-width: 1024px) { .mis-carousel { height: clamp(520px, 78vh, 820px); } .mis-carousel__nav--prev { left: 28px; } .mis-carousel__nav--next { right: 28px; } .mis-carousel__count { right: 28px; bottom: 24px; } }
+
+/* Cabecera de la ficha: blanca y transparente sobre la foto; al pasar la foto, la de siempre */
+.wp-block-template-part:has(> .mis-header--ficha) { position: fixed; top: 0; left: 0; right: 0; z-index: 50; }
+.admin-bar .wp-block-template-part:has(> .mis-header--ficha) { top: var(--wp-admin--admin-bar--height, 0px); }
+.mis-header--ficha { transition: background-color .25s ease, border-color .25s ease; }
+.mis-header--ficha.mis-header--overlay { background: linear-gradient(rgba(0, 0, 0, .38), transparent); }
+.mis-header--ficha .mis-logo--color { display: none; }
+.mis-header--ficha:not(.mis-header--overlay) .mis-logo--color { display: inline-flex; }
+.mis-header--ficha:not(.mis-header--overlay) .mis-logo--blanco { display: none; }
+
+/* Migas de pan en una línea que se desliza en horizontal */
+.mis-crumbs { display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--wp--preset--spacing--medium) * -1) 1.25rem; padding-inline: var(--wp--preset--spacing--medium); font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-crumbs::-webkit-scrollbar { display: none; }
+.mis-crumbs > * { flex-shrink: 0; }
+.mis-crumbs a { color: inherit; text-decoration: none; }
+.mis-crumbs a:hover { color: var(--wp--preset--color--main); text-decoration: underline; }
+.mis-crumbs a[aria-current] { color: var(--wp--preset--color--main); font-weight: 500; }
+.mis-crumbs__sep { opacity: .6; }
+@media (min-width: 1024px) { .mis-crumbs { margin-inline: 0; padding-inline: 0; } }
+.mis-ficha-title { margin: 0; font-size: clamp(2.25rem, 7vw, 3.5rem); line-height: 1.08; letter-spacing: 0.06em; text-wrap: balance; }
+.mis-where { margin: 0.5rem 0 0; font-size: var(--wp--preset--font-size--medium); color: var(--wp--preset--color--secondary); }
+/* Huéspedes, dormitorios y baños: tres columnas fijas, número arriba y texto debajo */
+.mis-facts { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; list-style: none; margin: 1.25rem 0 0; padding: 0; }
+.mis-facts li { display: grid; gap: 2px; padding-inline: 1rem; line-height: 1.2; white-space: nowrap; color: var(--wp--preset--color--secondary); font-size: var(--wp--preset--font-size--small); }
+.mis-facts li:first-child { padding-left: 0; }
+.mis-facts li + li { border-left: 1px solid var(--mis-line); }
+.mis-facts strong { font-size: 1.375rem; font-weight: 500; color: var(--wp--preset--color--main); }
+@media (min-width: 768px) { .mis-facts li { padding-inline: 1.5rem; } }
+/* Descripción corta con «Read more» */
+.mis-desc { margin-top: 1.5rem; max-width: 62ch; max-height: calc(1.7em * 4); overflow: hidden; position: relative; }
+.mis-desc > * { margin-block: 0 1rem; }
+.mis-desc p { line-height: 1.7; }
+.mis-desc:not(.is-open)::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.7em; background: linear-gradient(transparent, var(--wp--preset--color--base)); }
+.mis-desc.is-open { max-height: none; }
+.mis-more { margin-top: 0.5rem; padding: 0; border: 0; background: none; color: var(--wp--preset--color--main); font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; min-height: 44px; }
+/* Secciones separadas por una línea */
+.mis-ficha-sec { border-top: 1px solid var(--mis-line); margin-top: var(--wp--preset--spacing--large); padding-top: var(--wp--preset--spacing--large); }
+.mis-ficha-sec:has(> :only-child:empty) { display: none; }
+.mis-ficha-sec h2 { margin-top: 0; }
+/* Key features */
+.mis-keys h2 { margin: 0 0 1.25rem; }
+.mis-keys__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.375rem; }
+@media (min-width: 768px) { .mis-keys__list { grid-template-columns: 1fr 1fr; gap: 1.75rem 2.25rem; } }
+.mis-keys__list li { display: grid; grid-template-columns: 44px 1fr; gap: 0.875rem; align-items: start; }
+.mis-keys__list svg { color: var(--wp--preset--color--primary); }
+.mis-keys__list strong { display: block; font-size: var(--wp--preset--font-size--medium); font-weight: 500; }
+.mis-keys__list span { color: var(--wp--preset--color--secondary); font-size: var(--wp--preset--font-size--small); }
 
 /* Galería completa por estancias (marOS spec 041): capa a pantalla completa */
 html.mis-tour-open { overflow: hidden; }
@@ -300,7 +341,7 @@ html.mis-tour-open { overflow: hidden; }
 .mis-tour__title { margin: 0; font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mis-tour__title span { color: var(--wp--preset--color--secondary); }
 .mis-tour__scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--wp--preset--spacing--medium) 3rem; }
-.mis-tour__chips { position: sticky; top: 0; z-index: 2; display: flex; gap: 0.75rem; overflow-x: auto; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding: 0.875rem var(--wp--preset--spacing--medium); background: var(--wp--preset--color--base); border-bottom: 1px solid var(--mis-line); scrollbar-width: none; }
+.mis-tour__chips { display: flex; gap: 0.75rem; overflow-x: auto; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding: 0.875rem var(--wp--preset--spacing--medium); background: var(--wp--preset--color--base); border-bottom: 1px solid var(--mis-line); scrollbar-width: none; }
 .mis-tour__chips::-webkit-scrollbar { display: none; }
 .mis-tour__chip { flex: 0 0 112px; display: grid; gap: 4px; align-content: start; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; font-family: inherit; font-size: 0.75rem; line-height: 1.3; }
 .mis-tour__chip small { color: var(--wp--preset--color--secondary); font-size: 0.6875rem; }
@@ -319,7 +360,7 @@ html.mis-tour-open { overflow: hidden; }
 	.mis-tour__scroll { padding-inline: max(var(--wp--preset--spacing--medium), calc((100% - 1200px) / 2)); }
 	.mis-tour__chips { margin-inline: 0; padding-inline: 0; }
 	.mis-tour__sec { grid-template-columns: minmax(240px, 320px) 1fr; gap: 2.5rem; align-items: start; padding-block: 2.5rem; }
-	.mis-tour__head { position: sticky; top: 140px; }
+	.mis-tour__head { position: sticky; top: 1.5rem; }
 }
 
 /* Visor a pantalla completa */
@@ -363,10 +404,14 @@ html.mis-tour-open { overflow: hidden; }
 /* Caja de reserva (escritorio) y barra fija (móvil) */
 .mis-booking-box { border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); padding: 1.5rem; }
 .mis-booking-box .wp-block-buttons { margin-block: 1.25rem; }
-@media (min-width: 1024px) { .mis-booking-box { position: sticky; top: calc(var(--mis-header-h) + 80px); } }
-.mis-amenities { columns: 2; column-gap: 2rem; padding-left: 0; list-style: none; }
-.mis-amenities li { margin-bottom: 0.6rem; break-inside: avoid; padding-left: 1.25rem; position: relative; }
-.mis-amenities li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 8px; height: 1px; background: var(--wp--preset--color--primary); }
+@media (min-width: 1024px) { .mis-booking-box { position: sticky; top: calc(var(--mis-header-h) + 24px); } }
+.mis-amenities { display: grid; grid-template-columns: 1fr; gap: 0.875rem 2rem; padding-left: 0; margin: 1.5rem 0 0; list-style: none; }
+@media (min-width: 600px) { .mis-amenities { grid-template-columns: 1fr 1fr; } }
+.mis-amenities li { display: flex; align-items: center; gap: 0.75rem; }
+.mis-amenities svg { flex-shrink: 0; color: var(--wp--preset--color--main); }
+.mis-amenities:not(.is-open) li:nth-child(n+11) { display: none; }
+.mis-amenities__all { margin-top: 1.5rem; padding: 13px 18px; border: 1px solid var(--wp--preset--color--main); background: transparent; color: var(--wp--preset--color--main); font-family: var(--mis-label-font); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; }
+.mis-amenities__all:hover, .mis-amenities__all:focus-visible { background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); }
 /* Distribución de dormitorios (marOS spec 040; maqueta de Julio del 16-11-2026): una fila horizontal. */
 .mis-sleeping__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
 .mis-sleeping__head h2 { margin: 0; }
@@ -401,7 +446,10 @@ html.mis-tour-open { overflow: hidden; }
 	padding: 0.75rem var(--wp--preset--spacing--medium) calc(0.75rem + env(safe-area-inset-bottom));
 	display: flex; justify-content: space-between; align-items: center; gap: 1rem;
 }
-.mis-sticky-cta p { margin: 0; font-size: var(--wp--preset--font-size--small); line-height: 1.4; }
+.mis-sticky-cta p { margin: 0; font-size: var(--wp--preset--font-size--small); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.mis-sticky-cta .wp-element-button { flex-shrink: 0; }
+.mis-price-line strong { font-size: 1rem; font-weight: 500; }
+.mis-price-line small { font-size: 0.8125rem; color: var(--wp--preset--color--secondary); }
 @media (min-width: 1024px) { .mis-sticky-cta { display: none; } }
 body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 
