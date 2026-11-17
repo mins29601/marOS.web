@@ -23,6 +23,12 @@ function mis_setup_post( string $type, string $lang, string $slug, string $title
 		array( 'post_type' => $type, 'name' => $slug, 'post_status' => 'any', 'numberposts' => 1, 'lang' => $lang, 'fields' => 'ids' )
 	);
 	if ( $found ) {
+		// WordPress crea «privacy-policy» como borrador: si lo reutilizamos, se publica (antes el
+		// enlace del pie a la política de privacidad daba 404).
+		if ( 'publish' !== get_post_status( $found[0] ) ) {
+			wp_update_post( array( 'ID' => $found[0], 'post_status' => 'publish' ) );
+			WP_CLI::log( "  ~ $type $lang /$slug/ publicada" );
+		}
 		return (int) $found[0];
 	}
 	$id = wp_insert_post(
@@ -290,6 +296,7 @@ mis_setup_pair(
 // Portada y blog: Polylang usa la traducción de cada página.
 update_option( 'show_on_front', 'page' );
 update_option( 'page_on_front', $page_ids['home']['en'] );
+update_option( 'wp_page_for_privacy_policy', $page_ids['privacy']['en'] );
 update_option( 'page_for_posts', $page_ids['journal']['en'] );
 update_option( 'blogname', 'Marbella in Style' );
 update_option( 'blogdescription', 'Villas, services & experiences in Marbella' );

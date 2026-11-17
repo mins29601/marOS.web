@@ -109,13 +109,20 @@ add_shortcode(
 		$hero    = array_values( array_unique( array_merge( array_intersect( $lodgify, $order ), $order ) ) );
 		$id    = 'mis-tour-' . $post_id;
 		$icon  = static fn( string $d, int $s = 18 ) => '<svg width="' . $s . '" height="' . $s . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $d . '</svg>';
-		$alt   = static fn( int $att ) => trim( (string) get_post_meta( $att, '_wp_attachment_image_alt', true ) ) ?: $name;
+		// Texto alternativo «Villa Concha · Bedroom 1» (la estancia de marOS), no el nombre del archivo.
+		$room = array();
+		foreach ( $sections as $s ) {
+			foreach ( $s['photos'] as $p ) {
+				$room[ (int) $p ] ??= (string) $s['title'];
+			}
+		}
+		$alt   = static fn( int $att ) => trim( (string) get_post_meta( $att, '_wp_attachment_image_alt', true ) ) ?: ( isset( $room[ $att ] ) && '' !== $room[ $att ] ? $name . ' · ' . $room[ $att ] : $name );
 
 		// Carrusel a sangre (formato Le Collectionist, Julio 17-11-2026): todas las fotos en el orden
 		// de Lodgify, flechas, deslizar y «1/N», que abre la galería por estancias.
 		$html = '<div class="mis-gallery-wrap mis-hero-gallery" data-mis-tour="' . esc_attr( $id ) . '"><div class="mis-carousel" tabindex="0" aria-roledescription="carousel" aria-label="' . esc_attr( sprintf( $es ? 'Fotos de %s' : 'Photos of %s', $name ) ) . '">';
 		foreach ( $hero as $i => $att ) {
-			$img   = wp_get_attachment_image( $att, 'large', false, array( 'class' => 'mis-carousel__img', 'loading' => 0 === $i ? 'eager' : 'lazy', 'fetchpriority' => 0 === $i ? 'high' : 'auto', 'sizes' => '100vw' ) );
+			$img   = wp_get_attachment_image( $att, 'large', false, array( 'class' => 'mis-carousel__img', 'alt' => $alt( $att ), 'loading' => 0 === $i ? 'eager' : 'lazy', 'fetchpriority' => 0 === $i ? 'high' : 'auto', 'sizes' => '100vw' ) );
 			$html .= '<button type="button" class="mis-carousel__slide" data-mis-photo="' . (int) $att . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver foto %1$d de %2$d' : 'View photo %1$d of %2$d', $i + 1, $total ) ) . '">' . $img . '</button>';
 		}
 		$html .= '</div>';
@@ -147,7 +154,7 @@ add_shortcode(
 			foreach ( $s['photos'] as $att ) {
 				$full  = wp_get_attachment_image_url( $att, 'large' );
 				$set   = wp_get_attachment_image_srcset( $att, 'large' );
-				$html .= '<button type="button" class="mis-tour__item" data-mis-photo="' . (int) $att . '" data-full="' . esc_url( (string) $full ) . '" data-srcset="' . esc_attr( (string) $set ) . '" data-section="' . esc_attr( $s['title'] ) . '" aria-label="' . esc_attr( $alt( $att ) ) . '">' . wp_get_attachment_image( $att, 'medium_large', false, array( 'class' => 'mis-tour__img', 'loading' => 'lazy' ) ) . '</button>';
+				$html .= '<button type="button" class="mis-tour__item" data-mis-photo="' . (int) $att . '" data-full="' . esc_url( (string) $full ) . '" data-srcset="' . esc_attr( (string) $set ) . '" data-section="' . esc_attr( $s['title'] ) . '" aria-label="' . esc_attr( $alt( $att ) ) . '">' . wp_get_attachment_image( $att, 'medium_large', false, array( 'class' => 'mis-tour__img', 'alt' => $alt( $att ), 'loading' => 'lazy' ) ) . '</button>';
 			}
 			$html .= '</div></section>';
 		}

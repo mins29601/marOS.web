@@ -215,7 +215,8 @@ function mis_tour_binding_value( array $args, $block_instance ) {
 			if ( $item && 'formulario' !== get_post_meta( $post_id, 'tour_booking_mode', true ) ) {
 				return esc_url( 'https://fareharbor.com/embeds/book/marbella-in-style/items/' . rawurlencode( $item ) . '/?full-items=yes&flow=no' );
 			}
-			return esc_url( home_url( $es ? '/es/contacto/' : '/contact/' ) . '?tour=' . rawurlencode( get_the_title( $post_id ) ) );
+			// El título sin pasar por los filtros de get_the_title(), que convierten «&» en «&#038;».
+			return esc_url( home_url( $es ? '/es/contacto/' : '/contact/' ) . '?tour=' . rawurlencode( get_post_field( 'post_title', $post_id, 'raw' ) ) );
 		default:
 			$value = get_post_meta( $post_id, $key, true );
 			return is_scalar( $value ) ? esc_html( (string) $value ) : '';
@@ -239,3 +240,6 @@ register_activation_hook(
 		flush_rewrite_rules();
 	}
 );
+
+// Datos de contacto (teléfono, email, redes) para el pie y la capa «Menú».
+require_once __DIR__ . '/includes/contacto.php';
