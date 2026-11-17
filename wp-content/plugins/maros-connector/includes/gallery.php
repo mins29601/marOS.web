@@ -109,14 +109,16 @@ add_shortcode(
 		$hero    = array_values( array_unique( array_merge( array_intersect( $lodgify, $order ), $order ) ) );
 		$id    = 'mis-tour-' . $post_id;
 		$icon  = static fn( string $d, int $s = 18 ) => '<svg width="' . $s . '" height="' . $s . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $d . '</svg>';
-		// Texto alternativo «Villa Concha · Bedroom 1» (la estancia de marOS), no el nombre del archivo.
+		// Texto alternativo «Villa Concha · Bedroom 1», con la estancia de marOS.
 		$room = array();
 		foreach ( $sections as $s ) {
 			foreach ( $s['photos'] as $p ) {
 				$room[ (int) $p ] ??= (string) $s['title'];
 			}
 		}
-		$alt   = static fn( int $att ) => trim( (string) get_post_meta( $att, '_wp_attachment_image_alt', true ) ) ?: ( isset( $room[ $att ] ) && '' !== $room[ $att ] ? $name . ' · ' . $room[ $att ] : $name );
+		// Va primero la estancia: el alt guardado es el pie de foto de Lodgify, que suele ser el nombre
+		// del archivo («Villa concha brisas 25»).
+		$alt   = static fn( int $att ) => isset( $room[ $att ] ) && '' !== $room[ $att ] ? $name . ' · ' . $room[ $att ] : ( trim( (string) get_post_meta( $att, '_wp_attachment_image_alt', true ) ) ?: $name );
 
 		// Carrusel a sangre (formato Le Collectionist, Julio 17-11-2026): todas las fotos en el orden
 		// de Lodgify, flechas, deslizar y «1/N», que abre la galería por estancias.
