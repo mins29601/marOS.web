@@ -107,7 +107,7 @@ Phosphor Light + extensión propia (T35). Mapa de iconos y reglas: [iconos.md](i
 | Chip / filtro | Normal · Activo · Con número («Piscina climatizada 6») | Alquileres, horas de llamada | Bloque propio del buscador |
 | Pestaña | Normal · Activa | Colecciones, meses, subnavegación | CSS del tema |
 | Campo | Texto · Fecha · Huéspedes (− +) · Selección | Buscador, reserva, formularios | Gravity Forms (D4) y bloque de reserva |
-| Icono | Línea fina en círculo | Destacados, «Por qué con nosotros» | Biblioteca de iconos **pendiente** (SVG en línea) |
+| Icono | Línea fina en círculo | Destacados, «Por qué con nosotros» | SVG en línea desde `maros-connector/assets/icons` ([iconos.md](iconos.md)) |
 | Avatar | Foto redonda 44 px | Persona de contacto | Bloque Imagen con estilo «redonda» |
 | Botón de reproducción | ▶ sobre carátula | Vídeos | Parte de la molécula Vídeo |
 | Nota de aviso | Fondo suave | Estancia mínima, condiciones | Estilo de Grupo |

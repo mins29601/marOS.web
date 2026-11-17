@@ -166,8 +166,15 @@ add_shortcode(
 		if ( ! $terms || is_wp_error( $terms ) ) {
 			return '';
 		}
-		$es    = maros_is_es( (int) get_the_ID() );
-		$items = array_map( static fn( $t ) => '<li>' . maros_icon( maros_icon_paths( maros_amenity_icon( $t->slug ) ) ) . '<span>' . esc_html( $t->name ) . '</span></li>', $terms );
+		$es = maros_is_es( (int) get_the_ID() );
+		// Lo que más pregunta el huésped va entre las diez primeras (la secadora, Julio 17-11-2026).
+		$first = array( 'private_pool', 'heated_pool', 'shared_pool', 'sea_view', 'air_conditioning', 'wifi', 'parking', 'dryer', 'washer', 'dishwasher', 'bbq', 'gym', 'terrace' );
+		$rank  = static function ( $t ) use ( $first ) {
+			$pos = array_search( preg_replace( '/_es$/', '', str_replace( '-', '_', $t->slug ) ), $first, true );
+			return false === $pos ? count( $first ) : $pos;
+		};
+		usort( $terms, static fn( $a, $b ) => array( $rank( $a ), $a->name ) <=> array( $rank( $b ), $b->name ) );
+		$items = array_map( static fn( $t ) => '<li>' . maros_icon_svg( maros_amenity_icon( $t->slug ), 22 ) . '<span>' . esc_html( $t->name ) . '</span></li>', $terms );
 		$html  = '<ul class="mis-amenities">' . implode( '', $items ) . '</ul>';
 		if ( count( $items ) > 10 ) {
 			$html .= '<button type="button" class="mis-amenities__all" onclick="this.previousElementSibling.classList.add(\'is-open\');this.remove();">' . esc_html( sprintf( $es ? 'Ver las %d comodidades' : 'Show all %d amenities', count( $items ) ) ) . '</button>';
@@ -193,9 +200,8 @@ add_shortcode(
 		$lang = $es ? 'es' : 'en';
 		$max   = 3;
 		$icon  = static fn( string $d ) => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $d . '</svg>';
-		$bed_i = $icon( '<path d="M3 18V7"/><path d="M21 18v-6a3 3 0 0 0-3-3h-8v6"/><path d="M3 15h18"/><circle cx="6.5" cy="11.5" r="1.8"/>' );
-		$bath  = $icon( '<path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V5a2 2 0 0 1 3.5-1.3"/><path d="M7 19l-1 2M17 19l1 2"/>' );
-		$check = $icon( '<path d="M5 12l4 4 10-10"/>' );
+		$bed_i = maros_icon_svg( maros_amenity_icon( 'bed' ), 18 );
+		$bath  = maros_icon_svg( maros_amenity_icon( 'ensuite' ), 18 );
 
 		$cards = '';
 		foreach ( $rooms as $room ) {
@@ -244,7 +250,7 @@ add_shortcode(
 			);
 			foreach ( array_slice( $special, 0, $max ) as $a ) {
 				if ( ! empty( $a[ $lang ] ) ) {
-					$items[] = '<li>' . $check . '<span>' . esc_html( $a[ $lang ] ) . '</span></li>';
+					$items[] = '<li>' . maros_icon_svg( maros_amenity_icon( (string) ( $a['code'] ?? '' ) ), 18 ) . '<span>' . esc_html( $a[ $lang ] ) . '</span></li>';
 				}
 			}
 			if ( $items ) {

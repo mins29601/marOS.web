@@ -39,6 +39,22 @@ class Maros_Sync {
 		'bbq'              => array( 'BBQ', 'Barbacoa' ),
 		'gym'              => array( 'Gym', 'Gimnasio' ),
 		'terrace'          => array( 'Terrace', 'Terraza' ),
+		'dryer'            => array( 'Tumble dryer', 'Secadora' ),
+		'washer'           => array( 'Washing machine', 'Lavadora' ),
+		'dishwasher'       => array( 'Dishwasher', 'Lavavajillas' ),
+		'hair-dryer'       => array( 'Hair dryer', 'Secador de pelo' ),
+	);
+
+	/**
+	 * Nombres de Lodgify que se guardan con un código fijo, para que todas las fichas compartan
+	 * término y nombre traducido («ClothesDryer», «Tumble dryer» → dryer). En orden: el secador
+	 * de pelo y el lavavajillas antes que la secadora y la lavadora.
+	 */
+	private const AMENITY_ALIASES = array(
+		'/hair-?dryer/'                 => 'hair-dryer',
+		'/dish-?washer/'                => 'dishwasher',
+		'/dryer|secadora/'              => 'dryer',
+		'/washing|washer|lavadora/'     => 'washer',
 	);
 
 	/**
@@ -463,7 +479,13 @@ class Maros_Sync {
 			if ( ! $code ) {
 				continue;
 			}
-			$name        = is_array( $item ) ? (string) ( $item['name'] ?? $code ) : $code;
+			$name = is_array( $item ) ? (string) ( $item['name'] ?? $code ) : $code;
+			foreach ( self::AMENITY_ALIASES as $re => $alias ) {
+				if ( preg_match( $re, $code ) ) {
+					$code = $alias;
+					break;
+				}
+			}
 			$amenities[] = self::term( 'equipamiento', $code, self::AMENITIES[ $code ] ?? array( $name, $name ), $lang );
 		}
 		wp_set_object_terms( $post_id, array_filter( $amenities ), 'equipamiento' );
