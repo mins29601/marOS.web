@@ -1,31 +1,39 @@
-<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+<!-- wp:template-part {"slug":"header-ficha","tagName":"header"} /-->
+<!-- wp:shortcode -->[maros_gallery]<!-- /wp:shortcode -->
 <!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"1328px"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|medium","right":"var:preset|spacing|medium"}}}} -->
 <main class="wp-block-group" style="padding-right:var(--wp--preset--spacing--medium);padding-left:var(--wp--preset--spacing--medium)">
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|small"}}},"layout":{"type":"default"}} -->
-<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--small)">
-<!-- wp:paragraph {"className":"mis-eyebrow","metadata":{"bindings":{"content":{"source":"maros/property","args":{"key":"area"}}}}} --><p class="mis-eyebrow"></p><!-- /wp:paragraph -->
-<!-- wp:post-title {"level":1,"fontSize":"x-large"} /-->
-<!-- wp:paragraph {"className":"mis-muted","metadata":{"bindings":{"content":{"source":"maros/property","args":{"key":"facts"}}}}} --><p class="mis-muted"></p><!-- /wp:paragraph -->
-</div>
-<!-- /wp:group -->
-<!-- wp:shortcode -->[maros_gallery]<!-- /wp:shortcode -->
-<!-- wp:html -->
-<nav class="mis-anchors" aria-label="[mis_t en='Sections' es='Secciones']"><a href="#overview">[mis_t en="Overview" es="Resumen"]</a><a href="#amenities">[mis_t en="Amenities" es="Equipamiento"]</a><a href="#conditions">[mis_t en="Conditions" es="Condiciones"]</a><a href="#location">[mis_t en="Location" es="Ubicación"]</a><a href="#faq">FAQ</a></nav>
-<!-- /wp:html -->
-<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|x-large"},"padding":{"top":"var:preset|spacing|large","bottom":"var:preset|spacing|x-large"}}}} -->
-<div class="wp-block-columns" style="padding-top:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--x-large)">
+<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|x-large"},"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|x-large"}}}} -->
+<div class="wp-block-columns" style="padding-top:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--x-large)">
 <!-- wp:column {"width":"64%"} -->
 <div class="wp-block-column" style="flex-basis:64%">
 <!-- wp:group {"anchor":"overview","layout":{"type":"default"}} -->
 <div id="overview" class="wp-block-group">
-<!-- wp:paragraph {"className":"mis-badge"} --><p class="mis-badge">[mis_t en="Exclusive" es="Exclusiva"]</p><!-- /wp:paragraph -->
+<!-- wp:shortcode -->[maros_breadcrumbs]<!-- /wp:shortcode -->
+<!-- wp:post-title {"level":1,"className":"mis-ficha-title"} /-->
+<!-- wp:shortcode -->[maros_where]<!-- /wp:shortcode -->
+<!-- wp:shortcode -->[maros_facts]<!-- /wp:shortcode -->
+<!-- wp:group {"className":"mis-desc","layout":{"type":"default"}} -->
+<div class="wp-block-group mis-desc">
 <!-- wp:post-excerpt {"fontSize":"medium"} /-->
 <!-- wp:post-content {"layout":{"type":"default"}} /-->
 </div>
 <!-- /wp:group -->
-<!-- wp:group {"anchor":"amenities","layout":{"type":"default"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|medium"}}}} -->
-<div id="amenities" class="wp-block-group" style="padding-top:var(--wp--preset--spacing--medium)">
-<!-- wp:heading {"fontSize":"large"} --><h2 class="wp-block-heading has-large-font-size">[mis_t en="Amenities" es="Equipamiento"]</h2><!-- /wp:heading -->
+<!-- wp:shortcode -->[maros_read_more]<!-- /wp:shortcode -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"mis-ficha-sec","layout":{"type":"default"}} -->
+<div class="wp-block-group mis-ficha-sec">
+<!-- wp:shortcode -->[maros_key_features]<!-- /wp:shortcode -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"mis-ficha-sec","layout":{"type":"default"}} -->
+<div class="wp-block-group mis-ficha-sec">
+<!-- wp:shortcode -->[maros_sleeping]<!-- /wp:shortcode -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"anchor":"amenities","className":"mis-ficha-sec","layout":{"type":"default"}} -->
+<div id="amenities" class="wp-block-group mis-ficha-sec">
+<!-- wp:heading {"fontSize":"large"} --><h2 class="wp-block-heading has-large-font-size">[mis_t en="Features and amenities" es="Características y comodidades"]</h2><!-- /wp:heading -->
 <!-- wp:shortcode -->[maros_amenities]<!-- /wp:shortcode -->
 </div>
 <!-- /wp:group -->
@@ -70,6 +78,6 @@
 </main>
 <!-- /wp:group -->
 <!-- wp:html -->
-<div class="mis-sticky-cta"><p>[mis_t en="Direct booking · best price" es="Reserva directa · mejor precio"]</p><a class="wp-element-button" href="#overview" onclick="document.querySelector('.mis-booking-box').scrollIntoView({behavior:'smooth'});return false;">[mis_t en="Availability" es="Disponibilidad"]</a></div>
+<div class="mis-sticky-cta">[maros_price_line]<a class="wp-element-button" href="#overview" onclick="document.querySelector('.mis-booking-box').scrollIntoView({behavior:'smooth'});return false;">[mis_t en="Availability" es="Disponibilidad"]</a></div>
 <!-- /wp:html -->
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

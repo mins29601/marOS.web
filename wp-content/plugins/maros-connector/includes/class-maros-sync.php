@@ -39,7 +39,35 @@ class Maros_Sync {
 		'bbq'              => array( 'BBQ', 'Barbacoa' ),
 		'gym'              => array( 'Gym', 'Gimnasio' ),
 		'terrace'          => array( 'Terrace', 'Terraza' ),
+		'dryer'            => array( 'Tumble dryer', 'Secadora' ),
+		'washer'           => array( 'Washing machine', 'Lavadora' ),
+		'dishwasher'       => array( 'Dishwasher', 'Lavavajillas' ),
+		'hair-dryer'       => array( 'Hair dryer', 'Secador de pelo' ),
 	);
+
+	/**
+	 * Nombres de Lodgify que se guardan con un código fijo, para que todas las fichas compartan
+	 * término y nombre traducido («ClothesDryer», «Tumble dryer» → dryer). En orden: el secador
+	 * de pelo y el lavavajillas antes que la secadora y la lavadora.
+	 */
+	private const AMENITY_ALIASES = array(
+		'/hair-?dryer/'                 => 'hair-dryer',
+		'/dish-?washer/'                => 'dishwasher',
+		'/dryer|secadora/'              => 'dryer',
+		'/washing|washer|lavadora/'     => 'washer',
+	);
+
+	/**
+	 * Versión de lo que la web guarda de cada ficha. Se sube cuando la web empieza a guardar un dato
+	 * nuevo (2: municipio para las migas de pan), para que todas las fichas se relean una vez
+	 * aunque su etag en marOS no haya cambiado.
+	 */
+	private const FORMAT = '2';
+
+	/** Etag de marOS tal como se guarda en maros_etag: con la versión de formato de la web. */
+	private static function stamp( string $etag ): string {
+		return '' === $etag ? '' : $etag . '#' . self::FORMAT;
+	}
 
 	/** Fotos que se descargan como mucho en una pasada; el resto, en la siguiente (cron de 5 min). */
 	private const PHOTO_BUDGET = 40;
@@ -109,7 +137,7 @@ class Maros_Sync {
 		foreach ( $list as $summary ) {
 			$post = self::find_by_maros_id( $summary['id'] );
 			if ( ! $post
-				|| get_post_meta( $post, 'maros_etag', true ) !== (string) ( $summary['etag'] ?? '' )
+				|| get_post_meta( $post, 'maros_etag', true ) !== self::stamp( (string) ( $summary['etag'] ?? '' ) )
 				|| get_post_meta( $post, 'maros_calendar_etag', true ) !== (string) ( $summary['calendar_etag'] ?? '' )
 				|| get_post_meta( $post, 'maros_withdrawn', true ) ) {
 				Maros_Scheduler::enqueue( $summary['id'], 'cambio en marOS' );
@@ -130,7 +158,7 @@ class Maros_Sync {
 	public static function sync_property( string $maros_id, ?array $summary = null, bool $publish = false, bool $photos = true, bool $force = false ) {
 		$existing   = self::find_by_maros_id( $maros_id );
 		$same_card  = $existing && ! $force && $summary && '' !== (string) ( $summary['etag'] ?? '' )
-			&& get_post_meta( $existing, 'maros_etag', true ) === (string) $summary['etag']
+			&& get_post_meta( $existing, 'maros_etag', true ) === self::stamp( (string) $summary['etag'] )
 			&& ! get_post_meta( $existing, 'maros_withdrawn', true );
 		$outcome    = 'skipped';
 
@@ -199,7 +227,7 @@ class Maros_Sync {
 		$etag      = (string) ( $data['etag'] ?? $data['_etag'] ?? '' );
 		$withdrawn = $existing && get_post_meta( $existing, 'maros_withdrawn', true );
 
-		if ( $existing && ! $withdrawn && '' !== $etag && get_post_meta( $existing, 'maros_etag', true ) === $etag ) {
+		if ( $existing && ! $withdrawn && '' !== $etag && get_post_meta( $existing, 'maros_etag', true ) === self::stamp( $etag ) ) {
 			return 'skipped';
 		}
 
@@ -241,10 +269,14 @@ class Maros_Sync {
 		}
 
 		$complete = $photos ? self::sync_photos( $ids, $data['photos'] ?? array() ) : true;
+		// marOS spec 040: dormitorios para «Sleeping arrangements», con la foto de cada uno en Medios.
+		$complete = self::sync_bedrooms( $ids, $data['sleeping_arrangements'] ?? array(), $photos ) && $complete;
+		// marOS spec 041: estancias con fotos para la galería por estancias (maqueta B, Julio 16-11-2026).
+		$complete = self::sync_tour( $ids, $data['photo_tour'] ?? array(), $photos ) && $complete;
 
 		// El etag se guarda al final: si algo queda a medias (fotos), la próxima pasada lo repite.
 		foreach ( $ids as $post_id ) {
-			update_post_meta( $post_id, 'maros_etag', $complete ? $etag : '' );
+			update_post_meta( $post_id, 'maros_etag', $complete && '' !== $etag ? self::stamp( $etag ) : '' );
 		}
 		if ( ! $complete && class_exists( 'Maros_Scheduler' ) ) {
 			Maros_Scheduler::enqueue( $maros_id, 'fotos pendientes' );
@@ -357,6 +389,7 @@ class Maros_Sync {
 			'maros_bathrooms'   => (int) ( $d['bathrooms'] ?? 0 ),
 			'maros_beds'        => (int) ( $d['beds'] ?? 0 ),
 			'maros_area'        => (string) ( $d['location']['area'] ?? '' ),
+			'maros_municipality' => (string) ( $d['location']['municipality'] ?? '' ),
 			'maros_lat'         => (float) ( $d['location']['lat'] ?? 0 ),
 			'maros_lng'         => (float) ( $d['location']['lng'] ?? 0 ),
 			'maros_check_in'    => (string) ( $d['check_in'] ?? '' ),
@@ -446,7 +479,13 @@ class Maros_Sync {
 			if ( ! $code ) {
 				continue;
 			}
-			$name        = is_array( $item ) ? (string) ( $item['name'] ?? $code ) : $code;
+			$name = is_array( $item ) ? (string) ( $item['name'] ?? $code ) : $code;
+			foreach ( self::AMENITY_ALIASES as $re => $alias ) {
+				if ( preg_match( $re, $code ) ) {
+					$code = $alias;
+					break;
+				}
+			}
 			$amenities[] = self::term( 'equipamiento', $code, self::AMENITIES[ $code ] ?? array( $name, $name ), $lang );
 		}
 		wp_set_object_terms( $post_id, array_filter( $amenities ), 'equipamiento' );
@@ -534,6 +573,125 @@ class Maros_Sync {
 			if ( $gallery && ! has_post_thumbnail( $post_id ) ) {
 				set_post_thumbnail( $post_id, $gallery[0] );
 			}
+		}
+		return $complete;
+	}
+
+	/**
+	 * Guarda los dormitorios de marOS (spec 040) en maros_sleeping, en los dos idiomas, con el id
+	 * de Medios de la primera foto de cada uno. Las fotos suelen ser las de la galería (mismo hash).
+	 *
+	 * @return bool false si queda alguna foto por descargar en otra pasada.
+	 */
+	private static function sync_bedrooms( array $ids, $rooms, bool $photos ): bool {
+		$text     = static fn( $v ) => sanitize_text_field( (string) $v );
+		$pair     = static fn( $v ) => array( 'en' => sanitize_text_field( (string) ( $v['en'] ?? '' ) ), 'es' => sanitize_text_field( (string) ( $v['es'] ?? '' ) ) );
+		$out      = array();
+		$complete = true;
+		foreach ( is_array( $rooms ) && array_is_list( $rooms ) ? $rooms : array() as $room ) {
+			if ( ! is_array( $room ) ) {
+				continue;
+			}
+			$att   = 0;
+			$first = null;
+			foreach ( is_array( $room['photos'] ?? null ) ? $room['photos'] : array() as $p ) {
+				if ( is_array( $p ) && ! empty( $p['url'] ) && ( ! $first || ( $p['order'] ?? 0 ) < ( $first['order'] ?? 0 ) ) ) {
+					$first = $p;
+				}
+			}
+			if ( $first ) {
+				$hash = (string) ( $first['hash'] ?? md5( $first['url'] ) );
+				$att  = self::find_attachment_by_hash( $hash );
+				if ( ! $att && $photos ) {
+					if ( self::$photo_budget > 0 ) {
+						--self::$photo_budget;
+						$att = self::download_photo( $first, $hash, $ids['en'] );
+					}
+					$complete = $complete && $att > 0;
+				}
+			}
+			$floor = is_array( $room['floor'] ?? null ) ? $room['floor'] : null;
+			$out[] = array(
+				'number'    => max( 1, (int) ( $room['number'] ?? count( $out ) + 1 ) ),
+				'master'    => ! empty( $room['master'] ),
+				'floor'     => $floor ? $pair( $floor ) : null,
+				'beds'      => array_values(
+					array_map(
+						static fn( $b ) => array( 'type' => $text( $b['type'] ?? '' ), 'count' => max( 1, (int) ( $b['count'] ?? 1 ) ) ),
+						array_filter( is_array( $room['beds'] ?? null ) ? $room['beds'] : array(), 'is_array' )
+					)
+				),
+				'en_suite'  => is_array( $room['en_suite'] ?? null ) ? array( 'bathtub' => ! empty( $room['en_suite']['bathtub'] ), 'shower' => ! empty( $room['en_suite']['shower'] ) ) : null,
+				'amenities' => array_values(
+					array_map(
+						static fn( $a ) => array( 'code' => sanitize_key( (string) ( $a['code'] ?? '' ) ) ) + $pair( $a ),
+						array_filter( is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array(), 'is_array' )
+					)
+				),
+				'photo'     => $att,
+			);
+		}
+		foreach ( $ids as $post_id ) {
+			update_post_meta( $post_id, 'maros_sleeping', wp_slash( wp_json_encode( $out ) ) );
+		}
+		return $complete;
+	}
+
+	/**
+	 * Guarda las estancias con fotos de marOS (spec 041) en maros_tour, en los dos idiomas, con los
+	 * ids de Medios de sus fotos en orden. Casi siempre son fotos de la galería (mismo hash), así que
+	 * no se descargan otra vez.
+	 *
+	 * @return bool false si queda alguna foto por descargar en otra pasada.
+	 */
+	private static function sync_tour( array $ids, $rooms, bool $photos ): bool {
+		$pair     = static fn( $v ) => array( 'en' => sanitize_text_field( (string) ( $v['en'] ?? '' ) ), 'es' => sanitize_text_field( (string) ( $v['es'] ?? '' ) ) );
+		$number   = static fn( $v ) => is_numeric( $v ) && (int) $v > 0 ? (int) $v : null;
+		$out      = array();
+		$complete = true;
+		foreach ( is_array( $rooms ) && array_is_list( $rooms ) ? $rooms : array() as $room ) {
+			if ( ! is_array( $room ) ) {
+				continue;
+			}
+			$list = array_values( array_filter( is_array( $room['photos'] ?? null ) ? $room['photos'] : array(), static fn( $p ) => is_array( $p ) && ! empty( $p['url'] ) ) );
+			usort( $list, static fn( $a, $b ) => ( $a['order'] ?? 0 ) <=> ( $b['order'] ?? 0 ) );
+			$atts = array();
+			foreach ( $list as $p ) {
+				$hash = (string) ( $p['hash'] ?? md5( $p['url'] ) );
+				$att  = self::find_attachment_by_hash( $hash );
+				if ( ! $att && $photos ) {
+					if ( self::$photo_budget > 0 ) {
+						--self::$photo_budget;
+						$att = self::download_photo( $p, $hash, $ids['en'] );
+					}
+					$complete = $complete && $att > 0;
+				}
+				if ( $att && ! in_array( $att, $atts, true ) ) {
+					$atts[] = $att;
+				}
+			}
+			if ( ! $atts ) {
+				continue;
+			}
+			$floor = is_array( $room['floor'] ?? null ) ? $room['floor'] : null;
+			$out[] = array(
+				'name'        => sanitize_text_field( (string) ( $room['name'] ?? '' ) ),
+				'type'        => sanitize_key( (string) ( $room['type'] ?? '' ) ),
+				'outdoor'     => ! empty( $room['outdoor'] ),
+				'floor'       => $floor ? $pair( $floor ) : null,
+				'bedroom'     => $number( $room['bedroom'] ?? null ),
+				'en_suite_of' => $number( $room['en_suite_of'] ?? null ),
+				'amenities'   => array_values(
+					array_map(
+						static fn( $a ) => array( 'code' => sanitize_key( (string) ( $a['code'] ?? '' ) ) ) + $pair( $a ),
+						array_filter( is_array( $room['amenities'] ?? null ) ? $room['amenities'] : array(), 'is_array' )
+					)
+				),
+				'photos'      => $atts,
+			);
+		}
+		foreach ( $ids as $post_id ) {
+			update_post_meta( $post_id, 'maros_tour', wp_slash( wp_json_encode( $out ) ) );
 		}
 		return $complete;
 	}

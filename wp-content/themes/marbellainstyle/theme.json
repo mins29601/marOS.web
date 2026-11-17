@@ -86,6 +86,7 @@
 	"templateParts": [
 		{ "name": "header", "title": "Cabecera", "area": "header" },
 		{ "name": "header-overlay", "title": "Cabecera sobre foto (Inicio)", "area": "header" },
+		{ "name": "header-ficha", "title": "Cabecera sobre foto (ficha de propiedad)", "area": "header" },
 		{ "name": "footer", "title": "Pie", "area": "footer" }
 	],
 	"styles": {
