@@ -25,6 +25,7 @@ require_once __DIR__ . '/includes/class-maros-calendar.php';
 require_once __DIR__ . '/includes/class-maros-sync.php';
 require_once __DIR__ . '/includes/class-maros-scheduler.php';
 require_once __DIR__ . '/includes/class-maros-webhook.php';
+require_once __DIR__ . '/includes/icons.php';
 require_once __DIR__ . '/includes/bindings.php';
 require_once __DIR__ . '/includes/gallery.php';
 require_once __DIR__ . '/includes/ficha.php';
