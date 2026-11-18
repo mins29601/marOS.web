@@ -874,3 +874,15 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 	.mis-zona-ficha__ph { aspect-ratio: auto; height: 100%; min-height: 260px; }
 	.mis-zona-ficha__body { padding: 1.5rem 1.75rem; }
 }
+
+/* «From this house, by car»: distancias medidas con OpenStreetMap (maros_nearby), bajo la zona. */
+.mis-zona-cerca { margin-top: 1.25rem; box-sizing: border-box; }
+.mis-zona-cerca * { box-sizing: border-box; }
+.mis-zona-cerca > .mis-eyebrow { margin: 0 0 0.5rem; }
+.mis-zona-cerca__list { list-style: none; margin: 0; padding: 0; display: grid; column-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); border-top: 1px solid var(--mis-line); }
+.mis-zona-cerca__item { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--mis-line); min-width: 0; }
+.mis-zona-cerca__name { min-width: 0; }
+.mis-zona-cerca__val { white-space: nowrap; color: var(--wp--preset--color--secondary); font-size: var(--wp--preset--font-size--small); }
+.mis-zona-cerca__val strong { color: var(--wp--preset--color--main); font-weight: 600; }
+.mis-zona-cerca__src { margin: 0.75rem 0 0; font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--secondary); }
+.mis-zona-cerca__src a { color: inherit; }

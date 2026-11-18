@@ -84,6 +84,7 @@ function maros_property_fields(): array {
 		'maros_calendar_synced_at' => 'string',
 		'maros_withdrawn'  => 'integer', // 1 si ya no es publicable en marOS.
 		'maros_fees'       => 'string', // JSON: todas las tasas de Lodgify tal como las da marOS.
+		'maros_nearby'     => 'string', // JSON: distancias en coche medidas con OpenStreetMap (marOS «nearby»).
 		// Datos que piden los textos de las fichas (PC-15 §5, Julio 14/11). Vacío = marOS aún no lo da.
 		'maros_pool'                => 'string', // none | private | communal | both (expediente, features.pool).
 		'maros_pool_heating'        => 'string', // yes | no | ''.

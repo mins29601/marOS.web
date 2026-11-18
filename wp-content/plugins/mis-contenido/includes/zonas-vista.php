@@ -491,8 +491,9 @@ add_shortcode(
 	static function () {
 		$terms = get_the_terms( (int) get_the_ID(), 'zona' );
 		$term  = $terms && ! is_wp_error( $terms ) ? $terms[0] : null;
+		$near  = mis_zona_cerca( (int) get_the_ID() );
 		if ( ! $term instanceof WP_Term ) {
-			return '';
+			return $near;
 		}
 		$link    = get_term_link( $term );
 		$link    = is_wp_error( $link ) ? '' : $link;
@@ -518,6 +519,40 @@ add_shortcode(
 			. ( '' !== $resumen ? '<p class="mis-zona-ficha__text">' . esc_html( $resumen ) . '</p>' : '' )
 			. ( $dl ? '<dl class="mis-zona-ficha__dl">' . $dl . '</dl>' : '' )
 			. '<a class="mis-link-action" href="' . esc_url( $link ) . '">' . esc_html( mis_zona_t( 'Read the area guide', 'Leer la guía de la zona' ) ) . '</a>'
-			. '</div></div>';
+			. '</div></div>' . $near;
 	}
 );
+
+/**
+ * «From this house»: lo que tiene cerca la casa, en coche, con las distancias que marOS mide con
+ * OpenStreetMap (maros_nearby). Las de Google no se pueden publicar. Nada si aún no hay medidas.
+ */
+function mis_zona_cerca( int $post_id ): string {
+	$rows = json_decode( (string) get_post_meta( $post_id, 'maros_nearby', true ), true );
+	if ( ! is_array( $rows ) || ! $rows ) {
+		return '';
+	}
+	$li     = '';
+	$latest = '';
+	foreach ( $rows as $r ) {
+		if ( ! is_array( $r ) || empty( $r['name'] ) || ! isset( $r['distance_km'], $r['duration_minutes'] ) ) {
+			continue;
+		}
+		$latest = max( $latest, (string) ( $r['measured_on'] ?? '' ) );
+		$li    .= '<li class="mis-zona-cerca__item"><span class="mis-zona-cerca__name">' . esc_html( $r['name'] ) . '</span>'
+			. '<span class="mis-zona-cerca__val"><strong>' . esc_html( sprintf( mis_zona_t( '%d min', '%d min' ), (int) $r['duration_minutes'] ) ) . '</strong>'
+			. ' · ' . esc_html( number_format_i18n( (float) $r['distance_km'], 1 ) ) . ' km</span></li>';
+	}
+	if ( '' === $li ) {
+		return '';
+	}
+	$when = $latest ? date_i18n( 'F Y', strtotime( $latest . ' 12:00:00' ) ) : '';
+	return '<div class="mis-zona-cerca">'
+		. '<p class="mis-eyebrow">' . esc_html( mis_zona_t( 'From this house, by car', 'Desde esta casa, en coche' ) ) . '</p>'
+		. '<ul class="mis-zona-cerca__list">' . $li . '</ul>'
+		. '<p class="mis-zona-cerca__src">'
+		. esc_html( $when ? sprintf( mis_zona_t( 'Driving times without traffic, measured in %s.', 'Tiempos sin tráfico, medidos en %s.' ), $when ) : mis_zona_t( 'Driving times without traffic.', 'Tiempos sin tráfico.' ) )
+		. ' <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">© OpenStreetMap contributors</a>'
+		. ' · <a href="https://openrouteservice.org/" rel="noopener" target="_blank">openrouteservice</a></p>'
+		. '</div>';
+}
