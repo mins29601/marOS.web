@@ -19,10 +19,31 @@ class Maros_Sync {
 		'sierra-blanca'   => array( 'Sierra Blanca', 'Sierra Blanca' ),
 		'puerto-banus'    => array( 'Puerto Banús', 'Puerto Banús' ),
 		'golden-mile'     => array( 'Golden Mile', 'Milla de Oro' ),
+		'new-golden-mile' => array( 'New Golden Mile', 'New Golden Mile' ),
+		'los-flamingos'   => array( 'Los Flamingos', 'Los Flamingos' ),
+		'la-alqueria'     => array( 'La Alquería', 'La Alquería' ),
+		'guadalmina'      => array( 'Guadalmina', 'Guadalmina' ),
+		'rio-real'        => array( 'Río Real', 'Río Real' ),
+		'estepona'        => array( 'Estepona', 'Estepona' ),
+		'benahavis'       => array( 'Benahavís village', 'Benahavís pueblo' ),
+		'san-pedro'       => array( 'San Pedro de Alcántara', 'San Pedro de Alcántara' ),
+		'marbella-centro' => array( 'Marbella town centre', 'Marbella centro' ),
 	);
 
 	/** Zonas que marOS puede nombrar en español. */
-	private const ZONE_ALIASES = array( 'milla-de-oro' => 'golden-mile' );
+	private const ZONE_ALIASES = array(
+		'milla-de-oro'       => 'golden-mile',
+		'nueva-milla-de-oro'     => 'new-golden-mile',
+		'golden-mile-estepona'   => 'new-golden-mile',
+		'san-pedro-alcantara'    => 'san-pedro',
+		'san-pedro-de-alcantara' => 'san-pedro',
+		'marbella'               => 'marbella-centro',
+		'marbella-centre'        => 'marbella-centro',
+		'marbella-town-centre'   => 'marbella-centro',
+		'benahavis-pueblo'       => 'benahavis',
+		'flamingos'              => 'los-flamingos',
+		'alqueria'               => 'la-alqueria',
+	);
 
 	private const TYPES = array(
 		'villa'     => array( 'Villa', 'Villa' ),

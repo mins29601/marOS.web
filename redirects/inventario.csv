@@ -49,7 +49,7 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /marbella-area-guide/,post,Zonas,/areas/,301,fusionar,,propuesta,Pasa a ser la portada de Zonas
 /rio-real/,post,Zonas,/areas/rio-real/,301,mantener,,propuesta,Hoy es una entrada; pasa a página de Zona
 /sierra-blanca/,post,Zonas,/areas/sierra-blanca/,301,mantener,,propuesta,Hoy es una entrada; pasa a página de Zona
-/milla-de-oro/,post,Zonas,/areas/milla-de-oro/,301,mantener,,propuesta,Hoy es una entrada; pasa a página de Zona
+/milla-de-oro/,post,Zonas,/areas/golden-mile/,301,mantener,,propuesta,Hoy es una entrada; pasa a página de Zona
 /guadalmina/,post,Zonas,/areas/guadalmina/,301,mantener,,propuesta,Hoy es una entrada; pasa a página de Zona
 /nueva-andalucia/,post,Zonas,/areas/nueva-andalucia/,301,mantener,,propuesta,Hoy es una entrada; pasa a página de Zona
 /los-flamingos/,post,Zonas,/areas/los-flamingos/,301,mantener,,propuesta,Hoy es una entrada; pasa a página de Zona
@@ -274,15 +274,15 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services_cat/rio-real/,services_cat,Listados,/areas/rio-real/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/sierra-blanca/,services_cat,Listados,/areas/sierra-blanca/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/guadalmina/,services_cat,Listados,/areas/guadalmina/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/milla-de-oro/,services_cat,Listados,/areas/milla-de-oro/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/benahavis/,services_cat,Zonas,/areas/benahavis/,301,fusionar,,revisar,Zona sin guía hoy: crear la página de zona o 301 a /areas/
+/services_cat/milla-de-oro/,services_cat,Listados,/areas/golden-mile/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/benahavis/,services_cat,Zonas,/areas/benahavis/,301,fusionar,,propuesta,Zona nueva con guía propia en la web nueva
 /services_cat/soto-grande/,services_cat,Zonas,/areas/sotogrande/,301,fusionar,,revisar,Zona sin guía hoy: crear la página de zona o 301 a /areas/
 /services_cat/el-madronal/,services_cat,Zonas,/areas/el-madronal/,301,fusionar,,revisar,Zona sin guía hoy: crear la página de zona o 301 a /areas/
 /services_cat/nueva-andalucia/,services_cat,Listados,/areas/nueva-andalucia/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/guia-zona-2/,services_cat,Listados,/areas/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/modern-villas/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/milla-de-oro-2/,services_cat,Listados,/areas/milla-de-oro/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/milla-de-oro-2/,services_cat,Listados,/areas/golden-mile/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/6-bedroom/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/new-golden-mile/,services_cat,Zonas,/areas/new-golden-mile/,301,fusionar,,revisar,Zona sin guía hoy: crear la página de zona o 301 a /areas/
+/services_cat/new-golden-mile/,services_cat,Zonas,/areas/new-golden-mile/,301,fusionar,,propuesta,Zona nueva con guía propia en la web nueva
 /services_cat/apartments/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /page_category/area/,page_category,Zonas,/areas/,301,fusionar,,propuesta,
