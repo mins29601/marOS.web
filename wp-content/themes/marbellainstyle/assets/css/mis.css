@@ -500,6 +500,39 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 	.mis-search__submit { grid-column: auto; width: auto; padding-inline: 1.75rem; }
 }
 
+/* Buscador completo de Alojamiento (marOS Connector, [maros_buscador]): la misma caja, con
+   «Filtros» plegable debajo (zona, dormitorios y chips de equipamiento) */
+.mis-search--full { max-width: none; margin: 0 0 1.5rem; border: 1px solid var(--mis-line); }
+.mis-search .mis-chip { font-family: inherit; font-size: inherit; font-weight: 400; letter-spacing: normal; text-transform: none; color: var(--wp--preset--color--main); }
+.mis-search__more { grid-column: 1 / -1; border-top: 1px solid var(--mis-line); }
+.mis-search__more > summary { cursor: pointer; list-style: none; padding: 0.75rem 1rem; font-family: var(--mis-label-font); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.mis-search__more > summary::-webkit-details-marker { display: none; }
+.mis-search__more > summary::after { content: "+"; float: right; font-size: 1rem; line-height: 1; font-weight: 300; }
+.mis-search__more[open] > summary::after { content: "−"; }
+.mis-search__count { display: inline-block; min-width: 1.4em; padding: 0 0.35em; margin-left: 0.25rem; background: var(--wp--preset--color--main); color: #fff; border-radius: 1em; text-align: center; letter-spacing: 0; }
+.mis-search__filters { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--mis-line); }
+.mis-search__filters .mis-search__field { border-bottom: 1px solid var(--mis-line); }
+.mis-search__chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0.875rem 1rem; border: 0; }
+.mis-search__chips > legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.mis-chip { position: relative; cursor: pointer; }
+.mis-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.mis-chip span { display: inline-block; padding: 0.4rem 0.875rem; border: 1px solid var(--mis-line-dark); border-radius: 999px; font-size: 0.875rem; line-height: 1.3; }
+.mis-chip input:checked + span { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); color: #fff; }
+.mis-chip input:focus-visible + span { outline: 2px solid var(--wp--preset--color--main); outline-offset: 2px; }
+.mis-search__error { grid-column: 1 / -1; margin: 0; padding: 0.625rem 1rem; font-size: 0.8125rem; color: #9b1c1c; background: #fdf2f2; }
+.mis-search__error[hidden] { display: none; }
+.mis-results-summary { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; margin: 0 0 1.5rem; font-size: 0.9375rem; color: var(--wp--preset--color--secondary); }
+.mis-results-summary a { color: inherit; }
+.mis-card__price { margin-top: 0.25rem; font-weight: 600; }
+.mis-card__price:empty { display: none; }
+.mis-no-results { max-width: 40rem; padding: 2rem 0; }
+.mis-no-results__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+@media (min-width: 768px) {
+	.mis-search__filters { grid-template-columns: 1fr 1fr 2fr; }
+	.mis-search__filters .mis-search__field { border-bottom: 0; }
+	.mis-search__chips { grid-column: auto; align-items: center; }
+}
+
 .wp-block-details { border-top: 1px solid var(--mis-line); padding: 0; }
 .wp-block-details:last-of-type { border-bottom: 1px solid var(--mis-line); }
 .wp-block-details summary { cursor: pointer; font-weight: 500; padding: 1rem 2rem 1rem 0; list-style: none; position: relative; }
