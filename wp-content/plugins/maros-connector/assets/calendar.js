@@ -108,7 +108,7 @@
 			var html = '<div class="mis-cal__bar"><button type="button" data-month="-1" aria-label="' + T.prev + '"' + ( s.month <= 0 ? ' disabled' : '' ) + '>‹</button>'
 				+ '<strong>' + monthName.format( first ) + '</strong>'
 				+ '<button type="button" data-month="1" aria-label="' + T.next + '"' + ( s.month >= last ? ' disabled' : '' ) + '>›</button></div>'
-				+ '<p class="mis-cal__hint">' + hint + '</p><div class="mis-cal__grid">';
+				+ '<p class="mis-cal__hint' + ( hint.indexOf( ' · ' ) > -1 ? ' has-min' : '' ) + '">' + hint + '</p><div class="mis-cal__grid">';
 			T.weekdays.forEach( function ( w ) {
 				html += '<span class="mis-cal__wd" aria-hidden="true">' + w + '</span>';
 			} );
