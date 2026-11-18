@@ -105,6 +105,8 @@ add_shortcode(
 			$guests .= sprintf( '<option value="%1$d"%2$s>%1$d</option>', $n, 2 === $n ? ' selected' : '' );
 		}
 		$today = wp_date( 'Y-m-d' );
+		// Fechas que abren el calendario al pulsar la celda (script de marOS Connector).
+		wp_enqueue_script( 'maros-search' );
 		return sprintf(
 			'<form class="mis-search" role="search" method="get" action="%1$s">'
 			. '<div class="mis-search__field"><label for="mis-checkin">%2$s</label><input id="mis-checkin" type="date" name="checkin" min="%8$s"></div>'

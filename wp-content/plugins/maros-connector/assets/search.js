@@ -1,8 +1,30 @@
 /**
- * Buscador de Alojamiento ([maros_buscador]): la salida va después de la llegada, las fechas van
+ * Buscadores ([maros_buscador] y [mis_search] de la portada): las fechas abren el calendario al
+ * pulsar en cualquier parte de su celda. En Alojamiento, además: la salida va después de la llegada, las fechas van
  * juntas (las dos o ninguna) y los campos vacíos no se envían, para que la URL quede limpia.
  */
 ( function () {
+	// Toda la celda de una fecha abre el calendario del navegador, no solo el icono.
+	document.querySelectorAll( 'form.mis-search input[type=date]' ).forEach( function ( input ) {
+		var open = function () {
+			if ( typeof input.showPicker === 'function' ) {
+				try {
+					input.showPicker();
+				} catch ( e ) {}
+			}
+		};
+		input.addEventListener( 'click', open );
+		var field = input.closest( '.mis-search__field' );
+		if ( field ) {
+			field.addEventListener( 'click', function ( event ) {
+				if ( event.target !== input ) {
+					input.focus();
+					open();
+				}
+			} );
+		}
+	} );
+
 	document.querySelectorAll( 'form.mis-search--full' ).forEach( function ( form ) {
 		var checkin = form.querySelector( '[name=checkin]' );
 		var checkout = form.querySelector( '[name=checkout]' );
