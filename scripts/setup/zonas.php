@@ -22,9 +22,10 @@
  * (contenidos/ideas/PC-17-revision-zonas.md y docs/guia-editorial.md): sin distancias ni
  * tiempos que no se hayan medido y sin locales que no recomiende Marbella in Style. Once zonas
  * parten del texto de la web actual (marOS.content, contenidos/ideas/zonas-web-actual/ y
- * PC-17-textos-web-actual.md); New Golden Mile se escribió desde cero y Benahavís pueblo sigue
- * provisional. La versión definitiva sale del flujo de marOS.content y se pega en WordPress o
- * aquí con «forzar».
+ * PC-17-textos-web-actual.md). New Golden Mile y Benahavís pueblo, que no tenían guía, se
+ * escribieron desde cero con lo que dicen de ellas otras guías y entradas de la web actual.
+ * La versión definitiva sale del flujo de marOS.content y se pega en WordPress o aquí con
+ * «forzar».
  *
  * @package MarbellaInStyle
  */
@@ -50,6 +51,12 @@ $mis_zonas = array(
 <h2>Beaches</h2>
 <p>Long, open beaches such as El Saladillo and Guadalmansa, with beach clubs and chiringuitos along the shore.</p>
 
+<h2>Eating out</h2>
+<p>By the sea, our guides have recommended Sublim Beach, at Laguna on Playa del Padrón, and Azure Beach, at METT Marbella-Estepona, for a day of pool, sunbeds and lunch, as well as Salduna Beach and Tikitano, in Guadalmansa. Inland, around Cancelada, El Paraíso and Atalaya, there are El Carnicero 1993, for premium beef; La Alcaría de Ramos, for traditional food; Yiu &amp; Gabo; and The Garden by La Rosa, for Argentine grills. Benahavís village, known for its restaurants, is a short drive up the hill.</p>
+
+<h2>Services</h2>
+<p>Supermarkets such as Mercadona, Lidl, Supeco, Carrefour Market and Aldi, pharmacies and banks are along the coast road, a short drive from most villas.</p>
+
 <h2>Golf and sport</h2>
 <p>Atalaya Golf &amp; Country Club and El Paraíso Golf Club are within the area, and the courses of Benahavís and Nueva Andalucía are a short drive away.</p>
 
@@ -67,6 +74,12 @@ HTML,
 
 <h2>Playas</h2>
 <p>Playas largas y abiertas como El Saladillo y Guadalmansa, con beach clubs y chiringuitos a lo largo de la orilla.</p>
+
+<h2>Comer y salir</h2>
+<p>Junto al mar, nuestras guías han recomendado Sublim Beach, en Laguna, en la playa del Padrón, y Azure Beach, en el METT Marbella-Estepona, para un día de piscina, hamacas y comida, además de Salduna Beach y Tikitano, en Guadalmansa. Hacia el interior, en Cancelada, El Paraíso y Atalaya, están El Carnicero 1993, de carnes de calidad; La Alcaría de Ramos, de comida tradicional; Yiu &amp; Gabo; y The Garden by La Rosa, de carnes a la brasa y recetas argentinas. El pueblo de Benahavís, conocido por sus restaurantes, queda a un rato en coche subiendo la sierra.</p>
+
+<h2>Servicios</h2>
+<p>Supermercados como Mercadona, Lidl, Supeco, Carrefour Market y Aldi, farmacias y bancos están en la carretera de la costa, a poca distancia en coche de casi todas las villas.</p>
 
 <h2>Golf y deporte</h2>
 <p>Atalaya Golf &amp; Country Club y El Paraíso Golf Club están en la propia zona, y los campos de Benahavís y Nueva Andalucía quedan a un rato en coche.</p>
@@ -598,13 +611,13 @@ HTML,
 <p>In the heart of Marbella is the historic Old Town, around Plaza de los Naranjos, with the Alameda park and the seafront promenade a short walk away. It offers a glimpse of the town's multicultural past, with influences from North Africa and southern Europe. It suits guests who want to walk to restaurants, tapas bars, shops and the beach.</p>
 
 <h2>What it is like</h2>
-<p>Historic buildings with flower-filled balconies, small squares with fountains and terraces shaded by large umbrellas. Places to see include El Hospitalillo chapel, the remains of the Arab castle and its walls, and squares such as Plaza de los Naranjos and Plaza Puente Ronda. There are open-air concerts, markets, museums and parks: children will enjoy the Vigil de Quiñones park and the Arroyo de la Represa park, which has a bonsai museum.</p>
+<p>Narrow whitewashed streets, historic buildings with flower-filled balconies, small squares with fountains and terraces shaded by large umbrellas. At its heart, Plaza de los Naranjos is surrounded by the Town Hall, the Chapel of Santiago and the Church of the Encarnación, and the old quarters of Barrio Alto and Barrio Nuevo spread out around it. Places to see include El Hospitalillo chapel, the remains of the Arab castle and its walls, and squares such as Plaza de los Naranjos and Plaza Puente Ronda. There are open-air concerts, markets, museums and parks: children will enjoy the Vigil de Quiñones park and the Arroyo de la Represa park, which has a bonsai museum.</p>
 
 <h2>Beaches</h2>
 <p>The town beaches and the seafront promenade are a short walk from the Old Town.</p>
 
 <h2>Eating out</h2>
-<p>The Old Town is a great place to find and enjoy tapas, with terraces on its squares and side streets.</p>
+<p>The Old Town is a great place for tapas, with terraces on its squares and side streets. Our tapas guide picks La Taberna del Pintxo and Bodegas La Venencia, on Avenida Miguel Cano; La Tienda Casa Curro, for wine and cheese; La Niña del Pisto; and El Patio de Mariscal, for a seated meal. We also run a private tapas tour of the Old Town.</p>
 
 <h2>Golf and sport</h2>
 <p>Río Real, Santa Clara and the courses of Nueva Andalucía are a short drive away.</p>
@@ -622,13 +635,13 @@ HTML,
 <p>En el corazón de Marbella está el casco antiguo, en torno a la plaza de los Naranjos, con la Alameda y el paseo marítimo a un paseo. Muestra el pasado multicultural de la ciudad, con influencias del norte de África y del sur de Europa. Encaja contigo si quieres ir andando a restaurantes, bares de tapas, tiendas y playa.</p>
 
 <h2>Cómo es</h2>
-<p>Edificios históricos con balcones llenos de flores, plazuelas con fuentes y terrazas a la sombra de grandes sombrillas. Merece la pena ver la capilla de El Hospitalillo, los restos del castillo árabe y sus murallas, y plazas como la de los Naranjos y la del Puente de Ronda. Hay conciertos al aire libre, mercadillos, museos y parques: los niños disfrutarán del parque Vigil de Quiñones y del parque Arroyo de la Represa, que tiene un museo del bonsái.</p>
+<p>Calles estrechas y encaladas, edificios históricos con balcones llenos de flores, plazuelas con fuentes y terrazas a la sombra de grandes sombrillas. En el centro, la plaza de los Naranjos está rodeada por el Ayuntamiento, la ermita de Santiago y la iglesia de la Encarnación, y a su alrededor se extienden los barrios históricos del Barrio Alto y el Barrio Nuevo. Merece la pena ver la capilla de El Hospitalillo, los restos del castillo árabe y sus murallas, y plazas como la de los Naranjos y la del Puente de Ronda. Hay conciertos al aire libre, mercadillos, museos y parques: los niños disfrutarán del parque Vigil de Quiñones y del parque Arroyo de la Represa, que tiene un museo del bonsái.</p>
 
 <h2>Playas</h2>
 <p>Las playas del centro y el paseo marítimo están a un paseo del casco antiguo.</p>
 
 <h2>Comer y salir</h2>
-<p>El casco antiguo es un gran sitio para ir de tapas, con terrazas en sus plazas y callejuelas.</p>
+<p>El casco antiguo es un gran sitio para ir de tapas, con terrazas en sus plazas y callejuelas. Nuestra guía de tapas elige La Taberna del Pintxo y Bodegas La Venencia, en la avenida Miguel Cano; La Tienda Casa Curro, para vino y quesos; La Niña del Pisto; y El Patio de Mariscal, para comer sentado. También organizamos un tour privado de tapas por el casco antiguo.</p>
 
 <h2>Golf y deporte</h2>
 <p>Río Real, Santa Clara y los campos de Nueva Andalucía quedan a un rato en coche.</p>
@@ -643,11 +656,64 @@ HTML,
 <p>Alojarte en el centro te deja la cultura, los restaurantes y la vida nocturna a la puerta; si prefieres una villa con jardín y piscina, puedes quedarte en otra zona y bajar al centro cuando te apetezca.</p>
 HTML,
 	),
-	// Sin guía en la web actual: texto provisional (Julio, 18-11-2026) hasta que PC-17 la escriba.
+	// Sin guía propia en la web actual: escrita con lo que dicen de Benahavís las guías de
+	// Los Flamingos, La Alquería y Guadalmina. Falta la lista de restaurantes que recomendamos.
 	'benahavis' => array(
 		'nombre' => array( 'Benahavís village', 'Benahavís pueblo' ),
-		'en'     => '<p>A white village in the mountains above San Pedro de Alcántara, known for its restaurants. It suits guests who want countryside and views, a short drive from the coast.</p>',
-		'es'     => '<p>Un pueblo blanco en la sierra, sobre San Pedro de Alcántara, conocido por sus restaurantes. Encaja con quien busca campo y vistas, a poca distancia en coche de la costa.</p>',
+		'en'     => <<<'HTML'
+<p>Benahavís is a white village in the mountains above San Pedro de Alcántara, reached by a road that winds up alongside the Guadalmina river. It is known for its food and its charming Andalusian streets. It suits guests who want countryside, views and good restaurants, a short drive from the coast.</p>
+
+<h2>What it is like</h2>
+<p>A village of whitewashed houses and Andalusian streets, surrounded by hills, golf courses and residential communities such as La Alquería and Los Flamingos, which belong to the same municipality. Our own office is in Benahavís, at the Monte Halcones shopping centre.</p>
+
+<h2>Nature</h2>
+<p>The Acequia del Guadalmina path is an easy circular walk alongside the old irrigation channel, with mountain views. For something more adventurous, you can go down the Guadalmina river: take water shoes and a waterproof backpack, find out about the route before you go, and expect to swim some stretches. It is best in summer. There are also hiking and mountain-bike routes in the hills around the village.</p>
+
+<h2>Beaches</h2>
+<p>There is no beach in Benahavís. The nearest are those of San Pedro de Alcántara, Guadalmina and the New Golden Mile, a drive down to the coast.</p>
+
+<h2>Eating out</h2>
+<p>Food is what Benahavís is known for. Its restaurants serve the dishes of a mountain village, such as rabbit, suckling pig, veal and venison, but also fish and shellfish, such as zarzuela and sole. Ask our team which places we recommend for your evening.</p>
+
+<h2>Golf and sport</h2>
+<p>The municipality is home to the three courses of Villa Padierna, the Marbella Club Golf Resort and El Higueral, a nine-hole course on the gentle slopes of the hills. Atalaya Golf &amp; Country Club and the Real Club de Golf Guadalmina are close by.</p>
+
+<h2>Services</h2>
+<p>The village has basic services and cash machines. For larger supermarkets, pharmacies and banks, head down to San Pedro de Alcántara or the coast road.</p>
+
+<h2>Getting around</h2>
+<p>You will need a car or a driver. The road up the Guadalmina river is a beautiful drive, and a driver means nobody has to drive back after dinner; our team can arrange one.</p>
+
+<h2>Good to know</h2>
+<p>Choose Benahavís for quiet, views and food; for the beach and the shops you will drive down to the coast.</p>
+HTML,
+		'es'     => <<<'HTML'
+<p>Benahavís es un pueblo blanco en la sierra, sobre San Pedro de Alcántara, al que se sube por una carretera que sigue el río Guadalmina. Es conocido por su gastronomía y sus calles andaluzas con encanto. Encaja contigo si buscas campo, vistas y buenos restaurantes, a poca distancia en coche de la costa.</p>
+
+<h2>Cómo es</h2>
+<p>Un pueblo de casas encaladas y calles andaluzas, rodeado de colinas, campos de golf y urbanizaciones como La Alquería y Los Flamingos, que pertenecen al mismo municipio. Nuestra oficina está en Benahavís, en el centro comercial Monte Halcones.</p>
+
+<h2>Naturaleza</h2>
+<p>El sendero de la Acequia del Guadalmina es un recorrido circular sencillo junto a la antigua acequia, con vistas a la sierra. Si buscas algo más aventurero, puedes hacer el descenso del río Guadalmina: lleva zapatillas de agua y una mochila estanca, infórmate de la ruta antes de ir y cuenta con nadar algunos tramos. Lo mejor es hacerlo en verano. En las colinas de alrededor también hay rutas de senderismo y de bici de montaña.</p>
+
+<h2>Playas</h2>
+<p>En Benahavís no hay playa. Las más cercanas son las de San Pedro de Alcántara, Guadalmina y la New Golden Mile, bajando en coche a la costa.</p>
+
+<h2>Comer y salir</h2>
+<p>Benahavís es conocido por su cocina. Sus restaurantes sirven los platos de un pueblo de sierra, como conejo, cochinillo, ternera o venado, pero también pescado y marisco, como la zarzuela o el lenguado. Pregunta a nuestro equipo qué sitios te recomendamos para tu cena.</p>
+
+<h2>Golf y deporte</h2>
+<p>En el municipio están los tres campos de Villa Padierna, el Marbella Club Golf Resort y El Higueral, un campo de nueve hoyos en las suaves laderas de las colinas. Atalaya Golf &amp; Country Club y el Real Club de Golf Guadalmina quedan cerca.</p>
+
+<h2>Servicios</h2>
+<p>El pueblo tiene servicios básicos y cajeros. Para supermercados grandes, farmacias y bancos, baja a San Pedro de Alcántara o a la carretera de la costa.</p>
+
+<h2>Cómo moverse</h2>
+<p>Necesitarás coche o chófer. La carretera que sube junto al río Guadalmina es un paseo precioso, y con chófer nadie tiene que conducir de vuelta después de cenar; nuestro equipo te lo organiza.</p>
+
+<h2>Lo que hay que saber</h2>
+<p>Elige Benahavís por tranquilidad, vistas y buena mesa; a la playa y a las tiendas bajarás en coche a la costa.</p>
+HTML,
 	),
 );
 
