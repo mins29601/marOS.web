@@ -302,12 +302,13 @@ final class Maros_Booking {
 		// Pie: en el móvil, barra fija con el total, las fechas y «Reservar».
 		$html .= '<div class="mis-resv__foot"><div class="mis-resv__sum" data-sum><span class="mis-resv__sum-none">' . esc_html( $es ? 'Sin fechas todavía' : 'No dates yet' ) . '</span></div>'
 			. '<a class="wp-element-button mis-resv__cta" href="' . esc_url( $config['stay'] ) . '" data-book-cta>' . esc_html( $es ? 'Ver disponibilidad' : 'Check availability' ) . '</a></div>';
+		$html .= '<div class="mis-resv__after" data-after></div>';
 		$html .= '<div class="mis-resv__help">' . $talk . '</div>';
 		$html .= '<script type="application/json" class="mis-resv__data">' . wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ) . '</script>';
 		$html .= '</div>';
 
 		$file = dirname( __DIR__ ) . '/assets/booking.js';
-		wp_enqueue_script( 'maros-booking', plugins_url( 'assets/booking.js', __DIR__ ), array(), (string) filemtime( $file ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_enqueue_script( 'maros-booking', plugins_url( 'assets/booking.js', __DIR__ ), array( 'maros-calendar' ), (string) filemtime( $file ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		return $html;
 	}
 

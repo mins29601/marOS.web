@@ -7,8 +7,6 @@
  * barra fija.
  */
 ( function () {
-	var DAY = 86400000;
-
 	function iso( t ) {
 		return new Date( t ).toISOString().slice( 0, 10 );
 	}
@@ -23,16 +21,15 @@
 		var data = JSON.parse( root.querySelector( '.mis-resv__data' ).textContent );
 		var t = data.i18n;
 		var cal = data.calendar || { start: iso( Date.now() ), days: '', min: [] };
-		var start = parse( cal.start );
 		var box = root.closest( '.mis-booking-box' ) || root;
 		var panel = root.querySelector( '.mis-resv__cal' );
 		var quoteEl = root.querySelector( '.mis-resv__quote' );
 		var cta = root.querySelector( '[data-book-cta]' );
 		var sum = root.querySelector( '[data-sum]' );
+		var after = root.querySelector( '[data-after]' );
 		var sticky = document.querySelector( '.mis-sticky-cta' );
 		var stickyText = sticky && sticky.querySelector( 'p' );
 		var stickyDefault = stickyText ? stickyText.innerHTML : '';
-		var long = new Intl.DateTimeFormat( t.locale, { day: 'numeric', month: 'short', timeZone: 'UTC' } );
 		var dayMonth = new Intl.DateTimeFormat( t.locale, { day: 'numeric', month: 'short', timeZone: 'UTC' } );
 		function range( a, b ) {
 			var x = new Date( parse( a ) );
@@ -42,7 +39,6 @@
 			}
 			return dayMonth.format( x ) + ' – ' + dayMonth.format( y );
 		}
-		var monthName = new Intl.DateTimeFormat( t.locale, { month: 'long', year: 'numeric', timeZone: 'UTC' } );
 
 		var state = {
 			arrival: '',
@@ -50,175 +46,49 @@
 			adults: data.adults || 2,
 			children: 0,
 			infants: 0,
-			picking: 'arrival',
-			month: 0,
 		};
 		var request = 0;
 		var timer = null;
 
-		/* ---------------------------------------------------------- Disponibilidad local */
+		/* ---------------------------------------------------------- Calendario (assets/calendar.js) */
 
-		function index( d ) {
-			return Math.round( ( parse( d ) - start ) / DAY );
-		}
-		function bits( d ) {
-			if ( ! cal.days ) {
-				return index( d ) >= 0 ? 7 : 0; // Sin copia local: decide el presupuesto.
-			}
-			var i = index( d );
-			return i < 0 || i >= cal.days.length ? 0 : +cal.days.charAt( i );
-		}
-		function minStay( d ) {
-			var i = index( d );
-			var m = 0;
-			( cal.min || [] ).forEach( function ( r ) {
-				if ( r[ 0 ] <= i ) {
-					m = r[ 1 ];
-				}
-			} );
-			return m;
-		}
-		function canArrive( d ) {
-			return ( bits( d ) & 3 ) === 3;
-		}
-		/** 0 se puede salir; 1 no; 2 se puede salir pero no llega a la estancia mínima. */
-		function departureState( d ) {
-			if ( ! state.arrival || d <= state.arrival || ! ( bits( d ) & 4 ) ) {
-				return 1;
-			}
-			for ( var x = parse( state.arrival ); x < parse( d ); x += DAY ) {
-				if ( ! ( bits( iso( x ) ) & 1 ) ) {
-					return 1;
-				}
-			}
-			var nights = Math.round( ( parse( d ) - parse( state.arrival ) ) / DAY );
-			return nights > 90 ? 1 : nights < minStay( state.arrival ) ? 2 : 0;
-		}
-
-		/* ---------------------------------------------------------- Calendario */
-
-		function renderCalendar() {
-			var first = new Date( start );
-			first.setUTCDate( 1 );
-			first.setUTCMonth( first.getUTCMonth() + state.month );
-			var y = first.getUTCFullYear();
-			var m = first.getUTCMonth();
-			var lead = ( first.getUTCDay() + 6 ) % 7;
-			var days = new Date( Date.UTC( y, m + 1, 0 ) ).getUTCDate();
-			var maxMonth = cal.days ? Math.ceil( cal.days.length / 30 ) : 18;
-			var hint = state.picking === 'arrival' ? t.pickIn : t.pickOut;
-			if ( state.picking === 'departure' && minStay( state.arrival ) > 1 ) {
-				hint += ' · ' + t.minStay.replace( '%d', minStay( state.arrival ) );
-			}
-
-			var html = '<div class="mis-cal__bar"><button type="button" data-month="-1" aria-label="' + t.prev + '"' + ( state.month <= 0 ? ' disabled' : '' ) + '>‹</button>'
-				+ '<strong>' + monthName.format( first ) + '</strong>'
-				+ '<button type="button" data-month="1" aria-label="' + t.next + '"' + ( state.month >= maxMonth ? ' disabled' : '' ) + '>›</button></div>'
-				+ '<p class="mis-cal__hint">' + hint + '</p><div class="mis-cal__grid" role="grid">';
-			t.weekdays.forEach( function ( w ) {
-				html += '<span class="mis-cal__wd" aria-hidden="true">' + w + '</span>';
-			} );
-			for ( var i = 0; i < lead; i++ ) {
-				html += '<span></span>';
-			}
-			for ( var d = 1; d <= days; d++ ) {
-				var date = iso( Date.UTC( y, m, d, 12 ) );
-				var cls = [];
-				var ok;
-				var title = '';
-				if ( state.picking === 'arrival' ) {
-					ok = canArrive( date );
+		var picker = window.MisCalendar.range( {
+			panel: panel,
+			start: cal.start,
+			days: cal.days,
+			min: cal.min,
+			onChange: function ( a, d, done ) {
+				state.arrival = a;
+				state.departure = d;
+				showDates();
+				markPick( done ? '' : a ? 'departure' : 'arrival' );
+				if ( done ) {
+					closeCalendar();
+					fetchQuote();
 				} else {
-					var ds = departureState( date );
-					ok = ds === 0 || ( ds !== 0 && canArrive( date ) && date < state.arrival );
-					if ( ds === 2 ) {
-						title = t.minStay.replace( '%d', minStay( state.arrival ) );
-						cls.push( 'is-short' );
-					}
+					showQuote( null );
 				}
-				if ( index( date ) >= 0 && ! ( bits( date ) & 1 ) ) {
-					cls.push( 'is-busy' );
-				}
-				if ( date === state.arrival ) {
-					cls.push( 'is-start' );
-				}
-				if ( date === state.departure ) {
-					cls.push( 'is-end' );
-				}
-				if ( state.arrival && state.departure && date > state.arrival && date < state.departure ) {
-					cls.push( 'is-range' );
-				}
-				html += '<button type="button" data-date="' + date + '" class="' + cls.join( ' ' ) + '"' + ( ok ? '' : ' disabled' ) + ( title ? ' title="' + title + '"' : '' ) + ' aria-label="' + long.format( parse( date ) ) + '">' + d + '</button>';
-			}
-			html += '</div>';
-			if ( state.arrival ) {
-				html += '<button type="button" class="mis-cal__clear" data-clear>' + t.clear + '</button>';
-			}
-			panel.innerHTML = html;
-		}
-
-		function openCalendar( which ) {
-			state.picking = which === 'departure' && state.arrival ? 'departure' : 'arrival';
-			var ref = state.picking === 'departure' ? state.arrival : state.arrival || '';
-			state.month = ref ? monthOffset( ref ) : 0;
-			panel.hidden = false;
-			renderCalendar();
+			},
+		} );
+		function markPick( which ) {
 			root.querySelectorAll( '[data-pick]' ).forEach( function ( b ) {
-				b.classList.toggle( 'is-active', b.getAttribute( 'data-pick' ) === state.picking );
+				b.classList.toggle( 'is-active', b.getAttribute( 'data-pick' ) === which );
 			} );
+		}
+		function openCalendar( which ) {
+			picker.set( state.arrival, state.departure );
+			picker.open( which );
+			markPick( picker.picking() );
 		}
 		function closeCalendar() {
-			panel.hidden = true;
-			root.querySelectorAll( '[data-pick]' ).forEach( function ( b ) {
-				b.classList.remove( 'is-active' );
-			} );
+			picker.close();
+			markPick( '' );
 		}
-		function monthOffset( d ) {
-			var a = new Date( start );
-			var b = new Date( parse( d ) );
-			return Math.max( 0, ( b.getUTCFullYear() - a.getUTCFullYear() ) * 12 + b.getUTCMonth() - a.getUTCMonth() );
-		}
-
-		panel.addEventListener( 'click', function ( e ) {
-			var btn = e.target.closest( 'button' );
-			if ( ! btn || btn.disabled ) {
-				return;
-			}
-			if ( btn.hasAttribute( 'data-month' ) ) {
-				state.month += +btn.getAttribute( 'data-month' );
-				renderCalendar();
-				return;
-			}
-			if ( btn.hasAttribute( 'data-clear' ) ) {
-				state.arrival = state.departure = '';
-				showDates();
-				showQuote( null );
-				openCalendar( 'arrival' );
-				return;
-			}
-			var date = btn.getAttribute( 'data-date' );
-			if ( state.picking === 'departure' && departureState( date ) === 0 ) {
-				state.departure = date;
-				showDates();
-				closeCalendar();
-				fetchQuote();
-				return;
-			}
-			state.arrival = date;
-			state.departure = '';
-			showDates();
-			showQuote( null );
-			state.picking = 'departure';
-			renderCalendar();
-			root.querySelectorAll( '[data-pick]' ).forEach( function ( b ) {
-				b.classList.toggle( 'is-active', b.getAttribute( 'data-pick' ) === 'departure' );
-			} );
-		} );
 
 		root.querySelectorAll( '[data-pick]' ).forEach( function ( b ) {
 			b.addEventListener( 'click', function () {
 				var which = b.getAttribute( 'data-pick' );
-				if ( ! panel.hidden && state.picking === which ) {
+				if ( ! panel.hidden && picker.picking() === which ) {
 					closeCalendar();
 				} else {
 					openCalendar( which );
@@ -227,8 +97,8 @@
 		} );
 
 		function showDates() {
-			root.querySelector( '[data-show=arrival]' ).textContent = state.arrival ? long.format( parse( state.arrival ) ) : t.add;
-			root.querySelector( '[data-show=departure]' ).textContent = state.departure ? long.format( parse( state.departure ) ) : t.add;
+			root.querySelector( '[data-show=arrival]' ).textContent = state.arrival ? window.MisCalendar.format( state.arrival ) : t.add;
+			root.querySelector( '[data-show=departure]' ).textContent = state.departure ? window.MisCalendar.format( state.departure ) : t.add;
 		}
 
 		/* ---------------------------------------------------------- Huéspedes */
@@ -306,6 +176,7 @@
 
 		function showQuote( q ) {
 			root.classList.remove( 'is-loading' );
+			after.innerHTML = '';
 			if ( ! q || q.error || ! q.available ) {
 				sum.innerHTML = '<span class="mis-resv__sum-none">' + t.none + '</span>';
 			}
@@ -342,11 +213,9 @@
 				html += '<div class="mis-resv__line' + ( l.included ? ' is-included' : '' ) + '"><dt>' + esc( l.label ) + '</dt><dd>' + esc( l.amount ) + '</dd></div>';
 			} );
 			html += '<div class="mis-resv__line mis-resv__total"><dt>' + t.total + ' <small>' + esc( q.nights_label ) + '</small></dt><dd>' + esc( q.total ) + '</dd></div></dl>';
-			if ( q.deposit ) {
-				html += '<p class="mis-resv__note">' + esc( q.deposit ) + '</p>';
-			}
-			html += '<p class="mis-resv__note">' + esc( q.note ) + '</p>';
 			quoteEl.innerHTML = html;
+			// Fianza y aviso, debajo del botón «Book» (Julio, 18-11).
+			after.innerHTML = ( q.deposit ? '<p class="mis-resv__note">' + esc( q.deposit ) + '</p>' : '' ) + '<p class="mis-resv__note">' + esc( q.note ) + '</p>';
 			cta.textContent = t.book;
 			cta.href = q.book_url;
 			cta.setAttribute( 'data-ready', '' );

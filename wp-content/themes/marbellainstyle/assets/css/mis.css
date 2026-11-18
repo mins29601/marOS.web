@@ -454,8 +454,9 @@ html.mis-tour-open { overflow: hidden; }
 .mis-resv__date + .mis-resv__date { border-left: 1px solid var(--mis-line); }
 .mis-resv__date span { display: block; margin-top: 2px; }
 .mis-resv__date.is-active { box-shadow: inset 0 -2px 0 var(--wp--preset--color--main); }
-.mis-resv__cal { border: 1px solid var(--mis-line); padding: 0.75rem; }
-.mis-resv__cal[hidden] { display: none; }
+/* Calendario único de la web (maros-connector/assets/calendar.js): reserva y buscadores */
+.mis-cal { border: 1px solid var(--mis-line); padding: 0.75rem; background: var(--wp--preset--color--primary-alt-accent); color: var(--wp--preset--color--main); font-family: var(--wp--preset--font-family--primary, inherit); font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none; text-align: left; }
+.mis-cal[hidden] { display: none; }
 .mis-cal__bar { display: flex; align-items: center; justify-content: space-between; }
 .mis-cal__bar strong { font-weight: 500; text-transform: capitalize; }
 .mis-cal__bar button { width: var(--mis-touch); height: var(--mis-touch); border: 0; background: transparent; font-size: 1.25rem; cursor: pointer; color: var(--wp--preset--color--main); }
@@ -493,8 +494,15 @@ html.mis-tour-open { overflow: hidden; }
 .mis-resv__other { margin-top: 0.5rem; padding: 0; border: 0; background: none; font: inherit; font-size: var(--wp--preset--font-size--small); text-decoration: underline; cursor: pointer; color: var(--wp--preset--color--main); }
 .mis-resv.is-loading .mis-resv__cta { opacity: 0.6; pointer-events: none; }
 .mis-resv__cta.wp-element-button { display: block; width: 100%; box-sizing: border-box; text-align: center; margin-top: 0.5rem; }
-/* Móvil: la caja se abre a pantalla completa desde la barra fija (flujo C, T28). */
+.mis-resv__after:empty { display: none; }
+.mis-resv__after .mis-resv__note:first-child { margin-top: 0; }
+/* Móvil: la caja se abre a pantalla completa desde la barra fija (flujo C, T28). Mientras no se
+   abre, la columna de la derecha no se pinta (la barra fija ya lleva «Availability») y el
+   contenido ocupa todo el ancho (Julio, 18-11). */
 @media (max-width: 1023px) {
+	.wp-block-column:has(> .mis-booking-box:not(.is-sheet)) { display: none; }
+	.wp-block-columns:has(> .wp-block-column > .mis-booking-box) > .wp-block-column { flex-basis: 100% !important; }
+	.mis-booking-box.is-sheet .mis-resv__after { order: 8; }
 	.mis-booking-box.is-sheet { position: fixed; inset: 0; z-index: 200; overflow-y: auto; overscroll-behavior: contain; border: 0; padding: 1rem var(--wp--preset--spacing--medium) calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 0.75rem; }
 	.mis-booking-box.is-sheet > * { margin-block: 0; }
 	.mis-booking-box.is-sheet .mis-resv { display: contents; }
@@ -639,6 +647,14 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-chip input:focus-visible + span { outline: 2px solid var(--wp--preset--color--main); outline-offset: 2px; }
 .mis-search__error { grid-column: 1 / -1; margin: 0; padding: 0.625rem 1rem; font-size: 0.8125rem; color: #9b1c1c; background: #fdf2f2; }
 .mis-search__error[hidden] { display: none; }
+/* Fechas del buscador con el calendario de la web */
+.mis-search { position: relative; }
+.mis-search__date { width: 100%; min-height: 32px; padding: 0.25rem 0 0; border: 0; background: transparent; font: inherit; font-size: 1rem; text-align: left; color: var(--wp--preset--color--main); cursor: pointer; }
+.mis-search__date.is-empty { color: var(--wp--preset--color--secondary); }
+.mis-search__date:focus { outline: none; }
+.mis-search__field.is-active { box-shadow: inset 0 -2px 0 var(--wp--preset--color--main); }
+.mis-search__field:has(.mis-search__date) { cursor: pointer; }
+.mis-search__cal { position: absolute; top: calc(100% + 4px); left: 0; z-index: 60; width: min(360px, 100%); box-sizing: border-box; }
 .mis-results-summary { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; margin: 0 0 1.5rem; font-size: 0.9375rem; color: var(--wp--preset--color--secondary); }
 .mis-results-summary a { color: inherit; }
 .mis-card__price { margin-top: 0.25rem; font-weight: 600; }
