@@ -15,6 +15,8 @@
  *   GET /v1/catalog/properties/{id}          → ficha (ver mock/maros-api/v1/properties/*.json)
  *   GET /v1/catalog/properties/{id}/calendar → { currency, etag, days: [ { room_type_id, date, available, closed,
  *                                                check_in, check_out, min_stay, rates: [ { min_stay, max_stay, price } ] } ] }
+ *   GET /v1/catalog/properties/{id}/quote?arrival&departure&adults&children&infants[&room_type_id]
+ *                                            → presupuesto de la estancia (marOS spec 044, contracts/quote-api.md)
  * Solo salen las propiedades marcadas «publicable en la web» en marOS.
  *
  * @package MarbellaInStyle
@@ -158,6 +160,31 @@ class Maros_Client {
 		return self::safe_id( $id ) ? self::get( '/catalog/properties/' . $id . '/calendar', $etag ) : new WP_Error( 'maros_id', 'Id de marOS no válido.' );
 	}
 
+	/**
+	 * Presupuesto de una estancia (marOS spec 044): se calcula con la copia del catálogo de marOS,
+	 * sin guardar nada. Devuelve el cuerpo tal cual: { available, exact, nights, lines, total,
+	 * deposit, … } o { available: false, reasons }.
+	 *
+	 * @param array{adults:int,children:int,infants:int} $guests
+	 * @return array|WP_Error
+	 */
+	public static function get_quote( string $id, string $arrival, string $departure, array $guests, string $room_type_id = '' ) {
+		if ( ! self::safe_id( $id ) ) {
+			return new WP_Error( 'maros_id', 'Id de marOS no válido.' );
+		}
+		$query = array(
+			'arrival'   => $arrival,
+			'departure' => $departure,
+			'adults'    => (int) $guests['adults'],
+			'children'  => (int) ( $guests['children'] ?? 0 ),
+			'infants'   => (int) ( $guests['infants'] ?? 0 ),
+		);
+		if ( '' !== $room_type_id && preg_match( '/^\d{1,20}$/', $room_type_id ) ) {
+			$query['room_type_id'] = $room_type_id;
+		}
+		return self::get( '/catalog/properties/' . $id . '/quote?' . http_build_query( $query ) );
+	}
+
 	public static function safe_id( string $id ): string {
 		return preg_match( '/^[A-Za-z0-9_\-]{1,80}$/', $id ) ? $id : '';
 	}
@@ -168,6 +195,13 @@ class Maros_Client {
 		}
 		if ( '/catalog/properties' === $path ) {
 			return mis_maros_mock_read( 'v1/properties.json' ) ?? new WP_Error( 'maros_mock', 'Sin properties.json' );
+		}
+		if ( preg_match( '#^/catalog/properties/([a-z0-9\-]+)/quote\?(.*)$#', $path, $m ) ) {
+			if ( ! mis_maros_mock_read( 'v1/properties/' . $m[1] . '.json' ) ) {
+				return new WP_Error( 'maros_not_found', 'Propiedad no encontrada: ' . $m[1], array( 'status' => 404 ) );
+			}
+			parse_str( $m[2], $query );
+			return mis_maros_mock_quote( $m[1], $query );
 		}
 		if ( preg_match( '#^/catalog/properties/([a-z0-9\-]+)/calendar$#', $path, $m ) ) {
 			if ( ! mis_maros_mock_read( 'v1/properties/' . $m[1] . '.json' ) ) {

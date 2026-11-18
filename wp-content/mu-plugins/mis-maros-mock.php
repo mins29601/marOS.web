@@ -9,6 +9,7 @@
  *   GET  /v1/catalog/properties                 (propiedades publicables en la web)
  *   GET  /v1/catalog/properties/{id}            (ficha)
  *   GET  /v1/catalog/properties/{id}/calendar   (calendario y tarifas por noche, lo que sincroniza WP)
+ *   GET  /v1/catalog/properties/{id}/quote     (presupuesto de la estancia, spec 044 de marOS)
  *   GET  /v1/availability?property_id&from&to&guests
  *   POST /v1/quotes
  *   POST /v1/bookings
@@ -116,6 +117,22 @@ add_action(
 						return mis_maros_mock_error( 'not_found', 'Propiedad no encontrada', 404 );
 					}
 					return rest_ensure_response( mis_maros_mock_calendar( $id ) );
+				},
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/v1/catalog/properties/(?P<id>[a-z0-9\-]+)/quote',
+			array(
+				'methods'             => 'GET',
+				'permission_callback' => $auth,
+				'callback'            => static function ( WP_REST_Request $r ) {
+					$id = mis_maros_mock_safe_id( $r['id'] );
+					if ( ! mis_maros_mock_read( 'v1/properties/' . $id . '.json' ) ) {
+						return mis_maros_mock_error( 'not_found', 'Propiedad no encontrada', 404 );
+					}
+					return rest_ensure_response( mis_maros_mock_quote( $id, $r->get_query_params() ) );
 				},
 			)
 		);
@@ -288,5 +305,102 @@ function mis_maros_mock_calendar( string $id ): array {
 		'to'          => $days[ count( $days ) - 1 ]['date'],
 		'etag'        => '"mock-cal-' . $id . '-1"',
 		'days'        => $days,
+	);
+}
+
+/**
+ * Presupuesto como el de marOS (spec 044, contracts/quote-api.md), con el calendario del mock:
+ * tramo de la estancia por noche, gastos de la ficha, IVA del 10 % incluido y depósito aparte.
+ * Motivos: not_available, check_in_not_allowed, check_out_not_allowed, min_stay, max_stay,
+ * too_many_guests, advance_notice y no_rate.
+ */
+function mis_maros_mock_quote( string $id, array $q ): array {
+	$property  = mis_maros_mock_read( 'v1/properties/' . $id . '.json' ) ?? array();
+	$cal       = mis_maros_mock_calendar( $id );
+	$arrival   = (string) ( $q['arrival'] ?? '' );
+	$departure = (string) ( $q['departure'] ?? '' );
+	$adults    = max( 1, (int) ( $q['adults'] ?? 1 ) );
+	$children  = max( 0, (int) ( $q['children'] ?? 0 ) );
+	$infants   = max( 0, (int) ( $q['infants'] ?? 0 ) );
+	$nights    = (int) round( ( strtotime( $departure . ' 00:00:00 UTC' ) - strtotime( $arrival . ' 00:00:00 UTC' ) ) / DAY_IN_SECONDS );
+	$by        = array();
+	foreach ( $cal['days'] as $d ) {
+		$by[ $d['date'] ] = $d;
+	}
+	$room    = (string) ( $property['room_types'][0]['id'] ?? '' );
+	$base    = array( 'property_id' => $id, 'room_type_id' => $room, 'arrival' => $arrival, 'departure' => $departure, 'nights' => $nights );
+	$reasons = array();
+	$cap     = (int) ( $property['max_guests'] ?? 0 );
+	if ( $cap && $adults + $children > $cap ) {
+		$reasons[] = array( 'code' => 'too_many_guests', 'required' => $cap );
+	}
+	if ( $arrival < gmdate( 'Y-m-d' ) ) {
+		$reasons[] = array( 'code' => 'advance_notice', 'required' => 0 );
+	}
+	$busy  = array();
+	$price = 0.0;
+	$none  = array();
+	for ( $i = 0; $i < $nights; $i++ ) {
+		$date = gmdate( 'Y-m-d', strtotime( $arrival . ' 12:00:00 UTC' ) + $i * DAY_IN_SECONDS );
+		$day  = $by[ $date ] ?? null;
+		if ( ! $day || ! $day['available'] || $day['closed'] ) {
+			$busy[] = $date;
+			continue;
+		}
+		$band = null;
+		foreach ( $day['rates'] as $rate ) {
+			if ( $rate['min_stay'] <= $nights && ( null === $rate['max_stay'] || $nights <= $rate['max_stay'] ) ) {
+				$band = $rate;
+				break;
+			}
+		}
+		if ( $band ) {
+			$price += (float) $band['price'];
+		} else {
+			$none[] = $date;
+		}
+	}
+	if ( $busy ) {
+		$reasons[] = array( 'code' => 'not_available', 'dates' => $busy );
+	}
+	$first = $by[ $arrival ] ?? null;
+	if ( $first && empty( $first['check_in'] ) ) {
+		$reasons[] = array( 'code' => 'check_in_not_allowed', 'dates' => array( $arrival ) );
+	}
+	if ( isset( $by[ $departure ] ) && empty( $by[ $departure ]['check_out'] ) ) {
+		$reasons[] = array( 'code' => 'check_out_not_allowed', 'dates' => array( $departure ) );
+	}
+	$min = $first ? (int) $first['min_stay'] : 0;
+	if ( $min && $nights < $min ) {
+		$reasons[] = array( 'code' => 'min_stay', 'required' => $min );
+	} elseif ( $none ) {
+		$reasons[] = array( 'code' => 'no_rate', 'dates' => $none );
+	}
+	if ( $reasons ) {
+		return $base + array( 'available' => false, 'reasons' => $reasons, 'calendar_etag' => $cal['etag'] );
+	}
+
+	$lines = array( array( 'kind' => 'accommodation', 'label' => 'Alojamiento (' . $nights . ' noches)', 'amount' => $price ) );
+	$total = $price;
+	foreach ( (array) ( $property['fees'] ?? array() ) as $fee ) {
+		if ( 'Fixed' !== ( $fee['rate_type'] ?? '' ) ) {
+			continue;
+		}
+		$units = array( 'PerStay' => 1, 'PerNight' => $nights, 'PerPerson' => $adults + $children )[ $fee['frequency'] ?? 'PerStay' ] ?? 1;
+		$amount   = (float) $fee['amount'] * $units;
+		$lines[]  = array( 'kind' => 'fee', 'label' => (string) ( $fee['name'] ?? 'Gasto' ), 'amount' => $amount );
+		$total   += $amount;
+	}
+	$lines[] = array( 'kind' => 'tax', 'label' => 'IVA 10 %', 'amount' => round( $price * 10 / 110, 2 ), 'included' => true );
+	return $base + array(
+		'available'     => true,
+		'exact'         => true,
+		'guests'        => array( 'adults' => $adults, 'children' => $children, 'infants' => $infants ),
+		'currency'      => $cal['currency'],
+		'lines'         => $lines,
+		'total'         => round( $total, 2 ),
+		'deposit'       => isset( $property['deposit'] ) ? (float) $property['deposit'] : null,
+		'calendar_etag' => $cal['etag'],
+		'mock'          => true,
 	);
 }

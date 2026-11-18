@@ -71,13 +71,9 @@
 <!-- /wp:column -->
 <!-- wp:column {"width":"36%"} -->
 <div class="wp-block-column" style="flex-basis:36%">
-<!-- wp:group {"className":"mis-booking-box","layout":{"type":"default"}} -->
-<div class="wp-block-group mis-booking-box">
-<!-- wp:paragraph {"className":"mis-eyebrow"} --><p class="mis-eyebrow">[mis_t en="Direct booking · best price" es="Reserva directa · mejor precio"]</p><!-- /wp:paragraph -->
-<!-- wp:shortcode -->[maros_price_line fallback="0"]<!-- /wp:shortcode -->
-<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"maros/property","args":{"key":"facts"}}}}} --><p></p><!-- /wp:paragraph -->
-<!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button {"width":100,"metadata":{"bindings":{"url":{"source":"maros/property","args":{"key":"booking_url"}}}}} --><div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button">[mis_t en="Check availability" es="Ver disponibilidad"]</a></div><!-- /wp:button --></div><!-- /wp:buttons -->
-<!-- wp:paragraph {"className":"mis-muted","fontSize":"small"} --><p class="mis-muted has-small-font-size">[mis_t en="Prefer to talk it through?" es="¿Prefieres hablarlo?"] [mis_link to="contact" en="Talk to our team" es="Habla con el equipo"]</p><!-- /wp:paragraph -->
+<!-- wp:group {"anchor":"book","className":"mis-booking-box","layout":{"type":"default"}} -->
+<div id="book" class="wp-block-group mis-booking-box">
+<!-- wp:shortcode -->[maros_booking]<!-- /wp:shortcode -->
 </div>
 <!-- /wp:group -->
 </div>
@@ -87,6 +83,6 @@
 </main>
 <!-- /wp:group -->
 <!-- wp:html -->
-<div class="mis-sticky-cta">[maros_price_line]<a class="wp-element-button" href="#overview" onclick="document.querySelector('.mis-booking-box').scrollIntoView({behavior:'smooth'});return false;">[mis_t en="Availability" es="Disponibilidad"]</a></div>
+<div class="mis-sticky-cta">[maros_price_line]<a class="wp-element-button" href="#book" data-book-open>[mis_t en="Availability" es="Disponibilidad"]</a></div>
 <!-- /wp:html -->
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
