@@ -283,6 +283,6 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services_cat/modern-villas/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/milla-de-oro-2/,services_cat,Listados,/areas/milla-de-oro/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/6-bedroom/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/new-golden-mile/,services_cat,Zonas,/areas/new-golden-mile/,301,fusionar,,revisar,Zona sin guía hoy: crear la página de zona o 301 a /areas/
+/services_cat/new-golden-mile/,services_cat,Zonas,/areas/new-golden-mile/,301,fusionar,,propuesta,Zona nueva con guía propia en la web nueva
 /services_cat/apartments/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /page_category/area/,page_category,Zonas,/areas/,301,fusionar,,propuesta,

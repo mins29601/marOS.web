@@ -79,7 +79,9 @@ ZONAS = {  # entradas actuales que son guías de zona -> slug de zona
 }
 # Zonas que solo existen como categoría de servicios; no tienen guía hoy.
 ZONAS_SIN_GUIA = {"benahavis": "benahavis", "soto-grande": "sotogrande",
-                  "el-madronal": "el-madronal", "new-golden-mile": "new-golden-mile"}
+                  "el-madronal": "el-madronal"}
+# Zonas nuevas, con guía escrita para la web nueva (scripts/setup/zonas.php).
+ZONAS_NUEVAS = {"new-golden-mile": "new-golden-mile"}
 
 # Entradas del blog que pasan a «Recursos para propietarios» (se quedan en el Journal,
 # con la categoría Propietarios, y se listan en /owners/resources/).
@@ -256,6 +258,9 @@ def clasificar(tipo, url):
 
     if tipo == "services_cat":
         slug = partes[1]
+        if slug in ZONAS_NUEVAS:
+            return fila(url, tipo, "Zonas", AREAS + ZONAS_NUEVAS[slug] + "/", "fusionar",
+                        nota="Zona nueva con guía propia en la web nueva")
         if slug in ZONAS_SIN_GUIA:
             return fila(url, tipo, "Zonas", AREAS + ZONAS_SIN_GUIA[slug] + "/", "fusionar", "revisar",
                         "Zona sin guía hoy: crear la página de zona o 301 a /areas/")

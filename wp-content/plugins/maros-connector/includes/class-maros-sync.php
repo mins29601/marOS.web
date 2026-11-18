@@ -18,10 +18,14 @@ class Maros_Sync {
 		'sierra-blanca'   => array( 'Sierra Blanca', 'Sierra Blanca' ),
 		'puerto-banus'    => array( 'Puerto Banús', 'Puerto Banús' ),
 		'golden-mile'     => array( 'Golden Mile', 'Milla de Oro' ),
+		'new-golden-mile' => array( 'New Golden Mile', 'New Golden Mile' ),
 	);
 
 	/** Zonas que marOS puede nombrar en español. */
-	private const ZONE_ALIASES = array( 'milla-de-oro' => 'golden-mile' );
+	private const ZONE_ALIASES = array(
+		'milla-de-oro'       => 'golden-mile',
+		'nueva-milla-de-oro' => 'new-golden-mile',
+	);
 
 	private const TYPES = array(
 		'villa'     => array( 'Villa', 'Villa' ),
