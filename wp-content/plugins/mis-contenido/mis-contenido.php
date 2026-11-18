@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       MIS Contenido
- * Description:       Tipos de contenido de Marbella in Style que se editan en WordPress: tours, servicios y zonas (spec 004).
- * Version:           0.1.1
+ * Description:       Tipos de contenido de Marbella in Style que se editan en WordPress: tours, servicios, zonas y lugares recomendados (spec 004).
+ * Version:           0.2.0
  * Requires at least: 6.9
  * Requires PHP:      8.3
  * Text Domain:       mis-contenido
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const MIS_CONTENIDO_VERSION = '0.1.1';
+const MIS_CONTENIDO_VERSION = '0.2.0';
 
 /**
  * Campos de los tours (spec 004, data-model). Se registran como metadatos con esquema para que
@@ -247,3 +247,6 @@ require_once __DIR__ . '/includes/contacto.php';
 // Campos de las zonas (foto, frase corta, perfiles y «De un vistazo»).
 require_once __DIR__ . '/includes/zonas.php';
 require_once __DIR__ . '/includes/zonas-vista.php';
+// Lugares recomendados por zona y sus herramientas MCP (Rebecca, desde ChatGPT).
+require_once __DIR__ . '/includes/lugares.php';
+require_once __DIR__ . '/includes/lugares-mcp.php';
