@@ -9,7 +9,7 @@
  *
  * Por cada zona:
  * - crea el término de la taxonomía `zona` en inglés y español, enlazados con Polylang
- *   (/areas/<slug>/ y /es/zonas/<slug>-es/), con el mismo slug que usa marOS Connector;
+ *   (/areas/<slug>/ y /es/areas/<slug>-es/), con el mismo slug que usa marOS Connector;
  * - escribe la guía (la descripción del término, que la plantilla taxonomy-zona muestra
  *   bajo el título) solo si la zona aún no tiene texto: lo que el equipo edite en
  *   WordPress no se pisa. Para reescribirla: `wp eval-file zonas.php forzar`;
@@ -34,8 +34,10 @@ if ( ! function_exists( 'pll_set_term_language' ) || ! class_exists( 'Maros_Sync
 	WP_CLI::error( 'Faltan Polylang o marOS Connector.' );
 }
 
-// WP-CLI corre sin usuario: sin esto, kses quita los <h2> y <ul> de la guía.
+// WP-CLI corre sin usuario: sin esto, kses quita los <h2> y <ul> de la guía. La descripción de
+// un término tiene su propio filtro, que kses_remove_filters() no quita.
 kses_remove_filters();
+remove_filter( 'pre_term_description', 'wp_filter_kses' );
 
 $mis_forzar = in_array( 'forzar', $args ?? array(), true );
 
