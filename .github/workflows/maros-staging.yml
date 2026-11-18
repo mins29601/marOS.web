@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       accion:
-        description: "status = ver la conexión · sync = importar la propiedad del id"
+        description: "status = ver la conexión · sync = importar la propiedad del id · seo = rellenar Yoast en todas las fichas (wp maros seo)"
         type: choice
-        options: [status, sync]
+        options: [status, sync, seo]
         default: status
       id:
         description: "Id de marOS de la propiedad (p. ej. villa-flamingos). Solo con sync"
