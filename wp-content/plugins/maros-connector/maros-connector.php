@@ -8,9 +8,10 @@
  * Text Domain:       maros-connector
  * License:           GPL-2.0-or-later
  *
- * Pendiente (spec 003): proxy de presupuesto y reserva, solicitudes Open, bloques de búsqueda y
+ * Pendiente (spec 003): proxy de presupuesto y reserva, solicitudes Open, bloque de
  * calendario, el resto de Abilities del MCP, purga de APO. Ya hay: maros/list-properties y
- * maros/publish-review (opiniones de Airbnb que envía un agente).
+ * maros/publish-review (opiniones de Airbnb que envía un agente) y la búsqueda en Alojamiento
+ * (includes/search.php).
  *
  * @package MarbellaInStyle
  */
@@ -27,8 +28,10 @@ require_once __DIR__ . '/includes/class-maros-scheduler.php';
 require_once __DIR__ . '/includes/class-maros-webhook.php';
 require_once __DIR__ . '/includes/icons.php';
 require_once __DIR__ . '/includes/bindings.php';
+require_once __DIR__ . '/includes/search.php';
 require_once __DIR__ . '/includes/gallery.php';
 require_once __DIR__ . '/includes/ficha.php';
+require_once __DIR__ . '/includes/excerpt.php';
 require_once __DIR__ . '/includes/seo.php';
 require_once __DIR__ . '/includes/class-maros-reviews.php';
 
