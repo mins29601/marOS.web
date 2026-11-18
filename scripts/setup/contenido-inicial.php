@@ -101,17 +101,16 @@ function mis_page_hero( string $eyebrow, string $title, string $text ): string {
 // ---------------------------------------------------------------- taxonomías
 
 WP_CLI::log( 'Zonas y tipos…' );
+// Solo se crean los términos: la guía de cada zona (su descripción) la escribe zonas.php.
 $zones = array(
-	'nueva-andalucia' => array( 'Nueva Andalucía', 'Nueva Andalucía', 'The golf valley: quiet villas a few minutes from Puerto Banús.', 'El valle del golf: villas tranquilas a pocos minutos de Puerto Banús.' ),
-	'sierra-blanca'   => array( 'Sierra Blanca', 'Sierra Blanca', 'Gated hillside living with sea views above the Golden Mile.', 'Urbanización cerrada en la ladera, con vistas al mar sobre la Milla de Oro.' ),
-	'puerto-banus'    => array( 'Puerto Banús', 'Puerto Banús', 'The marina, the beach clubs and everything within walking distance.', 'El puerto, los beach clubs y todo a un paseo.' ),
-	'golden-mile'     => array( 'Golden Mile', 'Milla de Oro', 'Between Marbella old town and Puerto Banús, by the sea.', 'Entre el casco antiguo y Puerto Banús, junto al mar.' ),
+	'nueva-andalucia' => array( 'Nueva Andalucía', 'Nueva Andalucía' ),
+	'sierra-blanca'   => array( 'Sierra Blanca', 'Sierra Blanca' ),
+	'puerto-banus'    => array( 'Puerto Banús', 'Puerto Banús' ),
+	'golden-mile'     => array( 'Golden Mile', 'Milla de Oro' ),
 );
 foreach ( $zones as $slug => $z ) {
-	$en = Maros_Sync::term( 'zona', $slug, array( $z[0], $z[1] ), 'en' );
-	$es = Maros_Sync::term( 'zona', $slug, array( $z[0], $z[1] ), 'es' );
-	wp_update_term( $en, 'zona', array( 'description' => $z[2] ) );
-	wp_update_term( $es, 'zona', array( 'description' => $z[3] ) );
+	Maros_Sync::term( 'zona', $slug, array( $z[0], $z[1] ), 'en' );
+	Maros_Sync::term( 'zona', $slug, array( $z[0], $z[1] ), 'es' );
 }
 
 $service_types = array(
