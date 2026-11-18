@@ -10,8 +10,11 @@
  *   (principio III); se valida todo, se guarda en caché por la huella del calendario (FR-009 de la
  *   spec 044) y se limita por visitante.
  *
- * El botón sigue llevando al motor de Lodgify (`stay.`) con las fechas y los huéspedes (D15) hasta
- * que marOS tenga la ruta para crear reservas desde la web (spec 026 de marOS).
+ * - POST /wp-json/maros/v1/booking-request: solicitud de reserva (spec 026 de marOS, fase C,
+ *   pantallas C4 y C5). Con fechas y precio, «Reservar» abre el formulario en la misma pantalla; la
+ *   web vuelve a pedir el presupuesto, comprueba los datos y envía la solicitud a marOS con el total
+ *   que vio el huésped. Sin la solicitud activa (filtro «maros_booking_requests», apagado en
+ *   producción hasta que se apruebe), el botón sigue llevando al motor de Lodgify (`stay.`, D15).
  *
  * @package MarbellaInStyle
  */
@@ -28,6 +31,23 @@ final class Maros_Booking {
 
 	/** Caché de un presupuesto mientras no cambie el calendario de la casa. */
 	private const TTL = 15 * MINUTE_IN_SECONDS;
+
+	/** Solicitudes de reserva por visitante cada diez minutos (marOS admite 10 por minuto en total). */
+	private const REQUESTS_PER_WINDOW = 5;
+
+	/** Versión de las condiciones y la privacidad que acepta el huésped (marOS la guarda, FR-001). */
+	private const TERMS_VERSION = 'web-2026-11';
+
+	/** Franjas de llegada de marOS (ARRIVAL_SLOTS). */
+	private const ARRIVAL_SLOTS = array( 'unknown', 'before_16', '16_20', 'after_20' );
+
+	/**
+	 * ¿«Reservar» abre la solicitud de reserva? Sí fuera de producción; en producción, cuando se
+	 * apruebe (add_filter( 'maros_booking_requests', '__return_true' )).
+	 */
+	public static function requests_enabled(): bool {
+		return (bool) apply_filters( 'maros_booking_requests', 'production' !== Maros_Client::env() );
+	}
 
 	public static function init(): void {
 		add_action( 'rest_api_init', array( __CLASS__, 'routes' ) );
@@ -51,6 +71,16 @@ final class Maros_Booking {
 					'children'  => array( 'type' => 'integer', 'minimum' => 0, 'maximum' => 40, 'default' => 0 ),
 					'infants'   => array( 'type' => 'integer', 'minimum' => 0, 'maximum' => 20, 'default' => 0 ),
 				),
+			)
+		);
+		register_rest_route(
+			'maros/v1',
+			'/booking-request',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'rest_request' ),
+				// Público, como el presupuesto: límite por visitante en rest_request() y en marOS.
+				'permission_callback' => '__return_true',
 			)
 		);
 	}
@@ -78,7 +108,7 @@ final class Maros_Booking {
 			'infants'  => (int) $r['infants'],
 		);
 
-		if ( ! self::within_limit() ) {
+		if ( ! self::within_limit( 'q', self::PER_MINUTE, MINUTE_IN_SECONDS ) ) {
 			return self::reply( array( 'error' => 'rate_limited', 'message' => self::t( $es, 'Too many requests. Please wait a minute and try again.', 'Demasiadas consultas. Espera un minuto y vuelve a intentarlo.' ) ), 429 );
 		}
 
@@ -96,6 +126,181 @@ final class Maros_Booking {
 		return self::reply( self::present( $quote, $post_id, $es, $guests ) );
 	}
 
+	/* ------------------------------------------------------------------ Solicitud de reserva (C4, C5) */
+
+	/**
+	 * POST /wp-json/maros/v1/booking-request. Errores para el navegador: «fields» (campo → texto,
+	 * junto a cada campo), «price_changed» con el presupuesto nuevo, «not_available» con los motivos,
+	 * o «message» para el resto. Nunca se guarda nada del huésped en WordPress.
+	 */
+	public static function rest_request( WP_REST_Request $r ): WP_REST_Response {
+		$in      = (array) $r->get_json_params();
+		$post_id = isset( $in['post'] ) ? absint( $in['post'] ) : 0;
+		$post    = $post_id ? get_post( $post_id ) : null;
+		$maros   = $post && 'mis_property' === $post->post_type && 'publish' === $post->post_status ? (string) get_post_meta( $post_id, 'maros_id', true ) : '';
+		$es      = $post_id ? maros_is_es( $post_id ) : false;
+		if ( '' === $maros || get_post_meta( $post_id, 'maros_withdrawn', true ) || ! self::requests_enabled() ) {
+			return self::reply( array( 'error' => 'not_found', 'message' => self::t( $es, 'This home can’t be booked online. Talk to our team and we’ll help.', 'Esta casa no se puede reservar en la web. Habla con el equipo y te ayudamos.' ) ), 404 );
+		}
+
+		$str       = static fn( string $k, int $max ) => isset( $in[ $k ] ) && is_scalar( $in[ $k ] ) ? mb_substr( trim( (string) $in[ $k ] ), 0, $max ) : '';
+		$int       = static fn( string $k ) => isset( $in[ $k ] ) && is_numeric( $in[ $k ] ) ? (int) $in[ $k ] : 0;
+		$arrival   = $str( 'arrival', 10 );
+		$departure = $str( 'departure', 10 );
+		$nights    = self::nights( $arrival, $departure );
+		if ( $nights < 1 || $nights > self::MAX_NIGHTS || $arrival < wp_date( 'Y-m-d' ) ) {
+			return self::reply( array( 'error' => 'bad_dates', 'message' => self::t( $es, 'Choose a check-in date from today and a check-out date after it.', 'Elige una llegada a partir de hoy y una salida posterior.' ) ), 400 );
+		}
+		$max    = (int) get_post_meta( $post_id, 'maros_max_guests', true ) ?: 50;
+		$guests = array(
+			'adults'   => max( 1, min( 50, $int( 'adults' ) ) ),
+			'children' => max( 0, min( 50, $int( 'children' ) ) ),
+			'infants'  => max( 0, min( 20, $int( 'infants' ) ) ),
+		);
+
+		$fields = array();
+		$msg    = self::request_strings( $es )['fields'];
+		$guest  = array(
+			'first_name' => $str( 'first_name', 80 ),
+			'last_name'  => $str( 'last_name', 80 ),
+			'email'      => strtolower( $str( 'email', 200 ) ),
+			'phone'      => preg_replace( '/\s+/', ' ', $str( 'phone', 30 ) ),
+			'country'    => strtoupper( $str( 'country', 2 ) ),
+			'language'   => $es ? 'es' : 'en',
+		);
+		if ( '' === $guest['first_name'] ) {
+			$fields['first_name'] = $msg['first_name'];
+		}
+		if ( '' === $guest['last_name'] ) {
+			$fields['last_name'] = $msg['last_name'];
+		}
+		if ( ! preg_match( '/^[^\s@]{1,100}@[^\s@]{1,100}\.[^\s@]{2,40}$/', $guest['email'] ) ) {
+			$fields['email'] = $msg['email'];
+		}
+		if ( ! preg_match( '/^\+\d[\d\s().-]{5,24}$/', $guest['phone'] ) ) {
+			$fields['phone'] = $msg['phone'];
+		}
+		if ( ! preg_match( '/^[A-Z]{2}$/', $guest['country'] ) ) {
+			$fields['country'] = $msg['country'];
+		}
+		$slot = $str( 'arrival_time', 12 ) ?: 'unknown';
+		if ( ! in_array( $slot, self::ARRIVAL_SLOTS, true ) ) {
+			$slot = 'unknown';
+		}
+		$message = $str( 'message', 1000 );
+		if ( empty( $in['terms'] ) ) {
+			$fields['terms'] = $msg['terms'];
+		}
+		$request_id = strtolower( $str( 'request_id', 36 ) );
+		if ( ! preg_match( '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/', $request_id ) ) {
+			return self::reply( array( 'error' => 'bad_request', 'message' => self::t( $es, 'Reload the page and try again.', 'Vuelve a cargar la página e inténtalo de nuevo.' ) ), 400 );
+		}
+		if ( $guests['adults'] + $guests['children'] > $max ) {
+			return self::reply( array( 'error' => 'bad_guests', 'message' => sprintf( $es ? 'La casa admite hasta %d huéspedes (sin contar bebés).' : 'The home sleeps up to %d guests (infants not included).', $max ) ), 400 );
+		}
+		if ( $fields ) {
+			return self::reply( array( 'error' => 'invalid', 'fields' => $fields, 'message' => self::request_strings( $es )['check'] ), 400 );
+		}
+
+		if ( ! self::within_limit( 'r', self::REQUESTS_PER_WINDOW, 10 * MINUTE_IN_SECONDS ) ) {
+			return self::reply( array( 'error' => 'rate_limited', 'message' => self::t( $es, 'Too many requests from this connection. Wait a few minutes or talk to our team.', 'Demasiadas solicitudes desde esta conexión. Espera unos minutos o habla con el equipo.' ) ), 429 );
+		}
+
+		// El presupuesto de ahora, el mismo que ve la ficha: si ha cambiado, el huésped lo confirma.
+		$quote = self::quote( $post_id, $maros, $arrival, $departure, $guests );
+		if ( is_wp_error( $quote ) ) {
+			Maros_Log::add( 'error', 'Presupuesto de ' . $maros . ' para una solicitud: ' . $quote->get_error_message() );
+			return self::reply( array( 'error' => 'unavailable', 'message' => self::request_failed( $es ) ), 502 );
+		}
+		$seen = isset( $in['total'] ) && is_numeric( $in['total'] ) ? round( (float) $in['total'], 2 ) : -1.0;
+		if ( empty( $quote['available'] ) ) {
+			return self::reply( array( 'error' => 'not_available', 'message' => self::t( $es, 'These dates are no longer available.', 'Estas fechas ya no están disponibles.' ), 'quote' => self::present( $quote, $post_id, $es, $guests ) ), 409 );
+		}
+		if ( abs( (float) $quote['total'] - $seen ) > 0.01 ) {
+			return self::price_changed( $quote, $post_id, $es, $guests );
+		}
+
+		$body = array(
+			'request_id'        => $request_id,
+			'arrival'           => $arrival,
+			'departure'         => $departure,
+			'adults'            => $guests['adults'],
+			'children'          => $guests['children'],
+			'infants'           => $guests['infants'],
+			'guest'             => $guest,
+			'arrival_time'      => $slot,
+			'accepted_terms'    => array( 'version' => self::TERMS_VERSION ),
+			'marketing_consent' => ! empty( $in['marketing'] ),
+			'quoted_total'      => round( (float) $quote['total'], 2 ),
+		);
+		if ( ! empty( $quote['room_type_id'] ) ) {
+			$body['room_type_id'] = (string) $quote['room_type_id'];
+		}
+		if ( '' !== $message ) {
+			$body['message'] = $message;
+		}
+
+		$res = Maros_Client::post_booking_request( $maros, $body );
+		if ( is_wp_error( $res ) ) {
+			Maros_Log::add( 'error', 'Solicitud de reserva de ' . $maros . ': ' . $res->get_error_message() );
+			return self::reply( array( 'error' => 'unavailable', 'message' => self::request_failed( $es ) ), 502 );
+		}
+		$data = $res['body'];
+		if ( $res['status'] >= 200 && $res['status'] < 300 && ! empty( $data['reference'] ) ) {
+			$currency = (string) ( $data['currency'] ?? 'EUR' );
+			$out      = array(
+				'reference'  => (string) $data['reference'],
+				'first_name' => $guest['first_name'],
+				'email'      => $guest['email'],
+				'total'      => self::money( (float) ( $data['total'] ?? $quote['total'] ), $currency, $es ),
+			);
+			if ( isset( $data['deposit'] ) && is_numeric( $data['deposit'] ) && (float) $data['deposit'] > 0 ) {
+				$out['deposit'] = sprintf( self::t( $es, 'Refundable security deposit: %s', 'Fianza reembolsable: %s' ), self::money( (float) $data['deposit'], $currency, $es ) );
+			}
+			return self::reply( $out, 201 );
+		}
+
+		// marOS ha dicho que no: se explica con sus datos y no se guarda el presupuesto viejo.
+		$error = is_array( $data['error'] ?? null ) ? $data['error'] : array();
+		$code  = (string) ( $error['code'] ?? '' );
+		if ( in_array( $code, array( 'price_changed', 'not_available' ), true ) ) {
+			delete_transient( self::quote_key( $post_id, $maros, $arrival, $departure, $guests ) );
+		}
+		if ( 'price_changed' === $code && is_array( $error['quote'] ?? null ) ) {
+			return self::price_changed( $error['quote'], $post_id, $es, $guests );
+		}
+		if ( 'not_available' === $code ) {
+			$gone = array( 'available' => false, 'arrival' => $arrival, 'departure' => $departure, 'nights' => $nights, 'reasons' => (array) ( $error['reasons'] ?? array() ) );
+			return self::reply( array( 'error' => 'not_available', 'message' => self::t( $es, 'These dates are no longer available.', 'Estas fechas ya no están disponibles.' ), 'quote' => self::present( $gone, $post_id, $es, $guests ) ), 409 );
+		}
+		if ( 'invalid_request' === $code && isset( $error['field'] ) ) {
+			$name = str_replace( 'guest.', '', (string) $error['field'] );
+			if ( isset( $guest[ $name ] ) ) {
+				return self::reply( array( 'error' => 'invalid', 'fields' => array( $name => self::t( $es, 'Check this detail.', 'Revisa este dato.' ) ), 'message' => self::t( $es, 'Check the highlighted details.', 'Revisa los datos marcados.' ) ), 400 );
+			}
+		}
+		if ( 429 === $res['status'] ) {
+			return self::reply( array( 'error' => 'rate_limited', 'message' => self::t( $es, 'We’re receiving a lot of requests. Try again in a minute.', 'Estamos recibiendo muchas solicitudes. Vuelve a intentarlo en un minuto.' ) ), 429 );
+		}
+		Maros_Log::add( 'error', 'Solicitud de reserva de ' . $maros . ' rechazada por marOS (' . $res['status'] . ' ' . $code . '): ' . (string) ( $error['message'] ?? '' ) );
+		return self::reply( array( 'error' => 'unavailable', 'message' => self::request_failed( $es ) ), 502 );
+	}
+
+	private static function price_changed( array $quote, int $post_id, bool $es, array $guests ): WP_REST_Response {
+		return self::reply(
+			array(
+				'error'   => 'price_changed',
+				'message' => self::t( $es, 'The price for these dates has just changed. Check the new total and send the request again.', 'El precio de estas fechas acaba de cambiar. Revisa el total nuevo y vuelve a enviar la solicitud.' ),
+				'quote'   => self::present( $quote, $post_id, $es, $guests ),
+			),
+			409
+		);
+	}
+
+	private static function request_failed( bool $es ): string {
+		return self::t( $es, 'We couldn’t send your request. Nothing has been booked or charged. Try again in a moment, or talk to our team.', 'No hemos podido enviar tu solicitud. No se ha reservado ni cobrado nada. Vuelve a intentarlo en un momento o habla con el equipo.' );
+	}
+
 	/**
 	 * Presupuesto de marOS para una casa, con caché por la huella del calendario. Si la casa tiene
 	 * varios tipos de alojamiento, el más barato que esté libre.
@@ -103,9 +308,8 @@ final class Maros_Booking {
 	 * @return array|WP_Error
 	 */
 	private static function quote( int $post_id, string $maros, string $arrival, string $departure, array $guests ) {
-		$etag = (string) get_post_meta( $post_id, 'maros_calendar_etag', true );
-		$key  = 'maros_q_' . md5( wp_json_encode( array( $maros, $arrival, $departure, $guests, $etag ) ) );
-		$hit  = get_transient( $key );
+		$key = self::quote_key( $post_id, $maros, $arrival, $departure, $guests );
+		$hit = get_transient( $key );
 		if ( is_array( $hit ) ) {
 			return $hit;
 		}
@@ -131,6 +335,11 @@ final class Maros_Booking {
 		unset( $best['_etag'] );
 		set_transient( $key, $best, self::TTL );
 		return $best;
+	}
+
+	private static function quote_key( int $post_id, string $maros, string $arrival, string $departure, array $guests ): string {
+		$etag = (string) get_post_meta( $post_id, 'maros_calendar_etag', true );
+		return 'maros_q_' . md5( wp_json_encode( array( $maros, $arrival, $departure, $guests, $etag ) ) );
 	}
 
 	/** Lo que necesita el navegador, ya traducido y con los importes escritos. */
@@ -168,6 +377,8 @@ final class Maros_Booking {
 		}
 		$out['lines'] = $lines;
 		$out['total'] = self::money( (float) ( $q['total'] ?? 0 ), $currency, $es );
+		// El importe tal cual, para enviarlo con la solicitud (marOS comprueba que no ha cambiado).
+		$out['amount'] = round( (float) ( $q['total'] ?? 0 ), 2 );
 		$out['short'] = $out['total'] . ' · ' . $out['nights_label'];
 		$deposit      = isset( $q['deposit'] ) && is_numeric( $q['deposit'] ) ? (float) $q['deposit'] : 0.0;
 		if ( $deposit > 0 ) {
@@ -259,6 +470,11 @@ final class Maros_Booking {
 			'calendar' => self::calendar( $post_id ),
 			'i18n'     => self::strings( $es ),
 		);
+		$requests = self::requests_enabled();
+		if ( $requests ) {
+			$config['request'] = rest_url( 'maros/v1/booking-request' );
+			$config['form']    = self::request_strings( $es );
+		}
 
 		$stepper = static function ( string $key, string $label, string $hint ) use ( $es ): string {
 			return '<div class="mis-resv__guest"><div><span class="mis-resv__guest-label">' . esc_html( $label ) . '</span>' . ( '' !== $hint ? '<small>' . esc_html( $hint ) . '</small>' : '' ) . '</div>'
@@ -305,11 +521,123 @@ final class Maros_Booking {
 		$html .= '<div class="mis-resv__after" data-after></div>';
 		$html .= self::included( $post_id, $es );
 		$html .= '<div class="mis-resv__help">' . $talk . '</div>';
+		if ( $requests ) {
+			$html .= self::request_markup( $es, (string) $photo, $name );
+		}
 		$html .= '<script type="application/json" class="mis-resv__data">' . wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ) . '</script>';
 		$html .= '</div>';
 
 		$file = dirname( __DIR__ ) . '/assets/booking.js';
 		wp_enqueue_script( 'maros-booking', plugins_url( 'assets/booking.js', __DIR__ ), array( 'maros-calendar' ), (string) filemtime( $file ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		return $html;
+	}
+
+	/* ------------------------------------------------------------------ Pantallas C4 y C5 */
+
+	/** Una página del sitio por su slug en inglés (en el idioma de la ficha), o '' si no existe. */
+	private static function page( string $slug ): string {
+		return function_exists( 'mis_page_url' ) && get_page_by_path( $slug ) ? mis_page_url( $slug ) : '';
+	}
+
+	/** Textos de la solicitud que usa el navegador (los avisos de campo son los mismos que da el servidor). */
+	private static function request_strings( bool $es ): array {
+		return array(
+			'fields'  => array(
+				'first_name' => self::t( $es, 'Enter your first name.', 'Escribe tu nombre.' ),
+				'last_name'  => self::t( $es, 'Enter your surname.', 'Escribe tus apellidos.' ),
+				'email'      => self::t( $es, 'Enter a valid email address, such as name@example.com.', 'Escribe un email válido, por ejemplo nombre@ejemplo.com.' ),
+				'phone'      => self::t( $es, 'Enter your phone number with the country code, such as +44 7700 900123.', 'Escribe tu teléfono con el prefijo del país, por ejemplo +34 600 123 456.' ),
+				'country'    => self::t( $es, 'Choose your country of residence.', 'Elige tu país de residencia.' ),
+				'terms'      => self::t( $es, 'To send the request, accept the booking conditions and the privacy policy.', 'Para enviar la solicitud, acepta las condiciones de reserva y la política de privacidad.' ),
+			),
+			'check'   => self::t( $es, 'Check the highlighted details.', 'Revisa los datos marcados.' ),
+			'sending' => self::t( $es, 'Sending…', 'Enviando…' ),
+			'send'    => self::t( $es, 'Send request', 'Enviar solicitud' ),
+			'failed'  => self::request_failed( $es ),
+			'thanks'  => self::t( $es, 'Thank you, %1$s. We’ve received your request and we’ll write to you at %2$s.', 'Gracias, %1$s. Hemos recibido tu solicitud y te escribiremos a %2$s.' ),
+		);
+	}
+
+	private static function request_markup( bool $es, string $photo, string $name ): string {
+		$f     = self::request_strings( $es );
+		$input = static function ( string $key, string $label, string $type, string $auto, string $extra = '' ): string {
+			return '<div class="mis-req__field" data-field="' . esc_attr( $key ) . '"><label for="mis-req-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label>'
+				. '<input id="mis-req-' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" type="' . esc_attr( $type ) . '" autocomplete="' . esc_attr( $auto ) . '" aria-describedby="mis-req-' . esc_attr( $key ) . '-error"' . $extra . '>'
+				. '<p class="mis-req__error" id="mis-req-' . esc_attr( $key ) . '-error" hidden></p></div>';
+		};
+		$back  = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>';
+		$tick  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+		$house = '<div class="mis-req__house">' . ( $photo ? '<img src="' . esc_url( $photo ) . '" alt="" width="64" height="64" loading="lazy">' : '' )
+			. '<div><p class="mis-req__name">' . esc_html( $name ) . '</p><p data-req-dates></p><p data-req-guests></p></div></div>';
+
+		$terms   = self::page( 'terms-and-conditions' );
+		$privacy = self::page( 'privacy-policy' );
+		$link    = static fn( string $url, string $text ) => '' !== $url ? '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html( $text ) . '</a>' : esc_html( $text );
+		$accept  = $es
+			? 'Acepto las ' . $link( $terms, 'condiciones de reserva' ) . ' y la ' . $link( $privacy, 'política de privacidad' ) . '.'
+			: 'I accept the ' . $link( $terms, 'booking conditions' ) . ' and the ' . $link( $privacy, 'privacy policy' ) . '.';
+		$slots   = array(
+			'unknown'   => self::t( $es, 'Not sure yet', 'Aún no lo sé' ),
+			'before_16' => self::t( $es, 'Before 4 pm', 'Antes de las 16:00' ),
+			'16_20'     => self::t( $es, '4 pm – 8 pm', '16:00 – 20:00' ),
+			'after_20'  => self::t( $es, 'After 8 pm', 'Después de las 20:00' ),
+		);
+		$radios = '';
+		foreach ( $slots as $value => $label ) {
+			$radios .= '<label class="mis-req__chip"><input type="radio" name="arrival_time" value="' . esc_attr( $value ) . '"' . checked( 'unknown', $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
+		}
+		$home     = function_exists( 'pll_home_url' ) ? pll_home_url() : home_url( '/' );
+		$services = self::page( 'services' );
+		$contact  = self::page( 'contact' );
+
+		$html  = '<div class="mis-req" data-req hidden role="dialog" aria-modal="true" aria-labelledby="mis-req-title">';
+		$html .= '<div class="mis-req__panel">';
+		$html .= '<div class="mis-req__top"><button type="button" class="mis-req__back" data-req-close aria-label="' . esc_attr( self::t( $es, 'Back to dates and price', 'Volver a fechas y precio' ) ) . '">' . $back . '</button><b id="mis-req-title" tabindex="-1">' . esc_html( self::t( $es, 'Request to book', 'Solicitar reserva' ) ) . '</b><span></span></div>';
+
+		// C4: la solicitud.
+		$html .= '<form class="mis-req__form" data-req-form novalidate>';
+		$html .= '<div class="mis-req__summary">' . $house . '<button type="button" class="mis-req__change" data-req-close>' . esc_html( self::t( $es, 'Change', 'Cambiar' ) ) . '</button></div>';
+		$html .= '<div class="mis-req__total"><span>' . esc_html( 'Total' ) . ' <small data-req-nights></small></span><b data-req-total></b></div><p class="mis-req__deposit" data-req-deposit hidden></p>';
+		$html .= '<div class="mis-req__alert" data-req-alert role="alert" hidden></div>';
+		$html .= '<fieldset class="mis-req__group"><legend>' . esc_html( self::t( $es, 'Your details', 'Tus datos' ) ) . '</legend><p class="mis-req__hint">' . esc_html( self::t( $es, 'We only use them for this booking.', 'Solo los usamos para esta reserva.' ) ) . '</p>';
+		$html .= '<div class="mis-req__row">' . $input( 'first_name', self::t( $es, 'First name', 'Nombre' ), 'text', 'given-name', ' maxlength="80" required' ) . $input( 'last_name', self::t( $es, 'Surname', 'Apellidos' ), 'text', 'family-name', ' maxlength="80" required' ) . '</div>';
+		$html .= $input( 'email', 'Email', 'email', 'email', ' maxlength="200" required inputmode="email"' );
+		$html .= '<div class="mis-req__field" data-field="phone"><label for="mis-req-phone">' . esc_html( self::t( $es, 'Phone (WhatsApp)', 'Teléfono (WhatsApp)' ) ) . '</label>'
+			. '<div class="mis-req__phone"><input id="mis-req-prefix" name="prefix" type="tel" autocomplete="tel-country-code" inputmode="tel" maxlength="5" value="+" aria-label="' . esc_attr( self::t( $es, 'Country code', 'Prefijo' ) ) . '">'
+			. '<input id="mis-req-phone" name="phone" type="tel" autocomplete="tel-national" inputmode="tel" maxlength="24" required aria-describedby="mis-req-phone-error"></div>'
+			. '<p class="mis-req__error" id="mis-req-phone-error" hidden></p></div>';
+		$html .= '<div class="mis-req__field" data-field="country"><label for="mis-req-country">' . esc_html( self::t( $es, 'Country of residence', 'País de residencia' ) ) . '</label>'
+			. '<select id="mis-req-country" name="country" autocomplete="country" required aria-describedby="mis-req-country-error"><option value="">' . esc_html( self::t( $es, 'Choose…', 'Elige…' ) ) . '</option></select>'
+			. '<p class="mis-req__error" id="mis-req-country-error" hidden></p></div>';
+		$html .= '</fieldset>';
+		$html .= '<fieldset class="mis-req__group"><legend>' . esc_html( self::t( $es, 'Approximate arrival time (optional)', 'Llegada aproximada (opcional)' ) ) . '</legend><div class="mis-req__chips">' . $radios . '</div></fieldset>';
+		$html .= '<div class="mis-req__field"><label for="mis-req-message">' . esc_html( self::t( $es, 'Anything we should know? (optional)', '¿Algo que debamos saber? (opcional)' ) ) . '</label><textarea id="mis-req-message" name="message" rows="3" maxlength="1000"></textarea></div>';
+		$html .= '<div class="mis-req__next"><p>' . esc_html( self::t( $es, 'What happens now', 'Qué pasa ahora' ) ) . '</p><ol>'
+			. '<li>' . esc_html( self::t( $es, 'Nothing is charged when you send the request.', 'Al enviar la solicitud no se cobra nada.' ) ) . '</li>'
+			. '<li>' . esc_html( self::t( $es, 'We confirm within 24 hours. Meanwhile, the dates are held for you.', 'Te confirmamos en 24 horas. Mientras, las fechas quedan apartadas para ti.' ) ) . '</li>'
+			. '<li>' . esc_html( self::t( $es, 'You pay with a secure link we send you.', 'Pagas con un enlace seguro que te enviamos.' ) ) . '</li>'
+			. '</ol></div>';
+		$html .= '<div class="mis-req__field mis-req__check" data-field="terms"><label><input type="checkbox" name="terms" value="1" required aria-describedby="mis-req-terms-error"><span>' . $accept . '</span></label><p class="mis-req__error" id="mis-req-terms-error" hidden></p></div>';
+		$html .= '<div class="mis-req__field mis-req__check"><label><input type="checkbox" name="marketing" value="1"><span>' . esc_html( self::t( $es, 'I’d like to receive news and offers from Marbella in Style by email (optional).', 'Quiero recibir novedades y ofertas de Marbella in Style por email (opcional).' ) ) . '</span></label></div>';
+		$html .= '<div class="mis-req__foot"><div><b data-req-total></b><small data-req-nights></small></div><button type="submit" class="wp-element-button" data-req-send>' . esc_html( $f['send'] ) . '</button></div>';
+		$html .= '</form>';
+
+		// C5: solicitud enviada.
+		$html .= '<div class="mis-req__done" data-req-done hidden>';
+		$html .= '<div class="mis-req__ok">' . $tick . '</div><h2 class="mis-req__title" tabindex="-1" data-req-done-title>' . esc_html( self::t( $es, 'Request sent', 'Solicitud enviada' ) ) . '</h2>';
+		$html .= '<p data-req-thanks></p><p class="mis-req__ref">' . esc_html( self::t( $es, 'Reference', 'Referencia' ) ) . ' <b data-req-ref></b></p>';
+		$html .= '<div class="mis-req__summary">' . $house . '</div><div class="mis-req__total"><span>Total</span><b data-req-total></b></div><p class="mis-req__deposit" data-req-deposit hidden></p>';
+		$html .= '<ol class="mis-req__steps">'
+			. '<li class="is-done">' . $tick . '<span>' . esc_html( self::t( $es, 'Request received. Your dates are held for 24 hours.', 'Solicitud recibida. Tus fechas quedan apartadas 24 horas.' ) ) . '</span></li>'
+			. '<li><span>' . esc_html( self::t( $es, 'We confirm your booking within 24 hours.', 'Te confirmamos la reserva en 24 horas como máximo.' ) ) . '</span></li>'
+			. '<li><span>' . esc_html( self::t( $es, 'Then we send you a secure link to pay.', 'Después te enviamos un enlace seguro para pagar.' ) ) . '</span></li>'
+			. '</ol>';
+		$html .= '<p class="mis-req__hint">' . esc_html( self::t( $es, 'Any questions? Write to us and mention your reference.', '¿Dudas? Escríbenos y menciona tu referencia.' ) ) . ( '' !== $contact ? ' <a href="' . esc_url( $contact ) . '">' . esc_html( self::t( $es, 'Talk to our team', 'Habla con el equipo' ) ) . '</a>' : '' ) . '</p>';
+		$html .= '<div class="mis-req__actions">' . ( '' !== $services ? '<a class="wp-element-button" href="' . esc_url( $services ) . '">' . esc_html( self::t( $es, 'Add services to your stay', 'Añadir servicios a tu estancia' ) ) . '</a>' : '' )
+			. '<a class="mis-req__home" href="' . esc_url( $home ) . '">' . esc_html( self::t( $es, 'Back to home', 'Volver al inicio' ) ) . '</a></div>';
+		$html .= '</div>';
+
+		$html .= '</div></div>';
 		return $html;
 	}
 
@@ -494,15 +822,15 @@ final class Maros_Booking {
 		return (int) round( ( strtotime( $b . ' 00:00:00 UTC' ) - strtotime( $a . ' 00:00:00 UTC' ) ) / DAY_IN_SECONDS );
 	}
 
-	/** Límite por visitante; la IP solo se usa con hash y durante un minuto. */
-	private static function within_limit(): bool {
+	/** Límite por visitante; la IP solo se usa con hash y durante la ventana. */
+	private static function within_limit( string $kind, int $max, int $window ): bool {
 		$ip  = (string) ( $_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['REMOTE_ADDR'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$key = 'maros_ql_' . md5( wp_salt( 'nonce' ) . $ip . gmdate( 'YmdHi' ) );
+		$key = 'maros_' . $kind . 'l_' . md5( wp_salt( 'nonce' ) . $ip . (int) floor( time() / $window ) );
 		$n   = (int) get_transient( $key );
-		if ( $n >= self::PER_MINUTE ) {
+		if ( $n >= $max ) {
 			return false;
 		}
-		set_transient( $key, $n + 1, 2 * MINUTE_IN_SECONDS );
+		set_transient( $key, $n + 1, 2 * $window );
 		return true;
 	}
 

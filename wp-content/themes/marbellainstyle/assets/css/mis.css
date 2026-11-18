@@ -560,6 +560,80 @@ html.mis-tour-open { overflow: hidden; }
 	.mis-booking-box.is-sheet .mis-resv__sum { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 	.mis-booking-box.is-sheet .mis-resv__cta.wp-element-button { white-space: nowrap; padding-inline: 1.25rem; }
 }
+/* Solicitud de reserva (spec 026 de marOS, pantallas C4 y C5; maros-connector/assets/booking.js):
+   a pantalla completa en el móvil y como ventana centrada en escritorio. */
+.mis-req { position: fixed; inset: 0; z-index: 300; display: flex; justify-content: center; align-items: center; background: rgb(37 39 40 / 0.55); }
+.mis-req[hidden] { display: none; }
+html.mis-req-open, html.mis-req-open body { overflow: hidden; }
+.mis-req__panel { position: relative; width: min(560px, 100%); max-height: calc(100% - 3rem); overflow-y: auto; overscroll-behavior: contain; background: var(--wp--preset--color--primary-alt-accent); color: var(--wp--preset--color--main); padding: 0 1.5rem; box-sizing: border-box; text-align: left; }
+.mis-req__top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; margin-inline: -1.5rem; padding: 0.25rem 0.75rem; border-bottom: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); }
+.mis-req__top b { font-weight: 500; outline: none; }
+.mis-req__top span, .mis-req__back { width: var(--mis-touch); height: var(--mis-touch); flex: none; }
+.mis-req__back { display: grid; place-items: center; padding: 0; border: 0; background: transparent; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-req.is-done .mis-req__back { visibility: hidden; }
+.mis-req__form, .mis-req__done { display: flex; flex-direction: column; gap: 1rem; padding-top: 1rem; }
+.mis-req__form[hidden], .mis-req__done[hidden] { display: none; }
+.mis-req p { margin: 0; max-width: none; text-align: left; }
+.mis-req__summary { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.mis-req__house { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.mis-req__house img { width: 64px; height: 64px; object-fit: cover; flex: none; }
+.mis-req__house p { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-req__house .mis-req__name { font-size: 1.0625rem; color: var(--wp--preset--color--main); }
+.mis-req__change { flex: none; padding: 0; border: 0; background: none; font: inherit; font-size: var(--wp--preset--font-size--small); text-decoration: underline; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-req__total { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--mis-line); font-weight: 500; }
+.mis-req__total small { margin-left: 0.25rem; font-weight: 400; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-req__deposit, .mis-req__hint { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-req__deposit { margin-top: -0.625rem !important; }
+.mis-req__alert { padding: 0.75rem 0.875rem; border-left: 3px solid #A1432F; background: #FBEDEA; font-size: var(--wp--preset--font-size--small); }
+.mis-req__alert[hidden] { display: none; }
+.mis-req__group { display: flex; flex-direction: column; gap: 0.75rem; margin: 0; padding: 0; border: 0; min-width: 0; }
+.mis-req__group legend, .mis-req__next > p { padding: 0; margin-bottom: 0.25rem; font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wp--preset--color--secondary); }
+.mis-req__group .mis-req__hint { margin-top: -0.5rem; }
+.mis-req__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.mis-req__field { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.mis-req__field > label { font-size: var(--wp--preset--font-size--small); }
+.mis-req__field input:not([type=checkbox]):not([type=radio]), .mis-req__field select, .mis-req__field textarea { width: 100%; min-height: var(--mis-touch); box-sizing: border-box; padding: 0.5rem 0.75rem; border: 1px solid var(--wp--preset--color--border-dark); border-radius: 0; background: #fff; font: inherit; font-size: 1rem; color: var(--wp--preset--color--main); }
+.mis-req__field textarea { resize: vertical; }
+.mis-req__field.has-error input, .mis-req__field.has-error select { border-color: #A1432F; }
+.mis-req__error { font-size: var(--wp--preset--font-size--small); color: #A1432F; }
+.mis-req__error[hidden] { display: none; }
+.mis-req__phone { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.5rem; }
+.mis-req__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.mis-req__chip { position: relative; cursor: pointer; }
+.mis-req__chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.mis-req__chip span { display: inline-block; padding: 0.5rem 0.875rem; border: 1px solid var(--mis-line); font-size: var(--wp--preset--font-size--small); }
+.mis-req__chip input:checked + span { border-color: var(--wp--preset--color--main); box-shadow: inset 0 0 0 1px var(--wp--preset--color--main); }
+.mis-req__chip input:focus-visible + span { outline: 2px solid var(--wp--preset--color--main); outline-offset: 2px; }
+.mis-req__next { padding: 0.875rem 1rem; background: var(--wp--preset--color--tertiary); }
+.mis-req__next ol { margin: 0.25rem 0 0; padding-left: 1.25rem; display: grid; gap: 0.25rem; font-size: var(--wp--preset--font-size--small); }
+.mis-req__check label { display: flex; align-items: flex-start; gap: 0.625rem; font-size: var(--wp--preset--font-size--small); cursor: pointer; }
+.mis-req__check input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--wp--preset--color--main); }
+.mis-req__check a { color: inherit; }
+.mis-req__foot { position: sticky; bottom: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0 -1.5rem; padding: 0.75rem 1.5rem calc(0.75rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); }
+.mis-req__foot b { display: block; font-weight: 500; }
+.mis-req__foot small { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-req__foot .wp-element-button { flex: none; margin: 0; cursor: pointer; }
+.mis-req__foot .wp-element-button:disabled { opacity: 0.6; cursor: default; }
+.mis-req__done { padding-bottom: 1.5rem; }
+.mis-req__ok { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); }
+.mis-req__ok svg { width: 24px; height: 24px; }
+.mis-req__title { margin: 0; font-size: 1.5rem; font-weight: 500; outline: none; }
+.mis-req__ref b { font-size: 1.125rem; letter-spacing: 0.05em; }
+.mis-req__steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.625rem; font-size: var(--wp--preset--font-size--small); }
+.mis-req__steps li { position: relative; padding-left: 1.75rem; }
+.mis-req__steps li::before { content: ""; position: absolute; left: 3px; top: 3px; width: 12px; height: 12px; border: 1px solid var(--wp--preset--color--border-dark); border-radius: 50%; }
+.mis-req__steps li.is-done::before { display: none; }
+.mis-req__steps li svg { position: absolute; left: 0; top: 1px; }
+.mis-req__actions { display: flex; flex-direction: column; align-items: stretch; gap: 0.75rem; text-align: center; }
+.mis-req__actions .wp-element-button { margin: 0; }
+.mis-req__home { color: var(--wp--preset--color--main); }
+@media (max-width: 1023px) {
+	.mis-req { align-items: stretch; background: var(--wp--preset--color--primary-alt-accent); }
+	.mis-req__panel { width: 100%; max-height: none; height: 100%; padding: 0 var(--wp--preset--spacing--medium); }
+	.mis-req__top { margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding-inline: 0.25rem; }
+	.mis-req__foot { margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding-inline: var(--wp--preset--spacing--medium); }
+}
+@media (max-width: 380px) { .mis-req__row { grid-template-columns: 1fr; } }
 .mis-amenities { display: grid; grid-template-columns: 1fr; gap: 0.875rem 2rem; padding-left: 0; margin: 1.5rem 0 0; list-style: none; }
 @media (min-width: 600px) { .mis-amenities { grid-template-columns: 1fr 1fr; } }
 .mis-amenities li { display: flex; align-items: center; gap: 0.75rem; }
