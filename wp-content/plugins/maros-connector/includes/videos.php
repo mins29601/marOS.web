@@ -5,9 +5,9 @@
  *
  * - Editor: caja «Videos» con el enlace, la carátula (de la biblioteca de medios) y el orden.
  * - Ficha: [maros_videos], tarjetas verticales 9:16 con ▶. No se carga nada de Instagram, YouTube
- *   ni TikTok hasta que el cliente pulsa (spec 006, «Vídeo»; principio VII). Al pulsar se abre un
- *   visor en la propia web con el vídeo y un enlace a la red social. Sin JavaScript, o con el filtro
- *   `maros_videos_inline` a false, la carátula abre el vídeo en la red social.
+ *   ni TikTok en la página (spec 006, «Vídeo»; principio VII). Por ahora la carátula abre el vídeo
+ *   en la red social, en otra pestaña (Julio, 18-11-2026). Con el filtro `maros_videos_inline` a
+ *   true, se abre en cambio un visor en la propia web con el reproductor (assets/videos.js).
  *
  * @package MarbellaInStyle
  */
@@ -125,7 +125,7 @@ add_shortcode(
 		}
 		$es     = maros_is_es( $post_id );
 		$name   = get_the_title( $post_id );
-		$inline = (bool) apply_filters( 'maros_videos_inline', true, $post_id );
+		$inline = (bool) apply_filters( 'maros_videos_inline', false, $post_id );
 		$total  = count( $videos );
 
 		$cards = '';
