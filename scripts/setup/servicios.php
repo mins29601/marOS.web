@@ -14,8 +14,8 @@
  * - Los servicios de ejemplo «Private driver» y «Concierge» pasan a borrador: su texto está
  *   ahora en la portada de su tipo.
  * - Menús: bajo Servicios, los cuatro tipos; bajo Experiencias, las que falten.
- * - Ilustraciones (servicios/img/, dibujadas con dibujar.py; sin etiqueta en la web por decisión
- *   de Julio, 18-11-2026): imagen de cada tipo y de los servicios que aún no tienen foto.
+ * - Ilustraciones (servicios/img/, dibujadas con dibujar.py): sin etiqueta visible; el texto
+ *   alternativo y el nombre del archivo dicen que son imágenes generadas con IA (Julio, 18-11-2026): imagen de cada tipo y de los servicios que aún no tienen foto.
  *
  * Los textos están en servicios/servicios.json, que genera servicios/generar.py desde
  * marOS.content. Lo que ya se cargó desde marOS.content y luego se editó en WordPress no se
@@ -307,31 +307,46 @@ WP_CLI::log( 'Ilustraciones…' );
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
+// Son imágenes generadas con IA: se dice en el texto alternativo (EN y ES) y en el nombre del
+// archivo, sin etiqueta visible (guía editorial, punto 6; Julio, 18-11-2026).
 $mis_ilus_alt = array(
-	'transport' => array( 'Illustration of a car on the road', 'Ilustración de un coche en la carretera' ),
-	'catering'  => array( 'Illustration of a chef’s hat and a plate', 'Ilustración de un gorro de chef y un plato' ),
-	'events'    => array( 'Illustration of two glasses raised in a toast', 'Ilustración de dos copas brindando' ),
-	'concierge' => array( 'Illustration of a reception bell', 'Ilustración de un timbre de recepción' ),
+	'transport' => array( 'AI-generated image: a car on the road', 'Imagen generada con IA: un coche en la carretera' ),
+	'catering'  => array( 'AI-generated image: a chef’s hat and a plate', 'Imagen generada con IA: un gorro de chef y un plato' ),
+	'events'    => array( 'AI-generated image: two glasses raised in a toast', 'Imagen generada con IA: dos copas brindando' ),
+	'concierge' => array( 'AI-generated image: a reception bell', 'Imagen generada con IA: un timbre de recepción' ),
 );
 $mis_ilus = array();
 foreach ( $mis_ilus_alt as $slug => $alt ) {
 	$found = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'numberposts' => 1, 'fields' => 'ids', 'lang' => '', 'meta_key' => 'mis_ilustracion', 'meta_value' => $slug ) ); // phpcs:ignore WordPress.DB.SlowDBQuery
-	if ( $found ) {
-		$mis_ilus[ $slug ] = (int) $found[0];
-		continue;
+	$old   = $found ? (int) $found[0] : 0;
+	$att   = $old;
+	// La primera versión se subió como «…-ilustracion.jpg»: se sube de nuevo con el nombre que lo dice.
+	if ( ! $old || ! str_contains( basename( (string) get_attached_file( $old ) ), 'generada-con-ia' ) ) {
+		$tmp = wp_tempnam( "servicio-$slug.jpg" );
+		copy( __DIR__ . "/servicios/img/$slug.jpg", $tmp );
+		$att = media_handle_sideload( array( 'name' => "servicio-$slug-imagen-generada-con-ia.jpg", 'tmp_name' => $tmp ), 0, $alt[0] );
+		if ( is_wp_error( $att ) ) {
+			WP_CLI::warning( "Imagen $slug: " . $att->get_error_message() );
+			continue;
+		}
+		update_post_meta( $att, 'mis_ilustracion', $slug );
+		WP_CLI::log( "  + imagen $slug (Medios $att): " . basename( (string) get_attached_file( $att ) ) );
+		if ( $old ) {
+			// Lo que apuntaba a la anterior pasa a la nueva, y la anterior se borra.
+			foreach ( get_terms( array( 'taxonomy' => 'tipo-servicio', 'hide_empty' => false, 'lang' => '', 'meta_key' => 'service_image', 'meta_value' => $old ) ) as $t ) { // phpcs:ignore WordPress.DB.SlowDBQuery
+				update_term_meta( $t->term_id, 'service_image', $att );
+			}
+			foreach ( get_posts( array( 'post_type' => 'any', 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids', 'lang' => '', 'meta_key' => '_thumbnail_id', 'meta_value' => $old ) ) as $pid ) { // phpcs:ignore WordPress.DB.SlowDBQuery
+				set_post_thumbnail( $pid, $att );
+			}
+			wp_delete_attachment( $old, true );
+			WP_CLI::log( "  - imagen anterior $old borrada" );
+		}
 	}
-	$tmp = wp_tempnam( "servicio-$slug.jpg" );
-	copy( __DIR__ . "/servicios/img/$slug.jpg", $tmp );
-	$att = media_handle_sideload( array( 'name' => "servicio-$slug-ilustracion.jpg", 'tmp_name' => $tmp ), 0, $alt[0] );
-	if ( is_wp_error( $att ) ) {
-		WP_CLI::warning( "Ilustración $slug: " . $att->get_error_message() );
-		continue;
-	}
-	update_post_meta( $att, 'mis_ilustracion', $slug );
 	update_post_meta( $att, '_wp_attachment_image_alt', $alt[0] );
-	wp_update_post( array( 'ID' => $att, 'post_excerpt' => 'Illustration' ) );
+	update_post_meta( $att, 'mis_alt_es', $alt[1] );
+	wp_update_post( array( 'ID' => $att, 'post_title' => $alt[0], 'post_excerpt' => '' ) );
 	$mis_ilus[ $slug ] = (int) $att;
-	WP_CLI::log( "  + ilustración $slug (Medios $att)" );
 }
 foreach ( $mis_tipo_ids as $slug => $by_lang ) {
 	foreach ( $by_lang as $lang => $tid ) {

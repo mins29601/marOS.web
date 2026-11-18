@@ -86,7 +86,7 @@ add_shortcode(
 			$foto = mis_servicio_tipo_foto( $term );
 			$out .= '<div class="mis-card">';
 			if ( $foto ) {
-				$out .= sprintf( '<a class="mis-card__foto" href="%s">%s</a>', esc_url( $url ), wp_get_attachment_image( $foto, 'medium_large', false, array( 'alt' => '' ) ) );
+				$out .= sprintf( '<a class="mis-card__foto" href="%s">%s</a>', esc_url( $url ), wp_get_attachment_image( $foto, 'medium_large' ) );
 			}
 			$out .= sprintf( '<h3 class="wp-block-post-title"><a href="%s">%s</a></h3>', esc_url( $url ), esc_html( wp_specialchars_decode( $term->name ) ) );
 			$resumen = (string) get_term_meta( $term->term_id, 'service_summary', true );
@@ -110,7 +110,7 @@ add_shortcode(
 		$out = '<h1 class="wp-block-heading has-x-large-font-size">' . esc_html( $h1 ? $h1 : wp_specialchars_decode( $term->name ) ) . '</h1>';
 		$foto = (int) get_term_meta( $term->term_id, 'service_image', true );
 		if ( $foto && wp_attachment_is_image( $foto ) ) {
-			$out .= '<figure class="mis-servicio-foto">' . wp_get_attachment_image( $foto, 'large', false, array( 'alt' => '' ) ) . '</figure>';
+			$out .= '<figure class="mis-servicio-foto">' . wp_get_attachment_image( $foto, 'large' ) . '</figure>';
 		}
 		if ( $term->description ) {
 			$out .= '<div class="mis-servicio-texto">' . wp_kses_post( wpautop( $term->description ) ) . '</div>';
@@ -152,6 +152,21 @@ add_filter(
 			return true;
 		}
 		return $handled;
+	},
+	10,
+	2
+);
+
+// Texto alternativo en español de las imágenes que lo tienen (mis_alt_es), en las páginas en español.
+add_filter(
+	'wp_get_attachment_image_attributes',
+	static function ( array $attr, WP_Post $attachment ): array {
+		$es = function_exists( 'pll_current_language' ) && 'es' === pll_current_language();
+		$alt = $es ? (string) get_post_meta( $attachment->ID, 'mis_alt_es', true ) : '';
+		if ( $alt ) {
+			$attr['alt'] = $alt;
+		}
+		return $attr;
 	},
 	10,
 	2
