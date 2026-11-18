@@ -211,6 +211,19 @@ function maros_property_binding_value( array $args, $block_instance ) {
 		case 'license':
 			$license = (string) $m( 'maros_license' );
 			return $license ? esc_html( sprintf( $es ? 'Registro turístico: %s' : 'Tourist licence: %s', $license ) ) : '';
+		case 'stay_price':
+			// Solo con fechas buscadas (spec 005, conclusión 4): el total de la estancia, orientativo.
+			$stay = class_exists( 'Maros_Search' ) ? Maros_Search::stay_for( $post_id ) : null;
+			if ( ! $stay || $stay['total'] <= 0 ) {
+				return '';
+			}
+			return esc_html(
+				sprintf(
+					'%1$s · %2$s',
+					Maros_Search::money( $stay['total'], $stay['currency'], $es ),
+					1 === $stay['nights'] ? ( $es ? '1 noche' : '1 night' ) : sprintf( $es ? '%d noches' : '%d nights', $stay['nights'] )
+				)
+			);
 		case 'booking_url':
 			return esc_url( maros_booking_url( (int) $post_id ) );
 		default:
