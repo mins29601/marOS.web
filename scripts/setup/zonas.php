@@ -142,6 +142,56 @@ foreach ( $mis_zonas as $mis_slug => $mis_z ) {
 	}
 }
 
+// ---------------------------------------------------------------- tarjeta y «De un vistazo»
+
+// Frase corta [en, es] y perfiles de cada zona (includes/zonas.php de mis-contenido), para el índice
+// de Zonas. Solo se rellenan si están vacíos. «De un vistazo» solo donde la guía ya lo dice.
+$mis_fichas = array(
+	'nueva-andalucia' => array( array( 'The golf valley, a few minutes from Puerto Banús.', 'El valle del golf, a pocos minutos de Puerto Banús.' ), 'golf,families' ),
+	'sierra-blanca'   => array( array( 'Gated hillside living with sea views.', 'Urbanización cerrada en la ladera, con vistas al mar.' ), 'families,hills' ),
+	'puerto-banus'    => array( array( 'The marina and the beach clubs within walking distance.', 'El puerto y los beach clubs, a un paseo.' ), 'walk,beach' ),
+	'golden-mile'     => array( array( 'By the sea, between the old town and Puerto Banús.', 'Junto al mar, entre el casco antiguo y Puerto Banús.' ), 'beach,walk' ),
+	'new-golden-mile' => array(
+		array( 'Space, quiet and long beaches between San Pedro and Estepona.', 'Espacio, tranquilidad y playas largas entre San Pedro y Estepona.' ),
+		'beach,families,golf',
+		array(
+			'zona_ideal'   => array( 'Families · Groups · Golf', 'Familias · Grupos · Golf' ),
+			'zona_playas'  => array( 'El Saladillo · Guadalmansa', 'El Saladillo · Guadalmansa' ),
+			'zona_golf'    => array( 'Atalaya · El Paraíso', 'Atalaya · El Paraíso' ),
+			'zona_moverse' => array( 'Car or private driver', 'Coche o chófer privado' ),
+		),
+	),
+	'los-flamingos'   => array( array( 'A golf community in the hills of Benahavís.', 'Urbanización de golf en las colinas de Benahavís.' ), 'golf,hills' ),
+	'la-alqueria'     => array( array( 'Quiet residential hills near Los Flamingos.', 'Colinas tranquilas cerca de Los Flamingos.' ), 'hills' ),
+	'guadalmina'      => array( array( 'Golf club and beach at the western end of Marbella.', 'Club de golf y playa en el extremo oeste de Marbella.' ), 'golf,beach,families' ),
+	'rio-real'        => array( array( 'Between the golf course and the beach, east of town.', 'Entre el golf y la playa, al este del centro.' ), 'golf,beach' ),
+	'estepona'        => array( array( 'Whitewashed old town, port and a long promenade.', 'Casco antiguo blanco, puerto y un largo paseo marítimo.' ), 'walk,beach' ),
+	'benahavis'       => array( array( 'A white village in the mountains, known for its restaurants.', 'Pueblo blanco en la sierra, conocido por sus restaurantes.' ), 'hills' ),
+	'san-pedro'       => array( array( 'Boulevard, shops and promenade within walking distance.', 'Bulevar, comercios y paseo marítimo a pie.' ), 'walk,families' ),
+	'marbella-centro' => array( array( 'The old town, the Alameda and the seafront promenade.', 'El casco antiguo, la Alameda y el paseo marítimo.' ), 'walk' ),
+);
+if ( function_exists( 'mis_zona_sanitize_perfiles' ) ) {
+	foreach ( $mis_fichas as $mis_slug => $mis_f ) {
+		foreach ( array( 'en' => 0, 'es' => 1 ) as $mis_lang => $mis_i ) {
+			$mis_term = get_term_by( 'slug', 'en' === $mis_lang ? $mis_slug : $mis_slug . '-es', 'zona' );
+			if ( ! $mis_term ) {
+				continue;
+			}
+			$mis_tid  = (int) $mis_term->term_id;
+			$mis_meta = array( 'zona_resumen' => $mis_f[0][ $mis_i ], 'zona_perfiles' => $mis_f[1] );
+			foreach ( $mis_f[2] ?? array() as $mis_k => $mis_v ) {
+				$mis_meta[ $mis_k ] = $mis_v[ $mis_i ];
+			}
+			foreach ( $mis_meta as $mis_k => $mis_v ) {
+				if ( '' === (string) get_term_meta( $mis_tid, $mis_k, true ) || $mis_forzar ) {
+					update_term_meta( $mis_tid, $mis_k, $mis_v );
+				}
+			}
+		}
+		WP_CLI::log( "  = ficha de $mis_slug" );
+	}
+}
+
 // ---------------------------------------------------------------- menús
 
 WP_CLI::log( 'Menús…' );
