@@ -436,6 +436,84 @@ html.mis-tour-open { overflow: hidden; }
 .mis-booking-box .wp-block-buttons { margin-block: 1.25rem; }
 /* Bajo la cabecera y la barra de anclas (unos 52 px) */
 @media (min-width: 1024px) { .mis-booking-box { position: sticky; top: calc(var(--mis-header-h) + 76px); } }
+/* Reserva: fechas, huéspedes y presupuesto ([maros_booking], maros-connector/assets/booking.js) */
+.mis-resv { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem; }
+.mis-resv small { display: block; font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wp--preset--color--secondary); }
+.mis-resv__top, .mis-resv__house, .mis-resv__sum { display: none; }
+.mis-resv__title { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.mis-resv__title p { margin: 0; font-size: 1.125rem; font-weight: 500; }
+.mis-resv__rating { font-weight: 600; white-space: nowrap; text-decoration: none; color: var(--wp--preset--color--main); }
+.mis-resv__rating span { font-weight: 400; color: var(--wp--preset--color--secondary); text-decoration: underline; }
+.mis-resv__empty { margin: 0; padding: 1rem; background: var(--wp--preset--color--tertiary); font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__help { padding-top: 0.75rem; border-top: 1px solid var(--mis-line); }
+.mis-resv__talk { margin: 0; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__sum b { display: block; font-weight: 500; }
+.mis-resv__sum span { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__dates { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--mis-line); }
+.mis-resv__date { min-height: var(--mis-touch); padding: 0.625rem 0.875rem; border: 0; background: transparent; text-align: left; cursor: pointer; font: inherit; color: var(--wp--preset--color--main); }
+.mis-resv__date + .mis-resv__date { border-left: 1px solid var(--mis-line); }
+.mis-resv__date span { display: block; margin-top: 2px; }
+.mis-resv__date.is-active { box-shadow: inset 0 -2px 0 var(--wp--preset--color--main); }
+.mis-resv__cal { border: 1px solid var(--mis-line); padding: 0.75rem; }
+.mis-resv__cal[hidden] { display: none; }
+.mis-cal__bar { display: flex; align-items: center; justify-content: space-between; }
+.mis-cal__bar strong { font-weight: 500; text-transform: capitalize; }
+.mis-cal__bar button { width: var(--mis-touch); height: var(--mis-touch); border: 0; background: transparent; font-size: 1.25rem; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-cal__bar button:disabled { opacity: 0.3; cursor: default; }
+.mis-cal__hint { margin: 0.25rem 0 0.5rem; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px 0; text-align: center; }
+.mis-cal__wd { font-size: 0.75rem; color: var(--wp--preset--color--secondary); padding-bottom: 0.25rem; }
+.mis-cal__grid button { aspect-ratio: 1; min-height: 36px; padding: 0; border: 0; background: transparent; font: inherit; font-size: 0.875rem; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-cal__grid button:hover:not(:disabled) { outline: 1px solid var(--wp--preset--color--main); outline-offset: -1px; }
+.mis-cal__grid button:disabled { color: var(--wp--preset--color--border-dark); cursor: default; }
+.mis-cal__grid button.is-busy:disabled { text-decoration: line-through; }
+.mis-cal__grid button.is-range { background: var(--wp--preset--color--tertiary); }
+.mis-cal__grid button.is-start, .mis-cal__grid button.is-end { background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); }
+.mis-cal__clear { margin-top: 0.5rem; padding: 0; border: 0; background: none; font: inherit; font-size: var(--wp--preset--font-size--small); text-decoration: underline; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-resv__guests { border: 1px solid var(--mis-line); }
+.mis-resv__guests summary { min-height: var(--mis-touch); padding: 0.625rem 0.875rem; cursor: pointer; list-style: none; }
+.mis-resv__guests summary::-webkit-details-marker { display: none; }
+.mis-resv__guests summary span { display: block; margin-top: 2px; }
+.mis-resv__guest { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0.875rem; border-top: 1px solid var(--wp--preset--color--tertiary); }
+.mis-resv__guest small { text-transform: none; letter-spacing: 0; font-family: inherit; font-weight: 400; }
+.mis-resv__stepper { display: flex; align-items: center; gap: 0.5rem; }
+.mis-resv__stepper button { width: 36px; height: 36px; padding: 0; border: 1px solid var(--mis-line); border-radius: 50%; background: transparent; font-size: 1.125rem; line-height: 1; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-resv__stepper button:disabled { opacity: 0.35; cursor: default; }
+.mis-resv__stepper output { min-width: 1.5rem; text-align: center; }
+.mis-resv__cap { margin: 0; padding: 0.5rem 0.875rem 0.75rem; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__quote:empty { display: none; }
+.mis-resv__lines { margin: 0; }
+.mis-resv__line { display: flex; justify-content: space-between; gap: 1rem; padding: 0.375rem 0; font-size: var(--wp--preset--font-size--small); }
+.mis-resv__line dt, .mis-resv__line dd { margin: 0; }
+.mis-resv__line.is-included { color: var(--wp--preset--color--secondary); }
+.mis-resv__total { margin-top: 0.375rem; padding-top: 0.75rem; border-top: 1px solid var(--mis-line); font-size: 1rem; font-weight: 500; align-items: baseline; }
+.mis-resv__total small { display: inline; margin-left: 0.25rem; }
+.mis-resv__note, .mis-resv__msg, .mis-resv__loading { margin: 0.5rem 0 0; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__reasons { margin: 0; padding: 0.75rem 0.875rem 0.75rem 2rem; background: var(--wp--preset--color--tertiary); font-size: var(--wp--preset--font-size--small); }
+.mis-resv__other { margin-top: 0.5rem; padding: 0; border: 0; background: none; font: inherit; font-size: var(--wp--preset--font-size--small); text-decoration: underline; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-resv.is-loading .mis-resv__cta { opacity: 0.6; pointer-events: none; }
+.mis-resv__cta.wp-element-button { display: block; width: 100%; box-sizing: border-box; text-align: center; margin-top: 0.5rem; }
+/* Móvil: la caja se abre a pantalla completa desde la barra fija (flujo C, T28). */
+@media (max-width: 1023px) {
+	.mis-booking-box.is-sheet { position: fixed; inset: 0; z-index: 200; overflow-y: auto; overscroll-behavior: contain; border: 0; padding: 1rem var(--wp--preset--spacing--medium) calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 0.75rem; }
+	.mis-booking-box.is-sheet > * { margin-block: 0; }
+	.mis-booking-box.is-sheet .mis-resv { display: contents; }
+	.mis-booking-box.is-sheet { padding-top: 0; padding-bottom: 0; }
+	.mis-booking-box.is-sheet .mis-resv__title { display: none; }
+	.mis-booking-box.is-sheet .mis-resv__top { display: flex; align-items: center; justify-content: space-between; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding: 0.25rem var(--wp--preset--spacing--medium); border-bottom: 1px solid var(--mis-line); position: sticky; top: 0; z-index: 1; background: var(--wp--preset--color--primary-alt-accent); }
+	.mis-booking-box.is-sheet .mis-resv__top b { font-weight: 500; }
+	.mis-booking-box.is-sheet .mis-resv__top span { width: var(--mis-touch); }
+	.mis-booking-box.is-sheet .mis-resv__house { display: flex; align-items: center; gap: 0.75rem; }
+	.mis-booking-box.is-sheet .mis-resv__house img { width: 84px; height: 84px; object-fit: cover; flex: none; }
+	.mis-booking-box.is-sheet .mis-resv__name { margin: 2px 0; font-size: 1.25rem; }
+	.mis-booking-box.is-sheet .mis-resv__foot { order: 10; position: sticky; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: auto calc(var(--wp--preset--spacing--medium) * -1) 0; padding: 0.75rem var(--wp--preset--spacing--medium) calc(0.75rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); }
+	.mis-booking-box.is-sheet .mis-resv__sum { display: block; min-width: 0; }
+	.mis-booking-box.is-sheet .mis-resv__cta.wp-element-button { width: auto; margin: 0; flex: none; }
+	.mis-booking-box.is-sheet .mis-resv__help { order: 9; }
+	.mis-resv__close { width: var(--mis-touch); height: var(--mis-touch); border: 0; background: transparent; cursor: pointer; color: var(--wp--preset--color--main); }
+	html.mis-resv-open, html.mis-resv-open body { overflow: hidden; }
+	html.mis-resv-open .mis-sticky-cta { display: none; }
+}
 .mis-amenities { display: grid; grid-template-columns: 1fr; gap: 0.875rem 2rem; padding-left: 0; margin: 1.5rem 0 0; list-style: none; }
 @media (min-width: 600px) { .mis-amenities { grid-template-columns: 1fr 1fr; } }
 .mis-amenities li { display: flex; align-items: center; gap: 0.75rem; }

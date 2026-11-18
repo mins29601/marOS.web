@@ -32,6 +32,7 @@ require_once __DIR__ . '/includes/search.php';
 require_once __DIR__ . '/includes/gallery.php';
 require_once __DIR__ . '/includes/videos.php';
 require_once __DIR__ . '/includes/ficha.php';
+require_once __DIR__ . '/includes/booking.php';
 require_once __DIR__ . '/includes/excerpt.php';
 require_once __DIR__ . '/includes/seo.php';
 require_once __DIR__ . '/includes/class-maros-reviews.php';
