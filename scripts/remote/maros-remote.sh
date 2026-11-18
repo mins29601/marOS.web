@@ -1,10 +1,15 @@
 # Se ejecuta EN EL SERVIDOR de IONOS a través de .github/workflows/maros-staging.yml (no a mano).
-# Argumentos: WP_PATH acción (status|sync) [id de marOS]. Antes, el workflow antepone MIS_PHP y php-bin.sh.
+# Argumentos: WP_PATH acción (status|sync|seo) [id de marOS]. Antes, el workflow antepone MIS_PHP y php-bin.sh.
 set -euo pipefail
 WP="$HOME/$1"; ACCION="$2"; ID="${3:-}"
 wp() { "$PHPBIN" "$WPCLI" --path="$WP" "$@"; }
 
-wp maros status
+wp maros status || [[ "$ACCION" == "seo" ]]  # el SEO no necesita la conexión con marOS
+
+if [[ "$ACCION" == "seo" ]]; then
+	echo "→ Yoast SEO en todas las fichas (respeta lo editado a mano)"
+	wp maros seo
+fi
 
 if [[ "$ACCION" == "sync" ]]; then
 	[[ "$ID" =~ ^[a-z0-9-]{1,80}$ ]] || { echo "✗ Id no válido"; exit 1; }
