@@ -46,21 +46,29 @@ function maros_seo_lcfirst( string $s ): string {
 }
 
 /**
+ * Nombre de la propiedad en texto plano: get_the_title() lo devuelve con entidades HTML («&#8211;»),
+ * que en los campos de Yoast se verían tal cual.
+ */
+function maros_seo_name( int $post_id ): string {
+	return trim( html_entity_decode( wp_strip_all_tags( get_the_title( $post_id ) ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+}
+
+/**
  * Frase clave genérica: «villa de 5 dormitorios en Nueva Andalucía, Marbella» / «5-bedroom villa in
  * Nueva Andalucía, Marbella». Lleva el municipio porque la zona puede ser de grano muy fino (Julio
- * 18-11-2026). Vacía si no hay zona.
+ * 18-11-2026). Si marOS no trae zona, va solo el municipio; si no trae tipo, «alojamiento» /
+ * «holiday home»: así la ficha en español nunca se queda con el nombre en inglés de Lodgify.
  */
 function maros_seo_generic_keyphrase( int $post_id ): string {
 	$es   = maros_is_es( $post_id );
+	$town = trim( (string) get_post_meta( $post_id, 'maros_municipality', true ) ) ?: 'Marbella';
 	$zone = maros_seo_zone( $post_id );
 	if ( '' === $zone ) {
-		return '';
-	}
-	$town = trim( (string) get_post_meta( $post_id, 'maros_municipality', true ) ) ?: 'Marbella';
-	if ( 0 !== strcasecmp( remove_accents( $town ), remove_accents( $zone ) ) ) {
+		$zone = $town;
+	} elseif ( 0 !== strcasecmp( remove_accents( $town ), remove_accents( $zone ) ) ) {
 		$zone .= ', ' . $town;
 	}
-	$type = mb_strtolower( maros_seo_term( $post_id, 'tipo-propiedad' ) ?: ( $es ? 'Villa' : 'Villa' ) );
+	$type = mb_strtolower( maros_seo_term( $post_id, 'tipo-propiedad' ) ?: ( $es ? 'Alojamiento' : 'Holiday home' ) );
 	$beds = (int) get_post_meta( $post_id, 'maros_bedrooms', true );
 	if ( $es ) {
 		$beds_txt = $beds > 0 ? sprintf( 1 === $beds ? ' de %d dormitorio' : ' de %d dormitorios', $beds ) : '';
@@ -94,7 +102,7 @@ function maros_seo_siblings( int $post_id ): array {
  */
 function maros_seo_keyphrase( int $post_id ): string {
 	$generic = maros_seo_generic_keyphrase( $post_id );
-	$name    = get_the_title( $post_id );
+	$name    = maros_seo_name( $post_id );
 	$zone    = maros_seo_zone( $post_id );
 	if ( '' === $generic ) {
 		return $name;
@@ -110,7 +118,7 @@ function maros_seo_keyphrase( int $post_id ): string {
 
 /** Título SEO: la frase clave delante (Yoast lo pide), el nombre y la marca si caben. */
 function maros_seo_title( int $post_id, string $keyphrase ): string {
-	$name = get_the_title( $post_id );
+	$name = maros_seo_name( $post_id );
 	$site = get_bloginfo( 'name' );
 	$kw   = maros_seo_ucfirst( $keyphrase );
 	$has  = false !== mb_stripos( $keyphrase, $name );
@@ -136,7 +144,7 @@ function maros_seo_title( int $post_id, string $keyphrase ): string {
 function maros_seo_description( int $post_id, string $keyphrase ): string {
 	$es     = maros_is_es( $post_id );
 	$guests = (int) get_post_meta( $post_id, 'maros_max_guests', true );
-	$name   = get_the_title( $post_id );
+	$name   = maros_seo_name( $post_id );
 	// «Villa Concha, villa de 5 dormitorios en…»: con la frase genérica también cuando la clave es
 	// «Nombre + zona», porque así lleva todas sus palabras y se lee como una frase.
 	$generic = maros_seo_generic_keyphrase( $post_id ) ?: $keyphrase;
@@ -308,7 +316,7 @@ function maros_seo_template_html( int $post_id ): string {
 
 /** Texto alternativo de la foto principal: «Villa Concha · villa de 5 dormitorios en Nueva Andalucía». */
 function maros_seo_hero_alt( int $post_id ): string {
-	$name = get_the_title( $post_id );
+	$name = maros_seo_name( $post_id );
 	$kw   = (string) get_post_meta( $post_id, '_yoast_wpseo_focuskw', true ) ?: maros_seo_keyphrase( $post_id );
 	return false !== mb_stripos( $kw, $name ) ? maros_seo_ucfirst( $kw ) : $name . ' · ' . $kw;
 }
@@ -342,7 +350,7 @@ function maros_seo_schema_piece( int $post_id ): array {
 	$piece = array(
 		'@type'       => 'VacationRental',
 		'@id'         => $url . '#rental',
-		'name'        => get_the_title( $post_id ),
+		'name'        => maros_seo_name( $post_id ),
 		'url'         => $url,
 		'description' => (string) ( get_post_meta( $post_id, '_yoast_wpseo_metadesc', true ) ?: get_the_excerpt( $post_id ) ),
 		'inLanguage'  => $es ? 'es' : 'en',
