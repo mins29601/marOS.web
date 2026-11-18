@@ -632,6 +632,15 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-zona-prose h2 { font-size: var(--wp--preset--font-size--large); margin: 2.5rem 0 0.75rem; }
 .mis-zona-prose h3 { font-size: var(--wp--preset--font-size--medium); margin: 1.75rem 0 0.5rem; }
 .mis-zona-prose p, .mis-zona-prose li { line-height: 1.7; }
+/* Lugares recomendados bajo su sección de la guía (mis-contenido/includes/lugares.php) */
+.mis-lugares { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--mis-line); }
+.mis-lugar { padding: 0.9rem 0; border-bottom: 1px solid var(--mis-line); }
+.mis-zona-prose .mis-lugar p { margin: 0; line-height: 1.5; }
+.mis-lugar__name { font-family: var(--wp--preset--font-family--heading); font-size: var(--wp--preset--font-size--medium); }
+.mis-lugar__name a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.mis-zona-prose .mis-lugar__meta { margin-top: 0.15rem; font-family: var(--mis-label-font); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wp--preset--color--secondary); }
+.mis-zona-prose .mis-lugar__text { margin-top: 0.35rem; }
+@media (min-width: 640px) { .mis-lugares { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; } }
 .mis-zona-side { display: grid; gap: 1.25rem; align-content: start; }
 @media (min-width: 1024px) {
 	.mis-zona-guide { grid-template-columns: minmax(0, 1fr) 340px; column-gap: 4rem; }
