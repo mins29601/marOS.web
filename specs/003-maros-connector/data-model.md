@@ -26,7 +26,8 @@ Los campos L, E y M son de solo lectura en WordPress y se guardan con prefijo `_
 | Publicable en la web | M | no | Si deja de serlo → borrador |
 | Título visible (H1) | WP | sí | |
 | Slug | WP | sí | Se conserva el de la web actual (spec 002) |
-| Resumen y descripción larga | WP | sí | Bloques de Gutenberg |
+| Resumen (extracto) | WP, automático | sí | Se genera de tipo, zona, dormitorios, baños, huéspedes y lo más destacado (Julio 18-11-2026); uno escrito a mano se respeta y vaciarlo vuelve al automático |
+| Descripción larga | WP | sí | Bloques de Gutenberg |
 | Puntos fuertes, FAQ, «ideal para» | WP | sí | |
 | Orden de galería, imagen destacada, alt | WP | sí | |
 | SEO (title, meta, OG, schema) | WP | sí | Plugin SEO (D3) |
