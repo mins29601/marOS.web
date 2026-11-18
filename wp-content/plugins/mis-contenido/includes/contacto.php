@@ -25,6 +25,27 @@ function mis_contact_fields(): array {
 	);
 }
 
+/**
+ * Personas que dan la cara en la web (banners con foto): huéspedes y propietarios. Según la guía
+ * editorial de marOS.content, Rebecca firma lo de huéspedes y Julio lo de propietarios.
+ */
+function mis_people(): array {
+	return array(
+		'guests' => 'Huéspedes, zonas, servicios y experiencias',
+		'owners' => 'Propietarios',
+	);
+}
+
+/** Campos de cada persona: sufijo => etiqueta. La foto es un id de Medios. */
+function mis_person_fields(): array {
+	return array(
+		'name'    => 'Nombre',
+		'role_en' => 'Cargo (inglés)',
+		'role_es' => 'Cargo (español)',
+		'photo'   => 'Foto',
+	);
+}
+
 /** Un dato de contacto, o '' si no está. */
 function mis_contact( string $key ): string {
 	$all = get_option( 'mis_contact', array() );
@@ -51,6 +72,12 @@ add_action(
 				'default'           => array(),
 				'sanitize_callback' => static function ( $in ): array {
 					$out = array();
+					foreach ( array_keys( mis_people() ) as $who ) {
+						foreach ( array_keys( mis_person_fields() ) as $f ) {
+							$v                     = trim( (string) ( is_array( $in ) ? ( $in[ "{$who}_{$f}" ] ?? '' ) : '' ) );
+							$out[ "{$who}_{$f}" ] = 'photo' === $f ? (string) ( absint( $v ) ?: '' ) : sanitize_text_field( $v );
+						}
+					}
 					foreach ( array_keys( mis_contact_fields() ) as $k ) {
 						$v = trim( (string) ( is_array( $in ) ? ( $in[ $k ] ?? '' ) : '' ) );
 						if ( in_array( $k, array( 'instagram', 'tiktok', 'youtube', 'facebook' ), true ) ) {
@@ -66,6 +93,15 @@ add_action(
 				},
 			)
 		);
+	}
+);
+
+add_action(
+	'admin_enqueue_scripts',
+	static function ( string $hook ) {
+		if ( 'settings_page_mis-contacto' === $hook ) {
+			wp_enqueue_media();
+		}
 	}
 );
 
@@ -94,6 +130,48 @@ add_action(
 					);
 				}
 				echo '</table>';
+				foreach ( mis_people() as $who => $title ) {
+					echo '<h2>' . esc_html( 'Persona de contacto · ' . $title ) . '</h2><table class="form-table" role="presentation">';
+					foreach ( mis_person_fields() as $f => $label ) {
+						$k   = "{$who}_{$f}";
+						$val = (string) ( $saved[ $k ] ?? '' );
+						if ( 'photo' === $f ) {
+							$img = $val ? wp_get_attachment_image( (int) $val, 'thumbnail', false, array( 'style' => 'border-radius:50%;width:96px;height:96px;object-fit:cover;display:block' ) ) : '';
+							printf(
+								'<tr><th scope="row">%1$s</th><td><div class="mis-person-img">%2$s</div><input type="hidden" name="mis_contact[%3$s]" value="%4$s"><p><button type="button" class="button mis-person-pick">Elegir foto</button> <button type="button" class="button-link mis-person-del">Quitar</button></p><p class="description">Cuadrada, de cara y con luz natural; 600 × 600 px o más.</p></td></tr>',
+								esc_html( $label ),
+								$img, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								esc_attr( $k ),
+								esc_attr( $val )
+							);
+						} else {
+							printf(
+								'<tr><th scope="row"><label for="mis-contact-%1$s">%2$s</label></th><td><input type="text" class="regular-text" id="mis-contact-%1$s" name="mis_contact[%1$s]" value="%3$s"></td></tr>',
+								esc_attr( $k ),
+								esc_html( $label ),
+								esc_attr( $val )
+							);
+						}
+					}
+					echo '</table>';
+				}
+				?>
+				<script>
+				document.querySelectorAll( '.mis-person-pick' ).forEach( function ( pick ) {
+					var td = pick.closest( 'td' ), input = td.querySelector( 'input[type=hidden]' ), prev = td.querySelector( '.mis-person-img' ), frame;
+					pick.addEventListener( 'click', function () {
+						frame = frame || wp.media( { title: 'Foto', library: { type: 'image' }, multiple: false } );
+						frame.off( 'select' ).on( 'select', function () {
+							var a = frame.state().get( 'selection' ).first().toJSON(), s = ( a.sizes && ( a.sizes.thumbnail || a.sizes.full ) ) || a;
+							input.value = a.id;
+							prev.innerHTML = '<img src="' + s.url + '" alt="" style="border-radius:50%;width:96px;height:96px;object-fit:cover;display:block">';
+						} );
+						frame.open();
+					} );
+					td.querySelector( '.mis-person-del' ).addEventListener( 'click', function () { input.value = ''; prev.innerHTML = ''; } );
+				} );
+				</script>
+				<?php
 				submit_button();
 				echo '</form></div>';
 			}
@@ -218,6 +296,61 @@ add_action(
 		printf(
 			'<script>(function(){var t=document.querySelector(".wpcf7 textarea[name=\'your-message\']");if(t&&!t.value){t.value=%s;}})();</script>',
 			wp_json_encode( $text )
+		);
+	}
+);
+
+
+/**
+ * [mis_persona para="guests|owners" en="Questions about the area?" es="¿Dudas sobre la zona?" estilo="banner|compacto"]
+ * Banner con la foto, el nombre y el cargo de la persona de contacto, y los botones de WhatsApp y
+ * contacto. Sin nombre no se muestra; sin foto, sale sin ella.
+ */
+function mis_person( string $who, string $key ): string {
+	$all = get_option( 'mis_contact', array() );
+	return is_array( $all ) ? trim( (string) ( $all[ "{$who}_{$key}" ] ?? '' ) ) : '';
+}
+
+add_shortcode(
+	'mis_persona',
+	static function ( $atts ): string {
+		$atts = shortcode_atts( array( 'para' => 'guests', 'en' => '', 'es' => '', 'estilo' => 'banner' ), $atts );
+		$who  = array_key_exists( $atts['para'], mis_people() ) ? $atts['para'] : 'guests';
+		$es   = function_exists( 'pll_current_language' ) && 'es' === pll_current_language();
+		$name = mis_person( $who, 'name' );
+		if ( '' === $name && 'guests' === $who ) {
+			$name = mis_contact( 'person' );
+		}
+		if ( '' === $name ) {
+			return '';
+		}
+		$role  = mis_person( $who, $es ? 'role_es' : 'role_en' );
+		$photo = (int) mis_person( $who, 'photo' );
+		$img   = $photo ? wp_get_attachment_image( $photo, 'medium', false, array( 'class' => 'mis-person__photo', 'alt' => $name, 'loading' => 'lazy' ) ) : '';
+		$lead  = $es ? $atts['es'] : $atts['en'];
+		if ( '' === $lead ) {
+			$lead = $es ? '¿Hablamos?' : 'Shall we talk?';
+		}
+		$first = strtok( $name, ' ' );
+		$text  = $es
+			? sprintf( '%s y el equipo te ayudan a elegir, sin compromiso.', $first )
+			: sprintf( '%s and the team will help you choose, with no commitment.', $first );
+		$wa      = mis_contact( 'whatsapp' );
+		$contact = function_exists( 'mis_page_url' ) ? mis_page_url( 'contact' ) : home_url( $es ? '/es/contacto/' : '/contact/' );
+		$buttons = '<a class="wp-element-button" href="' . esc_url( $contact ) . '">' . esc_html( $es ? 'Escríbenos' : 'Write to us' ) . '</a>';
+		if ( '' !== $wa ) {
+			$buttons .= '<a class="wp-element-button mis-person__wa" href="https://wa.me/' . esc_attr( ltrim( mis_contact_digits( $wa ), '+' ) ) . '" rel="noopener" target="_blank">WhatsApp</a>';
+		}
+		return sprintf(
+			'<div class="mis-person mis-person--%1$s%2$s">%3$s<div class="mis-person__body"><p class="mis-person__lead">%4$s</p><p class="mis-person__text">%5$s</p><p class="mis-person__who"><strong>%6$s</strong>%7$s</p><div class="mis-person__actions">%8$s</div></div></div>',
+			esc_attr( 'compacto' === $atts['estilo'] ? 'compact' : 'banner' ),
+			$img ? '' : ' mis-person--sin-foto',
+			$img,
+			esc_html( $lead ),
+			esc_html( $text ),
+			esc_html( $name ),
+			'' !== $role ? ' · ' . esc_html( $role ) : '',
+			$buttons
 		);
 	}
 );

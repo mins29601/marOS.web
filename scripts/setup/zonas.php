@@ -743,6 +743,107 @@ foreach ( $mis_zonas as $mis_slug => $mis_z ) {
 	}
 }
 
+// ---------------------------------------------------------------- tarjeta y «De un vistazo»
+
+// Frase corta [en, es] y perfiles de cada zona (includes/zonas.php de mis-contenido), para el índice
+// de Zonas. Solo se rellenan si están vacíos. «De un vistazo» solo donde la guía ya lo dice.
+$mis_fichas = array(
+	'nueva-andalucia' => array( array( 'The golf valley, a few minutes from Puerto Banús.', 'El valle del golf, a pocos minutos de Puerto Banús.' ), 'golf,families' ),
+	'sierra-blanca'   => array( array( 'Gated hillside living with sea views.', 'Urbanización cerrada en la ladera, con vistas al mar.' ), 'families,hills' ),
+	'puerto-banus'    => array( array( 'The marina and the beach clubs within walking distance.', 'El puerto y los beach clubs, a un paseo.' ), 'walk,beach' ),
+	'golden-mile'     => array( array( 'By the sea, between the old town and Puerto Banús.', 'Junto al mar, entre el casco antiguo y Puerto Banús.' ), 'beach,walk' ),
+	'new-golden-mile' => array(
+		array( 'Space, quiet and long beaches between San Pedro and Estepona.', 'Espacio, tranquilidad y playas largas entre San Pedro y Estepona.' ),
+		'beach,families,golf',
+		array(
+			'zona_ideal'   => array( 'Families · Groups · Golf', 'Familias · Grupos · Golf' ),
+			'zona_playas'  => array( 'El Saladillo · Guadalmansa', 'El Saladillo · Guadalmansa' ),
+			'zona_golf'    => array( 'Atalaya · El Paraíso', 'Atalaya · El Paraíso' ),
+			'zona_moverse' => array( 'Car or private driver', 'Coche o chófer privado' ),
+		),
+	),
+	'los-flamingos'   => array( array( 'A golf community in the hills of Benahavís.', 'Urbanización de golf en las colinas de Benahavís.' ), 'golf,hills' ),
+	'la-alqueria'     => array( array( 'Quiet residential hills near Los Flamingos.', 'Colinas tranquilas cerca de Los Flamingos.' ), 'hills' ),
+	'guadalmina'      => array( array( 'Golf club and beach at the western end of Marbella.', 'Club de golf y playa en el extremo oeste de Marbella.' ), 'golf,beach,families' ),
+	'rio-real'        => array( array( 'Between the golf course and the beach, east of town.', 'Entre el golf y la playa, al este del centro.' ), 'golf,beach' ),
+	'estepona'        => array( array( 'Whitewashed old town, port and a long promenade.', 'Casco antiguo blanco, puerto y un largo paseo marítimo.' ), 'walk,beach' ),
+	'benahavis'       => array( array( 'A white village in the mountains, known for its restaurants.', 'Pueblo blanco en la sierra, conocido por sus restaurantes.' ), 'hills' ),
+	'san-pedro'       => array( array( 'Boulevard, shops and promenade within walking distance.', 'Bulevar, comercios y paseo marítimo a pie.' ), 'walk,families' ),
+	'marbella-centro' => array( array( 'The old town, the Alameda and the seafront promenade.', 'El casco antiguo, la Alameda y el paseo marítimo.' ), 'walk' ),
+);
+if ( function_exists( 'mis_zona_sanitize_perfiles' ) ) {
+	foreach ( $mis_fichas as $mis_slug => $mis_f ) {
+		foreach ( array( 'en' => 0, 'es' => 1 ) as $mis_lang => $mis_i ) {
+			$mis_term = get_term_by( 'slug', 'en' === $mis_lang ? $mis_slug : $mis_slug . '-es', 'zona' );
+			if ( ! $mis_term ) {
+				continue;
+			}
+			$mis_tid  = (int) $mis_term->term_id;
+			$mis_meta = array( 'zona_resumen' => $mis_f[0][ $mis_i ], 'zona_perfiles' => $mis_f[1] );
+			foreach ( $mis_f[2] ?? array() as $mis_k => $mis_v ) {
+				$mis_meta[ $mis_k ] = $mis_v[ $mis_i ];
+			}
+			foreach ( $mis_meta as $mis_k => $mis_v ) {
+				if ( '' === (string) get_term_meta( $mis_tid, $mis_k, true ) || $mis_forzar ) {
+					update_term_meta( $mis_tid, $mis_k, $mis_v );
+				}
+			}
+		}
+		WP_CLI::log( "  = ficha de $mis_slug" );
+	}
+}
+
+// ---------------------------------------------------------------- páginas de Zonas e Inicio
+
+// La página Areas / Zonas pasa de la lista de nombres a la rejilla con filtros y el banner de la
+// persona; la portada la pone la plantilla (page-areas.html, page-zonas.html). En Inicio, la lista
+// de zonas pasa a las seis primeras tarjetas. Solo se cambia si aún tiene la lista antigua.
+WP_CLI::log( 'Páginas de Zonas e Inicio…' );
+$mis_lista = '#<!-- wp:categories \{"taxonomy":"zona"[^}]*\} /-->#';
+foreach ( array( 'areas' => 'en', 'zonas' => 'es' ) as $mis_slug => $mis_lang ) {
+	$mis_page = get_page_by_path( $mis_slug );
+	if ( $mis_page && ( preg_match( $mis_lista, $mis_page->post_content ) || $mis_forzar ) ) {
+		wp_update_post(
+			array(
+				'ID'           => $mis_page->ID,
+				'post_content' => "<!-- wp:shortcode -->[mis_zonas]<!-- /wp:shortcode -->\n<!-- wp:shortcode -->[mis_zonas_hablar]<!-- /wp:shortcode -->\n",
+			)
+		);
+		WP_CLI::log( "  + página $mis_slug" );
+	}
+}
+foreach ( array( 'home' => array( '/areas/', 'See all areas' ), 'inicio' => array( '/es/zonas/', 'Ver todas las zonas' ) ) as $mis_slug => $mis_l ) {
+	$mis_page = get_page_by_path( $mis_slug );
+	if ( $mis_page && preg_match( $mis_lista, $mis_page->post_content ) ) {
+		$mis_new = '<!-- wp:shortcode -->[mis_zonas filtros="no" max="6"]<!-- /wp:shortcode -->'
+			. "\n<!-- wp:paragraph -->\n<p><a class=\"mis-link-action\" href=\"" . esc_url( home_url( $mis_l[0] ) ) . '">' . $mis_l[1] . "</a></p>\n<!-- /wp:paragraph -->";
+		wp_update_post( array( 'ID' => $mis_page->ID, 'post_content' => preg_replace( $mis_lista, $mis_new, $mis_page->post_content, 1 ) ) );
+		WP_CLI::log( "  + zonas en $mis_slug" );
+	}
+}
+
+// Personas de contacto (Ajustes → Datos de contacto): nombre y cargo si están vacíos. La foto la sube
+// el equipo desde ese panel.
+$mis_contacto = get_option( 'mis_contact', array() );
+$mis_contacto = is_array( $mis_contacto ) ? $mis_contacto : array();
+$mis_antes    = $mis_contacto;
+foreach (
+	array(
+		'guests' => array( 'Rebecca Kratz', 'Co-Founder & Lifestyle Manager', 'Cofundadora y Lifestyle Manager' ),
+		'owners' => array( 'Julio Fraile', 'Co-Founder & CEO', 'Cofundador y CEO' ),
+	) as $mis_who => $mis_p
+) {
+	foreach ( array( 'name' => 0, 'role_en' => 1, 'role_es' => 2 ) as $mis_k => $mis_i ) {
+		if ( '' === trim( (string) ( $mis_contacto[ "{$mis_who}_{$mis_k}" ] ?? '' ) ) ) {
+			$mis_contacto[ "{$mis_who}_{$mis_k}" ] = $mis_p[ $mis_i ];
+		}
+	}
+}
+if ( $mis_contacto !== $mis_antes ) {
+	update_option( 'mis_contact', $mis_contacto );
+	WP_CLI::log( '  + personas de contacto (sin foto)' );
+}
+
 // ---------------------------------------------------------------- menús
 
 WP_CLI::log( 'Menús…' );

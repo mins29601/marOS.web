@@ -211,6 +211,10 @@ function maros_property_binding_value( array $args, $block_instance ) {
 		case 'license':
 			$license = (string) $m( 'maros_license' );
 			return $license ? esc_html( sprintf( $es ? 'Registro turístico: %s' : 'Tourist licence: %s', $license ) ) : '';
+		case 'features':
+			// Tarjeta del listado: las tres key features principales, en breve (Julio, 18-11-2026).
+			$keys = function_exists( 'maros_key_features' ) ? array_slice( maros_key_features( $post_id, $es ), 0, 3 ) : array();
+			return esc_html( implode( ' · ', wp_list_pluck( $keys, 'title' ) ) );
 		case 'stay_price':
 			// Solo con fechas buscadas (spec 005, conclusión 4): el total de la estancia, orientativo.
 			$stay = class_exists( 'Maros_Search' ) ? Maros_Search::stay_for( $post_id ) : null;

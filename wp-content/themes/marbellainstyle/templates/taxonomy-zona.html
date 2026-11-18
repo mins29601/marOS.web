@@ -1,21 +1,27 @@
-<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
-<!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"1328px"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|large","left":"var:preset|spacing|medium","right":"var:preset|spacing|medium","bottom":"var:preset|spacing|x-large"}}}} -->
-<main class="wp-block-group" style="padding-top:var(--wp--preset--spacing--large);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--x-large);padding-left:var(--wp--preset--spacing--medium)">
-<!-- wp:paragraph {"className":"mis-eyebrow"} --><p class="mis-eyebrow">[mis_t en="Area guide" es="Guía de zona"]</p><!-- /wp:paragraph -->
-<!-- wp:query-title {"type":"archive","showPrefix":false,"fontSize":"x-large"} /-->
-<!-- wp:term-description /-->
-<!-- wp:heading {"fontSize":"large","style":{"spacing":{"margin":{"top":"var:preset|spacing|large"}}}} --><h2 class="wp-block-heading has-large-font-size">[mis_t en="Stay in this area" es="Alojamiento en esta zona"]</h2><!-- /wp:heading -->
-<!-- wp:query {"queryId":1,"query":{"perPage":24,"pages":0,"offset":0,"postType":"any","order":"asc","orderBy":"title","inherit":true},"align":"wide"} -->
-<div class="wp-block-query alignwide">
-<!-- wp:post-template {"layout":{"type":"grid","columnCount":3,"minimumColumnWidth":"16rem"}} -->
-<!-- wp:group {"className":"mis-card","layout":{"type":"default"}} --><div class="wp-block-group mis-card">
-<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"4/3"} /-->
-<!-- wp:post-title {"isLink":true,"level":3} /-->
-<!-- wp:post-excerpt {"excerptLength":18} /-->
-</div><!-- /wp:group -->
-<!-- /wp:post-template -->
+<!-- wp:template-part {"slug":"header-ficha","tagName":"header"} /-->
+<!-- wp:shortcode -->[mis_zona_portada]<!-- /wp:shortcode -->
+<!-- wp:group {"tagName":"main","className":"mis-zona","layout":{"type":"default"}} -->
+<main class="wp-block-group mis-zona">
+<!-- wp:group {"className":"mis-zona-nav","layout":{"type":"default"}} -->
+<div class="wp-block-group mis-zona-nav">
+<!-- wp:shortcode -->[mis_zona_migas]<!-- /wp:shortcode -->
+<!-- wp:shortcode -->[mis_zona_anclas]<!-- /wp:shortcode -->
 </div>
-<!-- /wp:query -->
+<!-- /wp:group -->
+<!-- wp:group {"anchor":"guia","className":"mis-zona-guide","layout":{"type":"default"}} -->
+<div id="guia" class="wp-block-group mis-zona-guide">
+<!-- wp:group {"className":"mis-zona-prose","layout":{"type":"default"}} -->
+<div class="wp-block-group mis-zona-prose">
+<!-- wp:term-description /-->
+</div>
+<!-- /wp:group -->
+<!-- wp:shortcode -->[mis_zona_vistazo]<!-- /wp:shortcode -->
+</div>
+<!-- /wp:group -->
+<!-- wp:shortcode -->[mis_zona_videos]<!-- /wp:shortcode -->
+<!-- wp:shortcode -->[mis_zona_propiedades]<!-- /wp:shortcode -->
+<!-- wp:shortcode -->[mis_zona_experiencias]<!-- /wp:shortcode -->
+<!-- wp:shortcode -->[mis_zonas_otras]<!-- /wp:shortcode -->
 </main>
 <!-- /wp:group -->
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
