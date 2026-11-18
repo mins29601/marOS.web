@@ -258,6 +258,8 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 
 /* Tipos de servicio (Inicio y Servicios) y portada de un tipo */
 .mis-servicios-tipos { display: grid; gap: 2.5rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+@media (min-width: 600px) { .mis-servicios-tipos { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .mis-servicios-tipos { grid-template-columns: repeat(4, 1fr); } }
 .mis-card__foto { display: block; position: relative; overflow: hidden; margin-bottom: 0.5rem; }
 .mis-servicio-foto { position: relative; margin: 1.5rem 0; }
 .mis-servicio-foto img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
