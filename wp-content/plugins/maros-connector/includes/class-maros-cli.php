@@ -68,6 +68,39 @@ class Maros_CLI {
 	}
 
 	/**
+	 * Rellena frase clave, título SEO y meta descripción de Yoast en todas las propiedades.
+	 *
+	 * Respeta lo editado a mano en Yoast salvo con --force.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--force]
+	 * : Sobrescribe también los campos editados a mano.
+	 *
+	 * [--dry-run]
+	 * : Solo muestra lo que se generaría.
+	 */
+	public function seo( $args, $assoc_args ) {
+		$force = ! empty( $assoc_args['force'] );
+		$dry   = ! empty( $assoc_args['dry-run'] );
+		$ids   = get_posts( array( 'post_type' => 'mis_property', 'post_status' => 'any', 'posts_per_page' => -1, 'fields' => 'ids', 'lang' => '', 'orderby' => 'ID', 'order' => 'ASC' ) );
+		$rows  = array();
+		foreach ( $ids as $id ) {
+			$values  = maros_seo_values( (int) $id );
+			$changed = $dry ? array() : maros_seo_apply( (int) $id, $force );
+			$rows[]  = array(
+				'id'       => $id,
+				'lang'     => maros_is_es( (int) $id ) ? 'es' : 'en',
+				'focuskw'  => $values['focuskw'],
+				'title'    => $values['title'],
+				'metadesc' => mb_strlen( $values['metadesc'] ) . ': ' . $values['metadesc'],
+				'cambiado' => $dry ? '-' : ( implode( ',', $changed ) ?: 'nada' ),
+			);
+		}
+		WP_CLI\Utils\format_items( 'table', $rows, array( 'id', 'lang', 'focuskw', 'title', 'metadesc', 'cambiado' ) );
+	}
+
+	/**
 	 * Muestra el estado de la conexión con marOS.
 	 */
 	public function status() {

@@ -94,8 +94,8 @@ add_shortcode(
 /**
  * [mis_search] Buscador de la portada: fechas y huéspedes (mockup M1/E1).
  * Envía a Alojamiento con ?checkin=AAAA-MM-DD&checkout=AAAA-MM-DD&guests=N, las rutas del
- * estudio de URLs (spec 005). El filtrado lo hará el buscador de marOS Connector; mientras
- * tanto el listado muestra todas las casas.
+ * estudio de URLs (spec 005). Alojamiento filtra el listado con esos parámetros y pinta el
+ * buscador completo (marOS Connector, includes/search.php).
  */
 add_shortcode(
 	'mis_search',

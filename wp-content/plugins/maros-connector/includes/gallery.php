@@ -124,7 +124,7 @@ add_shortcode(
 		// de Lodgify, flechas, deslizar y «1/N», que abre la galería por estancias.
 		$html = '<div class="mis-gallery-wrap mis-hero-gallery" data-mis-tour="' . esc_attr( $id ) . '"><div class="mis-carousel" tabindex="0" aria-roledescription="carousel" aria-label="' . esc_attr( sprintf( $es ? 'Fotos de %s' : 'Photos of %s', $name ) ) . '">';
 		foreach ( $hero as $i => $att ) {
-			$img   = wp_get_attachment_image( $att, 'large', false, array( 'class' => 'mis-carousel__img', 'alt' => $alt( $att ), 'loading' => 0 === $i ? 'eager' : 'lazy', 'fetchpriority' => 0 === $i ? 'high' : 'auto', 'sizes' => '100vw' ) );
+			$img   = wp_get_attachment_image( $att, 'large', false, array( 'class' => 'mis-carousel__img', 'alt' => 0 === $i && function_exists( 'maros_seo_hero_alt' ) ? maros_seo_hero_alt( $post_id ) : $alt( $att ), 'loading' => 0 === $i ? 'eager' : 'lazy', 'fetchpriority' => 0 === $i ? 'high' : 'auto', 'sizes' => '100vw' ) );
 			$html .= '<button type="button" class="mis-carousel__slide" data-mis-photo="' . (int) $att . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver foto %1$d de %2$d' : 'View photo %1$d of %2$d', $i + 1, $total ) ) . '">' . $img . '</button>';
 		}
 		$html .= '</div>';
