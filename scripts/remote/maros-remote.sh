@@ -1,10 +1,10 @@
 # Se ejecuta EN EL SERVIDOR de IONOS a través de .github/workflows/maros-staging.yml (no a mano).
-# Argumentos: WP_PATH acción (status|sync|seo|zonas|opiniones) [id de marOS] [MIS_PATH]. Antes, el workflow antepone MIS_PHP y php-bin.sh.
+# Argumentos: WP_PATH acción (status|sync|seo|zonas|opiniones|servicios) [id de marOS] [MIS_PATH]. Antes, el workflow antepone MIS_PHP y php-bin.sh.
 set -euo pipefail
 WP="$HOME/$1"; ACCION="$2"; ID="${3:-}"; MIS="$HOME/${4:-}"
 wp() { "$PHPBIN" "$WPCLI" --path="$WP" "$@"; }
 
-wp maros status || [[ "$ACCION" == "seo" || "$ACCION" == "zonas" || "$ACCION" == "opiniones" ]]  # SEO, zonas y opiniones no necesitan marOS
+wp maros status || [[ "$ACCION" == "seo" || "$ACCION" == "zonas" || "$ACCION" == "opiniones" || "$ACCION" == "servicios" ]]  # SEO, zonas, opiniones y servicios no necesitan marOS
 
 if [[ "$ACCION" == "zonas" ]]; then
 	# Reescribe las 13 guías con el texto del código desplegado: pisa lo editado a mano en WordPress.
@@ -20,6 +20,15 @@ if [[ "$ACCION" == "opiniones" ]]; then
 	[[ -n "${4:-}" && -f "$f" ]] || { echo "✗ No encuentro $f (¿MIS_PATH?)"; exit 1; }
 	echo "→ Opiniones de la web actual"
 	wp eval-file "$f"
+fi
+
+if [[ "$ACCION" == "servicios" ]]; then
+	# Servicios y experiencias con los textos de marOS.content. No pisa lo editado en WordPress.
+	f="$MIS/current/scripts/setup/servicios.php"
+	[[ -n "${4:-}" && -f "$f" ]] || { echo "✗ No encuentro $f (¿MIS_PATH?)"; exit 1; }
+	echo "→ Servicios y experiencias (servicios.php)"
+	wp eval-file "$f"
+	wp rewrite flush --hard
 fi
 
 if [[ "$ACCION" == "seo" ]]; then

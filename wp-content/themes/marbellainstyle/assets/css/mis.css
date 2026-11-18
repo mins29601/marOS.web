@@ -256,6 +256,14 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 /* Fila de rejilla con más aire entre filas que entre columnas */
 .wp-block-post-template.is-layout-grid { column-gap: 1.25rem; row-gap: 2.5rem; }
 
+/* Tipos de servicio (Inicio y Servicios) y portada de un tipo */
+.mis-servicios-tipos { display: grid; gap: 2.5rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+.mis-card__foto { display: block; overflow: hidden; margin-bottom: 0.5rem; }
+.mis-card__foto img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .6s ease; }
+.mis-card:hover .mis-card__foto img { transform: scale(1.03); }
+.mis-servicio-texto table { width: 100%; border-collapse: collapse; margin-block: 1rem; }
+.mis-servicio-texto th, .mis-servicio-texto td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--mis-line); }
+
 /* Lista de zonas */
 .mis-terms-list { list-style: none; padding: 0; display: grid; gap: 1px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); background: var(--mis-line); border: 1px solid var(--mis-line); }
 .mis-terms-list li { background: var(--wp--preset--color--base); }
