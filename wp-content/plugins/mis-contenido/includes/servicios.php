@@ -86,7 +86,7 @@ add_shortcode(
 			$foto = mis_servicio_tipo_foto( $term );
 			$out .= '<div class="mis-card">';
 			if ( $foto ) {
-				$out .= sprintf( '<a class="mis-card__foto" href="%s">%s%s</a>', esc_url( $url ), wp_get_attachment_image( $foto, 'medium_large', false, array( 'alt' => '' ) ), mis_ilustracion_etiqueta( $foto ) );
+				$out .= sprintf( '<a class="mis-card__foto" href="%s">%s</a>', esc_url( $url ), wp_get_attachment_image( $foto, 'medium_large', false, array( 'alt' => '' ) ) );
 			}
 			$out .= sprintf( '<h3 class="wp-block-post-title"><a href="%s">%s</a></h3>', esc_url( $url ), esc_html( wp_specialchars_decode( $term->name ) ) );
 			$resumen = (string) get_term_meta( $term->term_id, 'service_summary', true );
@@ -110,7 +110,7 @@ add_shortcode(
 		$out = '<h1 class="wp-block-heading has-x-large-font-size">' . esc_html( $h1 ? $h1 : wp_specialchars_decode( $term->name ) ) . '</h1>';
 		$foto = (int) get_term_meta( $term->term_id, 'service_image', true );
 		if ( $foto && wp_attachment_is_image( $foto ) ) {
-			$out .= '<figure class="mis-servicio-foto">' . wp_get_attachment_image( $foto, 'large', false, array( 'alt' => '' ) ) . mis_ilustracion_etiqueta( $foto ) . '</figure>';
+			$out .= '<figure class="mis-servicio-foto">' . wp_get_attachment_image( $foto, 'large', false, array( 'alt' => '' ) ) . '</figure>';
 		}
 		if ( $term->description ) {
 			$out .= '<div class="mis-servicio-texto">' . wp_kses_post( wpautop( $term->description ) ) . '</div>';
@@ -155,26 +155,4 @@ add_filter(
 	},
 	10,
 	2
-);
-
-/**
- * Imágenes generadas (no fotos): llevan la marca «Illustration» / «Ilustración» encima, como pide
- * la guía editorial de marOS.content (punto 6). Se marcan con el metadato mis_ilustracion.
- */
-function mis_ilustracion_etiqueta( int $attachment_id ): string {
-	if ( ! $attachment_id || ! get_post_meta( $attachment_id, 'mis_ilustracion', true ) ) {
-		return '';
-	}
-	return '<span class="mis-ilustracion">' . esc_html( mis_servicio_t( 'Illustration', 'Ilustración' ) ) . '</span>';
-}
-
-add_filter(
-	'render_block_core/post-featured-image',
-	static function ( string $html, array $block, $instance ) {
-		$post_id = $instance->context['postId'] ?? get_the_ID();
-		$etiqueta = $post_id ? mis_ilustracion_etiqueta( (int) get_post_thumbnail_id( $post_id ) ) : '';
-		return $etiqueta && str_contains( $html, '</figure>' ) ? str_replace( '</figure>', $etiqueta . '</figure>', $html ) : $html;
-	},
-	10,
-	3
 );

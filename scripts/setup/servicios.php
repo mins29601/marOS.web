@@ -14,8 +14,8 @@
  * - Los servicios de ejemplo «Private driver» y «Concierge» pasan a borrador: su texto está
  *   ahora en la portada de su tipo.
  * - Menús: bajo Servicios, los cuatro tipos; bajo Experiencias, las que falten.
- * - Ilustraciones (servicios/img/, dibujadas con dibujar.py; no son fotos y la web lo dice con
- *   «Illustration»): imagen de cada tipo y de los servicios que aún no tienen foto.
+ * - Ilustraciones (servicios/img/, dibujadas con dibujar.py; sin etiqueta en la web por decisión
+ *   de Julio, 18-11-2026): imagen de cada tipo y de los servicios que aún no tienen foto.
  *
  * Los textos están en servicios/servicios.json, que genera servicios/generar.py desde
  * marOS.content. Lo que ya se cargó desde marOS.content y luego se editó en WordPress no se
