@@ -307,7 +307,7 @@ final class Maros_Booking {
 		$html .= '</div>';
 
 		$file = dirname( __DIR__ ) . '/assets/booking.js';
-		wp_enqueue_script( 'maros-booking', plugins_url( 'assets/booking.js', __DIR__ ), array(), (string) filemtime( $file ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_enqueue_script( 'maros-booking', plugins_url( 'assets/booking.js', __DIR__ ), array( 'maros-calendar' ), (string) filemtime( $file ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		return $html;
 	}
 

@@ -48,7 +48,12 @@ class Maros_Search {
 		// El script lo usa también el buscador de la portada ([mis_search], del tema).
 		add_action(
 			'init',
-			static fn() => wp_register_script( 'maros-search', plugins_url( 'assets/search.js', __DIR__ ), array(), (string) filemtime( dirname( __DIR__ ) . '/assets/search.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) )
+			static function () {
+				$dir = dirname( __DIR__ ) . '/assets/';
+				// Calendario único de la web (reserva de la ficha y buscadores).
+				wp_register_script( 'maros-calendar', plugins_url( 'assets/calendar.js', __DIR__ ), array(), (string) filemtime( $dir . 'calendar.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+				wp_register_script( 'maros-search', plugins_url( 'assets/search.js', __DIR__ ), array( 'maros-calendar' ), (string) filemtime( $dir . 'search.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+			}
 		);
 	}
 
