@@ -1,6 +1,7 @@
 <?php
 /**
- * Zonas nuevas con su guía (spec 005, mapa del sitio: «Zonas sin guía»). Idempotente.
+ * Zonas de la web nueva que no crea contenido-inicial.php, con su guía (spec 005; las 13 zonas
+ * de Julio del 14-11-2026 en marOS.content, preguntas-ola-1 Z1). Idempotente.
  *
  * Uso: wp eval-file scripts/setup/zonas.php
  * (en local: npm run wp -- eval-file wp-content/mis-scripts/setup/zonas.php)
@@ -73,6 +74,48 @@ HTML,
 <h2>Lo que hay que saber</h2>
 <p>Elige la New Golden Mile por espacio y tranquilidad, no para ir andando al casco antiguo o al puerto. Si quieres la vida nocturna a la puerta de casa, te encajarán mejor Puerto Banús o la Milla de Oro.</p>
 HTML,
+	),
+	// Texto provisional (Julio, 18-11-2026): una entrada de «para quién encaja» hasta que PC-17
+	// escriba la guía completa en marOS.content.
+	'los-flamingos' => array(
+		'nombre' => array( 'Los Flamingos', 'Los Flamingos' ),
+		'en'     => '<p>A golf community in the hills of Benahavís, above the New Golden Mile. It suits golfers and families who want a quiet villa with views of the coast.</p>',
+		'es'     => '<p>Una urbanización de golf en las colinas de Benahavís, sobre la New Golden Mile. Encaja con golfistas y familias que buscan una villa tranquila con vistas a la costa.</p>',
+	),
+	'la-alqueria' => array(
+		'nombre' => array( 'La Alquería', 'La Alquería' ),
+		'en'     => '<p>A residential area in the hills of Benahavís, close to Los Flamingos. It suits guests who want space and quiet, a short drive from the coast.</p>',
+		'es'     => '<p>Una zona residencial en las colinas de Benahavís, cerca de Los Flamingos. Encaja con quien busca espacio y tranquilidad, a poca distancia en coche de la costa.</p>',
+	),
+	'guadalmina' => array(
+		'nombre' => array( 'Guadalmina', 'Guadalmina' ),
+		'en'     => '<p>A residential area by the sea at the western end of Marbella, next to San Pedro de Alcántara, with its own golf club and beach. It suits families and golfers.</p>',
+		'es'     => '<p>Una zona residencial junto al mar en el extremo oeste de Marbella, al lado de San Pedro de Alcántara, con club de golf y playa propios. Encaja con familias y golfistas.</p>',
+	),
+	'rio-real' => array(
+		'nombre' => array( 'Río Real', 'Río Real' ),
+		'en'     => '<p>A residential area east of Marbella town, between the Río Real golf course and the beach. It suits guests who want to be close to the town centre and the sea.</p>',
+		'es'     => '<p>Una zona residencial al este de Marbella, entre el campo de golf de Río Real y la playa. Encaja con quien quiere estar cerca del centro y del mar.</p>',
+	),
+	'estepona' => array(
+		'nombre' => array( 'Estepona', 'Estepona' ),
+		'en'     => '<p>A coastal town to the west of Marbella, with an old town of whitewashed streets, a port and a long seafront promenade. It suits guests who want town life at a slower pace.</p>',
+		'es'     => '<p>Un pueblo de costa al oeste de Marbella, con casco antiguo de calles blancas, puerto y un largo paseo marítimo. Encaja con quien quiere vida de pueblo a un ritmo más tranquilo.</p>',
+	),
+	'benahavis' => array(
+		'nombre' => array( 'Benahavís village', 'Benahavís pueblo' ),
+		'en'     => '<p>A white village in the mountains above San Pedro de Alcántara, known for its restaurants. It suits guests who want countryside and views, a short drive from the coast.</p>',
+		'es'     => '<p>Un pueblo blanco en la sierra, sobre San Pedro de Alcántara, conocido por sus restaurantes. Encaja con quien busca campo y vistas, a poca distancia en coche de la costa.</p>',
+	),
+	'san-pedro' => array(
+		'nombre' => array( 'San Pedro de Alcántara', 'San Pedro de Alcántara' ),
+		'en'     => '<p>A town within Marbella, between Puerto Banús and Guadalmina, with its own boulevard, shops and seafront promenade. It suits families who want everyday life within walking distance.</p>',
+		'es'     => '<p>Un núcleo de Marbella entre Puerto Banús y Guadalmina, con su bulevar, comercios y paseo marítimo. Encaja con familias que quieren tener el día a día a pie.</p>',
+	),
+	'marbella-centro' => array(
+		'nombre' => array( 'Marbella town centre', 'Marbella centro' ),
+		'en'     => '<p>The old town around Plaza de los Naranjos, the Alameda park and the seafront promenade. It suits guests who want to walk to restaurants, shops and the beach.</p>',
+		'es'     => '<p>El casco antiguo en torno a la plaza de los Naranjos, la Alameda y el paseo marítimo. Encaja con quien quiere ir andando a restaurantes, tiendas y playa.</p>',
 	),
 );
 

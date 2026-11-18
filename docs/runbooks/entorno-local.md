@@ -71,7 +71,7 @@ npm run wp -- eval-file wp-content/mis-scripts/setup/zonas.php
 - `contenido-inicial.php` crea zonas, tipos de servicio, 2 experiencias, 4 servicios, las páginas
   del mapa del sitio (spec 005), los formularios de Contact Form 7 y los menús de cada idioma. Es
   idempotente y los textos son de ejemplo.
-- `zonas.php` crea las zonas nuevas (hoy New Golden Mile) con su guía en inglés y español y las
+- `zonas.php` crea las zonas que no crea el contenido inicial (New Golden Mile y 8 más) con su guía en inglés y español y las
   añade a los menús. No pisa una guía que ya tenga texto (`… zonas.php forzar` para reescribirla).
 
 ## 4. La API de marOS simulada
