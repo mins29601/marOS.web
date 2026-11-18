@@ -36,6 +36,9 @@ if ( ! function_exists( 'pll_set_term_language' ) || ! class_exists( 'Maros_Sync
 
 // WP-CLI corre sin usuario: sin esto, kses quita los <h2> y <ul> de la guía.
 kses_remove_filters();
+// Las descripciones de término pasan además por wp_filter_kses (default-filters.php), que
+// kses_remove_filters() no quita: sin esto la guía se guarda como texto plano.
+remove_filter( 'pre_term_description', 'wp_filter_kses' );
 
 $mis_forzar = in_array( 'forzar', $args ?? array(), true );
 
