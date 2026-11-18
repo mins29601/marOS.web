@@ -258,7 +258,12 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 
 /* Tipos de servicio (Inicio y Servicios) y portada de un tipo */
 .mis-servicios-tipos { display: grid; gap: 2.5rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
-.mis-card__foto { display: block; overflow: hidden; margin-bottom: 0.5rem; }
+.mis-card__foto { display: block; position: relative; overflow: hidden; margin-bottom: 0.5rem; }
+.mis-servicio-foto { position: relative; margin: 1.5rem 0; }
+.mis-servicio-foto img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.wp-block-post-featured-image:has(.mis-ilustracion) { position: relative; }
+/* Imagen generada: se dice siempre (guía editorial, punto 6) */
+.mis-ilustracion { position: absolute; left: 0.75rem; bottom: 0.75rem; padding: 0.15rem 0.5rem; background: rgba(251, 251, 251, 0.9); color: var(--wp--preset--color--secondary); font-size: 0.75rem; letter-spacing: 0.04em; }
 .mis-card__foto img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .6s ease; }
 .mis-card:hover .mis-card__foto img { transform: scale(1.03); }
 .mis-servicio-texto table { width: 100%; border-collapse: collapse; margin-block: 1rem; }

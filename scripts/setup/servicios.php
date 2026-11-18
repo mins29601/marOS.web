@@ -14,6 +14,8 @@
  * - Los servicios de ejemplo «Private driver» y «Concierge» pasan a borrador: su texto está
  *   ahora en la portada de su tipo.
  * - Menús: bajo Servicios, los cuatro tipos; bajo Experiencias, las que falten.
+ * - Ilustraciones (servicios/img/, dibujadas con dibujar.py; no son fotos y la web lo dice con
+ *   «Illustration»): imagen de cada tipo y de los servicios que aún no tienen foto.
  *
  * Los textos están en servicios/servicios.json, que genera servicios/generar.py desde
  * marOS.content. Lo que ya se cargó desde marOS.content y luego se editó en WordPress no se
@@ -296,6 +298,59 @@ foreach ( array( 'en', 'es' ) as $lang ) {
 				WP_CLI::log( "  + $loc ($lang): " . get_the_title( $par[ $lang ] ) );
 			}
 		}
+	}
+}
+
+// ---------------------------------------------------------------- ilustraciones
+
+WP_CLI::log( 'Ilustraciones…' );
+require_once ABSPATH . 'wp-admin/includes/file.php';
+require_once ABSPATH . 'wp-admin/includes/media.php';
+require_once ABSPATH . 'wp-admin/includes/image.php';
+$mis_ilus_alt = array(
+	'transport' => array( 'Illustration of a car on the road', 'Ilustración de un coche en la carretera' ),
+	'catering'  => array( 'Illustration of a chef’s hat and a plate', 'Ilustración de un gorro de chef y un plato' ),
+	'events'    => array( 'Illustration of two glasses raised in a toast', 'Ilustración de dos copas brindando' ),
+	'concierge' => array( 'Illustration of a reception bell', 'Ilustración de un timbre de recepción' ),
+);
+$mis_ilus = array();
+foreach ( $mis_ilus_alt as $slug => $alt ) {
+	$found = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'numberposts' => 1, 'fields' => 'ids', 'lang' => '', 'meta_key' => 'mis_ilustracion', 'meta_value' => $slug ) ); // phpcs:ignore WordPress.DB.SlowDBQuery
+	if ( $found ) {
+		$mis_ilus[ $slug ] = (int) $found[0];
+		continue;
+	}
+	$tmp = wp_tempnam( "servicio-$slug.jpg" );
+	copy( __DIR__ . "/servicios/img/$slug.jpg", $tmp );
+	$att = media_handle_sideload( array( 'name' => "servicio-$slug-ilustracion.jpg", 'tmp_name' => $tmp ), 0, $alt[0] );
+	if ( is_wp_error( $att ) ) {
+		WP_CLI::warning( "Ilustración $slug: " . $att->get_error_message() );
+		continue;
+	}
+	update_post_meta( $att, 'mis_ilustracion', $slug );
+	update_post_meta( $att, '_wp_attachment_image_alt', $alt[0] );
+	wp_update_post( array( 'ID' => $att, 'post_excerpt' => 'Illustration' ) );
+	$mis_ilus[ $slug ] = (int) $att;
+	WP_CLI::log( "  + ilustración $slug (Medios $att)" );
+}
+foreach ( $mis_tipo_ids as $slug => $by_lang ) {
+	foreach ( $by_lang as $lang => $tid ) {
+		if ( ! empty( $mis_ilus[ $slug ] ) && ! get_term_meta( $tid, 'service_image', true ) ) {
+			update_term_meta( $tid, 'service_image', $mis_ilus[ $slug ] );
+			WP_CLI::log( "  ~ tipo $slug ($lang) con ilustración" );
+		}
+	}
+}
+// Servicios publicados sin foto: la ilustración de su tipo (si luego se pone una foto, se respeta).
+foreach ( get_posts( array( 'post_type' => 'mis_service', 'lang' => '', 'numberposts' => -1, 'fields' => 'ids' ) ) as $id ) {
+	$terms = get_the_terms( $id, 'tipo-servicio' );
+	$slug  = ( $terms && ! is_wp_error( $terms ) ) ? preg_replace( '/-es$/', '', $terms[0]->slug ) : '';
+	$thumb = (int) get_post_thumbnail_id( $id );
+	// Las fotos de villas que puso contenido-inicial.php como ejemplo no corresponden al servicio.
+	$de_ejemplo = $thumb && ! get_post_meta( $thumb, 'mis_ilustracion', true ) && get_post_meta( $thumb, 'maros_photo_hash', true );
+	if ( ! empty( $mis_ilus[ $slug ] ) && ( ! $thumb || $de_ejemplo ) ) {
+		set_post_thumbnail( $id, $mis_ilus[ $slug ] );
+		WP_CLI::log( '  ~ ' . get_the_title( $id ) . ' con ilustración' );
 	}
 }
 
