@@ -83,7 +83,7 @@ add_shortcode(
 			if ( $foto ) {
 				$out .= sprintf( '<a class="mis-card__foto" href="%s">%s</a>', esc_url( $url ), wp_get_attachment_image( $foto, 'medium_large', false, array( 'alt' => '' ) ) );
 			}
-			$out .= sprintf( '<h3 class="wp-block-post-title"><a href="%s">%s</a></h3>', esc_url( $url ), esc_html( $term->name ) );
+			$out .= sprintf( '<h3 class="wp-block-post-title"><a href="%s">%s</a></h3>', esc_url( $url ), esc_html( wp_specialchars_decode( $term->name ) ) );
 			$resumen = (string) get_term_meta( $term->term_id, 'service_summary', true );
 			if ( $resumen ) {
 				$out .= '<p class="mis-muted">' . esc_html( $resumen ) . '</p>';
@@ -102,7 +102,7 @@ add_shortcode(
 			return '';
 		}
 		$h1  = (string) get_term_meta( $term->term_id, 'service_h1', true );
-		$out = '<h1 class="wp-block-heading has-x-large-font-size">' . esc_html( $h1 ? $h1 : $term->name ) . '</h1>';
+		$out = '<h1 class="wp-block-heading has-x-large-font-size">' . esc_html( $h1 ? $h1 : wp_specialchars_decode( $term->name ) ) . '</h1>';
 		if ( $term->description ) {
 			$out .= '<div class="mis-servicio-texto">' . wp_kses_post( wpautop( $term->description ) ) . '</div>';
 		}
