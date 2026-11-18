@@ -185,6 +185,61 @@ class Maros_Client {
 		return self::get( '/catalog/properties/' . $id . '/quote?' . http_build_query( $query ) );
 	}
 
+	/**
+	 * Solicitud de reserva de la web (marOS spec 026, scope «booking_requests:write»):
+	 * POST /v1/catalog/properties/{id}/booking-requests. Un solo intento: marOS no duplica la
+	 * reserva con el mismo request_id, y la web deja reintentar al visitante.
+	 *
+	 * @return array{status:int,body:array}|WP_Error Respuesta de marOS (también 4xx, con su error).
+	 */
+	public static function post_booking_request( string $id, array $body ) {
+		if ( ! self::safe_id( $id ) ) {
+			return new WP_Error( 'maros_id', 'Id de marOS no válido.' );
+		}
+		$ok = self::check_config();
+		if ( is_wp_error( $ok ) ) {
+			return $ok;
+		}
+		if ( 'mock' === self::env() ) {
+			// Sin red: una solicitud de ejemplo para ver C5 en local.
+			return array(
+				'status' => 201,
+				'body'   => array(
+					'reference'  => 'MIS-TEST' . strtoupper( substr( md5( (string) ( $body['request_id'] ?? '' ) ), 0, 2 ) ),
+					'status'     => 'requested',
+					'property_id' => $id,
+					'arrival'    => $body['arrival'] ?? '',
+					'departure'  => $body['departure'] ?? '',
+					'total'      => $body['quoted_total'] ?? 0,
+					'currency'   => 'EUR',
+					'deposit'    => null,
+					'expires_at' => gmdate( 'c', time() + DAY_IN_SECONDS ),
+					'next_steps' => array( 'sent', 'confirm_24h', 'pay_link' ),
+				),
+			);
+		}
+		$response = wp_remote_post(
+			self::base() . '/v1/catalog/properties/' . $id . '/booking-requests',
+			array(
+				'timeout'     => 45,
+				'redirection' => 0,
+				'user-agent'  => 'marOS-Connector/' . MAROS_CONNECTOR_VERSION . '; ' . wp_parse_url( home_url(), PHP_URL_HOST ),
+				'headers'     => array(
+					'Authorization'   => 'Bearer ' . MAROS_API_KEY,
+					'Accept'          => 'application/json',
+					'Content-Type'    => 'application/json',
+					'Idempotency-Key' => (string) ( $body['request_id'] ?? '' ),
+				),
+				'body'        => wp_json_encode( $body ),
+			)
+		);
+		if ( is_wp_error( $response ) ) {
+			return new WP_Error( 'maros_http', 'marOS no responde a la solicitud de reserva: ' . $response->get_error_message() );
+		}
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		return array( 'status' => (int) wp_remote_retrieve_response_code( $response ), 'body' => is_array( $data ) ? $data : array() );
+	}
+
 	public static function safe_id( string $id ): string {
 		return preg_match( '/^[A-Za-z0-9_\-]{1,80}$/', $id ) ? $id : '';
 	}

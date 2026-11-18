@@ -4,7 +4,8 @@
  * Calendario con la copia local de disponibilidad (un carácter por día desde hoy; bits: 1 noche
  * libre, 2 se puede llegar, 4 se puede salir), huéspedes y presupuesto en vivo de marOS a través de
  * /wp-json/maros/v1/quote. En móvil la caja se abre como pantalla de reserva (flujo C) desde la
- * barra fija.
+ * barra fija. Con la solicitud de reserva activa (data.request, spec 026 de marOS), «Reservar» abre
+ * el formulario «Solicitar reserva» (C4) y, al enviarlo, «Solicitud enviada» (C5) en la misma página.
  */
 ( function () {
 	function iso( t ) {
@@ -49,6 +50,7 @@
 		};
 		var request = 0;
 		var timer = null;
+		var lastQuote = null;
 
 		/* ---------------------------------------------------------- Calendario (assets/calendar.js) */
 
@@ -58,6 +60,7 @@
 			days: cal.days,
 			min: cal.min,
 			onChange: function ( a, d, done ) {
+				requestId = '';
 				state.arrival = a;
 				state.departure = d;
 				showDates();
@@ -128,6 +131,7 @@
 			b.addEventListener( 'click', function () {
 				var k = b.getAttribute( 'data-step' );
 				state[ k ] = Math.max( k === 'adults' ? 1 : 0, state[ k ] + +b.getAttribute( 'data-by' ) );
+				requestId = '';
 				showGuests();
 				if ( state.arrival && state.departure ) {
 					clearTimeout( timer );
@@ -175,6 +179,7 @@
 		}
 
 		function showQuote( q ) {
+			lastQuote = q && q.available ? q : null;
 			root.classList.remove( 'is-loading' );
 			after.innerHTML = '';
 			if ( ! q || q.error || ! q.available ) {
@@ -231,13 +236,335 @@
 			}
 		} );
 
-		// Sin fechas, el botón abre el calendario en vez de ir a Lodgify.
+		// Sin fechas, el botón abre el calendario en vez de ir a Lodgify; con precio, la solicitud (C4).
 		cta.addEventListener( 'click', function ( e ) {
 			if ( ! cta.hasAttribute( 'data-ready' ) ) {
 				e.preventDefault();
 				openCalendar( state.arrival && ! state.departure ? 'departure' : 'arrival' );
+			} else if ( form && lastQuote ) {
+				e.preventDefault();
+				openRequest();
 			}
 		} );
+
+		/* ---------------------------------------------------------- Solicitud de reserva (C4 y C5) */
+
+		var req = data.request ? root.querySelector( '[data-req]' ) : null;
+		var form = req && req.querySelector( '[data-req-form]' );
+		var f = data.form || {};
+		var requestId = '';
+		var sending = false;
+		var opener = null;
+		if ( req ) {
+			// Fuera de la caja: en el móvil la columna se oculta y la pantalla de reserva recorta.
+			document.body.appendChild( req );
+		}
+
+		function uuid() {
+			if ( window.crypto && crypto.randomUUID ) {
+				return crypto.randomUUID();
+			}
+			var b = crypto.getRandomValues( new Uint8Array( 16 ) );
+			b[ 6 ] = ( b[ 6 ] & 15 ) | 64;
+			b[ 8 ] = ( b[ 8 ] & 63 ) | 128;
+			var h = Array.prototype.map.call( b, function ( x ) {
+				return ( x + 256 ).toString( 16 ).slice( 1 );
+			} ).join( '' );
+			return h.slice( 0, 8 ) + '-' + h.slice( 8, 12 ) + '-' + h.slice( 12, 16 ) + '-' + h.slice( 16, 20 ) + '-' + h.slice( 20 );
+		}
+
+		// Países con su nombre en el idioma de la ficha (Intl), ordenados; se propone el del navegador.
+		var COUNTRIES = 'AD AE AF AG AI AL AM AO AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BW BY BZ CA CD CF CG CH CI CK CL CM CN CO CR CU CV CW CY CZ DE DJ DK DM DO DZ EC EE EG ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GT GU GW GY HK HN HR HT HU ID IE IL IM IN IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TG TH TJ TL TM TN TO TR TT TV TW TZ UA UG US UY UZ VA VC VE VG VI VN VU WF WS XK YE YT ZA ZM ZW'.split( ' ' );
+		var PREFIX = { ES: '+34', GB: '+44', IE: '+353', DE: '+49', FR: '+33', NL: '+31', BE: '+32', LU: '+352', SE: '+46', NO: '+47', DK: '+45', FI: '+358', IT: '+39', PT: '+351', CH: '+41', AT: '+43', PL: '+48', CZ: '+420', US: '+1', CA: '+1', MX: '+52', AE: '+971', SA: '+966', QA: '+974', IL: '+972', RU: '+7', UA: '+380', AU: '+61', GI: '+350', MA: '+212' };
+		function fillCountries() {
+			var select = form.elements.country;
+			var names = null;
+			try {
+				names = new Intl.DisplayNames( [ t.locale ], { type: 'region' } );
+			} catch ( e ) {}
+			var list = COUNTRIES.map( function ( c ) {
+				return { code: c, name: names ? names.of( c ) || c : c };
+			} );
+			list.sort( function ( a, b ) {
+				return a.name.localeCompare( b.name, t.locale );
+			} );
+			list.forEach( function ( c ) {
+				var o = document.createElement( 'option' );
+				o.value = c.code;
+				o.textContent = c.name;
+				select.appendChild( o );
+			} );
+			var guess = ( navigator.language || '' ).split( '-' )[ 1 ];
+			if ( guess && COUNTRIES.indexOf( guess.toUpperCase() ) >= 0 ) {
+				select.value = guess.toUpperCase();
+				form.elements.prefix.value = PREFIX[ select.value ] || '+';
+			}
+			select.addEventListener( 'change', function () {
+				var p = form.elements.prefix;
+				if ( PREFIX[ select.value ] && ( p.value === '+' || p.value === '' || Object.keys( PREFIX ).some( function ( k ) {
+					return PREFIX[ k ] === p.value;
+				} ) ) ) {
+					p.value = PREFIX[ select.value ];
+				}
+			} );
+		}
+
+		if ( req ) {
+			fillCountries();
+		}
+
+		function setAll( sel, text ) {
+			req.querySelectorAll( sel ).forEach( function ( el ) {
+				el.textContent = text;
+			} );
+		}
+		function fillSummary( q ) {
+			setAll( '[data-req-dates]', range( q.arrival, q.departure ) + ' · ' + q.nights_label );
+			setAll( '[data-req-guests]', root.querySelector( '[data-show=guests]' ).textContent );
+			setAll( '[data-req-total]', q.total );
+			setAll( '[data-req-nights]', q.nights_label );
+			req.querySelectorAll( '[data-req-deposit]' ).forEach( function ( el ) {
+				el.textContent = q.deposit || '';
+				el.hidden = ! q.deposit;
+			} );
+		}
+
+		function alertBox( text ) {
+			var a = req.querySelector( '[data-req-alert]' );
+			a.textContent = text || '';
+			a.hidden = ! text;
+		}
+		function fieldError( name, text ) {
+			var wrap = form.querySelector( '[data-field="' + name + '"]' );
+			if ( ! wrap ) {
+				return;
+			}
+			var p = wrap.querySelector( '.mis-req__error' );
+			p.textContent = text || '';
+			p.hidden = ! text;
+			wrap.classList.toggle( 'has-error', !! text );
+			var input = form.elements[ name ];
+			if ( input && input.setAttribute ) {
+				if ( text ) {
+					input.setAttribute( 'aria-invalid', 'true' );
+				} else {
+					input.removeAttribute( 'aria-invalid' );
+				}
+			}
+		}
+		function showErrors( errors ) {
+			var first = null;
+			[ 'first_name', 'last_name', 'email', 'phone', 'country', 'terms' ].forEach( function ( k ) {
+				fieldError( k, errors[ k ] );
+				if ( errors[ k ] && ! first ) {
+					first = form.elements[ k ];
+				}
+			} );
+			if ( first ) {
+				first.focus();
+			}
+			return ! first;
+		}
+
+		function phone() {
+			var p = form.elements.prefix.value.replace( /[^\d+]/g, '' );
+			var n = form.elements.phone.value.trim();
+			if ( n.charAt( 0 ) === '+' ) {
+				return n;
+			}
+			p = p.charAt( 0 ) === '+' ? p : '+' + p;
+			// El 0 de los números nacionales sobra con el prefijo (salvo en Italia).
+			return p + ' ' + ( p === '+39' ? n : n.replace( /^0+/, '' ) );
+		}
+		function values() {
+			var el = form.elements;
+			return {
+				post: data.post,
+				request_id: requestId,
+				arrival: state.arrival,
+				departure: state.departure,
+				adults: state.adults,
+				children: state.children,
+				infants: state.infants,
+				total: lastQuote ? lastQuote.amount : null,
+				first_name: el.first_name.value.trim(),
+				last_name: el.last_name.value.trim(),
+				email: el.email.value.trim(),
+				phone: phone(),
+				country: el.country.value,
+				arrival_time: ( form.querySelector( '[name=arrival_time]:checked' ) || {} ).value || 'unknown',
+				message: el.message.value.trim(),
+				terms: el.terms.checked,
+				marketing: el.marketing.checked,
+			};
+		}
+		// Lo mismo que comprueba el servidor, para avisar junto al campo sin esperar.
+		function check( v ) {
+			var e = {};
+			var m = f.fields || {};
+			if ( ! v.first_name ) {
+				e.first_name = m.first_name;
+			}
+			if ( ! v.last_name ) {
+				e.last_name = m.last_name;
+			}
+			if ( ! /^[^\s@]{1,100}@[^\s@]{1,100}\.[^\s@]{2,40}$/.test( v.email ) ) {
+				e.email = m.email;
+			}
+			if ( ! /^\+\d[\d\s().-]{5,24}$/.test( v.phone ) || ! form.elements.phone.value.trim() ) {
+				e.phone = m.phone;
+			}
+			if ( ! /^[A-Z]{2}$/.test( v.country ) ) {
+				e.country = m.country;
+			}
+			if ( ! v.terms ) {
+				e.terms = m.terms;
+			}
+			return e;
+		}
+
+		function openRequest() {
+			opener = document.activeElement;
+			requestId = requestId || uuid();
+			fillSummary( lastQuote );
+			alertBox( '' );
+			form.hidden = false;
+			req.querySelector( '[data-req-done]' ).hidden = true;
+			req.classList.remove( 'is-done' );
+			req.hidden = false;
+			document.documentElement.classList.add( 'mis-req-open' );
+			req.querySelector( '.mis-req__panel' ).scrollTop = 0;
+			req.querySelector( '#mis-req-title' ).focus( { preventScroll: true } );
+		}
+		function closeRequest() {
+			if ( ! req || req.hidden ) {
+				return;
+			}
+			req.hidden = true;
+			document.documentElement.classList.remove( 'mis-req-open' );
+			if ( opener && opener.focus ) {
+				opener.focus( { preventScroll: true } );
+			}
+		}
+		if ( req ) {
+			req.querySelectorAll( '[data-req-close]' ).forEach( function ( b ) {
+				b.addEventListener( 'click', closeRequest );
+			} );
+			document.addEventListener( 'keydown', function ( e ) {
+				if ( e.key === 'Escape' && ! req.hidden && ! sending ) {
+					e.stopImmediatePropagation();
+					closeRequest();
+				}
+			}, true );
+			// El aviso de un campo se quita al corregirlo.
+			form.addEventListener( 'input', function ( e ) {
+				var wrap = e.target.closest( '[data-field]' );
+				if ( wrap && wrap.classList.contains( 'has-error' ) ) {
+					var name = wrap.getAttribute( 'data-field' );
+					if ( ! check( values() )[ name ] ) {
+						fieldError( name, '' );
+					}
+				}
+			} );
+			form.addEventListener( 'change', function ( e ) {
+				if ( e.target.name === 'terms' && e.target.checked ) {
+					fieldError( 'terms', '' );
+				}
+			} );
+			form.addEventListener( 'submit', function ( e ) {
+				e.preventDefault();
+				if ( sending ) {
+					return;
+				}
+				var v = values();
+				if ( ! showErrors( check( v ) ) ) {
+					alertBox( '' );
+					return;
+				}
+				send( v );
+			} );
+		}
+
+		function busy( on ) {
+			sending = on;
+			var b = form.querySelector( '[data-req-send]' );
+			b.disabled = on;
+			b.textContent = on ? f.sending : f.send;
+			form.setAttribute( 'aria-busy', on ? 'true' : 'false' );
+		}
+
+		function send( v ) {
+			busy( true );
+			alertBox( '' );
+			fetch( data.request, {
+				method: 'POST',
+				headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+				credentials: 'same-origin',
+				body: JSON.stringify( v ),
+			} )
+				.then( function ( r ) {
+					return r.json().catch( function () {
+						return {};
+					} ).then( function ( body ) {
+						return { status: r.status, body: body };
+					} );
+				} )
+				.then( function ( res ) {
+					busy( false );
+					var b = res.body || {};
+					if ( res.status === 201 && b.reference ) {
+						done( b, v );
+						return;
+					}
+					if ( res.status >= 400 && res.status < 500 && res.status !== 429 ) {
+						// marOS no ha creado nada: el próximo envío es otra solicitud.
+						requestId = uuid();
+					}
+					if ( b.error === 'invalid' && b.fields ) {
+						showErrors( b.fields );
+						alertBox( b.message || f.check );
+					} else if ( b.error === 'price_changed' && b.quote ) {
+						showQuote( b.quote );
+						if ( lastQuote ) {
+							fillSummary( lastQuote );
+						}
+						alertBox( b.message );
+						req.querySelector( '.mis-req__panel' ).scrollTop = 0;
+					} else if ( b.error === 'not_available' && b.quote ) {
+						showQuote( b.quote );
+						closeRequest();
+					} else {
+						alertBox( b.message || f.failed );
+						req.querySelector( '.mis-req__panel' ).scrollTop = 0;
+					}
+				} )
+				.catch( function () {
+					busy( false );
+					alertBox( f.failed );
+				} );
+		}
+
+		function done( b, v ) {
+			setAll( '[data-req-ref]', b.reference );
+			setAll( '[data-req-thanks]', ( f.thanks || '' ).replace( '%1$s', b.first_name || v.first_name ).replace( '%2$s', b.email || v.email ) );
+			if ( b.total ) {
+				setAll( '[data-req-total]', b.total );
+			}
+			if ( b.deposit ) {
+				req.querySelectorAll( '[data-req-deposit]' ).forEach( function ( el ) {
+					el.textContent = b.deposit;
+					el.hidden = false;
+				} );
+			}
+			form.hidden = true;
+			form.reset();
+			requestId = '';
+			req.classList.add( 'is-done' );
+			var d = req.querySelector( '[data-req-done]' );
+			d.hidden = false;
+			req.querySelector( '.mis-req__panel' ).scrollTop = 0;
+			d.querySelector( '[data-req-done-title]' ).focus( { preventScroll: true } );
+		}
 
 		/* ---------------------------------------------------------- Pantalla de reserva (móvil) */
 
