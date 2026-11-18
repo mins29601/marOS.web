@@ -56,7 +56,9 @@ class Maros_Search {
 			return self::$params;
 		}
 		// phpcs:disable WordPress.Security.NonceVerification
-		$get      = static fn( string $k ): string => sanitize_text_field( wp_unslash( (string) ( $_GET[ $k ] ?? '' ) ) );
+		// Un parámetro repetido (feat[]=…, o una URL manipulada) llega como lista: aquí cuenta como vacío.
+		$get      = static fn( string $k ): string => is_scalar( $_GET[ $k ] ?? '' ) ? sanitize_text_field( wp_unslash( (string) ( $_GET[ $k ] ?? '' ) ) ) : '';
+		$int      = static fn( string $k ): int => is_scalar( $_GET[ $k ] ?? 0 ) ? absint( $_GET[ $k ] ?? 0 ) : 0;
 		$checkin  = $get( 'checkin' );
 		$checkout = $get( 'checkout' );
 		$nights   = 0;
@@ -68,17 +70,16 @@ class Maros_Search {
 			$checkout = '';
 			$nights   = 0;
 		}
-		$feat = array_values( array_intersect( array_keys( self::FEATURES ), array_map( 'sanitize_title', explode( ',', $get( 'feat' ) ) ) ) );
-		if ( ! $feat && is_array( $_GET['feat'] ?? null ) ) {
-			// Los chips del formulario llegan como feat[]=…
-			$feat = array_values( array_intersect( array_keys( self::FEATURES ), array_map( 'sanitize_title', wp_unslash( $_GET['feat'] ) ) ) );
-		}
+		// Chips: feat[]=a&feat[]=b (formulario) o feat=a,b (enlaces).
+		$raw  = $_GET['feat'] ?? '';
+		$raw  = is_array( $raw ) ? array_filter( wp_unslash( $raw ), 'is_scalar' ) : explode( ',', (string) wp_unslash( $raw ) );
+		$feat = array_values( array_intersect( array_keys( self::FEATURES ), array_map( static fn( $v ) => sanitize_title( (string) $v ), $raw ) ) );
 		self::$params = array(
 			'checkin'  => $checkin,
 			'checkout' => $checkout,
 			'nights'   => $nights,
-			'guests'   => min( 30, absint( $_GET['guests'] ?? 0 ) ),
-			'bedrooms' => min( 12, absint( $_GET['bedrooms'] ?? 0 ) ),
+			'guests'   => min( 30, $int( 'guests' ) ),
+			'bedrooms' => min( 12, $int( 'bedrooms' ) ),
 			'area'     => sanitize_title( $get( 'area' ) ),
 			'feat'     => $feat,
 		);
