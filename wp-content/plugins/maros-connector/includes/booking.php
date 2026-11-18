@@ -303,6 +303,7 @@ final class Maros_Booking {
 		$html .= '<div class="mis-resv__foot"><div class="mis-resv__sum" data-sum><span class="mis-resv__sum-none">' . esc_html( $es ? 'Sin fechas todavía' : 'No dates yet' ) . '</span></div>'
 			. '<a class="wp-element-button mis-resv__cta" href="' . esc_url( $config['stay'] ) . '" data-book-cta>' . esc_html( $es ? 'Ver disponibilidad' : 'Check availability' ) . '</a></div>';
 		$html .= '<div class="mis-resv__after" data-after></div>';
+		$html .= self::included( $post_id, $es );
 		$html .= '<div class="mis-resv__help">' . $talk . '</div>';
 		$html .= '<script type="application/json" class="mis-resv__data">' . wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ) . '</script>';
 		$html .= '</div>';
@@ -318,6 +319,53 @@ final class Maros_Booking {
 	 * mínima por tramos [día desde hoy, noches]. Con varios tipos de alojamiento, basta uno libre;
 	 * el presupuesto de marOS es el que manda.
 	 */
+	/**
+	 * Lista «Incluido», común a todas las casas (Julio, 18-11-2026: «Lista común de la empresa»,
+	 * con iconos). La recepción dice también «self check-in» en las casas que lo ofrecen (marOS
+	 * spec 032, meta maros_self_check_in). El filtro «maros_booking_included» permite cambiarla.
+	 *
+	 * @return array<int, array{icon:string,text:string}>
+	 */
+	private static function included_items( int $post_id, bool $es ): array {
+		$self  = 'yes' === get_post_meta( $post_id, 'maros_self_check_in', true );
+		$items = array(
+			array(
+				'icon' => 'phosphor/key',
+				'text' => $self
+					? ( $es ? 'Recepción en persona o self check-in, como prefieras' : 'Personal welcome or self check-in, as you prefer' )
+					: ( $es ? 'Recepción en persona' : 'Personal welcome' ),
+			),
+			array(
+				'icon' => 'phosphor/bed',
+				'text' => $es ? 'Limpieza final, ropa de cama y toallas' : 'Final cleaning, bed linen and towels',
+			),
+			array(
+				'icon' => 'phosphor/wifi-high',
+				'text' => $es ? 'Wifi y suministros' : 'Wi-Fi and utilities',
+			),
+			array(
+				'icon' => 'propios/campana-recepcion',
+				'text' => $es ? 'Concierge durante la estancia' : 'Concierge throughout your stay',
+			),
+		);
+		return (array) apply_filters( 'maros_booking_included', $items, $post_id, $es );
+	}
+
+	private static function included( int $post_id, bool $es ): string {
+		$li = '';
+		foreach ( self::included_items( $post_id, $es ) as $item ) {
+			$text = is_array( $item ) ? (string) ( $item['text'] ?? '' ) : '';
+			if ( '' !== $text ) {
+				$icon = function_exists( 'maros_icon_svg' ) ? maros_icon_svg( (string) ( $item['icon'] ?? '' ), 20 ) : '';
+				$li  .= '<li>' . $icon . '<span>' . esc_html( $text ) . '</span></li>';
+			}
+		}
+		if ( '' === $li ) {
+			return '';
+		}
+		return '<div class="mis-resv__incl"><small>' . esc_html( $es ? 'Incluido' : 'Included' ) . '</small><ul>' . $li . '</ul></div>';
+	}
+
 	private static function calendar( int $post_id ): array {
 		global $wpdb;
 		$maros = (string) get_post_meta( $post_id, 'maros_id', true );
