@@ -73,13 +73,14 @@ VILLAS_SIN_MAROS = {
 }
 
 ZONAS = {  # entradas actuales que son guías de zona -> slug de zona
-    "rio-real": "rio-real", "sierra-blanca": "sierra-blanca", "milla-de-oro": "milla-de-oro",
+    "rio-real": "rio-real", "sierra-blanca": "sierra-blanca", "milla-de-oro": "golden-mile",
     "guadalmina": "guadalmina", "nueva-andalucia": "nueva-andalucia",
     "los-flamingos": "los-flamingos", "la-alqueria": "la-alqueria", "estepona": "estepona",
 }
 # Zonas que solo existen como categoría de servicios; no tienen guía hoy.
-ZONAS_SIN_GUIA = {"benahavis": "benahavis", "soto-grande": "sotogrande",
-                  "el-madronal": "el-madronal", "new-golden-mile": "new-golden-mile"}
+ZONAS_SIN_GUIA = {"soto-grande": "sotogrande", "el-madronal": "el-madronal"}
+# Zonas nuevas, con guía escrita para la web nueva (scripts/setup/zonas.php).
+ZONAS_NUEVAS = {"new-golden-mile": "new-golden-mile", "benahavis": "benahavis"}
 
 # Entradas del blog que pasan a «Recursos para propietarios» (se quedan en el Journal,
 # con la categoría Propietarios, y se listan en /owners/resources/).
@@ -174,8 +175,8 @@ CATEGORIAS_SERVICIOS = {
     "guide": AREAS, "guia-zona-2": AREAS,
     "alqueria": AREAS + "la-alqueria/", "flamingos": AREAS + "los-flamingos/",
     "rio-real": AREAS + "rio-real/", "sierra-blanca": AREAS + "sierra-blanca/",
-    "guadalmina": AREAS + "guadalmina/", "milla-de-oro": AREAS + "milla-de-oro/",
-    "milla-de-oro-2": AREAS + "milla-de-oro/", "nueva-andalucia": AREAS + "nueva-andalucia/",
+    "guadalmina": AREAS + "guadalmina/", "milla-de-oro": AREAS + "golden-mile/",
+    "milla-de-oro-2": AREAS + "golden-mile/", "nueva-andalucia": AREAS + "nueva-andalucia/",
 }
 
 
@@ -256,6 +257,9 @@ def clasificar(tipo, url):
 
     if tipo == "services_cat":
         slug = partes[1]
+        if slug in ZONAS_NUEVAS:
+            return fila(url, tipo, "Zonas", AREAS + ZONAS_NUEVAS[slug] + "/", "fusionar",
+                        nota="Zona nueva con guía propia en la web nueva")
         if slug in ZONAS_SIN_GUIA:
             return fila(url, tipo, "Zonas", AREAS + ZONAS_SIN_GUIA[slug] + "/", "fusionar", "revisar",
                         "Zona sin guía hoy: crear la página de zona o 301 a /areas/")

@@ -66,8 +66,8 @@ Inicio                                   /                          /es/
 ├── Zonas                                /areas/                    /es/zonas/
 │   └── Zona                             /areas/<slug>/             /es/zonas/<slug>/
 │       Sierra Blanca · Milla de Oro · Nueva Andalucía · Los Flamingos · La Alquería ·
-│       Guadalmina · Río Real · Estepona · (sin guía hoy: Benahavís, Sotogrande,
-│       El Madroñal, New Golden Mile)
+│       Guadalmina · Río Real · Estepona · Puerto Banús · New Golden Mile · Benahavís pueblo ·
+│       San Pedro · Marbella centro (13 zonas, Julio 14-11; sin página: Sotogrande, El Madroñal)
 │
 ├── Propietarios                         /owners/                   /es/propietarios/
 │   ├── Gestión de alquiler vacacional   /owners/vacation-rental-management/
@@ -189,8 +189,9 @@ la spec 002 (M6.2) añadirá que cada destino responda 200 en pruebas.
    Eventos, o se juntan en la galería?
 4. **Entradas antiguas** (fiestas de 2014–2015, guía de hoteles 2022…): retirar con 301 si no
    tienen tráfico.
-5. **Zonas sin guía** (Benahavís, Sotogrande, El Madroñal, New Golden Mile): ¿se crean páginas
-   de zona?
+5. **Zonas sin guía** (Sotogrande, El Madroñal): ¿se crean páginas de zona?
+   New Golden Mile, Benahavís pueblo, San Pedro y Marbella centro **sí** (Julio, 14 y 18/11),
+   en `scripts/setup/zonas.php`. La Milla de Oro vive en `/areas/golden-mile/`.
 6. **`/vacation-rental-lp/`** y **`/vacation-planner/`**: ¿siguen usándose en anuncios o
    campañas?
 
