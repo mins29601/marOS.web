@@ -2,8 +2,9 @@
 /**
  * Sincronización de propiedades marOS → WordPress (spec 003, US1 y US2).
  *
- * Solo toca campos operativos, tipo, equipamiento, zona, fotos y calendario. Nunca título visible,
- * textos, slug ni SEO de una propiedad que ya existe. Las nuevas nacen en borrador.
+ * Solo toca campos operativos, tipo, equipamiento, zona, fotos, calendario y el extracto automático
+ * (includes/excerpt.php, que respeta el escrito a mano). Nunca título visible, descripción, slug ni
+ * SEO de una propiedad que ya existe. Las nuevas nacen en borrador.
  *
  * @package MarbellaInStyle
  */
@@ -59,10 +60,10 @@ class Maros_Sync {
 
 	/**
 	 * Versión de lo que la web guarda de cada ficha. Se sube cuando la web empieza a guardar un dato
-	 * nuevo (2: municipio para las migas de pan), para que todas las fichas se relean una vez
+	 * nuevo (2: municipio para las migas de pan; 3: extracto automático), para que todas las fichas se relean una vez
 	 * aunque su etag en marOS no haya cambiado.
 	 */
-	private const FORMAT = '2';
+	private const FORMAT = '3';
 
 	/** Etag de marOS tal como se guarda en maros_etag: con la versión de formato de la web. */
 	private static function stamp( string $etag ): string {
@@ -245,7 +246,6 @@ class Maros_Sync {
 						'post_title'   => $data['name'],
 						'post_name'    => sanitize_title( $data['name'] ),
 						'post_status'  => $status,
-						'post_excerpt' => self::default_excerpt( $data, $lang ),
 					),
 					true
 				);
@@ -273,6 +273,11 @@ class Maros_Sync {
 		$complete = self::sync_bedrooms( $ids, $data['sleeping_arrangements'] ?? array(), $photos ) && $complete;
 		// marOS spec 041: estancias con fotos para la galería por estancias (maqueta B, Julio 16-11-2026).
 		$complete = self::sync_tour( $ids, $data['photo_tour'] ?? array(), $photos ) && $complete;
+
+		// Extracto automático (zona, capacidad y lo más destacado), salvo si se escribió a mano.
+		foreach ( $ids as $lang => $post_id ) {
+			maros_refresh_excerpt( $post_id, 'es' === $lang );
+		}
 
 		// El etag se guarda al final: si algo queda a medias (fotos), la próxima pasada lo repite.
 		foreach ( $ids as $post_id ) {
@@ -354,16 +359,6 @@ class Maros_Sync {
 			return array( '', array( 'Property', 'Propiedad' ) );
 		}
 		return array( $slug, self::TYPES[ $slug ] ?? array( $name ?: ucfirst( $slug ), $name ?: ucfirst( $slug ) ) );
-	}
-
-	private static function default_excerpt( array $d, string $lang ): string {
-		$area = (string) ( $d['location']['area'] ?? '' );
-		$type = self::type_of( $d )[1];
-		$max  = (int) ( $d['max_guests'] ?? 0 );
-		if ( 'es' === $lang ) {
-			return trim( sprintf( '%s%s para %d huéspedes, gestionada por nuestro equipo.', $type[1], $area ? ' en ' . $area : '', $max ) );
-		}
-		return trim( sprintf( '%s%s for %d guests, managed by our team.', $type[0], $area ? ' in ' . $area : '', $max ) );
 	}
 
 	private static function cleaning_fee( array $d ): float {
