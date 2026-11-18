@@ -16,6 +16,12 @@
  *
  * Para añadir otra zona basta con otra entrada en $mis_zonas.
  *
+ * Los textos siguen la estructura y los criterios de PC-17 en marOS.content
+ * (contenidos/ideas/PC-17-revision-zonas.md y docs/guia-editorial.md): sin distancias ni
+ * tiempos que no se hayan medido y sin locales que no recomiende Marbella in Style. Faltan
+ * «Comer y salir» y «Servicios», que esperan la lista de locales recomendados. La versión
+ * definitiva sale del flujo de marOS.content y se pega en WordPress o aquí con «forzar».
+ *
  * @package MarbellaInStyle
  */
 
@@ -32,38 +38,40 @@ $mis_zonas = array(
 	'new-golden-mile' => array(
 		'nombre' => array( 'New Golden Mile', 'New Golden Mile' ),
 		'en'     => <<<'HTML'
-<p>The New Golden Mile is the stretch of coast between San Pedro Alcántara and Estepona: around ten kilometres of beaches, golf courses and quiet residential streets running between the sea and the mountains. It has the climate and the sea views of Marbella, with more space, more privacy and a slower pace.</p>
+<p>The New Golden Mile is the stretch of coast in Estepona between San Pedro de Alcántara and Estepona town, with the sea on one side and the Sierra Bermeja foothills on the other. It suits families and groups who want a large villa with a garden and pool, close to the beach and the golf courses, and are happy to drive to restaurants and shops.</p>
 
-<h2>Why stay here</h2>
-<ul>
-<li><strong>Beachfront living.</strong> Long, wide beaches such as El Saladillo and Guadalmansa, with beach clubs and chiringuitos that rarely feel crowded, even in August.</li>
-<li><strong>Golf on the doorstep.</strong> Several courses within a few minutes' drive, including Atalaya and El Paraíso, with Los Flamingos and the golf valley of Nueva Andalucía close by.</li>
-<li><strong>Space for families and groups.</strong> Large villas with gardens and pools in gated communities such as Cancelada, Bel Air, El Paraíso and Costalita.</li>
-<li><strong>Between two towns.</strong> Puerto Banús is around 15 minutes away and Estepona's old town around 10, so you can dine out every night and come back to a quiet house.</li>
-</ul>
+<h2>What it is like</h2>
+<p>A residential area of villas and gated communities around Cancelada, El Paraíso and Atalaya, with the N-340 coast road (A-7) and the AP-7 toll road running through it. It is quieter than Marbella and Puerto Banús, especially outside the summer months.</p>
+
+<h2>Beaches</h2>
+<p>Long, open beaches such as El Saladillo and Guadalmansa, with beach clubs and chiringuitos along the shore.</p>
+
+<h2>Golf and sport</h2>
+<p>Atalaya Golf &amp; Country Club and El Paraíso Golf Club are within the area, and the courses of Benahavís and Nueva Andalucía are a short drive away.</p>
 
 <h2>Getting around</h2>
-<p>The A-7 coast road runs the length of the area, so a car (or our private transport) is the easiest way to move around. Málaga airport is about an hour's drive and Gibraltar about 45 minutes.</p>
+<p>You will need a car or private transport for almost everything: shops, restaurants and the beach are spread along the coast road. Our team can arrange a driver for airport transfers and evenings out.</p>
 
 <h2>Good to know</h2>
-<p>Supermarkets, pharmacies, international schools and medical centres are all within a short drive. It is a lively area in summer and a calm one the rest of the year, which makes it a good choice for long stays as well as holidays.</p>
+<p>Choose the New Golden Mile for space and quiet, not for walking to the old town or the port. If nightlife on your doorstep matters, Puerto Banús or the Golden Mile will suit you better.</p>
 HTML,
 		'es'     => <<<'HTML'
-<p>La New Golden Mile es el tramo de costa entre San Pedro Alcántara y Estepona: unos diez kilómetros de playas, campos de golf y urbanizaciones tranquilas entre el mar y la sierra. Tiene el clima y las vistas de Marbella, con más espacio, más privacidad y un ritmo más pausado.</p>
+<p>La New Golden Mile es el tramo de costa de Estepona entre San Pedro de Alcántara y el pueblo de Estepona, con el mar a un lado y las faldas de Sierra Bermeja al otro. Encaja con familias y grupos que buscan una villa grande con jardín y piscina, cerca de la playa y del golf, y no les importa coger el coche para ir a cenar o a comprar.</p>
 
-<h2>Por qué alojarse aquí</h2>
-<ul>
-<li><strong>Vida de playa.</strong> Playas largas y amplias como El Saladillo y Guadalmansa, con beach clubs y chiringuitos que rara vez se llenan, incluso en agosto.</li>
-<li><strong>Golf a la puerta de casa.</strong> Varios campos a pocos minutos en coche, entre ellos Atalaya y El Paraíso, y Los Flamingos y el valle del golf de Nueva Andalucía muy cerca.</li>
-<li><strong>Espacio para familias y grupos.</strong> Villas grandes con jardín y piscina en urbanizaciones cerradas como Cancelada, Bel Air, El Paraíso o Costalita.</li>
-<li><strong>Entre dos pueblos.</strong> Puerto Banús queda a unos 15 minutos y el casco antiguo de Estepona a unos 10: se puede cenar fuera cada noche y volver a una casa tranquila.</li>
-</ul>
+<h2>Cómo es</h2>
+<p>Una zona residencial de villas y urbanizaciones cerradas en torno a Cancelada, El Paraíso y Atalaya, que cruzan la N-340 (A-7) y la autopista de peaje AP-7. Es más tranquila que Marbella y Puerto Banús, sobre todo fuera del verano.</p>
+
+<h2>Playas</h2>
+<p>Playas largas y abiertas como El Saladillo y Guadalmansa, con beach clubs y chiringuitos a lo largo de la orilla.</p>
+
+<h2>Golf y deporte</h2>
+<p>Atalaya Golf &amp; Country Club y El Paraíso Golf Club están en la propia zona, y los campos de Benahavís y Nueva Andalucía quedan a un rato en coche.</p>
 
 <h2>Cómo moverse</h2>
-<p>La A-7 recorre toda la zona junto a la costa, así que lo más cómodo es el coche (o nuestro transporte privado). El aeropuerto de Málaga está a una hora en coche y Gibraltar a unos 45 minutos.</p>
+<p>Necesitarás coche o transporte privado para casi todo: tiendas, restaurantes y playa están repartidos a lo largo de la carretera de la costa. Nuestro equipo te organiza un chófer para el aeropuerto y para salir por la noche.</p>
 
-<h2>Bueno saber</h2>
-<p>Supermercados, farmacias, colegios internacionales y centros médicos quedan a pocos minutos. En verano es una zona animada y el resto del año es tranquila, por eso funciona tanto para vacaciones como para estancias largas.</p>
+<h2>Lo que hay que saber</h2>
+<p>Elige la New Golden Mile por espacio y tranquilidad, no para ir andando al casco antiguo o al puerto. Si quieres la vida nocturna a la puerta de casa, te encajarán mejor Puerto Banús o la Milla de Oro.</p>
 HTML,
 	),
 );
