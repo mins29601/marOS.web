@@ -30,6 +30,7 @@ require_once __DIR__ . '/includes/icons.php';
 require_once __DIR__ . '/includes/bindings.php';
 require_once __DIR__ . '/includes/search.php';
 require_once __DIR__ . '/includes/gallery.php';
+require_once __DIR__ . '/includes/videos.php';
 require_once __DIR__ . '/includes/ficha.php';
 require_once __DIR__ . '/includes/excerpt.php';
 require_once __DIR__ . '/includes/seo.php';
