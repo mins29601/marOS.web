@@ -28,7 +28,7 @@ if [[ "$ACCION" == "servicios" ]]; then
 	[[ -n "${4:-}" && -f "$f" ]] || { echo "✗ No encuentro $f (¿MIS_PATH?)"; exit 1; }
 	echo "→ Servicios y experiencias (servicios.php)"
 	wp eval-file "$f"
-	wp rewrite flush --hard
+	wp rewrite flush  # el .htaccess lo escribe deploy.sh
 fi
 
 if [[ "$ACCION" == "seo" ]]; then
