@@ -1,7 +1,8 @@
 # Lugares recomendados por el MCP
 
 Rebecca añade, edita y retira los lugares que recomendamos en cada zona (restaurantes, beach clubs,
-golf, supermercados…) hablando con su asistente (ChatGPT o Claude). Decisión T47.
+golf, supermercados…) hablando con su asistente (ChatGPT o Claude). Decisión T47. Para ChatGPT,
+Julio eligió el conector MCP (18-11-2026), frente a un GPT con Acciones.
 
 ## Qué es un lugar
 
@@ -72,19 +73,6 @@ de trabajo tiene que permitir el modo desarrollador y los conectores propios en 
    New Golden Mile, beach club, en Guadalmansa, lo recomendamos en este post de Instagram del
    3-10-2026: <enlace>. Web: <web>».
 
-### O un GPT personalizado con Acciones (la clave fuera del enlace)
-
-Si no se quiere la clave en el enlace, un GPT de Rebecca puede llamar a la API REST de lugares
-(`/wp-json/mis/v1`, `includes/lugares-api.php`), que hace lo mismo que las herramientas MCP:
-
-1. ChatGPT → Explorar GPT → Crear. Instrucciones: las reglas de arriba (fuente, sin teléfonos,
-   distancias ni superlativos, borrador salvo que se pida publicar).
-2. Configurar → Crear nueva acción → Importar desde URL: `https://<web>/wp-json/mis/v1/openapi`.
-3. Autenticación: Clave de API, tipo **Bearer**, con la clave de Rebecca (la parte `mis_…` del
-   enlace).
-4. Compartir: «Solo yo» (o solo el espacio de trabajo). Al crear, editar o retirar, ChatGPT pide
-   confirmación antes de llamar.
-
 ### Conectar Claude
 
 Conector personalizado en claude.ai: URL `https://<web>/wp-json/mis/lugares` (sin la clave),
@@ -94,7 +82,7 @@ spec 013).
 ### En pruebas
 
 Pruebas está detrás de Cloudflare Access: hace falta la misma excepción de ruta que D10 para
-`/wp-json/mis/lugares` y `/wp-json/mis/v1/*` (o ampliar la de `/wp-json/mcp/*`).
+`/wp-json/mis/lugares` (o ampliar la de `/wp-json/mcp/*`).
 
 ## Riesgos de la clave en el enlace
 
