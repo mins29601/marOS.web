@@ -26,6 +26,7 @@
 		var quoteEl = root.querySelector( '.mis-resv__quote' );
 		var cta = root.querySelector( '[data-book-cta]' );
 		var sum = root.querySelector( '[data-sum]' );
+		var after = root.querySelector( '[data-after]' );
 		var sticky = document.querySelector( '.mis-sticky-cta' );
 		var stickyText = sticky && sticky.querySelector( 'p' );
 		var stickyDefault = stickyText ? stickyText.innerHTML : '';
@@ -175,6 +176,7 @@
 
 		function showQuote( q ) {
 			root.classList.remove( 'is-loading' );
+			after.innerHTML = '';
 			if ( ! q || q.error || ! q.available ) {
 				sum.innerHTML = '<span class="mis-resv__sum-none">' + t.none + '</span>';
 			}
@@ -211,11 +213,9 @@
 				html += '<div class="mis-resv__line' + ( l.included ? ' is-included' : '' ) + '"><dt>' + esc( l.label ) + '</dt><dd>' + esc( l.amount ) + '</dd></div>';
 			} );
 			html += '<div class="mis-resv__line mis-resv__total"><dt>' + t.total + ' <small>' + esc( q.nights_label ) + '</small></dt><dd>' + esc( q.total ) + '</dd></div></dl>';
-			if ( q.deposit ) {
-				html += '<p class="mis-resv__note">' + esc( q.deposit ) + '</p>';
-			}
-			html += '<p class="mis-resv__note">' + esc( q.note ) + '</p>';
 			quoteEl.innerHTML = html;
+			// Fianza y aviso, debajo del botón «Book» (Julio, 18-11).
+			after.innerHTML = ( q.deposit ? '<p class="mis-resv__note">' + esc( q.deposit ) + '</p>' : '' ) + '<p class="mis-resv__note">' + esc( q.note ) + '</p>';
 			cta.textContent = t.book;
 			cta.href = q.book_url;
 			cta.setAttribute( 'data-ready', '' );

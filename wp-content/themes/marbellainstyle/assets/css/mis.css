@@ -494,8 +494,15 @@ html.mis-tour-open { overflow: hidden; }
 .mis-resv__other { margin-top: 0.5rem; padding: 0; border: 0; background: none; font: inherit; font-size: var(--wp--preset--font-size--small); text-decoration: underline; cursor: pointer; color: var(--wp--preset--color--main); }
 .mis-resv.is-loading .mis-resv__cta { opacity: 0.6; pointer-events: none; }
 .mis-resv__cta.wp-element-button { display: block; width: 100%; box-sizing: border-box; text-align: center; margin-top: 0.5rem; }
-/* Móvil: la caja se abre a pantalla completa desde la barra fija (flujo C, T28). */
+.mis-resv__after:empty { display: none; }
+.mis-resv__after .mis-resv__note:first-child { margin-top: 0; }
+/* Móvil: la caja se abre a pantalla completa desde la barra fija (flujo C, T28). Mientras no se
+   abre, la columna de la derecha no se pinta (la barra fija ya lleva «Availability») y el
+   contenido ocupa todo el ancho (Julio, 18-11). */
 @media (max-width: 1023px) {
+	.wp-block-column:has(> .mis-booking-box:not(.is-sheet)) { display: none; }
+	.wp-block-columns:has(> .wp-block-column > .mis-booking-box) > .wp-block-column { flex-basis: 100% !important; }
+	.mis-booking-box.is-sheet .mis-resv__after { order: 8; }
 	.mis-booking-box.is-sheet { position: fixed; inset: 0; z-index: 200; overflow-y: auto; overscroll-behavior: contain; border: 0; padding: 1rem var(--wp--preset--spacing--medium) calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 0.75rem; }
 	.mis-booking-box.is-sheet > * { margin-block: 0; }
 	.mis-booking-box.is-sheet .mis-resv { display: contents; }
