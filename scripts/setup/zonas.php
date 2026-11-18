@@ -657,7 +657,8 @@ HTML,
 HTML,
 	),
 	// Sin guía propia en la web actual: escrita con lo que dicen de Benahavís las guías de
-	// Los Flamingos, La Alquería y Guadalmina. Falta la lista de restaurantes que recomendamos.
+	// Los Flamingos, La Alquería y Guadalmina. Sin restaurantes recomendados por MiS en la zona, se
+	// citan los primeros del ranking de Tripadvisor (Julio, 18-11-2026; consultado ese día).
 	'benahavis' => array(
 		'nombre' => array( 'Benahavís village', 'Benahavís pueblo' ),
 		'en'     => <<<'HTML'
@@ -673,7 +674,7 @@ HTML,
 <p>There is no beach in Benahavís. The nearest are those of San Pedro de Alcántara, Guadalmina and the New Golden Mile, a drive down to the coast.</p>
 
 <h2>Eating out</h2>
-<p>Food is what Benahavís is known for. Its restaurants serve the dishes of a mountain village, such as rabbit, suckling pig, veal and venison, but also fish and shellfish, such as zarzuela and sole. Ask our team which places we recommend for your evening.</p>
+<p>Food is what Benahavís is known for. Its restaurants serve the dishes of a mountain village, such as rabbit, suckling pig, veal and venison, but also fish and shellfish, such as zarzuela and sole. Among the best rated on Tripadvisor (November 2026) are La Escalera de Balthazar, for French and Mediterranean cooking; Los Abanicos; Restaurante Sabor; Amanhavis; and Rufino, all Mediterranean. Book ahead, especially at weekends, and ask our team if you would like help choosing.</p>
 
 <h2>Golf and sport</h2>
 <p>The municipality is home to the three courses of Villa Padierna, the Marbella Club Golf Resort and El Higueral, a nine-hole course on the gentle slopes of the hills. Atalaya Golf &amp; Country Club and the Real Club de Golf Guadalmina are close by.</p>
@@ -700,7 +701,7 @@ HTML,
 <p>En Benahavís no hay playa. Las más cercanas son las de San Pedro de Alcántara, Guadalmina y la New Golden Mile, bajando en coche a la costa.</p>
 
 <h2>Comer y salir</h2>
-<p>Benahavís es conocido por su cocina. Sus restaurantes sirven los platos de un pueblo de sierra, como conejo, cochinillo, ternera o venado, pero también pescado y marisco, como la zarzuela o el lenguado. Pregunta a nuestro equipo qué sitios te recomendamos para tu cena.</p>
+<p>Benahavís es conocido por su cocina. Sus restaurantes sirven los platos de un pueblo de sierra, como conejo, cochinillo, ternera o venado, pero también pescado y marisco, como la zarzuela o el lenguado. Entre los mejor valorados en Tripadvisor (noviembre de 2026) están La Escalera de Balthazar, de cocina francesa y mediterránea; Los Abanicos; Restaurante Sabor; Amanhavis; y Rufino, todos de cocina mediterránea. Reserva con antelación, sobre todo el fin de semana, y pregunta a nuestro equipo si quieres ayuda para elegir.</p>
 
 <h2>Golf y deporte</h2>
 <p>En el municipio están los tres campos de Villa Padierna, el Marbella Club Golf Resort y El Higueral, un campo de nueve hoyos en las suaves laderas de las colinas. Atalaya Golf &amp; Country Club y el Real Club de Golf Guadalmina quedan cerca.</p>
