@@ -68,10 +68,69 @@ function mis_zonas_url(): string {
 	return home_url( mis_zona_es() ? '/es/zonas/' : '/areas/' );
 }
 
-/** <img> de la foto de la zona, o '' si no tiene. */
+/** <img> de la foto de la zona; mientras no tenga, la ilustración generada (Julio, 18-11-2026). */
 function mis_zona_img( WP_Term $term, string $size, array $attr = array() ): string {
 	$id = (int) get_term_meta( $term->term_id, 'zona_imagen', true );
-	return $id ? wp_get_attachment_image( $id, $size, false, $attr + array( 'alt' => '' ) ) : '';
+	if ( $id ) {
+		return wp_get_attachment_image( $id, $size, false, $attr + array( 'alt' => '' ) );
+	}
+	return mis_zona_sintetica( preg_replace( '/-es$/', '', $term->slug ), mis_zona_perfiles_de( $term->term_id ), (string) ( $attr['class'] ?? '' ) );
+}
+
+/**
+ * Ilustración provisional de una zona: cielo, sol, montes y mar en SVG, con la luz y el paisaje
+ * que tocan a sus perfiles (montaña, golf, playa, pueblo). Es la misma en los dos idiomas.
+ */
+function mis_zona_sintetica( string $seed, array $perfiles = array(), string $class = '' ): string {
+	$h      = crc32( $seed );
+	$luces  = array(
+		array( '#F6E7CF', '#E9B98B', '#F8F1E4', '#2F6F8A', '#1F4E66' ), // mañana
+		array( '#CFE3EE', '#F3E9D6', '#FFF8EA', '#2B7A99', '#1C5873' ), // mediodía
+		array( '#F2D2B6', '#C98D6B', '#FBE3C4', '#3E6E85', '#24485C' ), // tarde
+		array( '#E8DCCB', '#B99A78', '#F6EBDA', '#4A7488', '#2E4E5E' ), // dorada
+	);
+	list( $sky1, $sky2, $sun, $sea1, $sea2 ) = $luces[ $h % 4 ];
+	$monte  = in_array( 'hills', $perfiles, true );
+	$golf   = in_array( 'golf', $perfiles, true ) && ! in_array( 'beach', $perfiles, true );
+	$pueblo = in_array( 'walk', $perfiles, true );
+	$sx     = 300 + ( $h >> 3 ) % 1000;
+	$hor    = $monte ? 580 : 520;
+	$m1     = $monte ? 230 : 380;
+	$m2     = $monte ? 330 : 440;
+	$o      = ( $h >> 5 ) % 300;
+
+	$svg  = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">';
+	$svg .= '<defs><linearGradient id="c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' . $sky1 . '"/><stop offset="1" stop-color="' . $sky2 . '"/></linearGradient>';
+	$svg .= '<linearGradient id="m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' . $sea1 . '"/><stop offset="1" stop-color="' . $sea2 . '"/></linearGradient></defs>';
+	$svg .= '<rect width="1600" height="900" fill="url(#c)"/>';
+	$svg .= '<circle cx="' . $sx . '" cy="' . ( $monte ? $m1 - 70 : $hor - 190 ) . '" r="70" fill="' . $sun . '" opacity=".9"/>';
+	// Sierra al fondo y montes delante.
+	$svg .= '<path d="M0 ' . $hor . ' L0 ' . ( $m1 + 120 ) . ' C' . ( 200 + $o ) . ' ' . $m1 . ' ' . ( 420 + $o ) . ' ' . ( $m1 + 60 ) . ' ' . ( 640 + $o ) . ' ' . ( $m1 - 20 ) . ' S1100 ' . ( $m1 + 90 ) . ' 1300 ' . ( $m1 + 10 ) . ' S1600 ' . ( $m1 + 80 ) . ' 1600 ' . ( $m1 + 80 ) . ' L1600 ' . $hor . ' Z" fill="#8C8A80" opacity=".45"/>';
+	$svg .= '<path d="M0 ' . $hor . ' L0 ' . ( $m2 + 90 ) . ' C' . ( 300 - $o / 2 ) . ' ' . $m2 . ' ' . ( 560 - $o / 2 ) . ' ' . ( $m2 + 110 ) . ' 900 ' . ( $m2 + 50 ) . ' S1400 ' . ( $m2 + 120 ) . ' 1600 ' . ( $m2 + 60 ) . ' L1600 ' . $hor . ' Z" fill="#5F6B57" opacity=".7"/>';
+	if ( $monte ) {
+		// Valle verde en primer plano.
+		$svg .= '<path d="M0 900 L0 560 C400 500 800 620 1200 540 S1600 570 1600 570 L1600 900 Z" fill="#4D5E45"/>';
+		$svg .= '<path d="M0 900 L0 760 C500 690 1000 800 1600 720 L1600 900 Z" fill="#3B4A36"/>';
+	} else {
+		$svg .= '<rect y="' . $hor . '" width="1600" height="' . ( 900 - $hor ) . '" fill="url(#m)"/>';
+		$svg .= '<path d="M0 ' . ( $hor + 40 ) . ' H1600 M0 ' . ( $hor + 110 ) . ' H1600 M0 ' . ( $hor + 210 ) . ' H1600" stroke="#fff" stroke-opacity=".12" stroke-width="3"/>';
+		if ( $golf ) {
+			$svg .= '<path d="M0 900 L0 720 C420 650 900 760 1600 690 L1600 900 Z" fill="#6E8B4E"/><path d="M0 900 L0 810 C600 760 1100 840 1600 790 L1600 900 Z" fill="#587540"/>';
+		} else {
+			$svg .= '<path d="M0 900 L0 800 C500 760 1100 820 1600 780 L1600 900 Z" fill="#E8D6B5"/>';
+		}
+	}
+	if ( $pueblo ) {
+		// Casas blancas en la ladera.
+		for ( $i = 0; $i < 9; $i++ ) {
+			$x    = 180 + $i * 120 + ( ( $h >> $i ) % 40 );
+			$y    = $hor - 40 - ( ( $h >> ( $i + 2 ) ) % 50 );
+			$svg .= '<rect x="' . $x . '" y="' . $y . '" width="64" height="40" fill="#FBF8F2"/><path d="M' . ( $x - 4 ) . ' ' . $y . ' L' . ( $x + 32 ) . ' ' . ( $y - 16 ) . ' L' . ( $x + 68 ) . ' ' . $y . ' Z" fill="#C97F5A"/>';
+		}
+	}
+	$svg .= '</svg>';
+
+	return '<img class="' . esc_attr( trim( $class . ' mis-zona-sintetica' ) ) . '" src="data:image/svg+xml;base64,' . base64_encode( $svg ) . '" alt="" width="1600" height="900" decoding="async">'; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 }
 
 /** Tarjeta de zona: foto vertical con el nombre encima, perfiles y frase. */
@@ -144,7 +203,7 @@ add_shortcode(
 			$lead    = (string) get_term_meta( $term->term_id, 'zona_resumen', true );
 		} else {
 			$page    = get_queried_object_id();
-			$img     = has_post_thumbnail( $page ) ? get_the_post_thumbnail( $page, 'full', array( 'class' => 'mis-zona-cover__img', 'fetchpriority' => 'high', 'sizes' => '100vw', 'alt' => '' ) ) : '';
+			$img     = has_post_thumbnail( $page ) ? get_the_post_thumbnail( $page, 'full', array( 'class' => 'mis-zona-cover__img', 'fetchpriority' => 'high', 'sizes' => '100vw', 'alt' => '' ) ) : mis_zona_sintetica( 'areas', array( 'beach' ), 'mis-zona-cover__img' );
 			$eyebrow = mis_zona_t( 'Areas', 'Zonas' );
 			$title   = mis_zona_t( 'Where to stay in Marbella', 'Dónde alojarse en Marbella' );
 			$lead    = mis_zona_t(
@@ -254,7 +313,7 @@ add_shortcode(
 <!-- wp:paragraph {"className":"mis-eyebrow","metadata":{"bindings":{"content":{"source":"maros/property","args":{"key":"area"}}}}} --><p class="mis-eyebrow"></p><!-- /wp:paragraph -->
 <!-- wp:post-title {"isLink":true,"level":3} /-->
 <!-- wp:paragraph {"className":"mis-muted","metadata":{"bindings":{"content":{"source":"maros/property","args":{"key":"facts"}}}}} --><p class="mis-muted"></p><!-- /wp:paragraph -->
-<!-- wp:paragraph {"className":"mis-card__price","metadata":{"bindings":{"content":{"source":"maros/property","args":{"key":"stay_price"}}}}} --><p class="mis-card__price"></p><!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"mis-card__features","metadata":{"bindings":{"content":{"source":"maros/property","args":{"key":"features"}}}}} --><p class="mis-card__features"></p><!-- /wp:paragraph -->
 </div><!-- /wp:group -->
 <!-- /wp:post-template --></div><!-- /wp:query -->';
 		return mis_zona_seccion(

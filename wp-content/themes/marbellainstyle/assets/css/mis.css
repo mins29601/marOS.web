@@ -525,6 +525,8 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-results-summary a { color: inherit; }
 .mis-card__price { margin-top: 0.25rem; font-weight: 600; }
 .mis-card__price:empty { display: none; }
+.mis-card__features { margin-top: 0.15rem; font-family: var(--mis-label-font); font-size: 0.6875rem !important; font-weight: 600; letter-spacing: 0.1em; line-height: 1.6; text-transform: uppercase; color: var(--wp--preset--color--main); }
+.mis-card__features:empty { display: none; }
 .mis-no-results { max-width: 40rem; padding: 2rem 0; }
 .mis-no-results__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
 @media (min-width: 768px) {
