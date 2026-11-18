@@ -133,6 +133,11 @@ add_shortcode(
 			$html .= '<button type="button" class="mis-carousel__nav mis-carousel__nav--next" data-mis-slide="1" aria-label="' . esc_attr( $es ? 'Foto siguiente' : 'Next photo' ) . '">' . $icon( '<path d="M9 6l6 6-6 6"/>', 22 ) . '</button>';
 			$html .= '<button type="button" class="mis-carousel__count" data-mis-open aria-label="' . esc_attr( sprintf( $es ? 'Ver las %d fotos' : 'Show all %d photos', $total ) ) . '"><span class="mis-carousel__index">1</span>/' . $total . '</button>';
 		}
+		// «Videos · 3» (spec 006, galería de la ficha): abre el primer vídeo; sin JavaScript, baja a la sección.
+		$videos = function_exists( 'maros_videos' ) ? count( maros_videos( $post_id ) ) : 0;
+		if ( $videos ) {
+			$html .= '<a class="mis-carousel__videos" href="#videos" data-mis-videos-open>' . $icon( '<circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor"/>', 18 ) . '<span>' . esc_html( ( $es ? 'Vídeos' : 'Videos' ) . ' · ' . $videos ) . '</span></a>';
+		}
 
 		// Capa a pantalla completa: tira de estancias, secciones y visor.
 		$html .= '<dialog class="mis-tour" id="' . esc_attr( $id ) . '" aria-label="' . esc_attr( sprintf( $es ? 'Fotos de %s' : 'Photos of %s', $name ) ) . '">';

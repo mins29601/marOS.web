@@ -283,6 +283,10 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-carousel__count { position: absolute; right: 16px; bottom: 16px; border: 0; background: rgba(37, 39, 40, .6); color: #fff; padding: 6px 12px; font-family: var(--wp--preset--font-family--primary); font-size: 0.9375rem; font-variant-numeric: tabular-nums; cursor: pointer; }
 .mis-carousel__count:hover, .mis-carousel__count:focus-visible { background: rgba(37, 39, 40, .85); }
 @media (max-width: 767px) { .mis-carousel__nav { width: 40px; height: 40px; } .mis-carousel__nav--prev { left: 10px; } .mis-carousel__nav--next { right: 10px; } }
+/* «Videos · 3» sobre la galería, junto al contador de fotos */
+.mis-carousel__videos { position: absolute; left: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 36px; padding: 6px 12px; background: rgba(37, 39, 40, .6); color: #fff; font-size: 0.9375rem; text-decoration: none; }
+.mis-carousel__videos:hover, .mis-carousel__videos:focus-visible { background: rgba(37, 39, 40, .85); color: #fff; }
+@media (min-width: 1024px) { .mis-carousel__videos { left: 28px; bottom: 24px; } }
 @media (min-width: 1024px) { .mis-carousel { height: clamp(520px, 78vh, 820px); } .mis-carousel__nav--prev { left: 28px; } .mis-carousel__nav--next { right: 28px; } .mis-carousel__count { right: 28px; bottom: 24px; } }
 
 /* Cabecera de la ficha: blanca y transparente sobre la foto; al pasar la foto, la de siempre */
@@ -380,6 +384,31 @@ html.mis-tour-open { overflow: hidden; }
 @media (max-width: 767px) { .mis-lb__stage { padding: 0; } .mis-lb__nav { display: none; } }
 @media (prefers-reduced-motion: reduce) { .mis-gallery__img { transition: none; } }
 
+/* Vídeos de la casa (D18): carátulas verticales 9:16 en una fila que se desliza */
+.mis-videos h2 { margin: 0 0 1.25rem; }
+.mis-videos__track { list-style: none; margin: 0 calc(var(--wp--preset--spacing--medium) * -1); padding: 0 var(--wp--preset--spacing--medium) 0.5rem; display: flex; gap: 0.75rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--wp--preset--spacing--medium); scrollbar-width: thin; }
+.mis-videos__item { flex: 0 0 min(220px, 58vw); scroll-snap-align: start; }
+.mis-video { position: relative; display: block; aspect-ratio: 9 / 16; overflow: hidden; background: var(--wp--preset--color--tertiary); color: #fff; text-decoration: none; }
+.mis-video__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+.mis-video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(14, 15, 16, .55)); }
+.mis-video__play { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; }
+.mis-video__platform { position: absolute; left: 12px; bottom: 12px; z-index: 1; font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.mis-video:hover .mis-video__img, .mis-video:focus-visible .mis-video__img { transform: scale(1.03); }
+.mis-video:focus-visible { outline: 2px solid var(--wp--preset--color--primary); outline-offset: 2px; }
+@media (min-width: 768px) { .mis-videos__track { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; gap: 1.25rem; } .mis-videos__item { flex-basis: 240px; } }
+@media (prefers-reduced-motion: reduce) { .mis-video__img { transition: none; } }
+/* Visor de vídeo: el reproductor se carga al pulsar y se quita al cerrar */
+.mis-video-lb { width: min(960px, 100vw); max-width: 100vw; max-height: 100dvh; margin: auto; padding: 0; border: 0; background: transparent; color: #fff; overflow: visible; }
+.mis-video-lb.is-vertical { width: min(420px, 100vw); }
+.mis-video-lb::backdrop { background: rgba(14, 15, 16, .92); }
+.mis-video-lb__bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0.75rem; }
+.mis-video-lb__out { color: #fff; font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; text-underline-offset: 4px; }
+.mis-video-lb__close { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, .4); background: transparent; color: #fff; cursor: pointer; }
+.mis-video-lb__close:hover, .mis-video-lb__close:focus-visible { border-color: #fff; }
+.mis-video-lb__stage { background: #000; aspect-ratio: 16 / 9; max-height: calc(100dvh - 64px); }
+.mis-video-lb.is-vertical .mis-video-lb__stage { aspect-ratio: auto; height: min(760px, calc(100dvh - 64px)); background: #fff; }
+.mis-video-lb__stage iframe { width: 100%; height: 100%; border: 0; display: block; }
+
 /* Las fotos de Sleeping arrangements abren el visor */
 .mis-sleeping__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
 
@@ -389,8 +418,6 @@ html.mis-tour-open { overflow: hidden; }
 	background: var(--wp--preset--color--base);
 	border-bottom: 1px solid var(--mis-line);
 	overflow-x: auto; white-space: nowrap; scrollbar-width: none;
-	margin-inline: calc(var(--wp--preset--spacing--medium) * -1);
-	padding-inline: var(--wp--preset--spacing--medium);
 }
 .mis-anchors::-webkit-scrollbar { display: none; }
 .mis-anchors a {
@@ -401,12 +428,14 @@ html.mis-tour-open { overflow: hidden; }
 }
 .mis-anchors a:hover,
 .mis-anchors a[aria-current] { color: var(--wp--preset--color--main); border-bottom-color: var(--wp--preset--color--main); }
-:where(#overview, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, .mis-keys) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
+:where(#overview, #videos, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, .mis-keys) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
+.admin-bar .mis-anchors { top: calc(var(--mis-header-h) + var(--wp-admin--admin-bar--height, 0px)); }
 
 /* Caja de reserva (escritorio) y barra fija (móvil) */
 .mis-booking-box { border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); padding: 1.5rem; }
 .mis-booking-box .wp-block-buttons { margin-block: 1.25rem; }
-@media (min-width: 1024px) { .mis-booking-box { position: sticky; top: calc(var(--mis-header-h) + 24px); } }
+/* Bajo la cabecera y la barra de anclas (unos 52 px) */
+@media (min-width: 1024px) { .mis-booking-box { position: sticky; top: calc(var(--mis-header-h) + 76px); } }
 .mis-amenities { display: grid; grid-template-columns: 1fr; gap: 0.875rem 2rem; padding-left: 0; margin: 1.5rem 0 0; list-style: none; }
 @media (min-width: 600px) { .mis-amenities { grid-template-columns: 1fr 1fr; } }
 .mis-amenities li { display: flex; align-items: center; gap: 0.75rem; }
