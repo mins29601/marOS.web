@@ -216,6 +216,8 @@ foreach ( $forms as $slug => $f ) {
 // ---------------------------------------------------------------- páginas
 
 WP_CLI::log( 'Páginas…' );
+// Índice de Zonas: la plantilla pone la portada; aquí, rejilla con filtros y banner de la persona.
+$mis_zonas_pagina = "<!-- wp:shortcode -->[mis_zonas]<!-- /wp:shortcode -->\n<!-- wp:shortcode -->[mis_zonas_hablar]<!-- /wp:shortcode -->\n";
 $no_title = array( 'page_template' => 'page-no-title' );
 
 // La portada (título y buscador) la pone la plantilla front-page.html del tema.
@@ -228,7 +230,7 @@ $home_en = mis_section(
 ) . mis_section( mis_intro( 'Exclusive homes', 'Managed by us, known by us', 'We look after every home ourselves: we know the house, the neighbourhood and who to call.' ) . mis_pattern( 'property-grid' ) )
   . mis_section( mis_intro( 'Concierge', 'Everything around your stay' ) . mis_pattern( 'service-grid' ), 'tertiary' )
   . mis_section( mis_intro( 'Experiences', 'Andalusia, privately' ) . mis_pattern( 'tour-grid' ) )
-  . mis_section( mis_intro( 'Areas', 'Where to stay in Marbella' ) . '<!-- wp:categories {"taxonomy":"zona","className":"mis-terms-list","showEmpty":true} /-->' . "\n", 'tertiary' )
+  . mis_section( mis_intro( 'Areas', 'Where to stay in Marbella' ) . '<!-- wp:shortcode -->[mis_zonas filtros="no" max="6"]<!-- /wp:shortcode -->' . "\n" . mis_p( '<a class="mis-link-action" href="/areas/">See all areas</a>' ), 'tertiary' )
   . mis_section( mis_intro( 'Talk to us', 'Prefer to plan it with a person?', 'Write to us or call: one person from our team will help you from the first message to check-out.' ) . mis_button( 'Contact us', '/contact/' ) );
 
 // La portada (título y buscador) la pone la plantilla front-page.html del tema.
@@ -241,7 +243,7 @@ $home_es = mis_section(
 ) . mis_section( mis_intro( 'Casas exclusivas', 'Gestionadas y conocidas por nosotros', 'Cuidamos cada casa nosotros mismos: conocemos la casa, el barrio y a quién llamar.' ) . mis_pattern( 'property-grid' ) )
   . mis_section( mis_intro( 'Servicios', 'Todo lo que rodea tu estancia' ) . mis_pattern( 'service-grid' ), 'tertiary' )
   . mis_section( mis_intro( 'Experiencias', 'Andalucía, en privado' ) . mis_pattern( 'tour-grid' ) )
-  . mis_section( mis_intro( 'Zonas', 'Dónde alojarse en Marbella' ) . '<!-- wp:categories {"taxonomy":"zona","className":"mis-terms-list","showEmpty":true} /-->' . "\n", 'tertiary' )
+  . mis_section( mis_intro( 'Zonas', 'Dónde alojarse en Marbella' ) . '<!-- wp:shortcode -->[mis_zonas filtros="no" max="6"]<!-- /wp:shortcode -->' . "\n" . mis_p( '<a class="mis-link-action" href="/es/zonas/">Ver todas las zonas</a>' ), 'tertiary' )
   . mis_section( mis_intro( 'Habla con nosotros', '¿Prefieres organizarlo con una persona?', 'Escríbenos o llámanos: una persona del equipo te ayudará desde el primer mensaje hasta la salida.' ) . mis_button( 'Contactar', '/es/contacto/' ) );
 
 $pages = array(
@@ -250,7 +252,7 @@ $pages = array(
 	'stay'        => array( 'stay', 'Stay', mis_page_hero( 'Stay', 'Villas & apartments in Marbella', 'Every home is managed by our own team.' ) . mis_section( mis_pattern( 'property-grid' ) ), 'alojamiento', 'Alojamiento', mis_page_hero( 'Alojamiento', 'Villas y apartamentos en Marbella', 'Todas las casas las gestiona nuestro equipo.' ) . mis_section( mis_pattern( 'property-grid' ) ) ),
 	'services'    => array( 'services', 'Concierge', mis_page_hero( 'Concierge', 'Services in Marbella', 'Transport, chefs, events and concierge. Also if you are not staying with us.' ) . mis_section( mis_pattern( 'service-grid' ) ), 'servicios', 'Servicios', mis_page_hero( 'Servicios', 'Servicios en Marbella', 'Transporte, chefs, eventos y conserjería. También si no te alojas con nosotros.' ) . mis_section( mis_pattern( 'service-grid' ) ) ),
 	'experiences' => array( 'experiences', 'Experiences', mis_page_hero( 'Experiences', 'Private experiences in Andalusia', 'Book online in a few clicks.' ) . mis_section( mis_pattern( 'tour-grid' ) ), 'experiencias', 'Experiencias', mis_page_hero( 'Experiencias', 'Experiencias privadas en Andalucía', 'Reserva online en unos clics.' ) . mis_section( mis_pattern( 'tour-grid' ) ) ),
-	'areas'       => array( 'areas', 'Areas', mis_page_hero( 'Areas', 'Where to stay in Marbella', 'Our guide to each area, written by the team.' ) . mis_section( '<!-- wp:categories {"taxonomy":"zona","className":"mis-terms-list","showEmpty":true} /-->' ), 'zonas', 'Zonas', mis_page_hero( 'Zonas', 'Dónde alojarse en Marbella', 'Nuestra guía de cada zona, escrita por el equipo.' ) . mis_section( '<!-- wp:categories {"taxonomy":"zona","className":"mis-terms-list","showEmpty":true} /-->' ) ),
+	'areas'       => array( 'areas', 'Areas', $mis_zonas_pagina, 'zonas', 'Zonas', $mis_zonas_pagina ), // La portada la pone la plantilla page-areas / page-zonas.
 	'owners'      => array( 'owners', 'Owners', mis_page_hero( 'Owners', 'We look after your home as if it were ours', 'Holiday rental management and property management in Marbella.' ) . mis_section( mis_button( 'Talk to us', '/contact/' ) ), 'propietarios', 'Propietarios', mis_page_hero( 'Propietarios', 'Cuidamos tu casa como si fuera nuestra', 'Gestión de alquiler vacacional y de propiedades en Marbella.' ) . mis_section( mis_button( 'Habla con nosotros', '/es/contacto/' ) ) ),
 	'journal'     => array( 'journal', 'Journal', '', 'blog', 'Blog', '' ),
 	'about'       => array( 'about', 'About us', mis_page_hero( 'About us', 'A local team in Marbella', 'Text pending (content migration, spec 002).' ), 'nosotros', 'Nosotros', mis_page_hero( 'Nosotros', 'Un equipo local en Marbella', 'Texto pendiente (migración de contenido, spec 002).' ) ),
