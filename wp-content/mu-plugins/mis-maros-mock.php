@@ -383,7 +383,8 @@ function mis_maros_mock_quote( string $id, array $q ): array {
 	$lines = array( array( 'kind' => 'accommodation', 'label' => 'Alojamiento (' . $nights . ' noches)', 'amount' => $price ) );
 	$total = $price;
 	foreach ( (array) ( $property['fees'] ?? array() ) as $fee ) {
-		if ( 'Fixed' !== ( $fee['rate_type'] ?? '' ) ) {
+		// Los JSON del mock no siempre traen rate_type: sin él, importe fijo.
+		if ( 'Fixed' !== ( $fee['rate_type'] ?? 'Fixed' ) || ! isset( $fee['amount'] ) ) {
 			continue;
 		}
 		$units = array( 'PerStay' => 1, 'PerNight' => $nights, 'PerPerson' => $adults + $children )[ $fee['frequency'] ?? 'PerStay' ] ?? 1;
