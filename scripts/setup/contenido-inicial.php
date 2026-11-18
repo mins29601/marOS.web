@@ -115,8 +115,8 @@ foreach ( $zones as $slug => $z ) {
 
 $service_types = array(
 	'transport'       => array( 'Transport', 'Transporte' ),
-	'chef-catering'   => array( 'Chef & catering', 'Chef y catering' ),
-	'events-weddings' => array( 'Events & weddings', 'Eventos y bodas' ),
+	'catering'        => array( 'Chef & catering', 'Chef y catering' ),
+	'events'          => array( 'Events & weddings', 'Eventos y bodas' ),
 	'concierge'       => array( 'Concierge', 'Conserjería' ),
 );
 foreach ( $service_types as $slug => $names ) {
@@ -125,35 +125,10 @@ foreach ( $service_types as $slug => $names ) {
 
 // ---------------------------------------------------------------- tours y servicios
 
-WP_CLI::log( 'Experiencias y servicios…' );
-$tours = array(
-	array( 'granada-private-tour', 'Granada & the Alhambra, private tour', 'tour-privado-granada', 'Granada y la Alhambra, tour privado', 'Full day (11 h)', 'Día completo (11 h)', 'sierra-blanca', 490 ),
-	array( 'ronda-wine-tour', 'Ronda wine tour', 'ruta-vino-ronda', 'Ruta del vino en Ronda', 'Full day (9 h)', 'Día completo (9 h)', 'nueva-andalucia', 0 ),
-);
-foreach ( $tours as $t ) {
-	$ids = mis_setup_pair(
-		'mis_tour',
-		array( $t[0], $t[1], mis_p( 'A day with a local guide, private transport from your villa and time to enjoy it at your own pace.' ) ),
-		array( $t[2], $t[3], mis_p( 'Un día con guía local, transporte privado desde tu villa y tiempo para disfrutarlo a tu ritmo.' ) ),
-		array( 'post_excerpt' => 'Private, with pick-up at your door.' ),
-		array( 'post_excerpt' => 'Privado, con recogida en la puerta.' )
-	);
-	foreach ( $ids as $lang => $id ) {
-		update_post_meta( $id, 'tour_duration', 'en' === $lang ? $t[4] : $t[5] );
-		update_post_meta( $id, 'tour_private', true );
-		update_post_meta( $id, 'tour_languages', 'en' === $lang ? 'English, Spanish' : 'Inglés, español' );
-		update_post_meta( $id, 'tour_pickup', 'en' === $lang ? 'Pick-up at your accommodation' : 'Recogida en tu alojamiento' );
-		update_post_meta( $id, 'tour_price_from', $t[7] );
-		update_post_meta( $id, 'tour_booking_mode', $t[7] ? 'fareharbor' : 'formulario' );
-		wp_set_object_terms( $id, array( Maros_Sync::term( 'zona', $t[6], $zones[ $t[6] ], $lang ) ), 'zona' );
-	}
-}
-
+// Las experiencias, el chef, Transporte y Conserjería, con sus textos, los crea servicios.php.
+WP_CLI::log( 'Servicios de ejemplo…' );
 $services = array(
-	array( 'transport', 'private-driver', 'Private driver', 'chofer-privado', 'Chófer privado', 'Airport transfers and a driver at your disposal.', 'Traslados al aeropuerto y chófer a tu disposición.', 'From €90' , 'Desde 90 €' ),
-	array( 'chef-catering', 'private-chef', 'Private chef', 'chef-privado', 'Chef privado', 'Breakfasts, dinners and BBQs cooked at your villa.', 'Desayunos, cenas y barbacoas en tu villa.', 'On request', 'A consultar' ),
-	array( 'events-weddings', 'events-weddings', 'Events & weddings', 'eventos-bodas', 'Eventos y bodas', 'Celebrations planned end to end by our team.', 'Celebraciones organizadas de principio a fin.', 'On request', 'A consultar' ),
-	array( 'concierge', 'concierge', 'Concierge', 'conserjeria', 'Conserjería', 'Restaurants, boats, beach clubs and anything you need.', 'Restaurantes, barcos, beach clubs y lo que necesites.', 'Included for our guests', 'Incluida para nuestros huéspedes' ),
+	array( 'events', 'events-weddings', 'Events & weddings', 'eventos-bodas', 'Eventos y bodas', 'Celebrations planned end to end by our team.', 'Celebraciones organizadas de principio a fin.', 'On request', 'A consultar' ),
 );
 foreach ( $services as $s ) {
 	$ids = mis_setup_pair(

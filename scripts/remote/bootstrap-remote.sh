@@ -28,7 +28,7 @@ else
 	wp plugin activate mis-contenido maros-connector
 	wp theme activate marbellainstyle
 	wp rewrite structure '/%postname%/' --hard
-	SETUP="idiomas zonas"; [[ "$SKIP_CONTENT" == "1" ]] || SETUP="idiomas contenido-inicial zonas"
+	SETUP="idiomas zonas"; [[ "$SKIP_CONTENT" == "1" ]] || SETUP="idiomas contenido-inicial zonas servicios"
 	# Propiedades del mock (o de marOS pruebas): ficha, zona, equipamiento y fotos.
 	[[ "$SKIP_CONTENT" == "1" ]] || wp maros sync --publish || echo "  (aviso: wp maros sync falló)"
 	for s in $SETUP; do

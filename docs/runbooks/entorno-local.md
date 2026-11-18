@@ -61,6 +61,7 @@ Con el entorno arrancado, dos comandos dejan la web navegable en inglés y espa�
 npm run wp -- maros sync --publish
 npm run wp -- eval-file wp-content/mis-scripts/setup/contenido-inicial.php
 npm run wp -- eval-file wp-content/mis-scripts/setup/zonas.php
+npm run wp -- eval-file wp-content/mis-scripts/setup/servicios.php
 ```
 
 - `wp maros sync` carga las propiedades del mock (ficha, tipo, zona, equipamiento, fotos,
@@ -68,11 +69,15 @@ npm run wp -- eval-file wp-content/mis-scripts/setup/zonas.php
   Otros comandos: `wp maros status` (estado y últimos eventos), `wp maros tick` (la tarea de
   5 minutos ahora mismo) y `wp maros sync --id=<id> --force`. El estado también se ve en
   **Propiedades → marOS**, con el botón «Sincronizar ahora».
-- `contenido-inicial.php` crea zonas, tipos de servicio, 2 experiencias, 4 servicios, las páginas
+- `contenido-inicial.php` crea zonas, tipos de servicio, el servicio de ejemplo de Eventos, las páginas
   del mapa del sitio (spec 005), los formularios de Contact Form 7 y los menús de cada idioma. Es
   idempotente y los textos son de ejemplo.
 - `zonas.php` crea las zonas que no crea el contenido inicial (New Golden Mile y 8 más), escribe la guía en inglés y español
   de las 13 y las añade a los menús. No pisa una guía que ya tenga texto (`… zonas.php forzar` para reescribirla).
+- `servicios.php` carga los servicios (Transporte, Chef privado, Conserjería) y siete experiencias con los
+  textos de los borradores de marOS.content (`scripts/setup/servicios/servicios.json`, que genera
+  `servicios/generar.py`). Pone las URLs de la web actual (`/services/<tipo>/<slug>/`) y ordena los menús.
+  No pisa lo editado en WordPress (`… servicios.php forzar` para reescribirlo).
 
 ## 4. La API de marOS simulada
 

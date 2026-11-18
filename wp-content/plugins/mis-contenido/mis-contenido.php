@@ -40,6 +40,7 @@ function mis_service_fields(): array {
 	return array(
 		'service_summary'    => array( 'type' => 'string', 'label' => 'Resumen corto' ),
 		'service_price_from' => array( 'type' => 'string', 'label' => 'Precio orientativo' ),
+		'service_note'       => array( 'type' => 'string', 'label' => 'Nota bajo el botón (p. ej. «También si no te alojas con nosotros»)' ),
 	);
 }
 
@@ -79,7 +80,8 @@ function mis_contenido_register(): void {
 			'menu_icon'    => 'dashicons-star-filled',
 			'menu_position'=> 22,
 			'has_archive'  => false,
-			'rewrite'      => array( 'slug' => 'services/s', 'with_front' => false ),
+			// /services/<tipo>/<slug>/ (spec 005): %tipo-servicio% lo rellena mis_service_link().
+			'rewrite'      => array( 'slug' => 'services/%tipo-servicio%', 'with_front' => false ),
 			'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields', 'revisions' ),
 			'taxonomies'   => array( 'zona', 'tipo-servicio' ),
 		)
@@ -149,6 +151,20 @@ function mis_contenido_register(): void {
 		}
 	}
 }
+
+/**
+ * Enlace de un servicio: /services/<tipo>/<slug>/ con el tipo de su idioma (p. ej.
+ * /es/services/catering-es/chef-privado-en-marbella/). Sin tipo, «other».
+ */
+function mis_service_link( string $link, WP_Post $post ): string {
+	if ( 'mis_service' !== $post->post_type || ! str_contains( $link, '%tipo-servicio%' ) ) {
+		return $link;
+	}
+	$terms = get_the_terms( $post, 'tipo-servicio' );
+	$slug  = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->slug : 'other';
+	return str_replace( '%tipo-servicio%', $slug, $link );
+}
+add_filter( 'post_type_link', 'mis_service_link', 10, 2 );
 
 // Polylang: tipos y taxonomías traducibles (FR-002).
 add_filter(
@@ -247,6 +263,8 @@ require_once __DIR__ . '/includes/contacto.php';
 // Campos de las zonas (foto, frase corta, perfiles y «De un vistazo»).
 require_once __DIR__ . '/includes/zonas.php';
 require_once __DIR__ . '/includes/zonas-vista.php';
+// Portadas de los tipos de servicio (/services/<tipo>/) y sus tarjetas.
+require_once __DIR__ . '/includes/servicios.php';
 // Lugares recomendados por zona y sus herramientas MCP (Rebecca, desde ChatGPT).
 require_once __DIR__ . '/includes/lugares.php';
 require_once __DIR__ . '/includes/lugares-mcp.php';
