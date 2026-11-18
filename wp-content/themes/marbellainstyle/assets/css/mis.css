@@ -596,6 +596,15 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-hero__title { font-size: clamp(2.125rem, 1.4rem + 3vw, 3.5rem); color: #fff; max-width: 20ch; line-height: 1.12; }
 /* El diseño «constrained» centra a los hijos con ancho máximo: el título va alineado a la izquierda, como la etiqueta y el buscador */
 .mis-hero .wp-block-cover__inner-container > :is(h1, .mis-hero__title, .mis-search) { margin-left: 0 !important; margin-right: auto !important; }
+/* Portada sintética provisional (mar y sierra al atardecer) mientras la página no tenga imagen
+   destacada (Julio, 18-11-2026). */
+.mis-hero.wp-block-cover:not(:has(.wp-block-cover__image-background)) { background: var(--wp--preset--color--main) url(../images/portada-sintetica.jpg) center 60% / cover no-repeat; }
+/* El calendario del buscador sale por debajo de la portada: que no se recorte y quede por encima
+   de la sección siguiente. */
+.mis-hero.wp-block-cover { overflow: visible; position: relative; z-index: 3; }
+/* Sobre la foto oscura el botón negro se perdía: en la portada va en oro. */
+.mis-hero .mis-search__submit.wp-element-button { background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
+.mis-hero .mis-search__submit.wp-element-button:is(:hover, :focus-visible) { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); color: #fff; }
 .mis-front > .wp-block-post-content { margin-top: 0; }
 /* La portada pone el H1: la antigua introducción del contenido (con su propio H1) sobra */
 .mis-front > .wp-block-post-content > .wp-block-group:first-child:has(h1) { display: none; }
