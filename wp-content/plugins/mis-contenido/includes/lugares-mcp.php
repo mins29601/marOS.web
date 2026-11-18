@@ -359,7 +359,7 @@ function mis_lugar_ability_delete( $input = array() ) {
 	if ( ! current_user_can( 'delete_post', $id ) ) {
 		return new WP_Error( 'mis_lugar_permiso', 'No puedes retirar este lugar.' );
 	}
-	$nombre = get_the_title( $id );
+	$nombre = html_entity_decode( get_the_title( $id ), ENT_QUOTES, 'UTF-8' );
 	$ok     = 'trash' === get_post_status( $id ) || (bool) wp_trash_post( $id );
 	if ( $ok && class_exists( 'Maros_Log' ) ) {
 		$user = wp_get_current_user();

@@ -61,8 +61,8 @@ el usuario.
 
 ChatGPT solo conecta servidores MCP con OAuth o sin autenticación, y sin cabeceras propias; por
 eso la clave va en el enlace. Las herramientas que escriben necesitan el **modo desarrollador**
-de ChatGPT, que según la documentación de OpenAI está en los planes Business, Enterprise y Edu
-(con Plus o Pro solo se pueden leer datos; comprobarlo en su cuenta).
+de ChatGPT. Marbella in Style tiene plan Business (Julio, 18-11-2026): un administrador del espacio
+de trabajo tiene que permitir el modo desarrollador y los conectores propios en su configuración.
 
 1. ChatGPT → Ajustes → Aplicaciones y conectores → Ajustes avanzados → activar **Modo
    desarrollador**.
@@ -71,6 +71,19 @@ de ChatGPT, que según la documentación de OpenAI está en los planes Business,
 3. En un chat nuevo, activar el conector en «+ → Modo desarrollador». Ejemplo: «Añade Tikitano en
    New Golden Mile, beach club, en Guadalmansa, lo recomendamos en este post de Instagram del
    3-10-2026: <enlace>. Web: <web>».
+
+### O un GPT personalizado con Acciones (la clave fuera del enlace)
+
+Si no se quiere la clave en el enlace, un GPT de Rebecca puede llamar a la API REST de lugares
+(`/wp-json/mis/v1`, `includes/lugares-api.php`), que hace lo mismo que las herramientas MCP:
+
+1. ChatGPT → Explorar GPT → Crear. Instrucciones: las reglas de arriba (fuente, sin teléfonos,
+   distancias ni superlativos, borrador salvo que se pida publicar).
+2. Configurar → Crear nueva acción → Importar desde URL: `https://<web>/wp-json/mis/v1/openapi`.
+3. Autenticación: Clave de API, tipo **Bearer**, con la clave de Rebecca (la parte `mis_…` del
+   enlace).
+4. Compartir: «Solo yo» (o solo el espacio de trabajo). Al crear, editar o retirar, ChatGPT pide
+   confirmación antes de llamar.
 
 ### Conectar Claude
 
@@ -81,7 +94,7 @@ spec 013).
 ### En pruebas
 
 Pruebas está detrás de Cloudflare Access: hace falta la misma excepción de ruta que D10 para
-`/wp-json/mis/lugares` (o ampliar la de `/wp-json/mcp/*`).
+`/wp-json/mis/lugares` y `/wp-json/mis/v1/*` (o ampliar la de `/wp-json/mcp/*`).
 
 ## Riesgos de la clave en el enlace
 

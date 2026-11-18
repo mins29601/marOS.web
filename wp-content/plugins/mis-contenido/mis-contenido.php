@@ -250,3 +250,4 @@ require_once __DIR__ . '/includes/zonas-vista.php';
 // Lugares recomendados por zona y sus herramientas MCP (Rebecca, desde ChatGPT).
 require_once __DIR__ . '/includes/lugares.php';
 require_once __DIR__ . '/includes/lugares-mcp.php';
+require_once __DIR__ . '/includes/lugares-api.php';
