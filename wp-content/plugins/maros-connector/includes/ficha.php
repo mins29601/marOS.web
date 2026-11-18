@@ -244,7 +244,9 @@ add_shortcode(
 			'videos'    => array( function_exists( 'maros_videos' ) && maros_videos( $post_id ), $es ? 'Vídeos' : 'Videos' ),
 			'bedrooms'  => array( is_array( $rooms ) && $rooms, $es ? 'Dormitorios' : 'Bedrooms' ),
 			'amenities' => array( $terms && ! is_wp_error( $terms ), $es ? 'Comodidades' : 'Amenities' ),
-			'location'  => array( true, $es ? 'Ubicación' : 'Location' ),
+			// «Close to the Villa» y «Area Guide» (Julio, 18-11-2026); el script quita «Zona» si la casa no tiene.
+			'location'  => array( true, $es ? 'Cerca' : 'Nearby' ),
+			'area'      => array( true, $es ? 'Zona' : 'Area' ),
 			// Las opiniones solo se pintan si hay: al cargar la página se quita el enlace de toda sección que no esté.
 			'reviews'   => array( function_exists( 'glsr_get_reviews' ), $es ? 'Opiniones' : 'Reviews' ),
 			'faq'       => array( true, 'FAQ' ),

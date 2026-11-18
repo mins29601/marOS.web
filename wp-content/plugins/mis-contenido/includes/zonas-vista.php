@@ -491,9 +491,8 @@ add_shortcode(
 	static function () {
 		$terms = get_the_terms( (int) get_the_ID(), 'zona' );
 		$term  = $terms && ! is_wp_error( $terms ) ? $terms[0] : null;
-		$near  = mis_zona_cerca( (int) get_the_ID() );
 		if ( ! $term instanceof WP_Term ) {
-			return $near;
+			return '';
 		}
 		$link    = get_term_link( $term );
 		$link    = is_wp_error( $link ) ? '' : $link;
@@ -511,22 +510,44 @@ add_shortcode(
 				$dl .= '<div><dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( $val ) . '</dd></div>';
 			}
 		}
-		return '<div class="mis-zona-ficha">'
+		return '<section id="area" class="mis-ficha-seccion">'
+			. '<h2 class="wp-block-heading has-large-font-size">' . esc_html( mis_zona_t( 'Area Guide', 'Guía de la zona' ) ) . '</h2>'
+			. '<div class="mis-zona-ficha">'
 			. '<a class="mis-zona-ficha__ph" href="' . esc_url( $link ) . '" tabindex="-1" aria-hidden="true">' . mis_zona_img( $term, 'large', array( 'loading' => 'lazy', 'class' => 'mis-zona-ficha__img' ) ) . '</a>'
 			. '<div class="mis-zona-ficha__body">'
-			. '<p class="mis-eyebrow">' . esc_html( mis_zona_t( 'The area', 'La zona' ) ) . '</p>'
 			. '<h3 class="mis-zona-ficha__name"><a href="' . esc_url( $link ) . '">' . esc_html( $term->name ) . '</a></h3>'
 			. ( '' !== $resumen ? '<p class="mis-zona-ficha__text">' . esc_html( $resumen ) . '</p>' : '' )
 			. ( $dl ? '<dl class="mis-zona-ficha__dl">' . $dl . '</dl>' : '' )
 			. '<a class="mis-link-action" href="' . esc_url( $link ) . '">' . esc_html( mis_zona_t( 'Read the area guide', 'Leer la guía de la zona' ) ) . '</a>'
-			. '</div></div>' . $near;
+			. '</div></div></section>';
 	}
 );
 
 /**
- * «From this house»: lo que tiene cerca la casa, en coche, con las distancias que marOS mide con
- * OpenStreetMap (maros_nearby). Las de Google no se pueden publicar. Nada si aún no hay medidas.
+ * [mis_cerca] Apartado «Close to the Villa / Apartment» de la ficha (Julio, 18-11-2026): lo que tiene
+ * cerca la casa, en coche, con las distancias que marOS mide con OpenStreetMap (maros_nearby; las de
+ * Google no se pueden publicar), y la nota de la dirección. Sin medidas, queda «Location» con la nota.
  */
+add_shortcode(
+	'mis_cerca',
+	static function () {
+		$post_id = (int) get_the_ID();
+		$list    = mis_zona_cerca( $post_id );
+		$types   = get_the_terms( $post_id, 'tipo-propiedad' );
+		$slug    = $types && ! is_wp_error( $types ) ? preg_replace( '/-es$/', '', $types[0]->slug ) : '';
+		$title   = ! $list ? mis_zona_t( 'Location', 'Ubicación' )
+			: ( 'villa' === $slug ? mis_zona_t( 'Close to the Villa', 'Cerca de la villa' )
+			: ( 'apartment' === $slug ? mis_zona_t( 'Close to the Apartment', 'Cerca del apartamento' )
+			: mis_zona_t( 'Close to the Property', 'Cerca de la casa' ) ) );
+		return '<section id="location" class="mis-ficha-seccion">'
+			. '<h2 class="wp-block-heading has-large-font-size">' . esc_html( $title ) . '</h2>'
+			. $list
+			. '<p class="mis-muted">' . esc_html( mis_zona_t( 'The exact address is shared after booking.', 'La dirección exacta se envía tras la reserva.' ) ) . '</p>'
+			. '</section>';
+	}
+);
+
+/** Lista de distancias en coche (maros_nearby) con la fecha y la atribución, o '' si no hay. */
 function mis_zona_cerca( int $post_id ): string {
 	$rows = json_decode( (string) get_post_meta( $post_id, 'maros_nearby', true ), true );
 	if ( ! is_array( $rows ) || ! $rows ) {
@@ -548,10 +569,9 @@ function mis_zona_cerca( int $post_id ): string {
 	}
 	$when = $latest ? date_i18n( 'F Y', strtotime( $latest . ' 12:00:00' ) ) : '';
 	return '<div class="mis-zona-cerca">'
-		. '<p class="mis-eyebrow">' . esc_html( mis_zona_t( 'From this house, by car', 'Desde esta casa, en coche' ) ) . '</p>'
 		. '<ul class="mis-zona-cerca__list">' . $li . '</ul>'
 		. '<p class="mis-zona-cerca__src">'
-		. esc_html( $when ? sprintf( mis_zona_t( 'Driving times without traffic, measured in %s.', 'Tiempos sin tráfico, medidos en %s.' ), $when ) : mis_zona_t( 'Driving times without traffic.', 'Tiempos sin tráfico.' ) )
+		. esc_html( $when ? sprintf( mis_zona_t( 'By car, without traffic. Measured in %s.', 'En coche, sin tráfico. Medido en %s.' ), $when ) : mis_zona_t( 'By car, without traffic.', 'En coche, sin tráfico.' ) )
 		. ' <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">© OpenStreetMap contributors</a>'
 		. ' · <a href="https://openrouteservice.org/" rel="noopener" target="_blank">openrouteservice</a></p>'
 		. '</div>';
