@@ -45,6 +45,11 @@ class Maros_Search {
 		add_filter( 'render_block_core/query-no-results', array( __CLASS__, 'render_no_results' ), 10, 2 );
 		add_action( 'template_redirect', array( __CLASS__, 'headers' ) );
 		add_shortcode( 'maros_buscador', array( __CLASS__, 'form' ) );
+		// El script lo usa también el buscador de la portada ([mis_search], del tema).
+		add_action(
+			'init',
+			static fn() => wp_register_script( 'maros-search', plugins_url( 'assets/search.js', __DIR__ ), array(), (string) filemtime( dirname( __DIR__ ) . '/assets/search.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) )
+		);
 	}
 
 	/**
@@ -458,7 +463,7 @@ class Maros_Search {
 		$html .= '</div></details>';
 		$html .= '<p class="mis-search__error" role="alert" hidden>' . $t( 'Choose a departure date after the arrival date.', 'Elige una salida posterior a la llegada.' ) . '</p>';
 		$html .= '</form>';
-		wp_enqueue_script( 'maros-search', plugins_url( 'assets/search.js', __DIR__ ), array(), (string) filemtime( dirname( __DIR__ ) . '/assets/search.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_enqueue_script( 'maros-search' );
 		return $html;
 	}
 }
