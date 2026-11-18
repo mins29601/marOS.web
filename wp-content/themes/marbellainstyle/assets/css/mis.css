@@ -461,6 +461,10 @@ html.mis-tour-open { overflow: hidden; }
 .mis-resv__rating span { font-weight: 400; color: var(--wp--preset--color--secondary); text-decoration: underline; }
 .mis-resv__empty { margin: 0; padding: 1rem; background: var(--wp--preset--color--tertiary); font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
 .mis-resv__help { padding-top: 0.75rem; border-top: 1px solid var(--mis-line); }
+/* «Incluido»: lista común de la empresa (includes/booking.php, Maros_Booking::INCLUDED) */
+.mis-resv__incl ul { margin: 0.5rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.5rem; font-size: var(--wp--preset--font-size--small); line-height: 1.4; }
+.mis-resv__incl li { display: flex; align-items: flex-start; gap: 0.625rem; }
+.mis-resv__incl li .mis-icon { flex: none; width: 20px; height: 20px; color: var(--wp--preset--color--main); }
 .mis-resv__talk { margin: 0; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
 .mis-resv__sum b { display: block; font-weight: 500; }
 .mis-resv__sum span { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
@@ -518,6 +522,7 @@ html.mis-tour-open { overflow: hidden; }
 	.wp-block-column:has(> .mis-booking-box:not(.is-sheet)) { display: none; }
 	.wp-block-columns:has(> .wp-block-column > .mis-booking-box) > .wp-block-column { flex-basis: 100% !important; }
 	.mis-booking-box.is-sheet .mis-resv__after { order: 8; }
+	.mis-booking-box.is-sheet .mis-resv__incl { order: 9; }
 	.mis-booking-box.is-sheet { position: fixed; inset: 0; z-index: 200; overflow-y: auto; overscroll-behavior: contain; border: 0; padding: 1rem var(--wp--preset--spacing--medium) calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 0.75rem; }
 	.mis-booking-box.is-sheet > * { margin-block: 0; }
 	.mis-booking-box.is-sheet .mis-resv { display: contents; }
