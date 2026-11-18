@@ -611,6 +611,11 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 /* ------------------------------------------------------------------ Zonas */
 /* Índice de Zonas y ficha de zona (maqueta «Zonas de Marbella in Style», Julio 18-11-2026) */
 
+/* Estas piezas no son bloques: sin border-box, el relleno se sumaba al ancho máximo y la página
+   salía más ancha que la cabecera. */
+.mis-zona-cover, .mis-zona-cover *, .mis-zona, .mis-zona * { box-sizing: border-box; }
+/* El atributo hidden (filtros del índice) gana a display:flex */
+.mis-zcard[hidden] { display: none; }
 .mis-zona { --mis-zona-pad: var(--wp--preset--spacing--medium); --mis-zona-max: calc(1328px + var(--mis-zona-pad) * 2); }
 .mis-zona > *,
 .mis-zona .wp-block-post-content > * { margin-block: 0; }
@@ -664,6 +669,7 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-zona-glance dt { font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--secondary); text-transform: uppercase; letter-spacing: 0.08em; }
 .mis-zona-glance dd { margin: 0.2rem 0 0; }
 .mis-zona-glance__cta { width: 100%; margin-top: 1.25rem; }
+.mis-zona-glance > .mis-zona-glance__cta:first-child { margin-top: 0; }
 .mis-zona-glance__help { margin: 1rem 0 0; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
 
 /* Secciones a lo ancho: casas, experiencias, otras zonas */

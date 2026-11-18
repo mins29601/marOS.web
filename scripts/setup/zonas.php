@@ -746,12 +746,48 @@ foreach ( $mis_zonas as $mis_slug => $mis_z ) {
 // ---------------------------------------------------------------- tarjeta y «De un vistazo»
 
 // Frase corta [en, es] y perfiles de cada zona (includes/zonas.php de mis-contenido), para el índice
-// de Zonas. Solo se rellenan si están vacíos. «De un vistazo» solo donde la guía ya lo dice.
+// de Zonas. Solo se rellenan si están vacíos. «De un vistazo» sale de lo que dice la guía de cada zona.
 $mis_fichas = array(
-	'nueva-andalucia' => array( array( 'The golf valley, a few minutes from Puerto Banús.', 'El valle del golf, a pocos minutos de Puerto Banús.' ), 'golf,families' ),
-	'sierra-blanca'   => array( array( 'Gated hillside living with sea views.', 'Urbanización cerrada en la ladera, con vistas al mar.' ), 'families,hills' ),
-	'puerto-banus'    => array( array( 'The marina and the beach clubs within walking distance.', 'El puerto y los beach clubs, a un paseo.' ), 'walk,beach' ),
-	'golden-mile'     => array( array( 'By the sea, between the old town and Puerto Banús.', 'Junto al mar, entre el casco antiguo y Puerto Banús.' ), 'beach,walk' ),
+	'nueva-andalucia' => array(
+		array( 'The golf valley, a few minutes from Puerto Banús.', 'El valle del golf, a pocos minutos de Puerto Banús.' ),
+		'golf,families',
+		array(
+			'zona_ideal' => array( 'Golf · Families', 'Golf · Familias' ),
+			'zona_playas' => array( 'Playa del Duque', 'Playa del Duque' ),
+			'zona_golf' => array( 'Los Naranjos · Las Brisas · Aloha', 'Los Naranjos · Las Brisas · Aloha' ),
+			'zona_moverse' => array( 'Car, taxi or driver', 'Coche, taxi o chófer' ),
+		),
+	),
+	'sierra-blanca' => array(
+		array( 'Gated hillside living with sea views.', 'Urbanización cerrada en la ladera, con vistas al mar.' ),
+		'families,hills',
+		array(
+			'zona_ideal' => array( 'Families · Privacy · Views', 'Familias · Privacidad · Vistas' ),
+			'zona_playas' => array( 'Casablanca · La Fontanilla · Nagüeles', 'Casablanca · La Fontanilla · Nagüeles' ),
+			'zona_golf' => array( 'Los Naranjos · Las Brisas · Aloha', 'Los Naranjos · Las Brisas · Aloha' ),
+			'zona_moverse' => array( 'Car or driver', 'Coche o chófer' ),
+		),
+	),
+	'puerto-banus' => array(
+		array( 'The marina and the beach clubs within walking distance.', 'El puerto y los beach clubs, a un paseo.' ),
+		'walk,beach',
+		array(
+			'zona_ideal' => array( 'Nightlife · Shops · Beach clubs', 'Vida nocturna · Tiendas · Beach clubs' ),
+			'zona_playas' => array( 'Playa del Duque · Puerto Banús', 'Playa del Duque · Puerto Banús' ),
+			'zona_golf' => array( 'Los Naranjos · Las Brisas · Aloha', 'Los Naranjos · Las Brisas · Aloha' ),
+			'zona_moverse' => array( 'On foot · Private driver in high season', 'A pie · Chófer en temporada alta' ),
+		),
+	),
+	'golden-mile' => array(
+		array( 'By the sea, between the old town and Puerto Banús.', 'Junto al mar, entre el casco antiguo y Puerto Banús.' ),
+		'beach,walk',
+		array(
+			'zona_ideal' => array( 'Beach · Walking · Quiet', 'Playa · Paseos · Tranquilidad' ),
+			'zona_playas' => array( 'On the doorstep, beach side · Promenade to Puerto Banús', 'A pie de playa, del lado del mar · Paseo hasta Puerto Banús' ),
+			'zona_golf' => array( 'Los Naranjos · Las Brisas · Aloha', 'Los Naranjos · Las Brisas · Aloha' ),
+			'zona_moverse' => array( 'Promenade on foot or by bike · Car or driver', 'Paseo a pie o en bici · Coche o chófer' ),
+		),
+	),
 	'new-golden-mile' => array(
 		array( 'Space, quiet and long beaches between San Pedro and Estepona.', 'Espacio, tranquilidad y playas largas entre San Pedro y Estepona.' ),
 		'beach,families,golf',
@@ -762,14 +798,86 @@ $mis_fichas = array(
 			'zona_moverse' => array( 'Car or private driver', 'Coche o chófer privado' ),
 		),
 	),
-	'los-flamingos'   => array( array( 'A golf community in the hills of Benahavís.', 'Urbanización de golf en las colinas de Benahavís.' ), 'golf,hills' ),
-	'la-alqueria'     => array( array( 'Quiet residential hills near Los Flamingos.', 'Colinas tranquilas cerca de Los Flamingos.' ), 'hills' ),
-	'guadalmina'      => array( array( 'Golf club and beach at the western end of Marbella.', 'Club de golf y playa en el extremo oeste de Marbella.' ), 'golf,beach,families' ),
-	'rio-real'        => array( array( 'Between the golf course and the beach, east of town.', 'Entre el golf y la playa, al este del centro.' ), 'golf,beach' ),
-	'estepona'        => array( array( 'Whitewashed old town, port and a long promenade.', 'Casco antiguo blanco, puerto y un largo paseo marítimo.' ), 'walk,beach' ),
-	'benahavis'       => array( array( 'A white village in the mountains, known for its restaurants.', 'Pueblo blanco en la sierra, conocido por sus restaurantes.' ), 'hills' ),
-	'san-pedro'       => array( array( 'Boulevard, shops and promenade within walking distance.', 'Bulevar, comercios y paseo marítimo a pie.' ), 'walk,families' ),
-	'marbella-centro' => array( array( 'The old town, the Alameda and the seafront promenade.', 'El casco antiguo, la Alameda y el paseo marítimo.' ), 'walk' ),
+	'los-flamingos' => array(
+		array( 'A golf community in the hills of Benahavís.', 'Urbanización de golf en las colinas de Benahavís.' ),
+		'golf,hills',
+		array(
+			'zona_ideal' => array( 'Golf · Privacy · Views', 'Golf · Privacidad · Vistas' ),
+			'zona_playas' => array( 'Guadalmansa · El Saladillo', 'Guadalmansa · El Saladillo' ),
+			'zona_golf' => array( 'Villa Padierna · Atalaya · El Paraíso', 'Villa Padierna · Atalaya · El Paraíso' ),
+			'zona_moverse' => array( 'Car or driver', 'Coche o chófer' ),
+		),
+	),
+	'la-alqueria' => array(
+		array( 'Quiet residential hills near Los Flamingos.', 'Colinas tranquilas cerca de Los Flamingos.' ),
+		'hills',
+		array(
+			'zona_ideal' => array( 'Families · Privacy · Golf', 'Familias · Privacidad · Golf' ),
+			'zona_playas' => array( 'Guadalmina · New Golden Mile', 'Guadalmina · New Golden Mile' ),
+			'zona_golf' => array( 'Atalaya · El Paraíso · Villa Padierna', 'Atalaya · El Paraíso · Villa Padierna' ),
+			'zona_moverse' => array( 'Car or driver', 'Coche o chófer' ),
+		),
+	),
+	'guadalmina' => array(
+		array( 'Golf club and beach at the western end of Marbella.', 'Club de golf y playa en el extremo oeste de Marbella.' ),
+		'golf,beach,families',
+		array(
+			'zona_ideal' => array( 'Families · Golf · Beach', 'Familias · Golf · Playa' ),
+			'zona_playas' => array( 'Guadalmina', 'Guadalmina' ),
+			'zona_golf' => array( 'Real Club de Golf Guadalmina · Atalaya', 'Real Club de Golf Guadalmina · Atalaya' ),
+			'zona_moverse' => array( 'Car or driver', 'Coche o chófer' ),
+		),
+	),
+	'rio-real' => array(
+		array( 'Between the golf course and the beach, east of town.', 'Entre el golf y la playa, al este del centro.' ),
+		'golf,beach',
+		array(
+			'zona_ideal' => array( 'Peace and quiet · Golf · Beach', 'Tranquilidad · Golf · Playa' ),
+			'zona_playas' => array( 'Quiet, natural beaches east of town', 'Playas tranquilas y naturales al este del centro' ),
+			'zona_golf' => array( 'Río Real · Santa Clara · Marbella Golf', 'Río Real · Santa Clara · Marbella Golf' ),
+			'zona_moverse' => array( 'Car, taxi or driver', 'Coche, taxi o chófer' ),
+		),
+	),
+	'estepona' => array(
+		array( 'Whitewashed old town, port and a long promenade.', 'Casco antiguo blanco, puerto y un largo paseo marítimo.' ),
+		'walk,beach',
+		array(
+			'zona_ideal' => array( 'A slower pace · Old town · Seafront', 'Ritmo tranquilo · Casco antiguo · Paseo marítimo' ),
+			'zona_playas' => array( 'La Rada and the seafront walkway', 'La Rada y el paseo marítimo' ),
+			'zona_golf' => array( 'Estepona Golf · Azata · El Paraíso', 'Estepona Golf · Azata · El Paraíso' ),
+			'zona_moverse' => array( 'On foot in town · Car or driver beyond', 'A pie en el pueblo · Coche o chófer para salir' ),
+		),
+	),
+	'benahavis' => array(
+		array( 'A white village in the mountains, known for its restaurants.', 'Pueblo blanco en la sierra, conocido por sus restaurantes.' ),
+		'hills',
+		array(
+			'zona_ideal' => array( 'Countryside · Views · Restaurants', 'Campo · Vistas · Restaurantes' ),
+			'zona_playas' => array( 'No beach: San Pedro · Guadalmina', 'Sin playa: San Pedro · Guadalmina' ),
+			'zona_golf' => array( 'Villa Padierna · Marbella Club · El Higueral', 'Villa Padierna · Marbella Club · El Higueral' ),
+			'zona_moverse' => array( 'Car or driver', 'Coche o chófer' ),
+		),
+	),
+	'san-pedro' => array(
+		array( 'Boulevard, shops and promenade within walking distance.', 'Bulevar, comercios y paseo marítimo a pie.' ),
+		'walk,families',
+		array(
+			'zona_ideal' => array( 'Families · Young children', 'Familias · Niños pequeños' ),
+			'zona_playas' => array( 'San Pedro promenade', 'Paseo marítimo de San Pedro' ),
+			'zona_golf' => array( 'Guadalmina · Nueva Andalucía · Benahavís', 'Guadalmina · Nueva Andalucía · Benahavís' ),
+			'zona_moverse' => array( 'On foot in the centre · Car or driver beyond', 'A pie en el centro · Coche o chófer para salir' ),
+		),
+	),
+	'marbella-centro' => array(
+		array( 'The old town, the Alameda and the seafront promenade.', 'El casco antiguo, la Alameda y el paseo marítimo.' ),
+		'walk',
+		array(
+			'zona_ideal' => array( 'Walking · Old town · Restaurants', 'A pie · Casco antiguo · Restaurantes' ),
+			'zona_playas' => array( 'Town beaches and promenade', 'Playas del centro y paseo marítimo' ),
+			'zona_golf' => array( 'Río Real · Santa Clara · Nueva Andalucía', 'Río Real · Santa Clara · Nueva Andalucía' ),
+			'zona_moverse' => array( 'On foot · Taxi', 'A pie · Taxi' ),
+		),
+	),
 );
 if ( function_exists( 'mis_zona_sanitize_perfiles' ) ) {
 	foreach ( $mis_fichas as $mis_slug => $mis_f ) {

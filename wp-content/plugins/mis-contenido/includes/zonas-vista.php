@@ -289,8 +289,8 @@ add_shortcode(
 		if ( '' === $dl && '' === $cta ) {
 			return $persona;
 		}
-		return '<div class="mis-zona-side"><aside class="mis-zona-glance"><p class="mis-zona-glance__title">' . esc_html( mis_zona_t( 'At a glance', 'De un vistazo' ) ) . '</p>'
-			. ( $dl ? '<dl>' . $dl . '</dl>' : '' )
+		return '<div class="mis-zona-side"><aside class="mis-zona-glance">'
+			. ( $dl ? '<p class="mis-zona-glance__title">' . esc_html( mis_zona_t( 'At a glance', 'De un vistazo' ) ) . '</p><dl>' . $dl . '</dl>' : '' )
 			. $cta
 			. '</aside>'
 			. ( '' !== $persona ? $persona : '<p class="mis-zona-glance__help">' . esc_html( mis_zona_t( 'Questions about the area?', '¿Dudas sobre la zona?' ) ) . ' <a href="' . esc_url( $contact ) . '">' . esc_html( mis_zona_t( 'Talk to our team', 'Habla con nuestro equipo' ) ) . '</a></p>' )
