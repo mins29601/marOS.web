@@ -488,7 +488,28 @@ class Maros_Sync {
 			}
 			$amenities[] = self::term( 'equipamiento', $code, self::AMENITIES[ $code ] ?? array( $name, $name ), $lang );
 		}
-		wp_set_object_terms( $post_id, array_filter( $amenities ), 'equipamiento' );
+		// Piscinas del expediente (marOS spec 032) como equipamiento, para filtrar en el buscador.
+		foreach ( self::pool_amenities( $d ) as $code ) {
+			$amenities[] = self::term( 'equipamiento', $code, self::AMENITIES[ $code ], $lang );
+		}
+		wp_set_object_terms( $post_id, array_values( array_unique( array_filter( $amenities ) ) ), 'equipamiento' );
+	}
+
+	/** private-pool, shared-pool y heated-pool a partir de pool y pools de marOS. */
+	private static function pool_amenities( array $d ): array {
+		$pool  = (string) ( $d['pool'] ?? '' );
+		$pools = array_filter( is_array( $d['pools'] ?? null ) ? $d['pools'] : array(), 'is_array' );
+		$codes = array();
+		if ( in_array( $pool, array( 'private', 'both' ), true ) || array_filter( $pools, static fn( $p ) => 'private' === ( $p['access'] ?? '' ) ) ) {
+			$codes[] = 'private-pool';
+		}
+		if ( in_array( $pool, array( 'communal', 'both' ), true ) || array_filter( $pools, static fn( $p ) => 'communal' === ( $p['access'] ?? '' ) ) ) {
+			$codes[] = 'shared-pool';
+		}
+		if ( array_filter( $pools, static fn( $p ) => ! empty( $p['heated'] ) ) || ! empty( $d['pool_heating']['available'] ) ) {
+			$codes[] = 'heated-pool';
+		}
+		return $codes;
 	}
 
 	/**
