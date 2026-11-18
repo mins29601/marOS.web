@@ -246,3 +246,4 @@ require_once __DIR__ . '/includes/contacto.php';
 
 // Campos de las zonas (foto, frase corta, perfiles y «De un vistazo»).
 require_once __DIR__ . '/includes/zonas.php';
+require_once __DIR__ . '/includes/zonas-vista.php';

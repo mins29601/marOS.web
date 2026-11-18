@@ -192,6 +192,57 @@ if ( function_exists( 'mis_zona_sanitize_perfiles' ) ) {
 	}
 }
 
+// ---------------------------------------------------------------- páginas de Zonas e Inicio
+
+// La página Areas / Zonas pasa de la lista de nombres a la rejilla con filtros y el banner de la
+// persona; la portada la pone la plantilla (page-areas.html, page-zonas.html). En Inicio, la lista
+// de zonas pasa a las seis primeras tarjetas. Solo se cambia si aún tiene la lista antigua.
+WP_CLI::log( 'Páginas de Zonas e Inicio…' );
+$mis_lista = '#<!-- wp:categories \{"taxonomy":"zona"[^}]*\} /-->#';
+foreach ( array( 'areas' => 'en', 'zonas' => 'es' ) as $mis_slug => $mis_lang ) {
+	$mis_page = get_page_by_path( $mis_slug );
+	if ( $mis_page && ( preg_match( $mis_lista, $mis_page->post_content ) || $mis_forzar ) ) {
+		wp_update_post(
+			array(
+				'ID'           => $mis_page->ID,
+				'post_content' => "<!-- wp:shortcode -->[mis_zonas]<!-- /wp:shortcode -->\n<!-- wp:shortcode -->[mis_zonas_hablar]<!-- /wp:shortcode -->\n",
+			)
+		);
+		WP_CLI::log( "  + página $mis_slug" );
+	}
+}
+foreach ( array( 'home' => array( '/areas/', 'See all areas' ), 'inicio' => array( '/es/zonas/', 'Ver todas las zonas' ) ) as $mis_slug => $mis_l ) {
+	$mis_page = get_page_by_path( $mis_slug );
+	if ( $mis_page && preg_match( $mis_lista, $mis_page->post_content ) ) {
+		$mis_new = '<!-- wp:shortcode -->[mis_zonas filtros="no" max="6"]<!-- /wp:shortcode -->'
+			. "\n<!-- wp:paragraph -->\n<p><a class=\"mis-link-action\" href=\"" . esc_url( home_url( $mis_l[0] ) ) . '">' . $mis_l[1] . "</a></p>\n<!-- /wp:paragraph -->";
+		wp_update_post( array( 'ID' => $mis_page->ID, 'post_content' => preg_replace( $mis_lista, $mis_new, $mis_page->post_content, 1 ) ) );
+		WP_CLI::log( "  + zonas en $mis_slug" );
+	}
+}
+
+// Personas de contacto (Ajustes → Datos de contacto): nombre y cargo si están vacíos. La foto la sube
+// el equipo desde ese panel.
+$mis_contacto = get_option( 'mis_contact', array() );
+$mis_contacto = is_array( $mis_contacto ) ? $mis_contacto : array();
+$mis_antes    = $mis_contacto;
+foreach (
+	array(
+		'guests' => array( 'Rebecca Kratz', 'Co-Founder & Lifestyle Manager', 'Cofundadora y Lifestyle Manager' ),
+		'owners' => array( 'Julio Fraile', 'Co-Founder & CEO', 'Cofundador y CEO' ),
+	) as $mis_who => $mis_p
+) {
+	foreach ( array( 'name' => 0, 'role_en' => 1, 'role_es' => 2 ) as $mis_k => $mis_i ) {
+		if ( '' === trim( (string) ( $mis_contacto[ "{$mis_who}_{$mis_k}" ] ?? '' ) ) ) {
+			$mis_contacto[ "{$mis_who}_{$mis_k}" ] = $mis_p[ $mis_i ];
+		}
+	}
+}
+if ( $mis_contacto !== $mis_antes ) {
+	update_option( 'mis_contact', $mis_contacto );
+	WP_CLI::log( '  + personas de contacto (sin foto)' );
+}
+
 // ---------------------------------------------------------------- menús
 
 WP_CLI::log( 'Menús…' );

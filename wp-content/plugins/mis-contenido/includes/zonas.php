@@ -1,6 +1,6 @@
 <?php
 /**
- * Campos de las zonas (Propiedades → Zonas): foto, frase corta, perfiles y «De un vistazo».
+ * Campos de las zonas (Propiedades → Zonas): foto, frase corta, perfiles, «De un vistazo» y vídeos.
  * Los usan el índice de Zonas y la ficha de zona (maqueta «Zonas de Marbella in Style», 18-11-2026).
  * Los textos son por idioma (cada traducción de la zona tiene los suyos); la foto y los perfiles se
  * copian a la traducción.
@@ -49,6 +49,7 @@ add_action(
 				'auth_callback'     => $auth,
 			)
 		);
+		register_term_meta( 'zona', 'zona_videos', array( 'type' => 'string', 'single' => true, 'show_in_rest' => true, 'description' => 'JSON [{url, platform, cover}], como mis_videos de las fichas', 'sanitize_callback' => static fn( $v ) => function_exists( 'maros_sanitize_videos' ) ? maros_sanitize_videos( $v ) : '[]', 'auth_callback' => $auth ) );
 		foreach ( array_keys( mis_zona_textos() ) as $key ) {
 			register_term_meta( 'zona', $key, array( 'type' => 'string', 'single' => true, 'show_in_rest' => true, 'sanitize_callback' => 'sanitize_text_field', 'auth_callback' => $auth ) );
 		}
@@ -68,11 +69,11 @@ function mis_zona_perfiles_de( int $term_id ): array {
 	return '' === $raw ? array() : explode( ',', $raw );
 }
 
-// Polylang: la foto y los perfiles son iguales en los dos idiomas.
+// Polylang: la foto, los perfiles y los vídeos son iguales en los dos idiomas.
 add_filter(
 	'pll_copy_term_metas',
 	static function ( array $metas ): array {
-		return array_merge( $metas, array( 'zona_imagen', 'zona_perfiles' ) );
+		return array_merge( $metas, array( 'zona_imagen', 'zona_perfiles', 'zona_videos' ) );
 	}
 );
 
@@ -88,9 +89,39 @@ add_action(
 	static function ( string $hook ) {
 		if ( in_array( $hook, array( 'edit-tags.php', 'term.php' ), true ) && 'zona' === ( $_GET['taxonomy'] ?? '' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			wp_enqueue_media();
+			mis_zona_videos_admin_js();
 		}
 	}
 );
+
+/**
+ * La caja de vídeos es la de las fichas (maros-connector/assets/videos-admin.js, D18): mismo
+ * enlace, carátula y orden. Sin maros-connector, no aparece.
+ */
+function mis_zona_videos_admin_js(): void {
+	$file = WP_PLUGIN_DIR . '/maros-connector/assets/videos-admin.js';
+	if ( ! function_exists( 'maros_sanitize_videos' ) || ! is_readable( $file ) ) {
+		return;
+	}
+	wp_enqueue_script( 'maros-videos-admin', plugins_url( 'maros-connector/assets/videos-admin.js' ), array( 'jquery' ), (string) filemtime( $file ), true );
+	wp_localize_script(
+		'maros-videos-admin',
+		'marosVideosAdmin',
+		array(
+			'url'         => 'Enlace',
+			'cover'       => 'Elegir carátula',
+			'changeCover' => 'Cambiar carátula',
+			'noCover'     => 'Foto de la zona',
+			'removeCover' => 'Quitar carátula',
+			'remove'      => 'Quitar',
+			'up'          => 'Subir',
+			'down'        => 'Bajar',
+			'frameTitle'  => 'Carátula del vídeo',
+			'invalid'     => 'Solo se guardan enlaces https de Instagram, YouTube y TikTok.',
+		)
+	);
+	wp_add_inline_style( 'wp-admin', '.mis-videos-admin__list{margin:0;list-style:none}.mis-videos-admin__row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid #f0f0f1}.mis-videos-admin__url{flex:1 1 100%;min-width:0}.mis-videos-admin__thumb{width:27px;height:48px;object-fit:cover;background:#f0f0f1;display:block}.mis-videos-admin__bad{color:#b32d2e;flex-basis:100%;margin:0}' );
+}
 
 function mis_zona_campos( ?WP_Term $term ): void {
 	$id      = $term ? (int) $term->term_id : 0;
@@ -132,6 +163,25 @@ function mis_zona_campos( ?WP_Term $term ): void {
 		);
 	}
 	$row( esc_html__( 'Perfiles (filtros del índice)', 'mis-contenido' ), $boxes );
+
+	if ( function_exists( 'maros_sanitize_videos' ) ) {
+		$videos = $id ? json_decode( (string) get_term_meta( $id, 'zona_videos', true ), true ) : array();
+		$videos = is_array( $videos ) ? $videos : array();
+		$rows   = array_map(
+			static function ( $v ) {
+				$cover = (int) ( $v['cover'] ?? 0 );
+				return array( 'url' => (string) ( $v['url'] ?? '' ), 'cover' => $cover, 'thumb' => $cover ? (string) wp_get_attachment_image_url( $cover, 'thumbnail' ) : '' );
+			},
+			$videos
+		);
+		$row(
+			esc_html__( 'Vídeos (reels de Instagram)', 'mis-contenido' ),
+			'<div class="mis-videos-admin" data-rows="' . esc_attr( (string) wp_json_encode( $rows ) ) . '"><ol class="mis-videos-admin__list"></ol>'
+			. '<p><button type="button" class="button mis-videos-admin__add">' . esc_html__( 'Añadir vídeo', 'mis-contenido' ) . '</button></p>'
+			. '<input type="hidden" name="mis_videos_json" value="' . esc_attr( (string) wp_json_encode( $videos ) ) . '"></div>'
+			. '<p class="description">Pega el enlace de cada reel (también valen YouTube y TikTok) y elige una carátula vertical; si no hay, se usa la foto de la zona. Los vídeos son los mismos en los dos idiomas.</p>'
+		);
+	}
 	?>
 	<script>
 	( function () {
@@ -166,6 +216,11 @@ function mis_zona_guardar( int $term_id ): void {
 	foreach ( array_keys( mis_zona_textos() ) as $key ) {
 		$val = sanitize_text_field( wp_unslash( $_POST[ $key ] ?? '' ) );
 		'' === $val ? delete_term_meta( $term_id, $key ) : update_term_meta( $term_id, $key, $val );
+	}
+
+	if ( isset( $_POST['mis_videos_json'] ) && function_exists( 'maros_sanitize_videos' ) ) {
+		$videos = maros_sanitize_videos( (string) wp_unslash( $_POST['mis_videos_json'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- se sanea campo a campo.
+		'[]' === $videos ? delete_term_meta( $term_id, 'zona_videos' ) : update_term_meta( $term_id, 'zona_videos', wp_slash( $videos ) );
 	}
 
 	$perfiles = mis_zona_sanitize_perfiles( array_map( 'sanitize_key', (array) wp_unslash( $_POST['zona_perfiles'] ?? array() ) ) );
