@@ -1,4 +1,4 @@
-# marOS en PRUEBAS (IONOS), a mano: estado de la conexión, importación de UNA propiedad, SEO o guías de zona.
+# marOS en PRUEBAS (IONOS), a mano: estado de la conexión, importación de UNA propiedad, SEO, guías de zona u opiniones de la web actual.
 # Sirve para importar las fichas una a una (Julio, 14/11) sin entrar por SSH, y deja en el
 # resumen lo que llegó de marOS para revisarlo. Spec 003; runbook pruebas-ionos, «Conectar con marOS pruebas».
 name: marOS en pruebas
@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       accion:
-        description: "status = ver la conexión · sync = importar la propiedad del id · seo = rellenar Yoast en todas las fichas (wp maros seo) · zonas = reescribir las guías de zona (zonas.php forzar)"
+        description: "status = ver la conexión · sync = importar la propiedad del id · seo = rellenar Yoast en todas las fichas (wp maros seo) · zonas = reescribir las guías de zona (zonas.php forzar) · opiniones = importar las opiniones de la web actual (opiniones-web-actual.php)"
         type: choice
-        options: [status, sync, seo, zonas]
+        options: [status, sync, seo, zonas, opiniones]
         default: status
       id:
         description: "Id de marOS de la propiedad (p. ej. villa-flamingos). Solo con sync"
