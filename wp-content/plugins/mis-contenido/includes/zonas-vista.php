@@ -479,3 +479,45 @@ add_shortcode(
 	}
 );
 
+
+// ------------------------------------------------------------------ ficha de propiedad
+
+/**
+ * [mis_zona_ficha] Apartado «Location» de la ficha de propiedad: la zona de la casa con su foto (o
+ * la ilustración), la frase corta, «De un vistazo» y el enlace a la guía. Nada si la casa no tiene zona.
+ */
+add_shortcode(
+	'mis_zona_ficha',
+	static function () {
+		$terms = get_the_terms( (int) get_the_ID(), 'zona' );
+		$term  = $terms && ! is_wp_error( $terms ) ? $terms[0] : null;
+		if ( ! $term instanceof WP_Term ) {
+			return '';
+		}
+		$link    = get_term_link( $term );
+		$link    = is_wp_error( $link ) ? '' : $link;
+		$resumen = (string) get_term_meta( $term->term_id, 'zona_resumen', true );
+		$rows    = array(
+			'zona_ideal'   => mis_zona_t( 'Ideal for', 'Ideal para' ),
+			'zona_playas'  => mis_zona_t( 'Beaches', 'Playas' ),
+			'zona_golf'    => 'Golf',
+			'zona_moverse' => mis_zona_t( 'Getting around', 'Cómo moverse' ),
+		);
+		$dl = '';
+		foreach ( $rows as $key => $label ) {
+			$val = (string) get_term_meta( $term->term_id, $key, true );
+			if ( '' !== $val ) {
+				$dl .= '<div><dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( $val ) . '</dd></div>';
+			}
+		}
+		return '<div class="mis-zona-ficha">'
+			. '<a class="mis-zona-ficha__ph" href="' . esc_url( $link ) . '" tabindex="-1" aria-hidden="true">' . mis_zona_img( $term, 'large', array( 'loading' => 'lazy', 'class' => 'mis-zona-ficha__img' ) ) . '</a>'
+			. '<div class="mis-zona-ficha__body">'
+			. '<p class="mis-eyebrow">' . esc_html( mis_zona_t( 'The area', 'La zona' ) ) . '</p>'
+			. '<h3 class="mis-zona-ficha__name"><a href="' . esc_url( $link ) . '">' . esc_html( $term->name ) . '</a></h3>'
+			. ( '' !== $resumen ? '<p class="mis-zona-ficha__text">' . esc_html( $resumen ) . '</p>' : '' )
+			. ( $dl ? '<dl class="mis-zona-ficha__dl">' . $dl . '</dl>' : '' )
+			. '<a class="mis-link-action" href="' . esc_url( $link ) . '">' . esc_html( mis_zona_t( 'Read the area guide', 'Leer la guía de la zona' ) ) . '</a>'
+			. '</div></div>';
+	}
+);
