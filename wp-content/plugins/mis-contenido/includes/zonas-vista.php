@@ -539,10 +539,23 @@ add_shortcode(
 			: ( 'villa' === $slug ? mis_zona_t( 'Close to the Villa', 'Cerca de la villa' )
 			: ( 'apartment' === $slug ? mis_zona_t( 'Close to the Apartment', 'Cerca del apartamento' )
 			: mis_zona_t( 'Close to the Property', 'Cerca de la casa' ) ) );
+		$lat = (float) get_post_meta( $post_id, 'maros_lat', true );
+		$lng = (float) get_post_meta( $post_id, 'maros_lng', true );
+		$map = '';
+		if ( $lat && $lng ) {
+			// marOS solo manda coordenadas propias (no de Google) y redondeadas a 2 decimales (~1 km).
+			$base = plugins_url( 'assets/', dirname( __DIR__ ) . '/mis-contenido.php' );
+			$dir  = dirname( __DIR__ ) . '/assets/';
+			wp_enqueue_style( 'leaflet', $base . 'leaflet/leaflet.css', array(), '1.9.4' );
+			wp_enqueue_script( 'leaflet', $base . 'leaflet/leaflet.js', array(), '1.9.4', array( 'in_footer' => true, 'strategy' => 'defer' ) );
+			wp_enqueue_script( 'mis-mapa-cerca', $base . 'mapa-cerca.js', array( 'leaflet' ), (string) filemtime( $dir . 'mapa-cerca.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+			$map = '<div class="mis-cerca-mapa" data-lat="' . esc_attr( (string) $lat ) . '" data-lng="' . esc_attr( (string) $lng ) . '" role="img" aria-label="'
+				. esc_attr( mis_zona_t( 'Map of the approximate area of the house', 'Mapa de la zona aproximada de la casa' ) ) . '"></div>';
+		}
+		$body = $list . '<p class="mis-muted">' . esc_html( mis_zona_t( 'The exact address is shared after booking.', 'La dirección exacta se envía tras la reserva.' ) ) . '</p>';
 		return '<section id="location" class="mis-ficha-seccion">'
 			. '<h2 class="wp-block-heading has-large-font-size">' . esc_html( $title ) . '</h2>'
-			. $list
-			. '<p class="mis-muted">' . esc_html( mis_zona_t( 'The exact address is shared after booking.', 'La dirección exacta se envía tras la reserva.' ) ) . '</p>'
+			. ( $map ? '<div class="mis-cerca' . ( $list ? '' : ' mis-cerca--solo-mapa' ) . '"><div class="mis-cerca__datos">' . $body . '</div>' . $map . '</div>' : $body )
 			. '</section>';
 	}
 );

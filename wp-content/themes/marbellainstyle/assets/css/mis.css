@@ -890,3 +890,14 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-ficha-seccion { padding-top: var(--wp--preset--spacing--medium); }
 .mis-ficha-seccion > h2 { margin-top: 0; }
 .mis-ficha-seccion .mis-zona-cerca { margin-top: 0; }
+
+/* Mapa de la zona aproximada junto a las distancias (Leaflet + OpenStreetMap, solo un círculo). */
+.mis-cerca { display: grid; gap: 1.5rem; }
+.mis-cerca__datos { min-width: 0; }
+.mis-cerca__datos .mis-zona-cerca__list { grid-template-columns: 1fr; }
+.mis-cerca-mapa { --mis-mapa-color: var(--wp--preset--color--primary); position: relative; z-index: 0; width: 100%; aspect-ratio: 4 / 3; max-height: 420px; border: 1px solid var(--mis-line); background: var(--wp--preset--color--tertiary); }
+.mis-cerca-mapa .leaflet-control-attribution { font-size: 10px; }
+@media (min-width: 768px) {
+	.mis-cerca { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+	.mis-cerca-mapa { aspect-ratio: auto; height: 100%; min-height: 300px; }
+}
