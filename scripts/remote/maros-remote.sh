@@ -1,5 +1,5 @@
 # Se ejecuta EN EL SERVIDOR de IONOS a través de .github/workflows/maros-staging.yml (no a mano).
-# Argumentos: WP_PATH acción (status|sync|seo|zonas|opiniones|servicios|slugs) [id de marOS] [MIS_PATH]. Antes, el workflow antepone MIS_PHP y php-bin.sh.
+# Argumentos: WP_PATH acción (status|sync|seo|zonas|opiniones|servicios|slugs|idiomas) [id de marOS] [MIS_PATH]. Antes, el workflow antepone MIS_PHP y php-bin.sh.
 set -euo pipefail
 WP="$HOME/$1"; ACCION="$2"; ID="${3:-}"; MIS="$HOME/${4:-}"
 wp() { "$PHPBIN" "$WPCLI" --path="$WP" "$@"; }
@@ -37,6 +37,12 @@ if [[ "$ACCION" == "slugs" ]]; then
 	[[ -n "${4:-}" && -f "$f" ]] || { echo "✗ No encuentro $f (¿MIS_PATH?)"; exit 1; }
 	echo "→ Slugs por idioma (slugs-idioma.php)"
 	wp eval-file "$f"
+fi
+
+if [[ "$ACCION" == "idiomas" ]]; then
+	# Cada propiedad en inglés y español, vinculadas en Polylang; repara (vincula o crea) las que no.
+	echo "→ Propiedades en todos los idiomas (wp maros idiomas --fix)"
+	wp maros idiomas --fix
 fi
 
 if [[ "$ACCION" == "seo" ]]; then
