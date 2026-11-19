@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       accion:
-        description: "status = ver la conexión · sync = importar la propiedad del id · seo = rellenar Yoast en todas las fichas (wp maros seo) · zonas = reescribir las guías de zona (zonas.php forzar) · opiniones = importar las opiniones de la web actual (opiniones-web-actual.php) · servicios = cargar servicios y experiencias (servicios.php) · slugs = cambiar «-2» por «-es» en las traducciones (slugs-idioma.php) · idiomas = comprobar que cada propiedad existe en inglés y español y reparar las que no (wp maros idiomas --fix)"
+        description: "status = ver la conexión · sync = importar la propiedad del id · seo = rellenar Yoast en todas las fichas (wp maros seo) · zonas = reescribir las guías de zona (zonas.php forzar) · opiniones = importar las opiniones de la web actual (opiniones-web-actual.php) · servicios = cargar servicios y experiencias (servicios.php) · slugs = cambiar «-2» por «-es» en las traducciones (slugs-idioma.php) · idiomas = comprobar que cada propiedad existe en inglés y español y reparar las que no (wp maros idiomas --fix) · publicar = publicar en los dos idiomas las propiedades publicables en marOS (wp maros publicar)"
         type: choice
-        options: [status, sync, seo, zonas, opiniones, servicios, slugs, idiomas]
+        options: [status, sync, seo, zonas, opiniones, servicios, slugs, idiomas, publicar]
         default: status
       id:
         description: "Id de marOS de la propiedad (p. ej. villa-flamingos). Solo con sync"

@@ -178,6 +178,54 @@ class Maros_CLI {
 	}
 
 	/**
+	 * Publica, en todos los idiomas, las propiedades que marOS da como publicables.
+	 *
+	 * Las que ya no están en la lista de marOS siguen en borrador (la sincronización las volvería a
+	 * retirar). Pensado para pruebas; en producción las publica un editor (spec 003).
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--dry-run]
+	 * : Solo muestra lo que haría.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp maros publicar
+	 */
+	public function publicar( $args, $assoc_args ) {
+		$dry  = ! empty( $assoc_args['dry-run'] );
+		$list = Maros_Client::list_properties();
+		if ( is_wp_error( $list ) ) {
+			WP_CLI::error( $list->get_error_message() );
+		}
+		$publishable = array_map( 'strval', array_column( $list, 'id' ) );
+		$known       = array_unique( array_filter( array_map( static fn( $id ) => (string) get_post_meta( $id, 'maros_id', true ), Maros_Sync::all_posts() ) ) );
+		$count       = 0;
+		foreach ( $publishable as $maros_id ) {
+			$found = Maros_Sync::translations_of( $maros_id );
+			if ( ! $found ) {
+				WP_CLI::warning( "$maros_id es publicable en marOS pero aún no está en la web (wp maros sync --id=$maros_id)." );
+				continue;
+			}
+			foreach ( $found as $lang => $post_id ) {
+				if ( 'publish' === get_post_status( $post_id ) ) {
+					continue;
+				}
+				if ( ! $dry ) {
+					wp_update_post( array( 'ID' => $post_id, 'post_status' => 'publish' ) );
+				}
+				++$count;
+				WP_CLI::log( sprintf( '  ✓ %s %s «%s» %s', $maros_id, $lang, get_the_title( $post_id ), wp_make_link_relative( (string) get_permalink( $post_id ) ) ) );
+			}
+		}
+		foreach ( array_diff( $known, $publishable ) as $maros_id ) {
+			$found = Maros_Sync::translations_of( $maros_id );
+			WP_CLI::log( sprintf( '  · %s «%s» sigue en borrador: no es publicable en marOS.', $maros_id, get_the_title( (int) ( reset( $found ) ?: 0 ) ) ) );
+		}
+		WP_CLI::success( sprintf( '%d traducciones %s.', $count, $dry ? 'se publicarían' : 'publicadas' ) );
+	}
+
+	/**
 	 * Muestra el estado de la conexión con marOS.
 	 */
 	public function status() {
