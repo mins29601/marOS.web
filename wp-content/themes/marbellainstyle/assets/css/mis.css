@@ -358,14 +358,19 @@ html.mis-tour-open { overflow: hidden; }
 .mis-tour__title span { color: var(--wp--preset--color--secondary); }
 /* Móvil: barra de la galería más baja (Julio 19-11-2026: «la cabecera ocupa mucho») */
 @media (max-width: 1023px) {
-	.mis-tour__bar { gap: 0.5rem; padding-block: 0.25rem; padding-top: max(0.25rem, env(safe-area-inset-top, 0px)); }
-	.mis-tour__bar .mis-tour__close { width: 40px; height: 40px; border: 0; margin-left: -0.625rem; }
+	/* Sin env(safe-area-inset-top): la web no usa viewport-fit=cover y en algunos Android dejaba un hueco
+	   en blanco encima de la barra (Julio 19-11-2026). */
+	.mis-tour { height: 100dvh; }
+	.mis-tour__bar { gap: 0.5rem; padding: 0 var(--wp--preset--spacing--medium) 0 calc(var(--wp--preset--spacing--medium) - 0.625rem); min-height: 44px; box-sizing: border-box; }
+	.mis-tour__bar .mis-tour__title { line-height: 1.2; }
+	.mis-lb__bar { padding-top: 0.5rem; }
+	.mis-tour__bar .mis-tour__close { width: 40px; height: 40px; border: 0; }
 	.mis-tour__title { font-size: 0.6875rem; letter-spacing: 0.1em; }
 	.mis-tour__chips { padding-block: 0.625rem; }
 	.mis-tour__chip { flex-basis: 96px; }
 	.mis-tour__sec { padding-block: 1.25rem; }
 }
-.mis-tour__scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--wp--preset--spacing--medium) 3rem; }
+.mis-tour__scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--wp--preset--spacing--medium) 3rem; }
 .mis-tour__chips { display: flex; gap: 0.75rem; overflow-x: auto; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding: 0.875rem var(--wp--preset--spacing--medium); background: var(--wp--preset--color--base); border-bottom: 1px solid var(--mis-line); scrollbar-width: none; }
 .mis-tour__chips::-webkit-scrollbar { display: none; }
 .mis-tour__chip { flex: 0 0 112px; display: grid; gap: 4px; align-content: start; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; font-family: inherit; font-size: 0.75rem; line-height: 1.3; }
