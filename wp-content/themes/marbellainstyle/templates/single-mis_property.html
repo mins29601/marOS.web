@@ -11,6 +11,7 @@
 <div id="overview" class="wp-block-group">
 <!-- wp:shortcode -->[maros_breadcrumbs]<!-- /wp:shortcode -->
 <!-- wp:post-title {"level":1,"className":"mis-ficha-title"} /-->
+<!-- wp:shortcode -->[maros_subtitle]<!-- /wp:shortcode -->
 <!-- wp:shortcode -->[maros_where]<!-- /wp:shortcode -->
 <!-- wp:shortcode -->[maros_facts]<!-- /wp:shortcode -->
 <!-- wp:group {"className":"mis-desc","layout":{"type":"default"}} -->
@@ -37,11 +38,15 @@
 <!-- wp:shortcode -->[maros_sleeping]<!-- /wp:shortcode -->
 </div>
 <!-- /wp:group -->
+<!-- wp:group {"className":"mis-ficha-sec","layout":{"type":"default"}} -->
+<div class="wp-block-group mis-ficha-sec">
+<!-- wp:shortcode -->[maros_pools]<!-- /wp:shortcode -->
+</div>
+<!-- /wp:group -->
 <!-- wp:group {"anchor":"amenities","className":"mis-ficha-sec","layout":{"type":"default"}} -->
 <div id="amenities" class="wp-block-group mis-ficha-sec">
 <!-- wp:heading {"fontSize":"large"} --><h2 class="wp-block-heading has-large-font-size">[mis_t en="Features and amenities" es="Características y comodidades"]</h2><!-- /wp:heading -->
 <!-- wp:shortcode -->[maros_amenities]<!-- /wp:shortcode -->
-<!-- wp:paragraph {"className":"mis-pool","metadata":{"bindings":{"content":{"source":"maros/property","args":{"key":"pool_heating"}}}}} --><p class="mis-pool"></p><!-- /wp:paragraph -->
 </div>
 <!-- /wp:group -->
 <!-- wp:group {"anchor":"conditions","layout":{"type":"default"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|medium"}}}} -->

@@ -267,6 +267,7 @@ class Maros_Sync {
 		$publishable = ! array_key_exists( 'publishable', $data ) || ! empty( $data['publishable'] );
 		$status      = $publishable && $publish ? 'publish' : 'draft';
 		$ids         = array();
+		$title       = self::title_of( $data );
 
 		foreach ( self::LANGS as $lang ) {
 			$post_id = (int) ( $found[ $lang ] ?? 0 );
@@ -275,11 +276,11 @@ class Maros_Sync {
 				// (una propiedad publicada tiene que estar publicada en todos los idiomas).
 				$sibling = $existing ? get_post( $existing ) : null;
 				// El slug de la hermana sin su sufijo de idioma («villa-concha-es» → «villa-concha»).
-				$slug = $sibling ? preg_replace( '/-' . preg_quote( (string) array_key_first( $found ), '/' ) . '$/', '', $sibling->post_name ) : sanitize_title( $data['name'] );
+				$slug = $sibling ? preg_replace( '/-' . preg_quote( (string) array_key_first( $found ), '/' ) . '$/', '', $sibling->post_name ) : sanitize_title( $title );
 				$post_id = wp_insert_post(
 					array(
 						'post_type'    => 'mis_property',
-						'post_title'   => $sibling ? $sibling->post_title : $data['name'],
+						'post_title'   => $sibling ? $sibling->post_title : $title,
 						'post_name'    => $slug,
 						'post_status'  => $sibling && $publishable ? $sibling->post_status : $status,
 					),
@@ -288,8 +289,18 @@ class Maros_Sync {
 				if ( is_wp_error( $post_id ) ) {
 					return $post_id;
 				}
-			} elseif ( ! $publishable ) {
-				wp_update_post( array( 'ID' => $post_id, 'post_status' => 'draft' ) );
+			} else {
+				$update = $publishable ? array() : array( 'post_status' => 'draft' );
+				// El título es el nombre interno de marOS (Julio 19-11-2026). Se cambia solo si sigue siendo
+				// el que puso la sincronización (el nombre de antes); un título escrito a mano se respeta.
+				$current = (string) get_post_field( 'post_title', $post_id, 'raw' );
+				$synced  = array_filter( array( (string) get_post_meta( $post_id, 'maros_name', true ), (string) get_post_meta( $post_id, 'maros_internal_name', true ), (string) $data['name'] ) );
+				if ( $current !== $title && in_array( $current, $synced, true ) ) {
+					$update['post_title'] = $title;
+				}
+				if ( $update ) {
+					wp_update_post( array( 'ID' => $post_id ) + $update );
+				}
 			}
 			if ( function_exists( 'pll_set_post_language' ) ) {
 				pll_set_post_language( $post_id, $lang );
@@ -394,6 +405,25 @@ class Maros_Sync {
 		return true;
 	}
 
+	/** Título de la ficha: el nombre interno de marOS («Casa Coral»); sin él, el de siempre. */
+	public static function title_of( array $d ): string {
+		$internal = trim( (string) ( $d['internal_name'] ?? '' ) );
+		return '' !== $internal ? $internal : trim( (string) $d['name'] );
+	}
+
+	/**
+	 * Subtítulo: el nombre comercial sin el nombre interno delante («Casa Coral - Beachfront 3BR
+	 * Townhouse with Garden» → «Beachfront 3BR Townhouse with Garden»). Vacío si no añade nada.
+	 */
+	public static function subtitle_of( array $d ): string {
+		$title      = self::title_of( $d );
+		$commercial = trim( (string) ( array_key_exists( 'commercial_name', $d ) ? ( $d['commercial_name'] ?? '' ) : ( $d['name'] ?? '' ) ) );
+		if ( '' !== $title && 0 === stripos( $commercial, $title ) ) {
+			$commercial = trim( preg_replace( '/^[\s\-–—|·:,]+/u', '', substr( $commercial, strlen( $title ) ) ) );
+		}
+		return 0 === strcasecmp( $commercial, $title ) ? '' : $commercial;
+	}
+
 	private static function type_of( array $d ): array {
 		$type = $d['type'] ?? '';
 		$slug = is_array( $type ) ? (string) ( $type['id'] ?? '' ) : (string) $type;
@@ -423,6 +453,8 @@ class Maros_Sync {
 			'maros_lodgify_id'  => (int) ( $d['lodgify_id'] ?? 0 ),
 			'maros_updated_at'  => (string) ( $d['updated_at'] ?? '' ),
 			'maros_name'        => (string) $d['name'],
+			'maros_internal_name' => self::title_of( $d ),
+			'maros_subtitle'    => self::subtitle_of( $d ),
 			'maros_max_guests'  => (int) ( $d['max_guests'] ?? 0 ),
 			'maros_bedrooms'    => (int) ( $d['bedrooms'] ?? 0 ),
 			'maros_bathrooms'   => (int) ( $d['bathrooms'] ?? 0 ),
@@ -511,7 +543,8 @@ class Maros_Sync {
 			'maros_pool_heating_included'  => $heating ? self::flag( $heating['included'] ?? null ) : '',
 			'maros_pool_heating_mandatory' => $heating ? self::flag( $heating['mandatory'] ?? null ) : '',
 			'maros_pool_heating_min_nights' => (int) ( $heating['minimum_nights'] ?? 0 ),
-			'maros_pools'                => wp_json_encode( array_values( array_filter( is_array( $d['pools'] ?? null ) ? $d['pools'] : array(), 'is_array' ) ) ),
+			// wp_slash: las comodidades de cada piscina llevan acentos («\u00ed») que update_post_meta quitaría.
+			'maros_pools'                => wp_slash( wp_json_encode( array_values( array_filter( is_array( $d['pools'] ?? null ) ? $d['pools'] : array(), 'is_array' ) ) ) ),
 			'maros_extra_cleaning'       => (float) ( $extra['standard'] ?? 0 ),
 			'maros_extra_cleaning_linen' => (float) ( $extra['with_linen'] ?? 0 ),
 			'maros_self_check_in'        => self::flag( $d['self_check_in'] ?? null ),

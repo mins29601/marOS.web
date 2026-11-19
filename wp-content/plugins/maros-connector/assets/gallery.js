@@ -1,6 +1,7 @@
 /**
  * Galería de la propiedad (marOS spec 041): abre la capa de fotos por estancias y el visor.
- * Cualquier [data-mis-photo] de la página (cabecera, Sleeping arrangements) abre el visor en esa foto.
+ * Una foto de la cabecera ([data-mis-photo]) abre el visor en esa foto; una de un dormitorio o de la
+ * piscina ([data-mis-room-photo]) abre la galería en el bloque de su estancia (Julio 19-11-2026).
  */
 ( function () {
 	var wrap = document.querySelector( '[data-mis-tour]' );
@@ -65,6 +66,19 @@
 		show( i < 0 ? 0 : i );
 		lb.querySelector( '[data-mis-step="1"]' ).focus();
 	}
+	/** Abre la galería con el bloque de la estancia que tiene esta foto arriba del todo. */
+	function room( photo ) {
+		var item = items.find( function ( it ) {
+			return it.getAttribute( 'data-mis-photo' ) === String( photo );
+		} );
+		var sec = item && item.closest( '.mis-tour__sec' );
+		open();
+		lb.hidden = true;
+		scroller.scrollTop = 0;
+		if ( sec ) {
+			scroller.scrollTop = sec.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
+		}
+	}
 	function closeViewer() {
 		if ( lb.hidden ) {
 			return;
@@ -78,7 +92,7 @@
 	}
 
 	document.addEventListener( 'click', function ( e ) {
-		var t = e.target.closest( '[data-mis-slide], [data-mis-open], [data-mis-close], [data-mis-lb-close], [data-mis-step], [data-mis-goto], [data-mis-photo]' );
+		var t = e.target.closest( '[data-mis-slide], [data-mis-open], [data-mis-close], [data-mis-lb-close], [data-mis-step], [data-mis-goto], [data-mis-room-photo], [data-mis-photo]' );
 		if ( ! t ) {
 			return;
 		}
@@ -93,6 +107,8 @@
 			closeViewer();
 		} else if ( t.hasAttribute( 'data-mis-step' ) ) {
 			show( index + Number( t.getAttribute( 'data-mis-step' ) ) );
+		} else if ( t.hasAttribute( 'data-mis-room-photo' ) ) {
+			room( t.getAttribute( 'data-mis-room-photo' ) );
 		} else if ( t.hasAttribute( 'data-mis-goto' ) ) {
 			var sec = document.getElementById( t.getAttribute( 'data-mis-goto' ) );
 			if ( sec ) {
