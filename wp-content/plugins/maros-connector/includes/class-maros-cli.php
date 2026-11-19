@@ -146,7 +146,7 @@ class Maros_CLI {
 		WP_CLI\Utils\format_items( 'table', $rows, array_merge( array( 'maros_id', 'nombre', 'ok' ), Maros_Sync::LANGS, array( 'otras' ) ) );
 
 		// Resto del contenido traducible publicado sin todas sus traducciones (solo aviso).
-		$types = array_diff( (array) pll_get_post_types(), array( 'mis_property', 'attachment', 'wp_block', 'wp_template', 'wp_template_part', 'wp_navigation' ) );
+		$types = array_filter( get_post_types( array( 'public' => true ) ), static fn( $t ) => 'mis_property' !== $t && 'attachment' !== $t && pll_is_translated_post_type( $t ) );
 		$langs = (array) pll_languages_list();
 		foreach ( get_posts( array( 'post_type' => array_values( $types ), 'post_status' => 'publish', 'posts_per_page' => -1, 'fields' => 'ids', 'lang' => '' ) ) as $id ) {
 			$missing = array_diff( $langs, array_keys( (array) pll_get_post_translations( $id ) ) );

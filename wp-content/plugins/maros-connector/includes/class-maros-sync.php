@@ -260,7 +260,7 @@ class Maros_Sync {
 			return 'skipped';
 		}
 		if ( $existing && ! $complete ) {
-			Maros_Log::info( sprintf( '%s: faltaba la traducción en %s o no estaba vinculada; se crea o se vincula.', $maros_id, implode( ', ', array_diff( self::LANGS, array_keys( $found ) ) ) ?: implode( ', ', array_keys( $found ) ) ) );
+			Maros_Log::info( sprintf( '%s: le faltaba una traducción (%s), no estaban vinculadas o no tenían el mismo estado; se corrige.', $maros_id, implode( ', ', array_diff( self::LANGS, array_keys( $found ) ) ) ?: 'en y es existen' ) );
 		}
 
 		// La API del catálogo solo entrega publicables; el campo se respeta por si llega en false.
@@ -302,6 +302,14 @@ class Maros_Sync {
 
 		if ( function_exists( 'pll_save_post_translations' ) ) {
 			pll_save_post_translations( $ids );
+		}
+		// Publicada en un idioma = publicada en todos (si sigue siendo publicable en marOS).
+		if ( $publishable && ! self::same_status( $ids ) && in_array( 'publish', array_map( 'get_post_status', $ids ), true ) ) {
+			foreach ( $ids as $post_id ) {
+				if ( 'publish' !== get_post_status( $post_id ) ) {
+					wp_update_post( array( 'ID' => $post_id, 'post_status' => 'publish' ) );
+				}
+			}
 		}
 
 		$complete = $photos ? self::sync_photos( $ids, $data['photos'] ?? array() ) : true;
@@ -924,7 +932,33 @@ class Maros_Sync {
 		if ( ! function_exists( 'pll_get_post_translations' ) ) {
 			return (bool) $found;
 		}
-		return count( $found ) === count( self::LANGS ) && self::linked( $found );
+		return count( $found ) === count( self::LANGS ) && self::linked( $found ) && self::same_status( $found );
+	}
+
+	/** Si todas las traducciones tienen el mismo estado (publicada en un idioma = publicada en todos). */
+	private static function same_status( array $found ): bool {
+		return 1 === count( array_unique( array_map( 'get_post_status', array_values( $found ) ) ) );
+	}
+
+	/**
+	 * Iguala el estado de las traducciones de una propiedad al de la que acaba de cambiar (p. ej. al
+	 * publicar la española en el editor, se publica también la inglesa). Solo publicar, borrador,
+	 * pendiente y privado; la papelera no se propaga.
+	 */
+	public static function align_status( string $new, string $old, WP_Post $post ): void {
+		static $running = false;
+		if ( $running || $new === $old || 'mis_property' !== $post->post_type || ! in_array( $new, array( 'publish', 'draft', 'pending', 'private' ), true )
+			|| ! function_exists( 'pll_get_post_translations' ) ) {
+			return;
+		}
+		$running = true;
+		foreach ( (array) pll_get_post_translations( $post->ID ) as $id ) {
+			$status = get_post_status( (int) $id );
+			if ( (int) $id !== $post->ID && $status && 'trash' !== $status && $status !== $new ) {
+				wp_update_post( array( 'ID' => (int) $id, 'post_status' => $new ) );
+			}
+		}
+		$running = false;
 	}
 
 	/** Si Polylang tiene vinculadas entre sí estas traducciones. */
