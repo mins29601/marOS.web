@@ -28,18 +28,24 @@ function mis_slug_idioma( int $post_id ): string {
 	}
 	$post = get_post( $post_id );
 	$lang = $post ? (string) pll_get_post_language( $post_id ) : '';
-	if ( ! $post || ! $lang || pll_default_language() === $lang || 'attachment' === $post->post_type || 'revision' === $post->post_type ) {
+	if ( ! $post || ! $lang || 'attachment' === $post->post_type || 'revision' === $post->post_type || '' === $post->post_name ) {
 		return '';
 	}
-	if ( ! preg_match( '/^(.+)-(\d+)$/', $post->post_name, $m ) ) {
-		return '';
-	}
-	$base = $m[1];
-	// Solo si «-N» viene de un choque: otra entrada del mismo tipo tiene ya el slug base.
-	$otra = get_posts(
+	$default = (string) pll_default_language();
+	$set     = static function ( WP_Post $p, string $slug ) use ( &$running ): string {
+		$slug = wp_unique_post_slug( $slug, $p->ID, $p->post_status, $p->post_type, $p->post_parent );
+		if ( $slug === $p->post_name ) {
+			return '';
+		}
+		$running = true;
+		wp_update_post( array( 'ID' => $p->ID, 'post_name' => $slug ) );
+		$running = false;
+		return $slug;
+	};
+	$holder = static fn( string $name ): int => (int) ( get_posts(
 		array(
 			'post_type'        => $post->post_type,
-			'name'             => $base,
+			'name'             => $name,
 			'post_status'      => 'any',
 			'numberposts'      => 1,
 			'fields'           => 'ids',
@@ -47,17 +53,42 @@ function mis_slug_idioma( int $post_id ): string {
 			'exclude'          => array( $post_id ),
 			'suppress_filters' => true,
 		)
-	);
-	if ( ! $otra ) {
+	)[0] ?? 0 );
+	$translations = function_exists( 'pll_get_post_translations' ) ? array_map( 'intval', (array) pll_get_post_translations( $post_id ) ) : array();
+
+	if ( $default === $lang ) {
+		// El idioma principal lleva el slug limpio: si quedó en «<base>-N» porque <base> lo tiene una
+		// traducción suya (p. ej. al publicar la inglesa con la española ya publicada), la traducción
+		// pasa a «<base>-<idioma>» y esta recupera <base>.
+		if ( ! preg_match( '/^(.+)-(\d+)$/', $post->post_name, $m ) ) {
+			return '';
+		}
+		$otra = $holder( $m[1] );
+		$tr   = $otra ? array_search( $otra, $translations, true ) : false;
+		if ( ! $tr || $tr === $default ) {
+			return '';
+		}
+		$set( get_post( $otra ), $m[1] . '-' . $tr );
+		return $holder( $m[1] ) ? '' : $set( get_post( $post_id ), $m[1] );
+	}
+
+	// Traducción: «<base>-N» por choque, o el mismo slug que su versión en el idioma principal
+	// (los borradores pueden repetirlo y chocarían al publicar), pasa a «<base>-<idioma>».
+	$principal = (int) ( $translations[ $default ] ?? 0 );
+	$base      = '';
+	if ( $principal && preg_replace( '/-\d+$/', '', (string) get_post_field( 'post_name', $principal ) ) === $post->post_name ) {
+		$base = $post->post_name;
+	} elseif ( preg_match( '/^(.+)-(\d+)$/', $post->post_name, $m ) && $holder( $m[1] ) ) {
+		$base = $m[1];
+	}
+	if ( '' === $base ) {
 		return '';
 	}
-	$nuevo = wp_unique_post_slug( $base . '-' . $lang, $post_id, $post->post_status, $post->post_type, $post->post_parent );
-	if ( $nuevo === $post->post_name ) {
-		return '';
+	$nuevo = $set( $post, $base . '-' . $lang );
+	// Si la principal se quedó con «-N» por culpa de esta, recupera ahora el slug limpio.
+	if ( $nuevo && $principal && preg_match( '/^(.+)-(\d+)$/', (string) get_post_field( 'post_name', $principal ), $m ) && $m[1] === $base && ! $holder( $base ) ) {
+		$set( get_post( $principal ), $base );
 	}
-	$running = true;
-	wp_update_post( array( 'ID' => $post_id, 'post_name' => $nuevo ) );
-	$running = false;
 	return $nuevo;
 }
 
