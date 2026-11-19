@@ -253,6 +253,18 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 /* Fila de rejilla con más aire entre filas que entre columnas */
 .wp-block-post-template.is-layout-grid { column-gap: 1.25rem; row-gap: 2.5rem; }
 
+/* Tipos de servicio (Inicio y Servicios) y portada de un tipo */
+.mis-servicios-tipos { display: grid; gap: 2.5rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+@media (min-width: 600px) { .mis-servicios-tipos { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .mis-servicios-tipos { grid-template-columns: repeat(4, 1fr); } }
+.mis-card__foto { display: block; position: relative; overflow: hidden; margin-bottom: 0.5rem; }
+.mis-servicio-foto { position: relative; margin: 1.5rem 0; }
+.mis-servicio-foto img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.mis-card__foto img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .6s ease; }
+.mis-card:hover .mis-card__foto img { transform: scale(1.03); }
+.mis-servicio-texto table { width: 100%; border-collapse: collapse; margin-block: 1rem; }
+.mis-servicio-texto th, .mis-servicio-texto td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--mis-line); }
+
 /* Lista de zonas */
 .mis-terms-list { list-style: none; padding: 0; display: grid; gap: 1px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); background: var(--mis-line); border: 1px solid var(--mis-line); }
 .mis-terms-list li { background: var(--wp--preset--color--base); }
@@ -280,6 +292,10 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-carousel__count { position: absolute; right: 16px; bottom: 16px; border: 0; background: rgba(37, 39, 40, .6); color: #fff; padding: 6px 12px; font-family: var(--wp--preset--font-family--primary); font-size: 0.9375rem; font-variant-numeric: tabular-nums; cursor: pointer; }
 .mis-carousel__count:hover, .mis-carousel__count:focus-visible { background: rgba(37, 39, 40, .85); }
 @media (max-width: 767px) { .mis-carousel__nav { width: 40px; height: 40px; } .mis-carousel__nav--prev { left: 10px; } .mis-carousel__nav--next { right: 10px; } }
+/* «Videos · 3» sobre la galería, junto al contador de fotos */
+.mis-carousel__videos { position: absolute; left: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 36px; padding: 6px 12px; background: rgba(37, 39, 40, .6); color: #fff; font-size: 0.9375rem; text-decoration: none; }
+.mis-carousel__videos:hover, .mis-carousel__videos:focus-visible { background: rgba(37, 39, 40, .85); color: #fff; }
+@media (min-width: 1024px) { .mis-carousel__videos { left: 28px; bottom: 24px; } }
 @media (min-width: 1024px) { .mis-carousel { height: clamp(520px, 78vh, 820px); } .mis-carousel__nav--prev { left: 28px; } .mis-carousel__nav--next { right: 28px; } .mis-carousel__count { right: 28px; bottom: 24px; } }
 
 /* Cabecera de la ficha: blanca y transparente sobre la foto; al pasar la foto, la de siempre */
@@ -377,6 +393,31 @@ html.mis-tour-open { overflow: hidden; }
 @media (max-width: 767px) { .mis-lb__stage { padding: 0; } .mis-lb__nav { display: none; } }
 @media (prefers-reduced-motion: reduce) { .mis-gallery__img { transition: none; } }
 
+/* Vídeos de la casa (D18): carátulas verticales 9:16 en una fila que se desliza */
+.mis-videos h2 { margin: 0 0 1.25rem; }
+.mis-videos__track { list-style: none; margin: 0 calc(var(--wp--preset--spacing--medium) * -1); padding: 0 var(--wp--preset--spacing--medium) 0.5rem; display: flex; gap: 0.75rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--wp--preset--spacing--medium); scrollbar-width: thin; }
+.mis-videos__item { flex: 0 0 min(220px, 58vw); scroll-snap-align: start; }
+.mis-video { position: relative; display: block; aspect-ratio: 9 / 16; overflow: hidden; background: var(--wp--preset--color--tertiary); color: #fff; text-decoration: none; }
+.mis-video__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+.mis-video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(14, 15, 16, .55)); }
+.mis-video__play { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; }
+.mis-video__platform { position: absolute; left: 12px; bottom: 12px; z-index: 1; font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.mis-video:hover .mis-video__img, .mis-video:focus-visible .mis-video__img { transform: scale(1.03); }
+.mis-video:focus-visible { outline: 2px solid var(--wp--preset--color--primary); outline-offset: 2px; }
+@media (min-width: 768px) { .mis-videos__track { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; gap: 1.25rem; } .mis-videos__item { flex-basis: 240px; } }
+@media (prefers-reduced-motion: reduce) { .mis-video__img { transition: none; } }
+/* Visor de vídeo: el reproductor se carga al pulsar y se quita al cerrar */
+.mis-video-lb { width: min(960px, 100vw); max-width: 100vw; max-height: 100dvh; margin: auto; padding: 0; border: 0; background: transparent; color: #fff; overflow: visible; }
+.mis-video-lb.is-vertical { width: min(420px, 100vw); }
+.mis-video-lb::backdrop { background: rgba(14, 15, 16, .92); }
+.mis-video-lb__bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0.75rem; }
+.mis-video-lb__out { color: #fff; font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; text-underline-offset: 4px; }
+.mis-video-lb__close { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, .4); background: transparent; color: #fff; cursor: pointer; }
+.mis-video-lb__close:hover, .mis-video-lb__close:focus-visible { border-color: #fff; }
+.mis-video-lb__stage { background: #000; aspect-ratio: 16 / 9; max-height: calc(100dvh - 64px); }
+.mis-video-lb.is-vertical .mis-video-lb__stage { aspect-ratio: auto; height: min(760px, calc(100dvh - 64px)); background: #fff; }
+.mis-video-lb__stage iframe { width: 100%; height: 100%; border: 0; display: block; }
+
 /* Las fotos de Sleeping arrangements abren el visor */
 .mis-sleeping__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
 
@@ -386,8 +427,6 @@ html.mis-tour-open { overflow: hidden; }
 	background: var(--wp--preset--color--base);
 	border-bottom: 1px solid var(--mis-line);
 	overflow-x: auto; white-space: nowrap; scrollbar-width: none;
-	margin-inline: calc(var(--wp--preset--spacing--medium) * -1);
-	padding-inline: var(--wp--preset--spacing--medium);
 }
 .mis-anchors::-webkit-scrollbar { display: none; }
 .mis-anchors a {
@@ -398,12 +437,200 @@ html.mis-tour-open { overflow: hidden; }
 }
 .mis-anchors a:hover,
 .mis-anchors a[aria-current] { color: var(--wp--preset--color--main); border-bottom-color: var(--wp--preset--color--main); }
-:where(#overview, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, .mis-keys) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
+:where(#overview, #videos, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, .mis-keys) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
+.admin-bar .mis-anchors { top: calc(var(--mis-header-h) + var(--wp-admin--admin-bar--height, 0px)); }
 
 /* Caja de reserva (escritorio) y barra fija (móvil) */
 .mis-booking-box { border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); padding: 1.5rem; }
 .mis-booking-box .wp-block-buttons { margin-block: 1.25rem; }
-@media (min-width: 1024px) { .mis-booking-box { position: sticky; top: calc(var(--mis-header-h) + 24px); } }
+/* Bajo la cabecera y la barra de anclas (unos 52 px) */
+@media (min-width: 1024px) { .mis-booking-box { position: sticky; top: calc(var(--mis-header-h) + 76px); } }
+/* Reserva: fechas, huéspedes y presupuesto ([maros_booking], maros-connector/assets/booking.js) */
+.mis-resv { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem; }
+.mis-resv small { display: block; font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wp--preset--color--secondary); }
+.mis-resv__top, .mis-resv__house, .mis-resv__sum { display: none; }
+.mis-resv__title { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.mis-resv__title p { margin: 0; font-size: 1.125rem; font-weight: 500; }
+.mis-resv__rating { font-weight: 600; white-space: nowrap; text-decoration: none; color: var(--wp--preset--color--main); }
+.mis-resv__rating span { font-weight: 400; color: var(--wp--preset--color--secondary); text-decoration: underline; }
+.mis-resv__empty { margin: 0; padding: 1rem; background: var(--wp--preset--color--tertiary); font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__help { padding-top: 0.75rem; border-top: 1px solid var(--mis-line); }
+/* «Incluido»: lista común de la empresa (includes/booking.php, Maros_Booking::INCLUDED) */
+.mis-resv__incl ul { margin: 0.5rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.5rem; font-size: var(--wp--preset--font-size--small); line-height: 1.4; }
+.mis-resv__incl li { display: flex; align-items: flex-start; gap: 0.625rem; }
+.mis-resv__incl li .mis-icon { flex: none; width: 20px; height: 20px; color: var(--wp--preset--color--main); }
+.mis-resv__talk { margin: 0; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__sum b { display: block; font-weight: 500; }
+.mis-resv__sum span { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__dates { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--mis-line); }
+.mis-resv__date { min-height: var(--mis-touch); padding: 0.625rem 0.875rem; border: 0; background: transparent; text-align: left; cursor: pointer; font: inherit; color: var(--wp--preset--color--main); }
+.mis-resv__date + .mis-resv__date { border-left: 1px solid var(--mis-line); }
+.mis-resv__date span { display: block; margin-top: 2px; }
+.mis-resv__date.is-active { box-shadow: inset 0 -2px 0 var(--wp--preset--color--main); }
+/* Calendario único de la web (maros-connector/assets/calendar.js): reserva y buscadores */
+.mis-cal { border: 1px solid var(--mis-line); padding: 0.75rem; background: var(--wp--preset--color--primary-alt-accent); color: var(--wp--preset--color--main); font-family: var(--wp--preset--font-family--primary, inherit); font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none; text-align: left; }
+.mis-cal[hidden] { display: none; }
+.mis-cal__bar { display: flex; align-items: center; justify-content: space-between; }
+.mis-cal__bar strong { font-weight: 500; text-transform: capitalize; }
+.mis-cal__bar button { width: var(--mis-touch); height: var(--mis-touch); border: 0; background: transparent; font-size: 1.25rem; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-cal__bar button:disabled { opacity: 0.3; cursor: default; }
+.mis-cal__hint { margin: 0.25rem 0 0.5rem; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px 0; text-align: center; }
+.mis-cal__wd { font-size: 0.75rem; color: var(--wp--preset--color--secondary); padding-bottom: 0.25rem; }
+.mis-cal__grid button { aspect-ratio: 1; min-height: 36px; padding: 0; border: 0; background: transparent; font: inherit; font-size: 0.875rem; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-cal__grid button:hover:not(:disabled) { outline: 1px solid var(--wp--preset--color--main); outline-offset: -1px; }
+.mis-cal__grid button:disabled { color: var(--wp--preset--color--border-dark); cursor: default; }
+.mis-cal__grid button.is-busy:disabled { text-decoration: line-through; }
+.mis-cal__grid button.is-range { background: var(--wp--preset--color--tertiary); }
+.mis-cal__grid button.is-start, .mis-cal__grid button.is-end { background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); }
+.mis-cal__clear { margin-top: 0.5rem; padding: 0; border: 0; background: none; font: inherit; font-size: var(--wp--preset--font-size--small); text-decoration: underline; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-resv__guests { border: 1px solid var(--mis-line); }
+.mis-resv__guests summary { min-height: var(--mis-touch); padding: 0.625rem 0.875rem; cursor: pointer; list-style: none; }
+.mis-resv__guests summary::-webkit-details-marker { display: none; }
+.mis-resv__guests summary span { display: block; margin-top: 2px; }
+.mis-resv__guest { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0.875rem; border-top: 1px solid var(--wp--preset--color--tertiary); }
+.mis-resv__guest small { text-transform: none; letter-spacing: 0; font-family: inherit; font-weight: 400; }
+.mis-resv__stepper { display: flex; align-items: center; gap: 0.5rem; }
+.mis-resv__stepper button { width: 36px; height: 36px; padding: 0; border: 1px solid var(--mis-line); border-radius: 50%; background: transparent; font-size: 1.125rem; line-height: 1; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-resv__stepper button:disabled { opacity: 0.35; cursor: default; }
+.mis-resv__stepper output { min-width: 1.5rem; text-align: center; }
+.mis-resv__cap { margin: 0; padding: 0.5rem 0.875rem 0.75rem; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__quote:empty { display: none; }
+.mis-resv__lines { margin: 0; }
+.mis-resv__line { display: flex; justify-content: space-between; gap: 1rem; padding: 0.375rem 0; font-size: var(--wp--preset--font-size--small); }
+.mis-resv__line dt, .mis-resv__line dd { margin: 0; }
+.mis-resv__line.is-included { color: var(--wp--preset--color--secondary); }
+.mis-resv__total { margin-top: 0.375rem; padding-top: 0.75rem; border-top: 1px solid var(--mis-line); font-size: 1rem; font-weight: 500; align-items: baseline; }
+.mis-resv__total small { display: inline; margin-left: 0.25rem; }
+.mis-resv__note, .mis-resv__msg, .mis-resv__loading { margin: 0.5rem 0 0; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-resv__reasons { margin: 0; padding: 0.75rem 0.875rem 0.75rem 2rem; background: var(--wp--preset--color--tertiary); font-size: var(--wp--preset--font-size--small); }
+.mis-resv__other { margin-top: 0.5rem; padding: 0; border: 0; background: none; font: inherit; font-size: var(--wp--preset--font-size--small); text-decoration: underline; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-resv.is-loading .mis-resv__cta { opacity: 0.6; pointer-events: none; }
+.mis-resv__cta.wp-element-button { display: block; width: 100%; box-sizing: border-box; text-align: center; margin-top: 0.5rem; }
+.mis-resv__after:empty { display: none; }
+.mis-resv__after .mis-resv__note:first-child { margin-top: 0; }
+/* Móvil: la caja se abre a pantalla completa desde la barra fija (flujo C, T28). Mientras no se
+   abre, la columna de la derecha no se pinta (la barra fija ya lleva «Availability») y el
+   contenido ocupa todo el ancho (Julio, 18-11). */
+@media (max-width: 1023px) {
+	.wp-block-column:has(> .mis-booking-box:not(.is-sheet)) { display: none; }
+	.wp-block-columns:has(> .wp-block-column > .mis-booking-box) > .wp-block-column { flex-basis: 100% !important; }
+	.mis-booking-box.is-sheet .mis-resv__after { order: 8; }
+	.mis-booking-box.is-sheet .mis-resv__incl { order: 9; }
+	.mis-booking-box.is-sheet { position: fixed; inset: 0; z-index: 200; overflow-y: auto; overscroll-behavior: contain; border: 0; padding: 1rem var(--wp--preset--spacing--medium) calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 0.75rem; }
+	.mis-booking-box.is-sheet > * { margin-block: 0; }
+	.mis-booking-box.is-sheet .mis-resv { display: contents; }
+	.mis-booking-box.is-sheet { padding-top: 0; padding-bottom: 0; }
+	.mis-booking-box.is-sheet .mis-resv__title { display: none; }
+	.mis-booking-box.is-sheet .mis-resv__top { display: flex; align-items: center; justify-content: space-between; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding: 0.25rem var(--wp--preset--spacing--medium); border-bottom: 1px solid var(--mis-line); position: sticky; top: 0; z-index: 1; background: var(--wp--preset--color--primary-alt-accent); }
+	.mis-booking-box.is-sheet .mis-resv__top b { font-weight: 500; }
+	.mis-booking-box.is-sheet .mis-resv__top span { width: var(--mis-touch); }
+	.mis-booking-box.is-sheet .mis-resv__house { display: flex; align-items: center; gap: 0.75rem; }
+	.mis-booking-box.is-sheet .mis-resv__house img { width: 84px; height: 84px; object-fit: cover; flex: none; }
+	.mis-booking-box.is-sheet .mis-resv__name { margin: 2px 0; font-size: 1.25rem; }
+	.mis-booking-box.is-sheet .mis-resv__foot { order: 10; position: sticky; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: auto calc(var(--wp--preset--spacing--medium) * -1) 0; padding: 0.75rem var(--wp--preset--spacing--medium) calc(0.75rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); }
+	.mis-booking-box.is-sheet .mis-resv__sum { display: block; min-width: 0; }
+	.mis-booking-box.is-sheet .mis-resv__cta.wp-element-button { width: auto; margin: 0; flex: none; }
+	.mis-booking-box.is-sheet .mis-resv__help { order: 9; }
+	.mis-resv__close { width: var(--mis-touch); height: var(--mis-touch); border: 0; background: transparent; cursor: pointer; color: var(--wp--preset--color--main); }
+	html.mis-resv-open, html.mis-resv-open body { overflow: hidden; }
+	html.mis-resv-open .mis-sticky-cta { display: none; }
+	/* Hoja compacta (Julio, 18-11): el calendario entero a la vista en un móvil de 390 × 844; la casa
+	   en dos líneas (zona; nombre y valoración) y el pie en una sola línea. */
+	.mis-booking-box.is-sheet { gap: 0.5rem; }
+	.mis-booking-box.is-sheet .mis-resv__top { padding-block: 0; }
+	.mis-booking-box.is-sheet .mis-resv__house { gap: 0.625rem; padding-top: 0.25rem; }
+	.mis-booking-box.is-sheet .mis-resv__house img { width: 48px; height: 48px; }
+	.mis-booking-box.is-sheet .mis-resv__house > div { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-start; column-gap: 0.625rem; row-gap: 0; flex: 1; min-width: 0; margin: 0; text-align: left; }
+	.mis-booking-box.is-sheet .mis-resv__house small { flex-basis: 100%; margin: 0; line-height: 1.2; text-align: left; }
+	/* El tema da márgenes y centrado a los párrafos de los grupos: aquí la casa va pegada a la foto (Julio, 18-11). */
+	.mis-booking-box.is-sheet .mis-resv__house .mis-resv__name { margin: 0 !important; max-width: none; font-size: 1.0625rem; line-height: 1.25; text-align: left; }
+	.mis-booking-box.is-sheet .mis-resv__rating { font-size: var(--wp--preset--font-size--small); }
+	.mis-booking-box.is-sheet .mis-resv__date { min-height: 0; padding: 0.375rem 0.75rem; }
+	.mis-booking-box.is-sheet .mis-cal { padding: 0.25rem 0.5rem 0.5rem; }
+	.mis-booking-box.is-sheet .mis-cal__bar button { height: 36px; }
+	/* Sin «Elige el día de llegada»: solo queda el aviso de estancia mínima al elegir la salida. */
+	.mis-booking-box.is-sheet .mis-cal__hint { margin: 0 0 0.25rem; text-align: center; }
+	.mis-booking-box.is-sheet .mis-cal__hint:not(.has-min) { display: none; }
+	.mis-booking-box.is-sheet .mis-cal__grid button { aspect-ratio: auto; height: 36px; min-height: 0; line-height: 1; }
+	.mis-booking-box.is-sheet .mis-resv__foot { padding-block: 0.5rem calc(0.5rem + env(safe-area-inset-bottom)); }
+	.mis-booking-box.is-sheet .mis-resv__sum { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+	.mis-booking-box.is-sheet .mis-resv__cta.wp-element-button { white-space: nowrap; padding-inline: 1.25rem; }
+}
+/* Solicitud de reserva (spec 026 de marOS, pantallas C4 y C5; maros-connector/assets/booking.js):
+   a pantalla completa en el móvil y como ventana centrada en escritorio. */
+.mis-req { position: fixed; inset: 0; z-index: 300; display: flex; justify-content: center; align-items: center; background: rgb(37 39 40 / 0.55); }
+.mis-req[hidden] { display: none; }
+html.mis-req-open, html.mis-req-open body { overflow: hidden; }
+.mis-req__panel { position: relative; width: min(560px, 100%); max-height: calc(100% - 3rem); overflow-y: auto; overscroll-behavior: contain; background: var(--wp--preset--color--primary-alt-accent); color: var(--wp--preset--color--main); padding: 0 1.5rem; box-sizing: border-box; text-align: left; }
+.mis-req__top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; margin-inline: -1.5rem; padding: 0.25rem 0.75rem; border-bottom: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); }
+.mis-req__top b { font-weight: 500; outline: none; }
+.mis-req__top span, .mis-req__back { width: var(--mis-touch); height: var(--mis-touch); flex: none; }
+.mis-req__back { display: grid; place-items: center; padding: 0; border: 0; background: transparent; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-req.is-done .mis-req__back { visibility: hidden; }
+.mis-req__form, .mis-req__done { display: flex; flex-direction: column; gap: 1rem; padding-top: 1rem; }
+.mis-req__form[hidden], .mis-req__done[hidden] { display: none; }
+.mis-req p { margin: 0; max-width: none; text-align: left; }
+.mis-req__summary { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.mis-req__house { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.mis-req__house img { width: 64px; height: 64px; object-fit: cover; flex: none; }
+.mis-req__house p { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-req__house .mis-req__name { font-size: 1.0625rem; color: var(--wp--preset--color--main); }
+.mis-req__change { flex: none; padding: 0; border: 0; background: none; font: inherit; font-size: var(--wp--preset--font-size--small); text-decoration: underline; cursor: pointer; color: var(--wp--preset--color--main); }
+.mis-req__total { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--mis-line); font-weight: 500; }
+.mis-req__total small { margin-left: 0.25rem; font-weight: 400; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-req__deposit, .mis-req__hint { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-req__deposit { margin-top: -0.625rem !important; }
+.mis-req__alert { padding: 0.75rem 0.875rem; border-left: 3px solid #A1432F; background: #FBEDEA; font-size: var(--wp--preset--font-size--small); }
+.mis-req__alert[hidden] { display: none; }
+.mis-req__group { display: flex; flex-direction: column; gap: 0.75rem; margin: 0; padding: 0; border: 0; min-width: 0; }
+.mis-req__group legend, .mis-req__next > p { padding: 0; margin-bottom: 0.25rem; font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wp--preset--color--secondary); }
+.mis-req__group .mis-req__hint { margin-top: -0.5rem; }
+.mis-req__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.mis-req__field { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.mis-req__field > label { font-size: var(--wp--preset--font-size--small); }
+.mis-req__field input:not([type=checkbox]):not([type=radio]), .mis-req__field select, .mis-req__field textarea { width: 100%; min-height: var(--mis-touch); box-sizing: border-box; padding: 0.5rem 0.75rem; border: 1px solid var(--wp--preset--color--border-dark); border-radius: 0; background: #fff; font: inherit; font-size: 1rem; color: var(--wp--preset--color--main); }
+.mis-req__field textarea { resize: vertical; }
+.mis-req__field.has-error input, .mis-req__field.has-error select { border-color: #A1432F; }
+.mis-req__error { font-size: var(--wp--preset--font-size--small); color: #A1432F; }
+.mis-req__error[hidden] { display: none; }
+.mis-req__phone { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.5rem; }
+.mis-req__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.mis-req__chip { position: relative; cursor: pointer; }
+.mis-req__chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.mis-req__chip span { display: inline-block; padding: 0.5rem 0.875rem; border: 1px solid var(--mis-line); font-size: var(--wp--preset--font-size--small); }
+.mis-req__chip input:checked + span { border-color: var(--wp--preset--color--main); box-shadow: inset 0 0 0 1px var(--wp--preset--color--main); }
+.mis-req__chip input:focus-visible + span { outline: 2px solid var(--wp--preset--color--main); outline-offset: 2px; }
+.mis-req__next { padding: 0.875rem 1rem; background: var(--wp--preset--color--tertiary); }
+.mis-req__next ol { margin: 0.25rem 0 0; padding-left: 1.25rem; display: grid; gap: 0.25rem; font-size: var(--wp--preset--font-size--small); }
+.mis-req__check label { display: flex; align-items: flex-start; gap: 0.625rem; font-size: var(--wp--preset--font-size--small); cursor: pointer; }
+.mis-req__check input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--wp--preset--color--main); }
+.mis-req__check a { color: inherit; }
+.mis-req__foot { position: sticky; bottom: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0 -1.5rem; padding: 0.75rem 1.5rem calc(0.75rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); }
+.mis-req__foot b { display: block; font-weight: 500; }
+.mis-req__foot small { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-req__foot .wp-element-button { flex: none; margin: 0; cursor: pointer; }
+.mis-req__foot .wp-element-button:disabled { opacity: 0.6; cursor: default; }
+.mis-req__done { padding-bottom: 1.5rem; }
+.mis-req__ok { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); }
+.mis-req__ok svg { width: 24px; height: 24px; }
+.mis-req__title { margin: 0; font-size: 1.5rem; font-weight: 500; outline: none; }
+.mis-req__ref b { font-size: 1.125rem; letter-spacing: 0.05em; }
+.mis-req__steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.625rem; font-size: var(--wp--preset--font-size--small); }
+.mis-req__steps li { position: relative; padding-left: 1.75rem; }
+.mis-req__steps li::before { content: ""; position: absolute; left: 3px; top: 3px; width: 12px; height: 12px; border: 1px solid var(--wp--preset--color--border-dark); border-radius: 50%; }
+.mis-req__steps li.is-done::before { display: none; }
+.mis-req__steps li svg { position: absolute; left: 0; top: 1px; }
+.mis-req__actions { display: flex; flex-direction: column; align-items: stretch; gap: 0.75rem; text-align: center; }
+.mis-req__actions .wp-element-button { margin: 0; }
+.mis-req__home { color: var(--wp--preset--color--main); }
+@media (max-width: 1023px) {
+	.mis-req { align-items: stretch; background: var(--wp--preset--color--primary-alt-accent); }
+	.mis-req__panel { width: 100%; max-height: none; height: 100%; padding: 0 var(--wp--preset--spacing--medium); }
+	.mis-req__top { margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding-inline: 0.25rem; }
+	.mis-req__foot { margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding-inline: var(--wp--preset--spacing--medium); }
+}
+@media (max-width: 380px) { .mis-req__row { grid-template-columns: 1fr; } }
 .mis-amenities { display: grid; grid-template-columns: 1fr; gap: 0.875rem 2rem; padding-left: 0; margin: 1.5rem 0 0; list-style: none; }
 @media (min-width: 600px) { .mis-amenities { grid-template-columns: 1fr 1fr; } }
 .mis-amenities li { display: flex; align-items: center; gap: 0.75rem; }
@@ -470,6 +697,15 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-hero__title { font-size: clamp(2.125rem, 1.4rem + 3vw, 3.5rem); color: #fff; max-width: 20ch; line-height: 1.12; }
 /* El diseño «constrained» centra a los hijos con ancho máximo: el título va alineado a la izquierda, como la etiqueta y el buscador */
 .mis-hero .wp-block-cover__inner-container > :is(h1, .mis-hero__title, .mis-search) { margin-left: 0 !important; margin-right: auto !important; }
+/* Portada sintética provisional (mar y sierra al atardecer) mientras la página no tenga imagen
+   destacada (Julio, 18-11-2026). */
+.mis-hero.wp-block-cover:not(:has(.wp-block-cover__image-background)) { background: var(--wp--preset--color--main) url(../images/portada-sintetica.jpg) center 60% / cover no-repeat; }
+/* El calendario del buscador sale por debajo de la portada: que no se recorte y quede por encima
+   de la sección siguiente. */
+.mis-hero.wp-block-cover { overflow: visible; position: relative; z-index: 3; }
+/* Sobre la foto oscura el botón negro se perdía: en la portada va en oro. */
+.mis-hero .mis-search__submit.wp-element-button { background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
+.mis-hero .mis-search__submit.wp-element-button:is(:hover, :focus-visible) { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); color: #fff; }
 .mis-front > .wp-block-post-content { margin-top: 0; }
 /* La portada pone el H1: la antigua introducción del contenido (con su propio H1) sobra */
 .mis-front > .wp-block-post-content > .wp-block-group:first-child:has(h1) { display: none; }
@@ -497,6 +733,17 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 	.mis-search__submit { grid-column: auto; width: auto; padding-inline: 1.75rem; }
 }
 
+/* Alojamiento: el buscador va pegado al título de la página (Julio, 18-11-2026). La sección del
+   título y la del listado llevan cada una su relleno de sección; aquí se recortan. */
+.wp-block-group.alignfull:has(+ .wp-block-group.alignfull .mis-stay-search) { padding-bottom: var(--wp--preset--spacing--small) !important; }
+.wp-block-group.alignfull:has(.mis-stay-search) { padding-top: var(--wp--preset--spacing--small) !important; margin-block-start: 0 !important; }
+/* Fechas sin borde (el tema base dibuja uno en los campos) y con el cursor de botón: toda la
+   celda abre el calendario (assets/search.js) */
+.mis-search .mis-search__field input,
+.mis-search .mis-search__field select { border: 0 !important; box-shadow: none !important; outline: none; border-radius: 0; padding-left: 0; padding-right: 0; background-color: transparent; }
+.mis-search .mis-search__field:has(input[type=date]) { cursor: pointer; }
+.mis-search input[type=date] { cursor: pointer; }
+
 /* Buscador completo de Alojamiento (marOS Connector, [maros_buscador]): la misma caja, con
    «Filtros» plegable debajo (zona, dormitorios y chips de equipamiento) */
 .mis-search--full { max-width: none; margin: 0 0 1.5rem; border: 1px solid var(--mis-line); }
@@ -518,10 +765,20 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-chip input:focus-visible + span { outline: 2px solid var(--wp--preset--color--main); outline-offset: 2px; }
 .mis-search__error { grid-column: 1 / -1; margin: 0; padding: 0.625rem 1rem; font-size: 0.8125rem; color: #9b1c1c; background: #fdf2f2; }
 .mis-search__error[hidden] { display: none; }
+/* Fechas del buscador con el calendario de la web */
+.mis-search { position: relative; }
+.mis-search__date { width: 100%; min-height: 32px; padding: 0.25rem 0 0; border: 0; background: transparent; font: inherit; font-size: 1rem; text-align: left; color: var(--wp--preset--color--main); cursor: pointer; }
+.mis-search__date.is-empty { color: var(--wp--preset--color--secondary); }
+.mis-search__date:focus { outline: none; }
+.mis-search__field.is-active { box-shadow: inset 0 -2px 0 var(--wp--preset--color--main); }
+.mis-search__field:has(.mis-search__date) { cursor: pointer; }
+.mis-search__cal { position: absolute; top: calc(100% + 4px); left: 0; z-index: 60; width: min(360px, 100%); box-sizing: border-box; }
 .mis-results-summary { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; margin: 0 0 1.5rem; font-size: 0.9375rem; color: var(--wp--preset--color--secondary); }
 .mis-results-summary a { color: inherit; }
 .mis-card__price { margin-top: 0.25rem; font-weight: 600; }
 .mis-card__price:empty { display: none; }
+.mis-card__features { margin-top: 0.15rem; font-family: var(--mis-label-font); font-size: 0.6875rem !important; font-weight: 600; letter-spacing: 0.1em; line-height: 1.6; text-transform: uppercase; color: var(--wp--preset--color--main); }
+.mis-card__features:empty { display: none; }
 .mis-no-results { max-width: 40rem; padding: 2rem 0; }
 .mis-no-results__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
 @media (min-width: 768px) {
@@ -562,3 +819,131 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-review__stars { color: var(--wp--preset--color--main); letter-spacing: 0.1em; margin-left: 0.25rem; }
 .mis-review__meta { font-size: var(--wp--preset--font-size--small); }
 .mis-review__text p { margin-block: 0.5rem 0; }
+
+/* ------------------------------------------------------------------ Zonas */
+/* Índice de Zonas y ficha de zona (maqueta «Zonas de Marbella in Style», Julio 18-11-2026) */
+
+/* Estas piezas no son bloques: sin border-box, el relleno se sumaba al ancho máximo y la página
+   salía más ancha que la cabecera. */
+.mis-zona-cover, .mis-zona-cover *, .mis-zona, .mis-zona * { box-sizing: border-box; }
+/* El atributo hidden (filtros del índice) gana a display:flex */
+.mis-zcard[hidden] { display: none; }
+.mis-zona { --mis-zona-pad: var(--wp--preset--spacing--medium); --mis-zona-max: calc(1328px + var(--mis-zona-pad) * 2); }
+.mis-zona > *,
+.mis-zona .wp-block-post-content > * { margin-block: 0; }
+
+/* Portada: foto a sangre con el nombre abajo; sin foto, fondo beige y texto oscuro */
+.mis-zona-cover { position: relative; display: flex; align-items: flex-end; min-height: clamp(420px, 68svh, 720px); margin: 0 !important; background: var(--wp--preset--color--main); color: #fff; overflow: hidden; }
+.mis-zona-cover__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.mis-zona-cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(0, 0, 0, .35), transparent 30%, transparent 45%, rgba(0, 0, 0, .55)); pointer-events: none; }
+.mis-zona-cover__in { position: relative; z-index: 1; width: 100%; max-width: calc(1328px + var(--wp--preset--spacing--medium) * 2); margin-inline: auto; padding: calc(var(--mis-header-h) + 2rem) var(--wp--preset--spacing--medium) var(--wp--preset--spacing--large); }
+.mis-zona-cover .mis-eyebrow { color: #fff; opacity: .85; }
+.mis-zona-cover__title { margin: 0; font-size: var(--wp--preset--font-size--xx-large); line-height: 1.05; color: inherit; text-wrap: balance; }
+.mis-zona-cover__lead { max-width: 36rem; margin: 1rem 0 0; font-size: var(--wp--preset--font-size--medium); line-height: 1.5; text-wrap: pretty; }
+.mis-zona-cover--sin-foto { min-height: 0; background: var(--wp--preset--color--tertiary); color: var(--wp--preset--color--main); }
+.mis-zona-cover--sin-foto::after { display: none; }
+.mis-zona-cover--sin-foto .mis-eyebrow { color: var(--wp--preset--color--secondary); opacity: 1; }
+.mis-zona-cover--sin-foto .mis-zona-cover__in { padding-top: calc(var(--mis-header-h) + var(--wp--preset--spacing--x-large)); }
+
+/* Migas y anclas bajo la portada */
+.mis-zona-nav { max-width: var(--mis-zona-max); margin-inline: auto; padding: 1.25rem var(--mis-zona-pad) 0; position: sticky; top: var(--mis-header-h); z-index: 40; background: var(--wp--preset--color--base); }
+.admin-bar .mis-zona-nav { top: calc(var(--mis-header-h) + var(--wp-admin--admin-bar--height, 0px)); }
+.mis-zona-crumbs { margin-bottom: 0.25rem; }
+.mis-zona-anchors { position: static; }
+@media (min-width: 1024px) { .mis-zona-anchors { margin-inline: 0; padding-inline: 0; } }
+.mis-zona :where(#guia, #videos, #propiedades, #experiencias, #otras-zonas) { scroll-margin-top: calc(var(--mis-header-h) + 110px); }
+
+/* Guía: texto y, en escritorio, «De un vistazo» al lado y fijo */
+.mis-zona-guide { max-width: var(--mis-zona-max); margin-inline: auto; padding: var(--wp--preset--spacing--large) var(--mis-zona-pad) var(--wp--preset--spacing--x-large); display: grid; gap: var(--wp--preset--spacing--large); }
+.mis-zona-prose { min-width: 0; max-width: 46rem; }
+.mis-zona-prose .wp-block-term-description > :first-child { margin-top: 0; }
+.mis-zona-prose h2 { font-size: var(--wp--preset--font-size--large); margin: 2.5rem 0 0.75rem; }
+.mis-zona-prose h3 { font-size: var(--wp--preset--font-size--medium); margin: 1.75rem 0 0.5rem; }
+.mis-zona-prose p, .mis-zona-prose li { line-height: 1.7; }
+/* Lugares recomendados bajo su sección de la guía (mis-contenido/includes/lugares.php) */
+.mis-lugares { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--mis-line); }
+.mis-lugar { padding: 0.9rem 0; border-bottom: 1px solid var(--mis-line); }
+.mis-zona-prose .mis-lugar p { margin: 0; line-height: 1.5; }
+.mis-lugar__name { font-family: var(--wp--preset--font-family--heading); font-size: var(--wp--preset--font-size--medium); }
+.mis-lugar__name a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.mis-zona-prose .mis-lugar__meta { margin-top: 0.15rem; font-family: var(--mis-label-font); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wp--preset--color--secondary); }
+.mis-zona-prose .mis-lugar__text { margin-top: 0.35rem; }
+@media (min-width: 640px) { .mis-lugares { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; } }
+.mis-zona-side { display: grid; gap: 1.25rem; align-content: start; }
+@media (min-width: 1024px) {
+	.mis-zona-guide { grid-template-columns: minmax(0, 1fr) 340px; column-gap: 4rem; }
+	.mis-zona-side { position: sticky; top: calc(var(--mis-header-h) + 140px); }
+}
+.mis-zona-glance { border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); padding: 1.5rem; }
+.mis-zona-glance__title { margin: 0 0 1rem; font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.mis-zona-glance dl { margin: 0; }
+.mis-zona-glance dl > div { padding: 0.75rem 0; border-top: 1px solid var(--mis-line); }
+.mis-zona-glance dt { font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--secondary); text-transform: uppercase; letter-spacing: 0.08em; }
+.mis-zona-glance dd { margin: 0.2rem 0 0; }
+.mis-zona-glance__cta { width: 100%; margin-top: 1.25rem; }
+.mis-zona-glance > .mis-zona-glance__cta:first-child { margin-top: 0; }
+.mis-zona-glance__help { margin: 1rem 0 0; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+
+/* Secciones a lo ancho: casas, experiencias, otras zonas */
+.mis-zsect { padding: var(--wp--preset--spacing--x-large) 0; border-top: 1px solid var(--mis-line); }
+.mis-zsect--tint { background: var(--wp--preset--color--tertiary); border-top: 0; }
+.mis-zsect__in { max-width: var(--mis-zona-max, calc(1328px + var(--wp--preset--spacing--medium) * 2)); margin-inline: auto; padding-inline: var(--wp--preset--spacing--medium); }
+.mis-zsect__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.75rem 2rem; margin-bottom: 1.75rem; }
+.mis-zsect__head h2 { margin: 0; }
+.mis-zsect__head .mis-eyebrow { margin-bottom: 0.5rem; }
+.mis-zsect .wp-block-query { max-width: none; }
+
+/* Índice: filtros y rejilla de tarjetas */
+.mis-zonas-page .mis-zonas { max-width: calc(1328px + var(--wp--preset--spacing--medium) * 2); margin-inline: auto; padding: var(--wp--preset--spacing--large) var(--wp--preset--spacing--medium) var(--wp--preset--spacing--x-large); }
+.mis-zfilters { display: flex; gap: 0.5rem; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--wp--preset--spacing--medium) * -1) 1.75rem; padding: 0 var(--wp--preset--spacing--medium) 2px; }
+.mis-zfilters::-webkit-scrollbar { display: none; }
+@media (min-width: 1024px) { .mis-zfilters { flex-wrap: wrap; margin-inline: 0; padding-inline: 0; } }
+.mis-zfilters button { flex-shrink: 0; min-height: 40px; padding: 0 1.1rem; border: 1px solid var(--mis-line); border-radius: 999px; background: transparent; color: var(--wp--preset--color--main); font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+.mis-zfilters button:hover { border-color: var(--wp--preset--color--main); }
+.mis-zfilters button[aria-pressed="true"] { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); color: #fff; }
+.mis-zgrid { display: grid; gap: 2.5rem 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 600px) { .mis-zgrid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .mis-zgrid { grid-template-columns: repeat(3, 1fr); } }
+
+/* Tarjeta de zona: foto 4/5 con el nombre encima, cifra de casas y perfiles */
+.mis-zcard { display: flex; flex-direction: column; gap: 0.4rem; color: inherit; text-decoration: none; min-width: 0; }
+.mis-zcard__ph { position: relative; display: block; aspect-ratio: 4 / 5; max-width: 100%; overflow: hidden; background: var(--wp--preset--color--tertiary); margin-bottom: 0.5rem; }
+.mis-zcard__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.mis-zcard:hover .mis-zcard__img { transform: scale(1.03); }
+.mis-zcard__ph:has(.mis-zcard__img)::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(0, 0, 0, .55)); }
+.mis-zcard__name { position: absolute; z-index: 1; left: 1.25rem; right: 1.25rem; bottom: 1.1rem; margin: 0; font-family: var(--wp--preset--font-family--heading); font-size: var(--wp--preset--font-size--large); font-weight: 400; letter-spacing: 0.06em; line-height: 1.15; text-transform: uppercase; color: var(--wp--preset--color--main); text-wrap: balance; }
+.mis-zcard__ph:has(.mis-zcard__img) .mis-zcard__name { color: #fff; }
+.mis-zcard__count { position: absolute; z-index: 1; top: 0.9rem; left: 0.9rem; padding: 0.4rem 0.65rem; background: var(--wp--preset--color--main); color: #fff; font-family: var(--mis-label-font); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; line-height: 1; text-transform: uppercase; }
+.mis-zcard__tags { font-family: var(--mis-label-font); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wp--preset--color--secondary); }
+.mis-zcard__text { font-size: var(--wp--preset--font-size--small); line-height: 1.5; }
+.mis-zcard:hover .mis-zcard__text { text-decoration: underline; text-underline-offset: 0.2em; }
+
+/* Otras zonas: tira horizontal que se desliza */
+.mis-zstrip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 62%); gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding-inline: var(--wp--preset--spacing--medium); scroll-padding-inline: var(--wp--preset--spacing--medium); }
+.mis-zstrip::-webkit-scrollbar { display: none; }
+.mis-zstrip .mis-zcard { scroll-snap-align: start; }
+.mis-zstrip .mis-zcard__name { font-size: var(--wp--preset--font-size--medium); }
+@media (min-width: 768px) { .mis-zstrip { grid-auto-columns: calc((100% - 3 * 1.25rem) / 4); margin-inline: 0; padding-inline: 0; } }
+
+/* Persona de contacto ([mis_persona]): banner con foto, nombre y cargo */
+.mis-person { display: flex; flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+.mis-person__photo { width: 112px; height: 112px; flex-shrink: 0; border-radius: 50%; object-fit: cover; }
+.mis-person__body { min-width: 0; }
+.mis-person__body > p { margin: 0; }
+.mis-person__lead { font-family: var(--wp--preset--font-family--heading); font-size: var(--wp--preset--font-size--large); line-height: 1.2; text-wrap: balance; }
+.mis-person__text { margin-top: 0.5rem !important; color: var(--wp--preset--color--secondary); text-wrap: pretty; }
+.mis-person__who { margin-top: 0.75rem !important; font-size: var(--wp--preset--font-size--small); }
+.mis-person__who strong { font-weight: 600; }
+.mis-person__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; }
+.mis-person__wa.wp-element-button { background: transparent; color: var(--wp--preset--color--main); border: 1px solid var(--wp--preset--color--main); }
+.mis-person__wa.wp-element-button:hover { background: var(--wp--preset--color--main); color: #fff; }
+@media (min-width: 768px) {
+	.mis-person--banner { flex-direction: row; align-items: center; gap: 2.5rem; max-width: 60rem; }
+	.mis-person--banner .mis-person__photo { width: 168px; height: 168px; }
+}
+.mis-person--compact { flex-direction: row; align-items: flex-start; gap: 1rem; padding: 1.25rem; border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); }
+.mis-person--compact .mis-person__photo { width: 64px; height: 64px; }
+.mis-person--compact .mis-person__lead { font-size: var(--wp--preset--font-size--medium); }
+.mis-person--compact .mis-person__text { font-size: var(--wp--preset--font-size--small); }
+.mis-person--compact .mis-person__actions { margin-top: 0.9rem; gap: 0.5rem; }
+.mis-person--compact .wp-element-button { min-height: 40px; padding: 0.5rem 0.9rem; font-size: 0.6875rem; }

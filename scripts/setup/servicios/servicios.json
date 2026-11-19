@@ -1,0 +1,355 @@
+{
+ "origen": "mins29601/marOS.content · contenidos/borradores",
+ "servicios": [
+  {
+   "draft": "PC-35-traslados.md",
+   "kind": "term",
+   "type": "transport",
+   "en": {
+    "title": "Transfers and chauffeur service",
+    "seo_title": "Airport Transfers and Chauffeur Service in Marbella | Marbella in Style",
+    "metadesc": "Private transfers from Málaga and Gibraltar airports and chauffeur service in Marbella with Mercedes E-Class, S-Class and V-Class, plus minibuses and coaches for groups of up to 50.",
+    "excerpt": "Arrive without thinking about the road. We arrange private transfers from Málaga and Gibraltar airports, a chauffeur for your days out and transport for groups of any size, whether or not you are staying in one of our homes.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Airport transfers</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>We work mainly with <strong>Málaga</strong> and <strong>Gibraltar</strong> airports. Your driver will be waiting for you on arrival and take you straight to your home or hotel.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Our vehicles</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Vehicle</th><th>Seats</th></tr></thead><tbody><tr><td>Mercedes E-Class</td><td>up to 3 passengers</td></tr><tr><td>Mercedes S-Class</td><td>up to 3 passengers</td></tr><tr><td>Mercedes V-Class</td><td>up to 7 passengers</td></tr><tr><td>Minibuses</td><td>several sizes</td></tr><tr><td>Coaches</td><td>up to 50 passengers</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">For groups and events</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>For weddings, celebrations or company trips we combine vehicles or use minibuses and coaches, so everyone arrives together.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">How to book</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Transfers are booked and paid in advance. When you ask for a quote, tell us:</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>the date, time and flight number;</li><!-- /wp:list-item --><!-- wp:list-item --><li>where you are going;</li><!-- /wp:list-item --><!-- wp:list-item --><li>how many passengers and how much luggage, including golf bags;</li><!-- /wp:list-item --><!-- wp:list-item --><li>whether anyone travelling is under 12, so we can plan for an approved child seat or booster.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p><strong>Book your transfer.</strong> <a href=\"#solicitud\">Request a quote</a></p><!-- /wp:paragraph -->",
+    "html": "<p>Arrive without thinking about the road. We arrange private transfers from Málaga and Gibraltar airports, a chauffeur for your days out and transport for groups of any size, whether or not you are staying in one of our homes.</p>\n<h2>Airport transfers</h2>\n<p>We work mainly with <strong>Málaga</strong> and <strong>Gibraltar</strong> airports. Your driver will be waiting for you on arrival and take you straight to your home or hotel.</p>\n<h2>Our vehicles</h2>\n<table><thead><tr><th>Vehicle</th><th>Seats</th></tr></thead><tbody><tr><td>Mercedes E-Class</td><td>up to 3 passengers</td></tr><tr><td>Mercedes S-Class</td><td>up to 3 passengers</td></tr><tr><td>Mercedes V-Class</td><td>up to 7 passengers</td></tr><tr><td>Minibuses</td><td>several sizes</td></tr><tr><td>Coaches</td><td>up to 50 passengers</td></tr></tbody></table>\n<h2>For groups and events</h2>\n<p>For weddings, celebrations or company trips we combine vehicles or use minibuses and coaches, so everyone arrives together.</p>\n<h2>How to book</h2>\n<p>Transfers are booked and paid in advance. When you ask for a quote, tell us:</p>\n<ul><li>the date, time and flight number;</li><li>where you are going;</li><li>how many passengers and how much luggage, including golf bags;</li><li>whether anyone travelling is under 12, so we can plan for an approved child seat or booster.</li></ul>\n<p><strong>Book your transfer.</strong> <a href=\"#solicitud\">Request a quote</a></p>"
+   },
+   "es": {
+    "title": "Traslados y chófer",
+    "seo_title": "Traslados desde el aeropuerto y chófer en Marbella | Marbella in Style",
+    "metadesc": "Traslados privados desde los aeropuertos de Málaga y Gibraltar y chófer en Marbella con Mercedes Clase E, Clase S y Clase V, además de minibuses y autobuses para grupos de hasta 50 personas.",
+    "excerpt": "Llega sin pensar en la carretera. Organizamos traslados privados desde los aeropuertos de Málaga y Gibraltar, chófer para tus salidas y transporte para grupos de cualquier tamaño, te alojes o no en una de nuestras casas.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Traslados desde el aeropuerto</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Trabajamos sobre todo con los aeropuertos de <strong>Málaga</strong> y <strong>Gibraltar</strong>. Tu conductor te espera a la llegada y te lleva directamente a tu casa o a tu hotel.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Nuestros vehículos</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Vehículo</th><th>Plazas</th></tr></thead><tbody><tr><td>Mercedes Clase E</td><td>hasta 3 pasajeros</td></tr><tr><td>Mercedes Clase S</td><td>hasta 3 pasajeros</td></tr><tr><td>Mercedes Clase V</td><td>hasta 7 pasajeros</td></tr><tr><td>Minibuses</td><td>varias capacidades</td></tr><tr><td>Autobuses</td><td>hasta 50 pasajeros</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Para grupos y eventos</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Para bodas, celebraciones o viajes de empresa combinamos vehículos o usamos minibuses y autobuses, para que todos lleguéis a la vez.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cómo reservarlo</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Los traslados se reservan y se pagan por adelantado. Cuando nos pidas presupuesto, indícanos:</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>la fecha, la hora y el número de vuelo;</li><!-- /wp:list-item --><!-- wp:list-item --><li>a dónde vas;</li><!-- /wp:list-item --><!-- wp:list-item --><li>cuántos pasajeros y cuánto equipaje, incluidas bolsas de golf;</li><!-- /wp:list-item --><!-- wp:list-item --><li>si viaja algún menor de 12 años, para prever una silla o un alzador homologados.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p><strong>Reserva tu traslado.</strong> <a href=\"#solicitud\">Pide presupuesto</a></p><!-- /wp:paragraph -->",
+    "html": "<p>Llega sin pensar en la carretera. Organizamos traslados privados desde los aeropuertos de Málaga y Gibraltar, chófer para tus salidas y transporte para grupos de cualquier tamaño, te alojes o no en una de nuestras casas.</p>\n<h2>Traslados desde el aeropuerto</h2>\n<p>Trabajamos sobre todo con los aeropuertos de <strong>Málaga</strong> y <strong>Gibraltar</strong>. Tu conductor te espera a la llegada y te lleva directamente a tu casa o a tu hotel.</p>\n<h2>Nuestros vehículos</h2>\n<table><thead><tr><th>Vehículo</th><th>Plazas</th></tr></thead><tbody><tr><td>Mercedes Clase E</td><td>hasta 3 pasajeros</td></tr><tr><td>Mercedes Clase S</td><td>hasta 3 pasajeros</td></tr><tr><td>Mercedes Clase V</td><td>hasta 7 pasajeros</td></tr><tr><td>Minibuses</td><td>varias capacidades</td></tr><tr><td>Autobuses</td><td>hasta 50 pasajeros</td></tr></tbody></table>\n<h2>Para grupos y eventos</h2>\n<p>Para bodas, celebraciones o viajes de empresa combinamos vehículos o usamos minibuses y autobuses, para que todos lleguéis a la vez.</p>\n<h2>Cómo reservarlo</h2>\n<p>Los traslados se reservan y se pagan por adelantado. Cuando nos pidas presupuesto, indícanos:</p>\n<ul><li>la fecha, la hora y el número de vuelo;</li><li>a dónde vas;</li><li>cuántos pasajeros y cuánto equipaje, incluidas bolsas de golf;</li><li>si viaja algún menor de 12 años, para prever una silla o un alzador homologados.</li></ul>\n<p><strong>Reserva tu traslado.</strong> <a href=\"#solicitud\">Pide presupuesto</a></p>"
+   }
+  },
+  {
+   "draft": "PC-37-concierge.md",
+   "kind": "term",
+   "type": "concierge",
+   "cortar": "- Alcance en la web actual",
+   "en": {
+    "title": "Concierge in Marbella",
+    "seo_title": "Concierge Service in Marbella | Restaurants, Beach Clubs and Golf | Marbella in Style",
+    "metadesc": "Our Marbella concierge books restaurants, beach clubs, nightlife and golf for you. Included when you book a home directly with us, and available to anyone visiting.",
+    "excerpt": "The best tables, a sunbed at the right beach club, a tee time on the course you wanted: our concierge team makes the bookings so you can enjoy the day.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">What our concierge does</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>We book for you:</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>restaurants;</li><!-- /wp:list-item --><!-- wp:list-item --><li>beach clubs;</li><!-- /wp:list-item --><!-- wp:list-item --><li>nightclubs;</li><!-- /wp:list-item --><!-- wp:list-item --><li>golf courses.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Included when you book directly</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>If you book your home directly with Marbella in Style, the concierge service is included in your stay.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Not staying with us?</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Our concierge is also available if you booked elsewhere or are not staying in one of our homes. The price depends on how many days you need it and how many people it is for. <a href=\"#solicitud\">Request a quote</a></p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p><strong>Tell us what you have in mind.</strong> Share your dates, where you are staying and what you would like to do. <a href=\"#solicitud\">Contact our concierge</a></p><!-- /wp:paragraph -->",
+    "html": "<p>The best tables, a sunbed at the right beach club, a tee time on the course you wanted: our concierge team makes the bookings so you can enjoy the day.</p>\n<h2>What our concierge does</h2>\n<p>We book for you:</p>\n<ul><li>restaurants;</li><li>beach clubs;</li><li>nightclubs;</li><li>golf courses.</li></ul>\n<h2>Included when you book directly</h2>\n<p>If you book your home directly with Marbella in Style, the concierge service is included in your stay.</p>\n<h2>Not staying with us?</h2>\n<p>Our concierge is also available if you booked elsewhere or are not staying in one of our homes. The price depends on how many days you need it and how many people it is for. <a href=\"#solicitud\">Request a quote</a></p>\n<p><strong>Tell us what you have in mind.</strong> Share your dates, where you are staying and what you would like to do. <a href=\"#solicitud\">Contact our concierge</a></p>"
+   },
+   "es": {
+    "title": "Conserjería en Marbella",
+    "seo_title": "Servicio de conserjería en Marbella | Restaurantes, beach clubs y golf",
+    "metadesc": "Nuestro concierge en Marbella te reserva restaurantes, beach clubs, ocio nocturno y golf. Incluido si reservas tu casa directamente con nosotros y disponible para cualquier visitante.",
+    "excerpt": "La mesa que querías, una hamaca en el beach club adecuado, una salida en el campo de golf que buscabas: nuestro equipo de conserjería hace las reservas para que tú solo disfrutes del día.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Qué hace nuestro concierge</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Te reservamos:</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>restaurantes;</li><!-- /wp:list-item --><!-- wp:list-item --><li>beach clubs;</li><!-- /wp:list-item --><!-- wp:list-item --><li>discotecas;</li><!-- /wp:list-item --><!-- wp:list-item --><li>campos de golf.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Incluido si reservas directamente</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Si reservas tu casa directamente con Marbella in Style, el servicio de conserjería va incluido en tu estancia.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">¿No te alojas con nosotros?</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Nuestro concierge también está disponible si has reservado en otro sitio o no te alojas en una de nuestras casas. El precio depende de cuántos días lo necesites y para cuántas personas. <a href=\"#solicitud\">Pide presupuesto</a></p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p><strong>Cuéntanos qué tienes en mente.</strong> Dinos tus fechas, dónde te alojas y qué te apetece hacer. <a href=\"#solicitud\">Contacta con conserjería</a></p><!-- /wp:paragraph -->",
+    "html": "<p>La mesa que querías, una hamaca en el beach club adecuado, una salida en el campo de golf que buscabas: nuestro equipo de conserjería hace las reservas para que tú solo disfrutes del día.</p>\n<h2>Qué hace nuestro concierge</h2>\n<p>Te reservamos:</p>\n<ul><li>restaurantes;</li><li>beach clubs;</li><li>discotecas;</li><li>campos de golf.</li></ul>\n<h2>Incluido si reservas directamente</h2>\n<p>Si reservas tu casa directamente con Marbella in Style, el servicio de conserjería va incluido en tu estancia.</p>\n<h2>¿No te alojas con nosotros?</h2>\n<p>Nuestro concierge también está disponible si has reservado en otro sitio o no te alojas en una de nuestras casas. El precio depende de cuántos días lo necesites y para cuántas personas. <a href=\"#solicitud\">Pide presupuesto</a></p>\n<p><strong>Cuéntanos qué tienes en mente.</strong> Dinos tus fechas, dónde te alojas y qué te apetece hacer. <a href=\"#solicitud\">Contacta con conserjería</a></p>"
+   }
+  },
+  {
+   "draft": "PC-36-chef.md",
+   "kind": "post",
+   "type": "catering",
+   "slug": {
+    "en": "private-chef-in-marbella",
+    "es": "chef-privado-en-marbella"
+   },
+   "en": {
+    "title": "Private chef in Marbella",
+    "seo_title": "Private Chef in Marbella | For One Meal or Your Whole Stay | Marbella in Style",
+    "metadesc": "Book a private chef in your Marbella villa for a barbecue, a paella or every day of your stay. Tell us what you would like and we will prepare a quote.",
+    "excerpt": "Some of the best meals of a holiday happen at home, by the pool, with nobody needing to cook. We arrange private chefs for a single occasion or for your whole stay.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">For one meal</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Book a chef for one day of your stay: a barbecue in the garden, a paella by the pool, or a special dinner.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Full-service chef</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>For longer stays, a full-service chef takes care of the service day after day, so you only have to sit down at the table.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">How it works</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Tell us the dates, how many guests, the kind of meal you would like and any allergies or dietary needs.</li><!-- /wp:list-item --><!-- wp:list-item --><li>We prepare a quote for the chef's service.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>The food is always paid separately</strong> from the chef's service.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p><strong>Plan your meals with us.</strong> <a href=\"#solicitud\">Request a quote</a></p><!-- /wp:paragraph -->",
+    "html": "<p>Some of the best meals of a holiday happen at home, by the pool, with nobody needing to cook. We arrange private chefs for a single occasion or for your whole stay.</p>\n<h2>For one meal</h2>\n<p>Book a chef for one day of your stay: a barbecue in the garden, a paella by the pool, or a special dinner.</p>\n<h2>Full-service chef</h2>\n<p>For longer stays, a full-service chef takes care of the service day after day, so you only have to sit down at the table.</p>\n<h2>How it works</h2>\n<ul><li>Tell us the dates, how many guests, the kind of meal you would like and any allergies or dietary needs.</li><li>We prepare a quote for the chef's service.</li><li><strong>The food is always paid separately</strong> from the chef's service.</li></ul>\n<p><strong>Plan your meals with us.</strong> <a href=\"#solicitud\">Request a quote</a></p>"
+   },
+   "es": {
+    "title": "Chef privado en Marbella",
+    "seo_title": "Chef privado en Marbella | Para una comida o toda tu estancia | Marbella in Style",
+    "metadesc": "Contrata un chef privado en tu villa de Marbella para una barbacoa, una paella o todos los días de tu estancia. Cuéntanos qué te apetece y te preparamos presupuesto.",
+    "excerpt": "Algunas de las mejores comidas de unas vacaciones se hacen en casa, junto a la piscina y sin que nadie tenga que cocinar. Organizamos chef privado para una ocasión o para toda tu estancia.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Para una comida</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Contrata un chef para un día de tu estancia: una barbacoa en el jardín, una paella junto a la piscina o una cena especial.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Chef a tiempo completo</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Para estancias más largas, un chef a tiempo completo se ocupa del servicio día tras día, para que solo tengas que sentarte a la mesa.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cómo funciona</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Cuéntanos las fechas, cuántos seréis, qué tipo de comida te apetece y si hay alergias o dietas.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Te preparamos un presupuesto del servicio del chef.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>La comida se paga siempre aparte</strong> del servicio del chef.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p><strong>Organiza tus comidas con nosotros.</strong> <a href=\"#solicitud\">Pide presupuesto</a></p><!-- /wp:paragraph -->",
+    "html": "<p>Algunas de las mejores comidas de unas vacaciones se hacen en casa, junto a la piscina y sin que nadie tenga que cocinar. Organizamos chef privado para una ocasión o para toda tu estancia.</p>\n<h2>Para una comida</h2>\n<p>Contrata un chef para un día de tu estancia: una barbacoa en el jardín, una paella junto a la piscina o una cena especial.</p>\n<h2>Chef a tiempo completo</h2>\n<p>Para estancias más largas, un chef a tiempo completo se ocupa del servicio día tras día, para que solo tengas que sentarte a la mesa.</p>\n<h2>Cómo funciona</h2>\n<ul><li>Cuéntanos las fechas, cuántos seréis, qué tipo de comida te apetece y si hay alergias o dietas.</li><li>Te preparamos un presupuesto del servicio del chef.</li><li><strong>La comida se paga siempre aparte</strong> del servicio del chef.</li></ul>\n<p><strong>Organiza tus comidas con nosotros.</strong> <a href=\"#solicitud\">Pide presupuesto</a></p>"
+   }
+  }
+ ],
+ "tours": [
+  {
+   "draft": "tours/granada.md",
+   "slug": {
+    "en": "granada-private-tour",
+    "es": "tour-privado-granada"
+   },
+   "fields": {
+    "duration": {
+     "en": "10 hours",
+     "es": "10 horas"
+    },
+    "languages": {
+     "en": "English, Spanish, Russian, German, French",
+     "es": "Inglés, español, ruso, alemán, francés"
+    },
+    "pickup": {
+     "en": "Pick-up at your accommodation",
+     "es": "Incluida, en tu alojamiento"
+    },
+    "private": true,
+    "group_size": {
+     "en": "",
+     "es": ""
+    }
+   },
+   "en": {
+    "title": "Private Alhambra and Granada tour from Marbella",
+    "seo_title": "Private Alhambra and Granada Tour from Marbella | Marbella in Style",
+    "metadesc": "A private day trip from Marbella to Granada with pick-up, Alhambra tickets, a guided visit of the Alhambra and a walk through the Albaicín.",
+    "excerpt": "A day in Granada with your own driver and guide: a two-and-a-half-hour guided visit of the Alhambra, with tickets included, and an afternoon walk through the old town and the Albaicín.",
+    "content": "<!-- wp:paragraph --><p>The Alhambra limits the number of visitors each day, so the tour depends on tickets being available for your date, and the pick-up time is set by the time of your Alhambra entry. Book as early as you can.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Itinerary</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Time</th><th></th></tr></thead><tbody><tr><td>08:00</td><td>Pick-up and drive to the Alhambra (time depends on your tickets)</td></tr><tr><td>10:00</td><td>Guided visit of the Alhambra (2.5 hours)</td></tr><tr><td>13:00</td><td>Lunch (not included)</td></tr><tr><td>15:00</td><td>Guided walk through Granada and the Albaicín (1.5 hours)</td></tr><tr><td>19:00</td><td>Drive back to your accommodation</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">What's included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Private pick-up and return.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Private driver and guide.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Alhambra tickets.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Guided visit of the Alhambra.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Walking tour of the Albaicín.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Not included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Food and drink.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Tips.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Extras</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Expert official Alhambra guide: +€250.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Granada Cathedral tickets: +€5 per person.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Good to know</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Bring your passport or ID card.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Wear comfortable clothes and shoes.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Children are welcome. Not suitable for wheelchairs; pets are not allowed.</li><!-- /wp:list-item --><!-- wp:list-item --><li>The tour is private and can be adapted to your group.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancellation</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>More than 15 days before the tour: full refund minus a 10% administration fee. Between 5 and 15 days: 75% refund. Within 5 days: no refund. Alhambra tickets already bought are deducted from any refund.</p><!-- /wp:paragraph -->"
+   },
+   "es": {
+    "title": "Tour privado a la Alhambra y Granada desde Marbella",
+    "seo_title": "Tour privado a la Alhambra y Granada desde Marbella | Marbella in Style",
+    "metadesc": "Excursión privada de Marbella a Granada con recogida, entradas a la Alhambra, visita guiada de la Alhambra y paseo por el Albaicín.",
+    "excerpt": "Un día en Granada con conductor y guía para vosotros: visita guiada de dos horas y media a la Alhambra, con las entradas incluidas, y por la tarde un paseo por el centro y el Albaicín.",
+    "content": "<!-- wp:paragraph --><p>La Alhambra limita el número de visitas al día, así que el tour depende de que haya entradas para tu fecha, y la hora de recogida la marca la hora de entrada. Resérvalo con la mayor antelación posible.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Programa</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Hora</th><th></th></tr></thead><tbody><tr><td>08:00</td><td>Recogida y viaje a la Alhambra (según la hora de las entradas)</td></tr><tr><td>10:00</td><td>Visita guiada a la Alhambra (2 h 30 min)</td></tr><tr><td>13:00</td><td>Comida (no incluida)</td></tr><tr><td>15:00</td><td>Paseo guiado por Granada y el Albaicín (1 h 30 min)</td></tr><tr><td>19:00</td><td>Regreso a tu alojamiento</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Qué incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Recogida y regreso privados.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Conductor y guía privados.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entradas a la Alhambra.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Visita guiada a la Alhambra.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Paseo por el Albaicín.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">No incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Comida y bebida.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Propinas.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Extras</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Guía oficial experto de la Alhambra: +250 €.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entradas a la Catedral de Granada: +5 € por persona.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Bueno saberlo</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Lleva el DNI o el pasaporte.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Ropa y calzado cómodos.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Los niños son bienvenidos. No es apto para sillas de ruedas y no se admiten mascotas.</li><!-- /wp:list-item --><!-- wp:list-item --><li>El tour es privado y se puede adaptar a vuestro grupo.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancelación</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Con más de 15 días de antelación: reembolso completo menos un 10 % de gastos de gestión. Entre 5 y 15 días: reembolso del 75 %. Con menos de 5 días: sin reembolso. Las entradas de la Alhambra ya compradas se descuentan del reembolso.</p><!-- /wp:paragraph -->"
+   }
+  },
+  {
+   "draft": "tours/cordoba.md",
+   "slug": {
+    "en": "cordoba-private-tour",
+    "es": "tour-privado-cordoba"
+   },
+   "fields": {
+    "duration": {
+     "en": "10 hours",
+     "es": "10 horas"
+    },
+    "languages": {
+     "en": "English, Spanish, Russian",
+     "es": "Inglés, español, ruso"
+    },
+    "pickup": {
+     "en": "Pick-up at your accommodation",
+     "es": "Incluida, en tu alojamiento"
+    },
+    "private": true,
+    "group_size": {
+     "en": "",
+     "es": ""
+    }
+   },
+   "en": {
+    "title": "Private Córdoba tour from Marbella",
+    "seo_title": "Private Córdoba Tour from Marbella with Mosque-Cathedral Entry | Marbella in Style",
+    "metadesc": "A private day in Córdoba from Marbella with pick-up, a guided visit to the Jewish Quarter and the Mosque-Cathedral, and free time in the afternoon.",
+    "excerpt": "A day in Córdoba with your own driver and guide. The highlight is a two-and-a-half-hour guided visit to the Jewish Quarter and the Mosque-Cathedral, followed by lunch in a restaurant with a traditional patio and a free afternoon in the old town.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Itinerary</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Time</th><th></th></tr></thead><tbody><tr><td>09:00</td><td>Private pick-up with driver and guide</td></tr><tr><td>11:30</td><td>Guided tour of the Jewish Quarter and the Mosque-Cathedral (2.5 hours)</td></tr><tr><td>14:00</td><td>Lunch at a restaurant with a traditional patio (not included)</td></tr><tr><td>15:30</td><td>Free time, or a panoramic tour of Córdoba</td></tr><tr><td>18:00</td><td>Drive back to your accommodation</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">What's included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Private pick-up and return, in a vehicle sized to your group.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Private guide.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entry to the attractions on the itinerary, including the Mosque-Cathedral.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Not included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Food and drink.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Tips.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Extras</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Horse-drawn carriage ride: +€50 per carriage (up to 4 people).</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Good to know</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Wear comfortable clothes and shoes.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Children are welcome. Not suitable for wheelchairs; pets are not allowed.</li><!-- /wp:list-item --><!-- wp:list-item --><li>The tour is private and can be adapted to your group.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancellation</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>More than 15 days before the tour: full refund minus a 10% administration fee. Between 5 and 15 days: 75% refund. Within 5 days: no refund. Tickets already bought are deducted from any refund.</p><!-- /wp:paragraph -->"
+   },
+   "es": {
+    "title": "Tour privado a Córdoba desde Marbella",
+    "seo_title": "Tour privado a Córdoba desde Marbella con entrada a la Mezquita | Marbella in Style",
+    "metadesc": "Un día privado en Córdoba desde Marbella con recogida, visita guiada a la Judería y a la Mezquita-Catedral y tiempo libre por la tarde.",
+    "excerpt": "Un día en Córdoba con conductor y guía para vosotros. Lo principal es la visita guiada de dos horas y media a la Judería y a la Mezquita-Catedral; después, comida en un restaurante con patio tradicional y la tarde libre por el casco antiguo.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Programa</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Hora</th><th></th></tr></thead><tbody><tr><td>09:00</td><td>Recogida privada con conductor y guía</td></tr><tr><td>11:30</td><td>Visita guiada a la Judería y a la Mezquita-Catedral (2 h 30 min)</td></tr><tr><td>14:00</td><td>Comida en un restaurante con patio tradicional (no incluida)</td></tr><tr><td>15:30</td><td>Tiempo libre o tour panorámico por Córdoba</td></tr><tr><td>18:00</td><td>Regreso a tu alojamiento</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Qué incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Recogida y regreso privados, en un vehículo adecuado al tamaño del grupo.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Guía privado.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entradas a los sitios del programa, incluida la Mezquita-Catedral.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">No incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Comida y bebida.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Propinas.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Extras</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Paseo en coche de caballos: +50 € por carruaje (hasta 4 personas).</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Bueno saberlo</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Ropa y calzado cómodos.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Los niños son bienvenidos. No es apto para sillas de ruedas y no se admiten mascotas.</li><!-- /wp:list-item --><!-- wp:list-item --><li>El tour es privado y se puede adaptar a vuestro grupo.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancelación</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Con más de 15 días de antelación: reembolso completo menos un 10 % de gastos de gestión. Entre 5 y 15 días: reembolso del 75 %. Con menos de 5 días: sin reembolso. Las entradas ya compradas se descuentan del reembolso.</p><!-- /wp:paragraph -->"
+   }
+  },
+  {
+   "draft": "tours/sevilla.md",
+   "slug": {
+    "en": "sevilla-private-tour",
+    "es": "tour-privado-sevilla"
+   },
+   "fields": {
+    "duration": {
+     "en": "12 hours",
+     "es": "12 horas"
+    },
+    "languages": {
+     "en": "English, Spanish, Russian",
+     "es": "Inglés, español, ruso"
+    },
+    "pickup": {
+     "en": "Pick-up at your accommodation",
+     "es": "Incluida, en tu alojamiento"
+    },
+    "private": true,
+    "group_size": {
+     "en": "",
+     "es": ""
+    }
+   },
+   "en": {
+    "title": "Private Seville tour from Marbella",
+    "seo_title": "Private Seville Day Trip from Marbella | Marbella in Style",
+    "metadesc": "A private day in Seville from Marbella with pick-up, a guided walk, entry to the Cathedral and the Real Alcázar, and a panoramic tour.",
+    "excerpt": "A full day in Seville with your own driver and guide. You walk through the historic centre, visit the Cathedral and the Real Alcázar without having to buy tickets on the day, and see the rest of the city on a panoramic tour.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Itinerary</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Time</th><th></th></tr></thead><tbody><tr><td>08:00</td><td>Private pick-up and drive to Seville</td></tr><tr><td>11:30</td><td>Guided walking tour of Seville</td></tr><tr><td>14:00</td><td>Lunch at a local restaurant (not included)</td></tr><tr><td>15:30</td><td>Panoramic tour</td></tr><tr><td>18:00</td><td>Drive back to your accommodation</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">What's included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Private pick-up and return.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Private tour.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entry to the Cathedral and the Real Alcázar.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Not included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Food and drink.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Extras</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Official licensed guide inside the Real Alcázar: +€250.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Horse-drawn carriage ride.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Good to know</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Bring your passport or ID card.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Wear comfortable clothes and shoes.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Children are welcome. Not suitable for wheelchairs; pets are not allowed.</li><!-- /wp:list-item --><!-- wp:list-item --><li>The tour is private and can be adapted to your group.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancellation</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>More than 15 days before the tour: full refund minus a 10% administration fee. Between 5 and 15 days: 75% refund. Within 5 days: no refund. Tickets already bought are deducted from any refund.</p><!-- /wp:paragraph -->"
+   },
+   "es": {
+    "title": "Tour privado a Sevilla desde Marbella",
+    "seo_title": "Excursión privada a Sevilla desde Marbella | Marbella in Style",
+    "metadesc": "Un día privado en Sevilla desde Marbella con recogida, visita guiada a pie, entradas a la Catedral y al Real Alcázar, y tour panorámico.",
+    "excerpt": "Un día entero en Sevilla con conductor y guía para vosotros. Paseas por el centro histórico, entras en la Catedral y en el Real Alcázar sin tener que comprar las entradas ese día y ves el resto de la ciudad en un tour panorámico.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Programa</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Hora</th><th></th></tr></thead><tbody><tr><td>08:00</td><td>Recogida privada y viaje a Sevilla</td></tr><tr><td>11:30</td><td>Visita guiada a pie por Sevilla</td></tr><tr><td>14:00</td><td>Comida en un restaurante local (no incluida)</td></tr><tr><td>15:30</td><td>Tour panorámico</td></tr><tr><td>18:00</td><td>Regreso a tu alojamiento</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Qué incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Recogida y regreso privados.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Tour privado.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entradas a la Catedral y al Real Alcázar.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">No incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Comida y bebida.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Extras</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Guía oficial dentro del Real Alcázar: +250 €.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Paseo en coche de caballos.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Bueno saberlo</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Lleva el DNI o el pasaporte.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Ropa y calzado cómodos.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Los niños son bienvenidos. No es apto para sillas de ruedas y no se admiten mascotas.</li><!-- /wp:list-item --><!-- wp:list-item --><li>El tour es privado y se puede adaptar a vuestro grupo.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancelación</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Con más de 15 días de antelación: reembolso completo menos un 10 % de gastos de gestión. Entre 5 y 15 días: reembolso del 75 %. Con menos de 5 días: sin reembolso. Las entradas ya compradas se descuentan del reembolso.</p><!-- /wp:paragraph -->"
+   }
+  },
+  {
+   "draft": "tours/gibraltar.md",
+   "slug": {
+    "en": "gibraltar-private-tour",
+    "es": "tour-privado-gibraltar"
+   },
+   "fields": {
+    "duration": {
+     "en": "6 hours",
+     "es": "6 horas"
+    },
+    "languages": {
+     "en": "English, Spanish",
+     "es": "Inglés, español"
+    },
+    "pickup": {
+     "en": "Pick-up at your accommodation",
+     "es": "Incluida, en tu alojamiento"
+    },
+    "private": true,
+    "group_size": {
+     "en": "",
+     "es": ""
+    }
+   },
+   "en": {
+    "title": "Private Gibraltar tour from Marbella",
+    "seo_title": "Private Gibraltar Tour from Marbella | Marbella in Style",
+    "metadesc": "A six-hour private day trip from Marbella to Gibraltar with pick-up, a private guide, entry to the main sights on the Rock and free time on Main Street.",
+    "excerpt": "A private day out to the Rock with your own guide and driver. We pick you up at your accommodation, show you the highlights of Gibraltar and leave you time to wander and shop on Main Street before taking you back.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Itinerary</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Time</th><th></th></tr></thead><tbody><tr><td>10:00</td><td>Pick-up at your accommodation</td></tr><tr><td>11:00</td><td>Guided sightseeing: Europa Point, St Michael's Cave, the Upper Apes' Den at the top of the Rock and the Great Siege Tunnels</td></tr><tr><td>13:00</td><td>Free time on Main Street</td></tr><tr><td>16:00</td><td>Return to your accommodation</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">What's included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Private pick-up and return.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Private guide.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Sightseeing tour of Gibraltar.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entry to the attractions on the itinerary.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Not included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Food and drink.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Good to know</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Bring a valid passport. Depending on your nationality, you may need a visa to enter Gibraltar.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Wear comfortable clothes and shoes.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Children are welcome. Not suitable for wheelchairs; pets are not allowed.</li><!-- /wp:list-item --><!-- wp:list-item --><li>The tour is private and can be adapted to your group.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancellation</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>More than 15 days before the tour: full refund minus a 10% administration fee. Between 5 and 15 days: 75% refund. Within 5 days: no refund. Tickets already bought are deducted from any refund.</p><!-- /wp:paragraph -->"
+   },
+   "es": {
+    "title": "Tour privado a Gibraltar desde Marbella",
+    "seo_title": "Tour privado a Gibraltar desde Marbella | Marbella in Style",
+    "metadesc": "Excursión privada de seis horas de Marbella a Gibraltar con recogida, guía privado, entradas a los principales sitios del Peñón y tiempo libre en Main Street.",
+    "excerpt": "Un día en el Peñón con guía y conductor solo para vosotros. Te recogemos en tu alojamiento, te enseñamos lo mejor de Gibraltar y te dejamos tiempo para pasear y comprar en Main Street antes de volver.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Programa</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Hora</th><th></th></tr></thead><tbody><tr><td>10:00</td><td>Recogida en tu alojamiento</td></tr><tr><td>11:00</td><td>Visita guiada: Europa Point, la cueva de San Miguel, la cima del Peñón (Upper Apes' Den) y los túneles del Gran Asedio</td></tr><tr><td>13:00</td><td>Tiempo libre en Main Street</td></tr><tr><td>16:00</td><td>Regreso a tu alojamiento</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Qué incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Recogida y regreso privados.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Guía privado.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Visita turística de Gibraltar.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entradas a los sitios del programa.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">No incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Comida y bebida.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Bueno saberlo</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Lleva el pasaporte en vigor. Según tu nacionalidad, puede que necesites visado para entrar en Gibraltar.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Ropa y calzado cómodos.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Los niños son bienvenidos. No es apto para sillas de ruedas y no se admiten mascotas.</li><!-- /wp:list-item --><!-- wp:list-item --><li>El tour es privado y se puede adaptar a vuestro grupo.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancelación</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Con más de 15 días de antelación: reembolso completo menos un 10 % de gastos de gestión. Entre 5 y 15 días: reembolso del 75 %. Con menos de 5 días: sin reembolso. Las entradas ya compradas se descuentan del reembolso.</p><!-- /wp:paragraph -->"
+   }
+  },
+  {
+   "draft": "tours/tanger.md",
+   "slug": {
+    "en": "tangier-private-tour",
+    "es": "tour-privado-tanger-marruecos"
+   },
+   "fields": {
+    "duration": {
+     "en": "12 hours",
+     "es": "12 horas"
+    },
+    "languages": {
+     "en": "English, Spanish, French, Arabic, Russian",
+     "es": "Inglés, español, francés, árabe, ruso"
+    },
+    "pickup": {
+     "en": "Pick-up at your accommodation",
+     "es": "Incluida, en tu alojamiento"
+    },
+    "private": true,
+    "group_size": {
+     "en": "",
+     "es": ""
+    }
+   },
+   "en": {
+    "title": "Private Tangier tour from Marbella",
+    "seo_title": "Private Tangier Day Trip from Marbella with Ferry | Marbella in Style",
+    "metadesc": "A private day in Tangier from Marbella: pick-up, ferry from Tarifa, a local guide, the Caves of Hercules, Cape Spartel and the Kasbah.",
+    "excerpt": "Cross to Africa for the day. We drive you to the port of Tarifa, you take the ferry to Tangier (about an hour), and a private local guide shows you the modern city, the coast to the Caves of Hercules and Cape Spartel, and the Kasbah before you head back across the Strait.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">How you travel</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li><strong>To Tarifa</strong>: an air-conditioned Mercedes V-Class or minibus, depending on the size of your group.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>To Tangier</strong>: by ferry from Tarifa. Ferry tickets are included.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>In Tangier</strong>: an air-conditioned minibus.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Itinerary</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Time</th><th></th></tr></thead><tbody><tr><td>09:00</td><td>Pick-up at your accommodation and drive to Tarifa</td></tr><tr><td>11:00</td><td>Ferry from Tarifa to Tangier (usually at this time; about 1 hour)</td></tr><tr><td>On arrival</td><td>Tour of Tangier: the modern city, the north-west coast with the Caves of Hercules and Cape Spartel, and the Kasbah</td></tr><tr><td>Midday</td><td>Time for lunch at a recommended restaurant (not included)</td></tr><tr><td>Afternoon</td><td>Transfer to the ferry and return to your accommodation</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">What's included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Private pick-up and return.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Ferry tickets.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Private local guide in Tangier.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Sightseeing tour of Tangier.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entry to the Caves of Hercules.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Not included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Food and drink.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Extras</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Traditional tea on a hotel terrace.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Camel ride.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Good to know</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Bring a passport valid for your trip. Depending on your nationality, you may need a visa for Morocco: check before you book.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Wear comfortable clothes and shoes.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Children are welcome. Not suitable for wheelchairs; pets are not allowed.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Tell us about any dietary requirements when you book.</li><!-- /wp:list-item --><!-- wp:list-item --><li>The tour is private and can be adapted to your group.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancellation</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>More than 15 days before the tour: full refund minus a 10% administration fee. Between 5 and 15 days: 75% refund. Within 5 days: no refund. Tickets already bought, including the ferry, are deducted from any refund.</p><!-- /wp:paragraph -->"
+   },
+   "es": {
+    "title": "Tour privado a Tánger desde Marbella",
+    "seo_title": "Excursión privada a Tánger desde Marbella con ferry | Marbella in Style",
+    "metadesc": "Un día privado en Tánger desde Marbella: recogida, ferry desde Tarifa, guía local, cuevas de Hércules, cabo Espartel y la Kasbah.",
+    "excerpt": "Cruza a África por un día. Te llevamos al puerto de Tarifa, tomas el ferry a Tánger (alrededor de una hora) y un guía local privado te enseña la ciudad moderna, la costa hasta las cuevas de Hércules y el cabo Espartel, y la Kasbah antes de volver a cruzar el Estrecho.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Cómo se viaja</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li><strong>Hasta Tarifa</strong>: Mercedes Clase V o minibús con aire acondicionado, según el tamaño del grupo.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>Hasta Tánger</strong>: en ferry desde Tarifa. Los billetes van incluidos.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>En Tánger</strong>: minibús con aire acondicionado.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Programa</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Hora</th><th></th></tr></thead><tbody><tr><td>09:00</td><td>Recogida en tu alojamiento y viaje a Tarifa</td></tr><tr><td>11:00</td><td>Ferry de Tarifa a Tánger (normalmente a esta hora; alrededor de 1 hora)</td></tr><tr><td>A la llegada</td><td>Visita de Tánger: la ciudad moderna, la costa noroeste con las cuevas de Hércules y el cabo Espartel, y la Kasbah</td></tr><tr><td>Mediodía</td><td>Tiempo para comer en un restaurante recomendado (comida no incluida)</td></tr><tr><td>Tarde</td><td>Traslado al ferry y regreso a tu alojamiento</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Qué incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Recogida y regreso privados.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Billetes de ferry.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Guía local privado en Tánger.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Visita turística de Tánger.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entrada a las cuevas de Hércules.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">No incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Comida y bebida.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Extras</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Té tradicional en la terraza de un hotel.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Paseo en camello.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Bueno saberlo</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Lleva el pasaporte en vigor. Según tu nacionalidad, puede que necesites visado para Marruecos: compruébalo antes de reservar.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Ropa y calzado cómodos.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Los niños son bienvenidos. No es apto para sillas de ruedas y no se admiten mascotas.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Si tienes alguna necesidad de dieta, dínoslo al reservar.</li><!-- /wp:list-item --><!-- wp:list-item --><li>El tour es privado y se puede adaptar a vuestro grupo.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancelación</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Con más de 15 días de antelación: reembolso completo menos un 10 % de gastos de gestión. Entre 5 y 15 días: reembolso del 75 %. Con menos de 5 días: sin reembolso. Las entradas y billetes ya comprados, incluido el ferry, se descuentan del reembolso.</p><!-- /wp:paragraph -->"
+   }
+  },
+  {
+   "draft": "tours/ronda.md",
+   "slug": {
+    "en": "wine-tour-ronda",
+    "es": "tour-de-vino-por-ronda"
+   },
+   "fields": {
+    "duration": {
+     "en": "8 hours",
+     "es": "8 horas"
+    },
+    "languages": {
+     "en": "English, Spanish, German, Russian",
+     "es": "Inglés, español, alemán, ruso"
+    },
+    "pickup": {
+     "en": "Pick-up at your accommodation",
+     "es": "Incluida, en tu alojamiento"
+    },
+    "private": true,
+    "group_size": {
+     "en": "Minimum 2 people",
+     "es": "Mínimo 2 personas"
+    }
+   },
+   "en": {
+    "title": "Private Ronda wine tour from Marbella",
+    "seo_title": "Private Ronda Wine Tour from Marbella | Marbella in Style",
+    "metadesc": "A private day in Ronda from Marbella with pick-up, visits and tastings at two wineries, a guided walk through the town and entry to the bullring.",
+    "excerpt": "A day in the mountains with your own driver and guide. You visit two wineries around Ronda, taste their wines, and walk through the old town and across to the bullring.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Itinerary</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Time</th><th></th></tr></thead><tbody><tr><td>09:00</td><td>Pick-up at your accommodation</td></tr><tr><td>10:15</td><td>Stop for a traditional breakfast (not included)</td></tr><tr><td>11:00</td><td>First winery: visit and tasting with tapas</td></tr><tr><td>13:00</td><td>Guided walk through Ronda (1.5 hours)</td></tr><tr><td>14:30</td><td>Second winery: visit, with time for lunch (not included)</td></tr><tr><td>18:00</td><td>Drive back to your accommodation</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:paragraph --><p>The order can change depending on the wineries' availability.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">What's included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Private pick-up and return in an air-conditioned vehicle.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Private guide.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Visits and wine tastings at two wineries.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Guided walk through Ronda.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entry to the Ronda bullring.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Not included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Breakfast, lunch and other food and drink.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Good to know</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Minimum two people.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Wear comfortable clothes and shoes.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Children are welcome. The legal drinking age in Spain is 18. Not suitable for wheelchairs.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Tell us about any dietary requirements when you book.</li><!-- /wp:list-item --><!-- wp:list-item --><li>The tour is private and can be adapted to your group.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancellation</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>More than 15 days before the tour: full refund minus a 10% administration fee. Between 5 and 15 days: 75% refund. Within 5 days: no refund. Tickets already bought are deducted from any refund.</p><!-- /wp:paragraph -->"
+   },
+   "es": {
+    "title": "Tour privado de vino por Ronda desde Marbella",
+    "seo_title": "Tour privado de vino por Ronda desde Marbella | Marbella in Style",
+    "metadesc": "Un día privado en Ronda desde Marbella con recogida, visita y cata en dos bodegas, paseo guiado por la ciudad y entrada a la plaza de toros.",
+    "excerpt": "Un día en la sierra con conductor y guía para vosotros. Visitas dos bodegas de la zona de Ronda, pruebas sus vinos y paseas por el casco antiguo hasta la plaza de toros.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Programa</h2><!-- /wp:heading -->\n<!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Hora</th><th></th></tr></thead><tbody><tr><td>09:00</td><td>Recogida en tu alojamiento</td></tr><tr><td>10:15</td><td>Parada para un desayuno típico (no incluido)</td></tr><tr><td>11:00</td><td>Primera bodega: visita y cata con tapas</td></tr><tr><td>13:00</td><td>Paseo guiado por Ronda (1 h 30 min)</td></tr><tr><td>14:30</td><td>Segunda bodega: visita y tiempo para comer (comida no incluida)</td></tr><tr><td>18:00</td><td>Regreso a tu alojamiento</td></tr></tbody></table></figure><!-- /wp:table -->\n<!-- wp:paragraph --><p>El orden puede cambiar según la disponibilidad de las bodegas.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Qué incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Recogida y regreso privados en un vehículo con aire acondicionado.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Guía privado.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Visita y cata de vinos en dos bodegas.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Paseo guiado por Ronda.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Entrada a la plaza de toros de Ronda.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">No incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Desayuno, comida y el resto de comida y bebida.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Bueno saberlo</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Mínimo dos personas.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Ropa y calzado cómodos.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Los niños son bienvenidos. En España, la edad legal para beber alcohol es 18 años. No es apto para sillas de ruedas.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Si tienes alguna necesidad de dieta, dínoslo al reservar.</li><!-- /wp:list-item --><!-- wp:list-item --><li>El tour es privado y se puede adaptar a vuestro grupo.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancelación</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Con más de 15 días de antelación: reembolso completo menos un 10 % de gastos de gestión. Entre 5 y 15 días: reembolso del 75 %. Con menos de 5 días: sin reembolso. Las entradas ya compradas se descuentan del reembolso.</p><!-- /wp:paragraph -->"
+   }
+  },
+  {
+   "draft": "tours/tapas-marbella.md",
+   "slug": {
+    "en": "marbella-tapas-tour",
+    "es": "marbella-tapas-tour"
+   },
+   "fields": {
+    "duration": {
+     "en": "3 hours",
+     "es": "3 horas"
+    },
+    "languages": {
+     "en": "English, Spanish, German, Russian",
+     "es": "Inglés, español, alemán, ruso"
+    },
+    "pickup": {
+     "en": "Not included; can be added as an extra",
+     "es": "No incluida; se puede añadir como extra"
+    },
+    "private": true,
+    "group_size": {
+     "en": "",
+     "es": ""
+    }
+   },
+   "en": {
+    "title": "Tapas and wine in Marbella Old Town",
+    "seo_title": "Private Tapas and Wine Tour in Marbella Old Town | Marbella in Style",
+    "metadesc": "A three-hour private walk through Marbella Old Town with tapas in two local spots, wine and an olive oil tasting. Starts at 12:00 or 16:00 from the Alameda fountain.",
+    "excerpt": "Three hours on foot through the old town of Marbella with your own guide, stopping for tapas in two local places, tasting wine and trying Andalusian olive oil. The tour is private, so it moves at your pace and can be adapted to your group.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Practical details</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li><strong>Duration</strong>: 3 hours.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>Starts</strong>: 12:00 or 16:00.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>Meeting point</strong>: the fountain in Parque de la Alameda. Pick-up from your accommodation is not included, but we can add it as an extra.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>Private tour</strong> with a live guide in English, Spanish, German or Russian.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">What's included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Private guide.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Walking tour of Marbella Old Town.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Tapas tasting in two local venues.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Wine tasting.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Olive oil tasting.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Not included</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Pick-up and drop-off (available as an extra).</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Good to know</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Wear comfortable shoes.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Children are welcome. The legal drinking age in Spain is 18.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Tell us about any dietary requirements when you book.</li><!-- /wp:list-item --><!-- wp:list-item --><li>The route is not suitable for wheelchairs, and pets are not allowed.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancellation</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Free cancellation up to 48 hours before the start. Between 24 and 48 hours we refund 25%; within 24 hours there is no refund. You can change the date up to 48 hours before, subject to availability (a 10% fee may apply).</p><!-- /wp:paragraph -->"
+   },
+   "es": {
+    "title": "Tapas y vinos en el casco antiguo de Marbella",
+    "seo_title": "Tour privado de tapas y vinos por el casco antiguo de Marbella | Marbella in Style",
+    "metadesc": "Tres horas a pie por el casco antiguo de Marbella, con tapas en dos sitios locales, vino y cata de aceite. Salidas a las 12:00 o las 16:00 desde la fuente de la Alameda.",
+    "excerpt": "Tres horas a pie por el casco antiguo de Marbella con tu propio guía: tapas en dos sitios locales, vino y una cata de aceite de oliva andaluz. Es un tour privado, así que va a vuestro ritmo y se puede adaptar al grupo.",
+    "content": "<!-- wp:heading --><h2 class=\"wp-block-heading\">Datos prácticos</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li><strong>Duración</strong>: 3 horas.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>Salidas</strong>: 12:00 o 16:00.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>Punto de encuentro</strong>: la fuente del Parque de la Alameda. La recogida en tu alojamiento no está incluida, pero podemos añadirla como extra.</li><!-- /wp:list-item --><!-- wp:list-item --><li><strong>Tour privado</strong> con guía en español, inglés, alemán o ruso.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Qué incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Guía privado.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Paseo por el casco antiguo de Marbella.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Tapas en dos locales.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Degustación de vino.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Cata de aceite de oliva.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">No incluye</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Recogida y regreso (disponible como extra).</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Bueno saberlo</h2><!-- /wp:heading -->\n<!-- wp:list --><ul class=\"wp-block-list\"><!-- wp:list-item --><li>Lleva calzado cómodo.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Los niños son bienvenidos. En España, la edad legal para beber alcohol es 18 años.</li><!-- /wp:list-item --><!-- wp:list-item --><li>Si tienes alguna necesidad de dieta, dínoslo al reservar.</li><!-- /wp:list-item --><!-- wp:list-item --><li>El recorrido no es apto para sillas de ruedas y no se admiten mascotas.</li><!-- /wp:list-item --></ul><!-- /wp:list -->\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Cancelación</h2><!-- /wp:heading -->\n<!-- wp:paragraph --><p>Cancelación gratuita hasta 48 horas antes del inicio. Entre 24 y 48 horas devolvemos el 25 %; con menos de 24 horas no hay reembolso. Puedes cambiar la fecha hasta 48 horas antes, según disponibilidad (puede aplicarse un cargo del 10 %).</p><!-- /wp:paragraph -->"
+   }
+  }
+ ]
+}

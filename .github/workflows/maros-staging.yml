@@ -1,4 +1,4 @@
-# marOS en PRUEBAS (IONOS), a mano: estado de la conexión o importación de UNA propiedad.
+# marOS en PRUEBAS (IONOS), a mano: estado de la conexión, importación de UNA propiedad, SEO, guías de zona u opiniones de la web actual.
 # Sirve para importar las fichas una a una (Julio, 14/11) sin entrar por SSH, y deja en el
 # resumen lo que llegó de marOS para revisarlo. Spec 003; runbook pruebas-ionos, «Conectar con marOS pruebas».
 name: marOS en pruebas
@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       accion:
-        description: "status = ver la conexión · sync = importar la propiedad del id · seo = rellenar Yoast en todas las fichas (wp maros seo)"
+        description: "status = ver la conexión · sync = importar la propiedad del id · seo = rellenar Yoast en todas las fichas (wp maros seo) · zonas = reescribir las guías de zona (zonas.php forzar) · opiniones = importar las opiniones de la web actual (opiniones-web-actual.php) · servicios = cargar servicios y experiencias (servicios.php)"
         type: choice
-        options: [status, sync, seo]
+        options: [status, sync, seo, zonas, opiniones, servicios]
         default: status
       id:
         description: "Id de marOS de la propiedad (p. ej. villa-flamingos). Solo con sync"
@@ -51,6 +51,7 @@ jobs:
           SSH_PORT: ${{ vars.SSH_PORT || '22' }}
           MIS_PHP: ${{ vars.MIS_PHP }}
           WP_PATH: ${{ vars.WP_PATH }}
+          MIS_PATH: ${{ vars.MIS_PATH }}
           ACCION: ${{ inputs.accion }}
           MAROS_ID: ${{ inputs.id }}
         run: |
@@ -59,7 +60,7 @@ jobs:
             printf 'MIS_PHP=%q\n' "$MIS_PHP"
             cat scripts/remote/php-bin.sh scripts/remote/maros-remote.sh
           } | ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" \
-              "bash -s -- $(printf '%q ' "$WP_PATH" "$ACCION" "$MAROS_ID")" | tee salida.txt
+              "bash -s -- $(printf '%q ' "$WP_PATH" "$ACCION" "$MAROS_ID" "$MIS_PATH")" | tee salida.txt
           {
             echo "### marOS en pruebas: $ACCION ${MAROS_ID}"
             echo '```'

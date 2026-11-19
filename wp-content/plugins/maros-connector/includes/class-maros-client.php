@@ -15,6 +15,8 @@
  *   GET /v1/catalog/properties/{id}          → ficha (ver mock/maros-api/v1/properties/*.json)
  *   GET /v1/catalog/properties/{id}/calendar → { currency, etag, days: [ { room_type_id, date, available, closed,
  *                                                check_in, check_out, min_stay, rates: [ { min_stay, max_stay, price } ] } ] }
+ *   GET /v1/catalog/properties/{id}/quote?arrival&departure&adults&children&infants[&room_type_id]
+ *                                            → presupuesto de la estancia (marOS spec 044, contracts/quote-api.md)
  * Solo salen las propiedades marcadas «publicable en la web» en marOS.
  *
  * @package MarbellaInStyle
@@ -158,6 +160,86 @@ class Maros_Client {
 		return self::safe_id( $id ) ? self::get( '/catalog/properties/' . $id . '/calendar', $etag ) : new WP_Error( 'maros_id', 'Id de marOS no válido.' );
 	}
 
+	/**
+	 * Presupuesto de una estancia (marOS spec 044): se calcula con la copia del catálogo de marOS,
+	 * sin guardar nada. Devuelve el cuerpo tal cual: { available, exact, nights, lines, total,
+	 * deposit, … } o { available: false, reasons }.
+	 *
+	 * @param array{adults:int,children:int,infants:int} $guests
+	 * @return array|WP_Error
+	 */
+	public static function get_quote( string $id, string $arrival, string $departure, array $guests, string $room_type_id = '' ) {
+		if ( ! self::safe_id( $id ) ) {
+			return new WP_Error( 'maros_id', 'Id de marOS no válido.' );
+		}
+		$query = array(
+			'arrival'   => $arrival,
+			'departure' => $departure,
+			'adults'    => (int) $guests['adults'],
+			'children'  => (int) ( $guests['children'] ?? 0 ),
+			'infants'   => (int) ( $guests['infants'] ?? 0 ),
+		);
+		if ( '' !== $room_type_id && preg_match( '/^\d{1,20}$/', $room_type_id ) ) {
+			$query['room_type_id'] = $room_type_id;
+		}
+		return self::get( '/catalog/properties/' . $id . '/quote?' . http_build_query( $query ) );
+	}
+
+	/**
+	 * Solicitud de reserva de la web (marOS spec 026, scope «booking_requests:write»):
+	 * POST /v1/catalog/properties/{id}/booking-requests. Un solo intento: marOS no duplica la
+	 * reserva con el mismo request_id, y la web deja reintentar al visitante.
+	 *
+	 * @return array{status:int,body:array}|WP_Error Respuesta de marOS (también 4xx, con su error).
+	 */
+	public static function post_booking_request( string $id, array $body ) {
+		if ( ! self::safe_id( $id ) ) {
+			return new WP_Error( 'maros_id', 'Id de marOS no válido.' );
+		}
+		$ok = self::check_config();
+		if ( is_wp_error( $ok ) ) {
+			return $ok;
+		}
+		if ( 'mock' === self::env() ) {
+			// Sin red: una solicitud de ejemplo para ver C5 en local.
+			return array(
+				'status' => 201,
+				'body'   => array(
+					'reference'  => 'MIS-TEST' . strtoupper( substr( md5( (string) ( $body['request_id'] ?? '' ) ), 0, 2 ) ),
+					'status'     => 'requested',
+					'property_id' => $id,
+					'arrival'    => $body['arrival'] ?? '',
+					'departure'  => $body['departure'] ?? '',
+					'total'      => $body['quoted_total'] ?? 0,
+					'currency'   => 'EUR',
+					'deposit'    => null,
+					'expires_at' => gmdate( 'c', time() + DAY_IN_SECONDS ),
+					'next_steps' => array( 'sent', 'confirm_24h', 'pay_link' ),
+				),
+			);
+		}
+		$response = wp_remote_post(
+			self::base() . '/v1/catalog/properties/' . $id . '/booking-requests',
+			array(
+				'timeout'     => 45,
+				'redirection' => 0,
+				'user-agent'  => 'marOS-Connector/' . MAROS_CONNECTOR_VERSION . '; ' . wp_parse_url( home_url(), PHP_URL_HOST ),
+				'headers'     => array(
+					'Authorization'   => 'Bearer ' . MAROS_API_KEY,
+					'Accept'          => 'application/json',
+					'Content-Type'    => 'application/json',
+					'Idempotency-Key' => (string) ( $body['request_id'] ?? '' ),
+				),
+				'body'        => wp_json_encode( $body ),
+			)
+		);
+		if ( is_wp_error( $response ) ) {
+			return new WP_Error( 'maros_http', 'marOS no responde a la solicitud de reserva: ' . $response->get_error_message() );
+		}
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		return array( 'status' => (int) wp_remote_retrieve_response_code( $response ), 'body' => is_array( $data ) ? $data : array() );
+	}
+
 	public static function safe_id( string $id ): string {
 		return preg_match( '/^[A-Za-z0-9_\-]{1,80}$/', $id ) ? $id : '';
 	}
@@ -168,6 +250,13 @@ class Maros_Client {
 		}
 		if ( '/catalog/properties' === $path ) {
 			return mis_maros_mock_read( 'v1/properties.json' ) ?? new WP_Error( 'maros_mock', 'Sin properties.json' );
+		}
+		if ( preg_match( '#^/catalog/properties/([a-z0-9\-]+)/quote\?(.*)$#', $path, $m ) ) {
+			if ( ! mis_maros_mock_read( 'v1/properties/' . $m[1] . '.json' ) ) {
+				return new WP_Error( 'maros_not_found', 'Propiedad no encontrada: ' . $m[1], array( 'status' => 404 ) );
+			}
+			parse_str( $m[2], $query );
+			return mis_maros_mock_quote( $m[1], $query );
 		}
 		if ( preg_match( '#^/catalog/properties/([a-z0-9\-]+)/calendar$#', $path, $m ) ) {
 			if ( ! mis_maros_mock_read( 'v1/properties/' . $m[1] . '.json' ) ) {

@@ -226,3 +226,36 @@ add_shortcode(
 		return '<p class="mis-price-line"><small>' . esc_html( $es ? 'Desde' : 'From' ) . '</small> <strong>' . esc_html( $money ) . '</strong> <small>' . esc_html( $es ? '/ noche' : '/ night' ) . '</small></p>';
 	}
 );
+
+/**
+ * [maros_anchors] Subnavegación fija por anclas (spec 006: Resumen · Vídeos · Dormitorios ·
+ * Comodidades · Zona · Opiniones · FAQ). Solo enlaza las secciones que tiene esta casa y marca la
+ * que se está leyendo.
+ */
+add_shortcode(
+	'maros_anchors',
+	static function () {
+		$post_id = (int) get_the_ID();
+		$es      = maros_is_es( $post_id );
+		$rooms   = json_decode( (string) get_post_meta( $post_id, 'maros_sleeping', true ), true );
+		$terms   = get_the_terms( $post_id, 'equipamiento' );
+		$items   = array(
+			'overview'  => array( true, $es ? 'Resumen' : 'Overview' ),
+			'videos'    => array( function_exists( 'maros_videos' ) && maros_videos( $post_id ), $es ? 'Vídeos' : 'Videos' ),
+			'bedrooms'  => array( is_array( $rooms ) && $rooms, $es ? 'Dormitorios' : 'Bedrooms' ),
+			'amenities' => array( $terms && ! is_wp_error( $terms ), $es ? 'Comodidades' : 'Amenities' ),
+			'location'  => array( true, $es ? 'Ubicación' : 'Location' ),
+			// Las opiniones solo se pintan si hay: al cargar la página se quita el enlace de toda sección que no esté.
+			'reviews'   => array( function_exists( 'glsr_get_reviews' ), $es ? 'Opiniones' : 'Reviews' ),
+			'faq'       => array( true, 'FAQ' ),
+		);
+		$html = '';
+		foreach ( $items as $id => list( $show, $label ) ) {
+			if ( $show ) {
+				$html .= '<a href="#' . esc_attr( $id ) . '">' . esc_html( $label ) . '</a>';
+			}
+		}
+		$js = '<script>document.addEventListener("DOMContentLoaded",function(){var n=document.querySelector(".mis-anchors");if(!n)return;var l=[].slice.call(n.querySelectorAll("a")).filter(function(a){var s=document.getElementById(a.hash.slice(1));if(!s){a.remove();return false;}a._s=s;return true;});if(!("IntersectionObserver" in window))return;var v=new Map();var o=new IntersectionObserver(function(es){es.forEach(function(e){v.set(e.target,e.isIntersecting);});var c=null;l.forEach(function(a){if(!c&&v.get(a._s))c=a;});l.forEach(function(a){if(a===c){a.setAttribute("aria-current","true");}else{a.removeAttribute("aria-current");}});if(c&&n.scrollWidth>n.clientWidth){n.scrollLeft=c.offsetLeft-24;}},{rootMargin:"-40% 0px -55% 0px"});l.forEach(function(a){o.observe(a._s);});});</script>';
+		return '<nav class="mis-anchors" aria-label="' . esc_attr( $es ? 'Secciones de la casa' : 'Property sections' ) . '">' . $html . '</nav>' . $js;
+	}
+);
