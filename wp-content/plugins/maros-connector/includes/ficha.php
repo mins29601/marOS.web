@@ -352,8 +352,8 @@ add_shortcode(
 			}
 			$img = $pool['photo'] ? wp_get_attachment_image( $pool['photo'], 'medium_large', false, array( 'class' => 'mis-pools__img', 'loading' => 'lazy', 'alt' => $title ) ) : '';
 			if ( $img ) {
-				// Abre el visor de la galería (spec 041) en esta foto.
-				$img = '<button type="button" class="mis-pools__open" data-mis-photo="' . (int) $pool['photo'] . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver fotos: %s' : 'View photos: %s', $title ) ) . '">' . $img . '</button>';
+				// Abre la galería por estancias en el bloque de esta piscina, como los dormitorios.
+				$img = '<button type="button" class="mis-pools__open" data-mis-room-photo="' . (int) $pool['photo'] . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver fotos: %s' : 'View photos: %s', $title ) ) . '">' . $img . '</button>';
 			}
 			$cards .= '<li class="mis-pools__card' . ( $img ? '' : ' mis-pools__card--text' ) . '">' . $img . '<div class="mis-pools__body"><h3 class="mis-pools__title">' . esc_html( $title ) . '</h3><ul class="mis-pools__list">' . $items . '</ul></div></li>';
 		}

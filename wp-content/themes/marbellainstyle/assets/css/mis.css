@@ -356,6 +356,15 @@ html.mis-tour-open { overflow: hidden; }
 .mis-tour__close:hover, .mis-tour__close:focus-visible { border-color: var(--wp--preset--color--main); }
 .mis-tour__title { margin: 0; font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mis-tour__title span { color: var(--wp--preset--color--secondary); }
+/* Móvil: barra de la galería más baja (Julio 19-11-2026: «la cabecera ocupa mucho») */
+@media (max-width: 1023px) {
+	.mis-tour__bar { gap: 0.5rem; padding-block: 0.25rem; padding-top: max(0.25rem, env(safe-area-inset-top, 0px)); }
+	.mis-tour__bar .mis-tour__close { width: 40px; height: 40px; border: 0; margin-left: -0.625rem; }
+	.mis-tour__title { font-size: 0.6875rem; letter-spacing: 0.1em; }
+	.mis-tour__chips { padding-block: 0.625rem; }
+	.mis-tour__chip { flex-basis: 96px; }
+	.mis-tour__sec { padding-block: 1.25rem; }
+}
 .mis-tour__scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--wp--preset--spacing--medium) 3rem; }
 .mis-tour__chips { display: flex; gap: 0.75rem; overflow-x: auto; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding: 0.875rem var(--wp--preset--spacing--medium); background: var(--wp--preset--color--base); border-bottom: 1px solid var(--mis-line); scrollbar-width: none; }
 .mis-tour__chips::-webkit-scrollbar { display: none; }
@@ -423,7 +432,7 @@ html.mis-tour-open { overflow: hidden; }
 .mis-pools h2 { margin: 0 0 1.25rem; }
 .mis-pools__cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
 .mis-pools__card { display: grid; background: var(--wp--preset--color--primary-alt-accent); border: 1px solid var(--mis-line); }
-.mis-pools__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.mis-pools__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
 .mis-pools__img { display: block; width: 100%; height: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
 .mis-pools__body { padding: 1rem 1.25rem 1.25rem; }
 .mis-pools__title { margin: 0 0 0.75rem; font-size: var(--wp--preset--font-size--medium); font-weight: 500; }
@@ -437,7 +446,7 @@ html.mis-tour-open { overflow: hidden; }
 }
 
 /* Las fotos de Sleeping arrangements abren el visor */
-.mis-sleeping__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.mis-sleeping__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
 
 /* Subnavegación por anclas: pestañas en mayúsculas, fija bajo la cabecera */
 .mis-anchors {
