@@ -317,6 +317,7 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-crumbs__sep { opacity: .6; }
 @media (min-width: 1024px) { .mis-crumbs { margin-inline: 0; padding-inline: 0; } }
 .mis-ficha-title { margin: 0; font-size: clamp(2.25rem, 7vw, 3.5rem); line-height: 1.08; letter-spacing: 0.06em; text-wrap: balance; }
+.mis-ficha-subtitle { margin: 0.5rem 0 0; font-size: var(--wp--preset--font-size--medium); line-height: 1.35; color: var(--wp--preset--color--main); }
 .mis-where { margin: 0.5rem 0 0; font-size: var(--wp--preset--font-size--medium); color: var(--wp--preset--color--secondary); }
 /* Huéspedes, dormitorios y baños: tres columnas fijas, número arriba y texto debajo */
 .mis-facts { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; list-style: none; margin: 1.25rem 0 0; padding: 0; }
@@ -418,6 +419,23 @@ html.mis-tour-open { overflow: hidden; }
 .mis-video-lb.is-vertical .mis-video-lb__stage { aspect-ratio: auto; height: min(760px, calc(100dvh - 64px)); background: #fff; }
 .mis-video-lb__stage iframe { width: 100%; height: 100%; border: 0; display: block; }
 
+/* Bloque «Piscina» (Julio 19-11-2026): foto de la estancia y sus datos; en escritorio, foto al lado */
+.mis-pools h2 { margin: 0 0 1.25rem; }
+.mis-pools__cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
+.mis-pools__card { display: grid; background: var(--wp--preset--color--primary-alt-accent); border: 1px solid var(--mis-line); }
+.mis-pools__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.mis-pools__img { display: block; width: 100%; height: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.mis-pools__body { padding: 1rem 1.25rem 1.25rem; }
+.mis-pools__title { margin: 0 0 0.75rem; font-size: var(--wp--preset--font-size--medium); font-weight: 500; }
+.mis-pools__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-pools__list li { display: grid; grid-template-columns: 18px 1fr; gap: 0.625rem; align-items: start; }
+.mis-pools__list svg { margin-top: 1px; color: var(--wp--preset--color--primary); }
+@media (min-width: 768px) {
+	.mis-pools__card:not(.mis-pools__card--text) { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+	.mis-pools__img { aspect-ratio: auto; min-height: 240px; }
+	.mis-pools__body { padding: 1.5rem; align-self: center; }
+}
+
 /* Las fotos de Sleeping arrangements abren el visor */
 .mis-sleeping__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
 
@@ -437,8 +455,19 @@ html.mis-tour-open { overflow: hidden; }
 }
 .mis-anchors a:hover,
 .mis-anchors a[aria-current] { color: var(--wp--preset--color--main); border-bottom-color: var(--wp--preset--color--main); }
-:where(#overview, #videos, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, .mis-keys) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
+:where(#overview, #videos, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, #pool, .mis-keys) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
 .admin-bar .mis-anchors { top: calc(var(--mis-header-h) + var(--wp-admin--admin-bar--height, 0px)); }
+/*
+ * Móvil (Julio 19-11-2026: «la cabecera y el menú con Resumen… consumen mucho espacio»): la cabecera
+ * de la ficha se va con la página en vez de quedarse fija, y la barra de secciones, más baja, se
+ * queda arriba del todo.
+ */
+@media (max-width: 1023px) {
+	.wp-block-template-part:has(> .mis-header--ficha) { position: absolute; }
+	.mis-anchors, .admin-bar .mis-anchors { top: 0; }
+	.mis-anchors a { padding: 0.7rem 0 0.55rem; margin-right: 1.25rem; font-size: 0.6875rem; letter-spacing: 0.1em; }
+	:where(#overview, #videos, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, #pool, .mis-keys) { scroll-margin-top: 52px; }
+}
 
 /* Caja de reserva (escritorio) y barra fija (móvil) */
 .mis-booking-box { border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); padding: 1.5rem; }
@@ -669,15 +698,17 @@ html.mis-req-open, html.mis-req-open body { overflow: hidden; }
 	background: var(--wp--preset--color--base);
 	border-top: 1px solid var(--mis-line);
 	box-shadow: 0 -6px 18px rgba(37, 39, 40, .06); /* única sombra permitida (spec 006 §0) */
-	padding: 0.75rem var(--wp--preset--spacing--medium) calc(0.75rem + env(safe-area-inset-bottom));
-	display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+	padding: 0.5rem var(--wp--preset--spacing--medium) calc(0.5rem + env(safe-area-inset-bottom));
+	display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
 }
-.mis-sticky-cta p { margin: 0; font-size: var(--wp--preset--font-size--small); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.mis-sticky-cta .wp-element-button { flex-shrink: 0; }
+/* Barra compacta (Julio 19-11-2026): el precio nunca se corta; si no cabe en una línea, «/ noche» baja. */
+.mis-sticky-cta p { margin: 0; font-size: var(--wp--preset--font-size--small); line-height: 1.25; min-width: 0; flex: 1 1 auto; }
+.mis-sticky-cta p strong { white-space: nowrap; }
+.mis-sticky-cta .wp-element-button { flex-shrink: 0; box-sizing: border-box; min-height: var(--mis-touch); padding: 0.55rem 1.1rem 0.45rem; font-size: 0.75rem; letter-spacing: 0.1em; }
 .mis-price-line strong { font-size: 1rem; font-weight: 500; }
 .mis-price-line small { font-size: 0.8125rem; color: var(--wp--preset--color--secondary); }
 @media (min-width: 1024px) { .mis-sticky-cta { display: none; } }
-body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
+body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 
 /* ------------------------------------------------------------------ Bloques varios */
 
