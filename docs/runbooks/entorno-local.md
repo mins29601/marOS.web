@@ -68,7 +68,8 @@ npm run wp -- eval-file wp-content/mis-scripts/setup/slugs-idioma.php
 - `wp maros sync` carga las propiedades del mock (ficha, tipo, zona, equipamiento, fotos,
   calendario y tarifas) en inglés y español. Se puede repetir: solo actualiza lo que cambia (etag).
   Otros comandos: `wp maros status` (estado y últimos eventos), `wp maros tick` (la tarea de
-  5 minutos ahora mismo) y `wp maros sync --id=<id> --force`. El estado también se ve en
+  5 minutos ahora mismo), `wp maros sync --id=<id> --force` y `wp maros idiomas [--fix]` (cada
+  propiedad en inglés y español, vinculadas; con `--fix` crea o vincula la que falte). El estado también se ve en
   **Propiedades → marOS**, con el botón «Sincronizar ahora».
 - `contenido-inicial.php` crea zonas, tipos de servicio, el servicio de ejemplo de Eventos, las páginas
   del mapa del sitio (spec 005), los formularios de Contact Form 7 y los menús de cada idioma. Es

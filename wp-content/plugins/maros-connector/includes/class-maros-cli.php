@@ -101,6 +101,83 @@ class Maros_CLI {
 	}
 
 	/**
+	 * Comprueba que cada propiedad exista en todos los idiomas (en, es) y con las traducciones vinculadas.
+	 *
+	 * Lista cada propiedad con su entrada en cada idioma (id, estado y slug) y las demás entradas con su
+	 * id de marOS (duplicadas o en la papelera); avisa también del contenido publicado sin traducción.
+	 * Con --fix vuelve a sincronizar desde marOS las propiedades incompletas: vincula la traducción
+	 * suelta si existe y, si no, la crea.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--fix]
+	 * : Repara las propiedades incompletas.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp maros idiomas
+	 *     wp maros idiomas --fix
+	 */
+	public function idiomas( $args, $assoc_args ) {
+		if ( ! function_exists( 'pll_get_post_language' ) ) {
+			WP_CLI::error( 'Polylang no está activo.' );
+		}
+		$fix      = ! empty( $assoc_args['fix'] );
+		$statuses = array( 'publish', 'draft', 'pending', 'private', 'future', 'trash' );
+		$all      = get_posts( array( 'post_type' => 'mis_property', 'post_status' => $statuses, 'posts_per_page' => -1, 'fields' => 'ids', 'lang' => '', 'orderby' => 'ID', 'order' => 'ASC' ) );
+		$ids      = array_values( array_unique( array_filter( array_map( static fn( $id ) => (string) get_post_meta( $id, 'maros_id', true ), $all ) ) ) );
+		$describe = static fn( int $id ): string => sprintf( '%d %s %s %s', $id, pll_get_post_language( $id ) ?: '?', get_post_status( $id ), get_post_field( 'post_name', $id ) );
+		$rows     = array();
+		$bad      = array();
+		foreach ( $ids as $maros_id ) {
+			$found = Maros_Sync::translations_of( $maros_id );
+			$ok    = Maros_Sync::has_all_languages( $maros_id );
+			$row   = array( 'maros_id' => $maros_id, 'nombre' => get_the_title( (int) ( $found['en'] ?? reset( $found ) ?: 0 ) ), 'ok' => $ok ? 'sí' : 'NO' );
+			foreach ( Maros_Sync::LANGS as $lang ) {
+				$row[ $lang ] = empty( $found[ $lang ] ) ? '—' : $describe( $found[ $lang ] );
+			}
+			$same         = array_map( 'intval', get_posts( array( 'post_type' => 'mis_property', 'post_status' => $statuses, 'posts_per_page' => -1, 'fields' => 'ids', 'lang' => '', 'meta_key' => 'maros_id', 'meta_value' => $maros_id ) ) ); // phpcs:ignore WordPress.DB.SlowDBQuery
+			$row['otras'] = implode( ', ', array_map( $describe, array_diff( $same, array_values( $found ) ) ) );
+			$rows[]       = $row;
+			if ( ! $ok ) {
+				$bad[] = $maros_id;
+			}
+		}
+		WP_CLI\Utils\format_items( 'table', $rows, array_merge( array( 'maros_id', 'nombre', 'ok' ), Maros_Sync::LANGS, array( 'otras' ) ) );
+
+		// Resto del contenido traducible publicado sin todas sus traducciones (solo aviso).
+		$types = array_diff( (array) pll_get_post_types(), array( 'mis_property', 'attachment', 'wp_block', 'wp_template', 'wp_template_part', 'wp_navigation' ) );
+		$langs = (array) pll_languages_list();
+		foreach ( get_posts( array( 'post_type' => array_values( $types ), 'post_status' => 'publish', 'posts_per_page' => -1, 'fields' => 'ids', 'lang' => '' ) ) as $id ) {
+			$missing = array_diff( $langs, array_keys( (array) pll_get_post_translations( $id ) ) );
+			if ( $missing ) {
+				WP_CLI::warning( sprintf( '%s %d «%s» (%s) no tiene traducción en %s.', get_post_type( $id ), $id, get_the_title( $id ), pll_get_post_language( $id ) ?: 'sin idioma', implode( ', ', $missing ) ) );
+			}
+		}
+
+		if ( ! $bad ) {
+			WP_CLI::success( 'Todas las propiedades existen en ' . implode( ' y ', Maros_Sync::LANGS ) . ' y están vinculadas.' );
+			return;
+		}
+		if ( ! $fix ) {
+			WP_CLI::warning( 'Incompletas: ' . implode( ', ', $bad ) . '. Se reparan con: wp maros idiomas --fix' );
+			return;
+		}
+		foreach ( $bad as $maros_id ) {
+			$result = Maros_Scheduler::run_locked( static fn() => Maros_Sync::sync_property( $maros_id, null, false, true, true ) );
+			$now    = Maros_Sync::translations_of( $maros_id );
+			$text   = implode( ' · ', array_map( static fn( $id ) => $describe( $id ) . ' ' . wp_make_link_relative( (string) get_permalink( $id ) ), $now ) );
+			if ( is_wp_error( $result ) ) {
+				WP_CLI::warning( "$maros_id: " . $result->get_error_message() );
+			} elseif ( Maros_Sync::has_all_languages( $maros_id ) ) {
+				WP_CLI::log( "  ✓ $maros_id reparada: $text" );
+			} else {
+				WP_CLI::warning( "$maros_id sigue incompleta ($result): $text" );
+			}
+		}
+	}
+
+	/**
 	 * Muestra el estado de la conexión con marOS.
 	 */
 	public function status() {
