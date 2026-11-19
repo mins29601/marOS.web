@@ -479,3 +479,113 @@ add_shortcode(
 	}
 );
 
+
+// ------------------------------------------------------------------ ficha de propiedad
+
+/**
+ * [mis_zona_ficha] Apartado «Location» de la ficha de propiedad: la zona de la casa con su foto (o
+ * la ilustración), la frase corta, «De un vistazo» y el enlace a la guía. Nada si la casa no tiene zona.
+ */
+add_shortcode(
+	'mis_zona_ficha',
+	static function () {
+		$terms = get_the_terms( (int) get_the_ID(), 'zona' );
+		$term  = $terms && ! is_wp_error( $terms ) ? $terms[0] : null;
+		if ( ! $term instanceof WP_Term ) {
+			return '';
+		}
+		$link    = get_term_link( $term );
+		$link    = is_wp_error( $link ) ? '' : $link;
+		$resumen = (string) get_term_meta( $term->term_id, 'zona_resumen', true );
+		$rows    = array(
+			'zona_ideal'   => mis_zona_t( 'Ideal for', 'Ideal para' ),
+			'zona_playas'  => mis_zona_t( 'Beaches', 'Playas' ),
+			'zona_golf'    => 'Golf',
+			'zona_moverse' => mis_zona_t( 'Getting around', 'Cómo moverse' ),
+		);
+		$dl = '';
+		foreach ( $rows as $key => $label ) {
+			$val = (string) get_term_meta( $term->term_id, $key, true );
+			if ( '' !== $val ) {
+				$dl .= '<div><dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( $val ) . '</dd></div>';
+			}
+		}
+		return '<section id="area" class="mis-ficha-seccion">'
+			. '<h2 class="wp-block-heading has-large-font-size">' . esc_html( mis_zona_t( 'Area Guide', 'Guía de la zona' ) ) . '</h2>'
+			. '<div class="mis-zona-ficha">'
+			. '<a class="mis-zona-ficha__ph" href="' . esc_url( $link ) . '" tabindex="-1" aria-hidden="true">' . mis_zona_img( $term, 'large', array( 'loading' => 'lazy', 'class' => 'mis-zona-ficha__img' ) ) . '</a>'
+			. '<div class="mis-zona-ficha__body">'
+			. '<h3 class="mis-zona-ficha__name"><a href="' . esc_url( $link ) . '">' . esc_html( $term->name ) . '</a></h3>'
+			. ( '' !== $resumen ? '<p class="mis-zona-ficha__text">' . esc_html( $resumen ) . '</p>' : '' )
+			. ( $dl ? '<dl class="mis-zona-ficha__dl">' . $dl . '</dl>' : '' )
+			. '<a class="mis-link-action" href="' . esc_url( $link ) . '">' . esc_html( mis_zona_t( 'Read the area guide', 'Leer la guía de la zona' ) ) . '</a>'
+			. '</div></div></section>';
+	}
+);
+
+/**
+ * [mis_cerca] Apartado «Close to the Villa / Apartment» de la ficha (Julio, 18-11-2026): lo que tiene
+ * cerca la casa, en coche, con las distancias que marOS mide con OpenStreetMap (maros_nearby; las de
+ * Google no se pueden publicar), y la nota de la dirección. Sin medidas, queda «Location» con la nota.
+ */
+add_shortcode(
+	'mis_cerca',
+	static function () {
+		$post_id = (int) get_the_ID();
+		$list    = mis_zona_cerca( $post_id );
+		$types   = get_the_terms( $post_id, 'tipo-propiedad' );
+		$slug    = $types && ! is_wp_error( $types ) ? preg_replace( '/-es$/', '', $types[0]->slug ) : '';
+		$title   = ! $list ? mis_zona_t( 'Location', 'Ubicación' )
+			: ( 'villa' === $slug ? mis_zona_t( 'Close to the Villa', 'Cerca de la villa' )
+			: ( 'apartment' === $slug ? mis_zona_t( 'Close to the Apartment', 'Cerca del apartamento' )
+			: mis_zona_t( 'Close to the Property', 'Cerca de la casa' ) ) );
+		$lat = (float) get_post_meta( $post_id, 'maros_lat', true );
+		$lng = (float) get_post_meta( $post_id, 'maros_lng', true );
+		$map = '';
+		if ( $lat && $lng ) {
+			// marOS solo manda coordenadas propias (no de Google) y redondeadas a 2 decimales (~1 km).
+			$base = plugins_url( 'assets/', dirname( __DIR__ ) . '/mis-contenido.php' );
+			$dir  = dirname( __DIR__ ) . '/assets/';
+			wp_enqueue_style( 'leaflet', $base . 'leaflet/leaflet.css', array(), '1.9.4' );
+			wp_enqueue_script( 'leaflet', $base . 'leaflet/leaflet.js', array(), '1.9.4', array( 'in_footer' => true, 'strategy' => 'defer' ) );
+			wp_enqueue_script( 'mis-mapa-cerca', $base . 'mapa-cerca.js', array( 'leaflet' ), (string) filemtime( $dir . 'mapa-cerca.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+			$map = '<div class="mis-cerca-mapa" data-lat="' . esc_attr( (string) $lat ) . '" data-lng="' . esc_attr( (string) $lng ) . '" role="img" aria-label="'
+				. esc_attr( mis_zona_t( 'Map of the approximate area of the house', 'Mapa de la zona aproximada de la casa' ) ) . '"></div>';
+		}
+		$body = $list . '<p class="mis-muted">' . esc_html( mis_zona_t( 'The exact address is shared after booking.', 'La dirección exacta se envía tras la reserva.' ) ) . '</p>';
+		return '<section id="location" class="mis-ficha-seccion">'
+			. '<h2 class="wp-block-heading has-large-font-size">' . esc_html( $title ) . '</h2>'
+			. ( $map ? '<div class="mis-cerca' . ( $list ? '' : ' mis-cerca--solo-mapa' ) . '"><div class="mis-cerca__datos">' . $body . '</div>' . $map . '</div>' : $body )
+			. '</section>';
+	}
+);
+
+/** Lista de distancias en coche (maros_nearby) con la fecha y la atribución, o '' si no hay. */
+function mis_zona_cerca( int $post_id ): string {
+	$rows = json_decode( (string) get_post_meta( $post_id, 'maros_nearby', true ), true );
+	if ( ! is_array( $rows ) || ! $rows ) {
+		return '';
+	}
+	$li     = '';
+	$latest = '';
+	foreach ( $rows as $r ) {
+		if ( ! is_array( $r ) || empty( $r['name'] ) || ! isset( $r['distance_km'], $r['duration_minutes'] ) ) {
+			continue;
+		}
+		$latest = max( $latest, (string) ( $r['measured_on'] ?? '' ) );
+		$li    .= '<li class="mis-zona-cerca__item"><span class="mis-zona-cerca__name">' . esc_html( $r['name'] ) . '</span>'
+			. '<span class="mis-zona-cerca__val"><strong>' . esc_html( sprintf( mis_zona_t( '%d min', '%d min' ), (int) $r['duration_minutes'] ) ) . '</strong>'
+			. ' · ' . esc_html( number_format_i18n( (float) $r['distance_km'], 1 ) ) . ' km</span></li>';
+	}
+	if ( '' === $li ) {
+		return '';
+	}
+	$when = $latest ? date_i18n( 'F Y', strtotime( $latest . ' 12:00:00' ) ) : '';
+	return '<div class="mis-zona-cerca">'
+		. '<ul class="mis-zona-cerca__list">' . $li . '</ul>'
+		. '<p class="mis-zona-cerca__src">'
+		. esc_html( $when ? sprintf( mis_zona_t( 'By car, without traffic. Measured in %s.', 'En coche, sin tráfico. Medido en %s.' ), $when ) : mis_zona_t( 'By car, without traffic.', 'En coche, sin tráfico.' ) )
+		. ' <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">© OpenStreetMap contributors</a>'
+		. ' · <a href="https://openrouteservice.org/" rel="noopener" target="_blank">openrouteservice</a></p>'
+		. '</div>';
+}

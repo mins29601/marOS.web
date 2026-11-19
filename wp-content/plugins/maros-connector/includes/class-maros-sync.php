@@ -417,10 +417,34 @@ class Maros_Sync {
 			'maros_room_types'  => wp_json_encode( array_values( is_array( $d['room_types'] ?? null ) ? $d['room_types'] : array() ) ),
 			'maros_synced_at'   => gmdate( 'c' ),
 			'maros_fees'        => wp_json_encode( array_values( self::fees( $d ) ) ),
+			'maros_nearby'      => wp_slash( wp_json_encode( self::nearby( $d ) ) ),
 		) + self::text_facts( $d );
 		foreach ( $map as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
 		}
+	}
+
+	/**
+	 * Distancias en coche de marOS medidas con OpenStreetMap (se pueden publicar, a diferencia de las de
+	 * Google). Solo las filas completas: nombre, km, minutos y fecha de la medida.
+	 */
+	private static function nearby( array $d ): array {
+		$out = array();
+		foreach ( is_array( $d['nearby'] ?? null ) ? $d['nearby'] : array() as $r ) {
+			if ( ! is_array( $r ) || 'openstreetmap' !== ( $r['source'] ?? '' ) || ! is_string( $r['name'] ?? null ) || '' === trim( $r['name'] )
+				|| ! is_numeric( $r['distance_km'] ?? null ) || ! is_numeric( $r['duration_minutes'] ?? null )
+				|| ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', (string) ( $r['measured_on'] ?? '' ) ) ) {
+				continue;
+			}
+			$out[] = array(
+				'name'             => sanitize_text_field( $r['name'] ),
+				'icon'             => sanitize_key( (string) ( $r['icon'] ?? '' ) ),
+				'distance_km'      => round( (float) $r['distance_km'], 1 ),
+				'duration_minutes' => max( 1, (int) $r['duration_minutes'] ),
+				'measured_on'      => (string) $r['measured_on'],
+			);
+		}
+		return $out;
 	}
 
 	private static function fees( array $d ): array {

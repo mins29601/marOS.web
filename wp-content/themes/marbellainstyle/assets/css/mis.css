@@ -947,3 +947,49 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-person--compact .mis-person__text { font-size: var(--wp--preset--font-size--small); }
 .mis-person--compact .mis-person__actions { margin-top: 0.9rem; gap: 0.5rem; }
 .mis-person--compact .wp-element-button { min-height: 40px; padding: 0.5rem 0.9rem; font-size: 0.6875rem; }
+
+/* Apartado «Location» de la ficha: la zona con su foto, frase, «De un vistazo» y la guía */
+.mis-zona-ficha { display: grid; gap: 1.25rem; margin-top: 1.25rem; border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); }
+.mis-zona-ficha, .mis-zona-ficha * { box-sizing: border-box; }
+.mis-zona-ficha__ph { display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--wp--preset--color--tertiary); }
+.mis-zona-ficha__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mis-zona-ficha__body { padding: 0 1.25rem 1.5rem; min-width: 0; }
+.mis-zona-ficha__body > * { margin: 0; }
+.mis-zona-ficha__name { margin: 0.25rem 0 0; font-size: var(--wp--preset--font-size--large); }
+.mis-zona-ficha__name a { text-decoration: none; }
+.mis-zona-ficha__text { margin-top: 0.5rem !important; color: var(--wp--preset--color--secondary); }
+.mis-zona-ficha__dl { margin: 1rem 0 1.25rem !important; display: grid; gap: 0.75rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+.mis-zona-ficha__dl dt { font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--secondary); text-transform: uppercase; letter-spacing: 0.08em; }
+.mis-zona-ficha__dl dd { margin: 0.2rem 0 0; }
+@media (min-width: 768px) {
+	.mis-zona-ficha { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 0; }
+	.mis-zona-ficha__ph { aspect-ratio: auto; height: 100%; min-height: 260px; }
+	.mis-zona-ficha__body { padding: 1.5rem 1.75rem; }
+}
+
+/* «From this house, by car»: distancias medidas con OpenStreetMap (maros_nearby), bajo la zona. */
+.mis-zona-cerca { margin-top: 1.25rem; box-sizing: border-box; }
+.mis-zona-cerca * { box-sizing: border-box; }
+.mis-zona-cerca__list { list-style: none; margin: 0; padding: 0; display: grid; column-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); border-top: 1px solid var(--mis-line); }
+.mis-zona-cerca__item { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--mis-line); min-width: 0; }
+.mis-zona-cerca__name { min-width: 0; }
+.mis-zona-cerca__val { white-space: nowrap; color: var(--wp--preset--color--secondary); font-size: var(--wp--preset--font-size--small); }
+.mis-zona-cerca__val strong { color: var(--wp--preset--color--main); font-weight: 600; }
+.mis-zona-cerca__src { margin: 0.75rem 0 0; font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--secondary); }
+.mis-zona-cerca__src a { color: inherit; }
+
+/* «Close to the Villa» y «Area Guide»: dos apartados de la ficha, cada uno con su ancla. */
+.mis-ficha-seccion { padding-top: var(--wp--preset--spacing--medium); }
+.mis-ficha-seccion > h2 { margin-top: 0; }
+.mis-ficha-seccion .mis-zona-cerca { margin-top: 0; }
+
+/* Mapa de la zona aproximada junto a las distancias (Leaflet + OpenStreetMap, solo un círculo). */
+.mis-cerca { display: grid; gap: 1.5rem; }
+.mis-cerca__datos { min-width: 0; }
+.mis-cerca__datos .mis-zona-cerca__list { grid-template-columns: 1fr; }
+.mis-cerca-mapa { --mis-mapa-color: var(--wp--preset--color--primary); position: relative; z-index: 0; width: 100%; aspect-ratio: 4 / 3; max-height: 420px; border: 1px solid var(--mis-line); background: var(--wp--preset--color--tertiary); }
+.mis-cerca-mapa .leaflet-control-attribution { font-size: 10px; }
+@media (min-width: 768px) {
+	.mis-cerca { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+	.mis-cerca-mapa { aspect-ratio: auto; height: 100%; min-height: 300px; }
+}
