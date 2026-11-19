@@ -41,6 +41,8 @@ Maros_Scheduler::init();
 Maros_Webhook::init();
 Maros_Reviews::init();
 add_action( 'plugins_loaded', array( 'Maros_Calendar', 'maybe_install' ) );
+// Una propiedad está en el mismo estado en todos los idiomas: publicar o despublicar una traducción arrastra a las demás (T49).
+add_action( 'transition_post_status', array( 'Maros_Sync', 'align_status' ), 20, 3 );
 
 if ( is_admin() ) {
 	require_once __DIR__ . '/includes/class-maros-admin.php';
