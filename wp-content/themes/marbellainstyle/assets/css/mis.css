@@ -171,14 +171,11 @@ a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 /* ------------------------------------------------------------------ Capa «Menú» */
 /* Pantalla completa sin JavaScript (details/summary). Mockup M6: fondo negro. */
 
-.mis-overlay > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; min-height: var(--mis-touch); color: var(--wp--preset--color--main); }
+.mis-overlay > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; min-height: var(--mis-touch); min-width: var(--mis-touch); color: var(--wp--preset--color--main); }
 .mis-overlay > summary::-webkit-details-marker { display: none; }
 .mis-overlay > summary::before { content: ""; width: 20px; height: 9px; border-top: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; }
-.mis-overlay > summary .mis-overlay__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-@media (min-width: 1024px) { .mis-overlay > summary .mis-overlay__label { position: static; width: auto; height: auto; overflow: visible; clip: auto; } }
 .mis-overlay[open] > summary { position: fixed; top: 0.75rem; right: var(--wp--preset--spacing--medium); z-index: 102; color: #fff; }
 .mis-overlay[open] > summary::before { content: "×"; border: 0; width: auto; height: auto; font-family: var(--wp--preset--font-family--primary); font-size: 1.75rem; font-weight: 300; line-height: 1; }
-.mis-overlay[open] > summary .mis-overlay__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 body:has(.mis-overlay[open]) { overflow: hidden; }
 
 .mis-overlay__panel {

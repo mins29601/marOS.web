@@ -4,11 +4,11 @@
  * Slug: marbellainstyle/menu-overlay
  * Categories: marbellainstyle
  * Inserter: no
- * Description: Botón «Menú» que abre una capa a pantalla completa (spec 005, menús v2).
+ * Description: Botón del menú (solo icono) que abre una capa a pantalla completa (spec 005, menús v2).
  */
 ?>
 <!-- wp:html -->
-<details class="mis-overlay"><summary aria-label="<?php echo esc_attr( mis_t( 'Menu', 'Menú' ) ); ?>"><span class="mis-overlay__label"><?php echo esc_html( mis_t( 'Menu', 'Menú' ) ); ?></span></summary>
+<details class="mis-overlay"><summary aria-label="<?php echo esc_attr( mis_t( 'Menu', 'Menú' ) ); ?>"></summary>
 <div class="mis-overlay__panel">
 <div class="mis-overlay__top"><?php echo do_shortcode( '[mis_logo variant="blanco"]' ); ?></div>
 <div class="mis-overlay__grid">
