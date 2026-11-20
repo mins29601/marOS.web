@@ -295,7 +295,11 @@ class Maros_Sync {
 				// el que puso la sincronización (el nombre de antes); un título escrito a mano se respeta.
 				$current = (string) get_post_field( 'post_title', $post_id, 'raw' );
 				$synced  = array_filter( array( (string) get_post_meta( $post_id, 'maros_name', true ), (string) get_post_meta( $post_id, 'maros_internal_name', true ), (string) $data['name'] ) );
-				if ( $current !== $title && in_array( $current, $synced, true ) ) {
+				// También el título de antes de esa decisión, «nombre interno - nombre comercial» con un
+				// comercial que ya no es el de marOS («Villa Flamingo - Modern Villa in Los Flamingos»,
+				// Julio 20-11-2026): empieza por el nombre interno y sigue con un separador.
+				$legacy = '' !== $title && preg_match( '/^' . preg_quote( $title, '/' ) . '\s*[\-–—|·:,]\s*\S/u', $current );
+				if ( $current !== $title && ( in_array( $current, $synced, true ) || $legacy ) ) {
 					$update['post_title'] = $title;
 				}
 				if ( $update ) {
