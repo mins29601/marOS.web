@@ -549,7 +549,9 @@ add_shortcode(
 			wp_enqueue_style( 'leaflet', $base . 'leaflet/leaflet.css', array(), '1.9.4' );
 			wp_enqueue_script( 'leaflet', $base . 'leaflet/leaflet.js', array(), '1.9.4', array( 'in_footer' => true, 'strategy' => 'defer' ) );
 			wp_enqueue_script( 'mis-mapa-cerca', $base . 'mapa-cerca.js', array( 'leaflet' ), (string) filemtime( $dir . 'mapa-cerca.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
-			$map = '<div class="mis-cerca-mapa" data-lat="' . esc_attr( (string) $lat ) . '" data-lng="' . esc_attr( (string) $lng ) . '" role="img" aria-label="'
+			// Estilo del mapa (assets/mapa-cerca.js): «sobrio» por defecto; MIS_MAPA_ESTILO lo cambia.
+			$style = defined( 'MIS_MAPA_ESTILO' ) ? (string) MIS_MAPA_ESTILO : 'sobrio';
+			$map   = '<div class="mis-cerca-mapa" data-estilo="' . esc_attr( $style ) . '" data-lat="' . esc_attr( (string) $lat ) . '" data-lng="' . esc_attr( (string) $lng ) . '" role="img" aria-label="'
 				. esc_attr( mis_zona_t( 'Map of the approximate area of the house', 'Mapa de la zona aproximada de la casa' ) ) . '"></div>';
 		}
 		$body = $list . '<p class="mis-muted">' . esc_html( mis_zona_t( 'The exact address is shared after booking.', 'La dirección exacta se envía tras la reserva.' ) ) . '</p>';
@@ -573,7 +575,8 @@ function mis_zona_cerca( int $post_id ): string {
 			continue;
 		}
 		$latest = max( $latest, (string) ( $r['measured_on'] ?? '' ) );
-		$li    .= '<li class="mis-zona-cerca__item"><span class="mis-zona-cerca__name">' . esc_html( $r['name'] ) . '</span>'
+		$icon   = function_exists( 'maros_icon_svg' ) ? maros_icon_svg( maros_poi_icon( (string) ( $r['icon'] ?? '' ) ), 22 ) : '';
+		$li    .= '<li class="mis-zona-cerca__item">' . ( '' !== $icon ? '<span class="mis-zona-cerca__icon">' . $icon . '</span>' : '' ) . '<span class="mis-zona-cerca__name">' . esc_html( $r['name'] ) . '</span>'
 			. '<span class="mis-zona-cerca__val"><strong>' . esc_html( sprintf( mis_zona_t( '%d min', '%d min' ), (int) $r['duration_minutes'] ) ) . '</strong>'
 			. ' · ' . esc_html( number_format_i18n( (float) $r['distance_km'], 1 ) ) . ' km</span></li>';
 	}

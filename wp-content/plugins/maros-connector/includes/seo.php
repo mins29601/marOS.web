@@ -30,9 +30,9 @@ function maros_seo_term( int $post_id, string $tax ): string {
 	return $terms && ! is_wp_error( $terms ) ? (string) $terms[0]->name : '';
 }
 
-/** Zona de la propiedad: término «zona» o, si falta, el área de marOS. */
+/** Zona de la propiedad: su Area de la web (maros_area_name). */
 function maros_seo_zone( int $post_id ): string {
-	return maros_seo_term( $post_id, 'zona' ) ?: trim( (string) get_post_meta( $post_id, 'maros_area', true ) );
+	return maros_area_name( $post_id );
 }
 
 /** Primera letra en mayúscula / minúscula sin romper tildes. */
@@ -61,7 +61,7 @@ function maros_seo_name( int $post_id ): string {
  */
 function maros_seo_generic_keyphrase( int $post_id ): string {
 	$es   = maros_is_es( $post_id );
-	$town = trim( (string) get_post_meta( $post_id, 'maros_municipality', true ) ) ?: 'Marbella';
+	$town = maros_town( $post_id ) ?: 'Marbella';
 	$zone = maros_seo_zone( $post_id );
 	if ( '' === $zone ) {
 		$zone = $town;
@@ -109,7 +109,7 @@ function maros_seo_keyphrase( int $post_id ): string {
 	}
 	foreach ( maros_seo_siblings( $post_id ) as $other ) {
 		if ( $other < $post_id && maros_seo_generic_keyphrase( $other ) === $generic ) {
-			$town = trim( (string) get_post_meta( $post_id, 'maros_municipality', true ) ) ?: 'Marbella';
+			$town = maros_town( $post_id ) ?: 'Marbella';
 			return trim( $name . ' ' . $zone . ( false === mb_stripos( $zone, $town ) ? ' ' . $town : '' ) );
 		}
 	}
@@ -358,7 +358,7 @@ function maros_seo_schema_piece( int $post_id ): array {
 		'address'     => array_filter(
 			array(
 				'@type'           => 'PostalAddress',
-				'addressLocality' => (string) ( $m( 'maros_municipality' ) ?: 'Marbella' ),
+				'addressLocality' => maros_town( $post_id ) ?: 'Marbella',
 				'addressRegion'   => 'Málaga',
 				'addressCountry'  => 'ES',
 				'streetAddress'   => maros_seo_zone( $post_id ),

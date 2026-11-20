@@ -34,15 +34,16 @@ function maros_auto_excerpt( int $post_id, bool $es ): string {
 
 	$type = maros_excerpt_term( $post_id, 'tipo-propiedad' );
 	$type = '' !== $type ? $type : ( $es ? 'Propiedad' : 'Property' );
-	$zone = maros_excerpt_term( $post_id, 'zona' );
-	if ( '' === $zone ) {
-		$zone = (string) get_post_meta( $post_id, 'maros_area', true );
-	}
+	$zone = maros_area_name( $post_id );
 
 	$features = array();
 	foreach ( maros_key_features( $post_id, $es ) as $f ) {
 		// Los dormitorios en-suite repetirían el número de dormitorios de la frase.
 		if ( 'bed' === ( $f['icon'] ?? '' ) ) {
+			continue;
+		}
+		if ( ! empty( $f['phrase'] ) ) {
+			$features[] = (string) $f['phrase'];
 			continue;
 		}
 		$title = (string) ( $f['title'] ?? '' );
