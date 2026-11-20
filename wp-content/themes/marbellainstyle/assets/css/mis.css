@@ -575,7 +575,10 @@ html.mis-tour-open { overflow: hidden; }
 	.mis-booking-box.is-sheet .mis-resv__sum { display: block; min-width: 0; }
 	.mis-booking-box.is-sheet .mis-resv__cta.wp-element-button { width: auto; margin: 0; flex: none; }
 	.mis-booking-box.is-sheet .mis-resv__help { order: 9; }
-	.mis-resv__close { width: var(--mis-touch); height: var(--mis-touch); border: 0; background: transparent; cursor: pointer; color: var(--wp--preset--color--main); }
+	/* La X centrada en su botón, a la altura de «Reservar» (Julio, 20-11). */
+	.mis-resv__close { display: grid; place-items: center; width: var(--mis-touch); height: var(--mis-touch); padding: 0; border: 0; background: transparent; line-height: 0; cursor: pointer; color: var(--wp--preset--color--main); }
+	.mis-resv__close svg { display: block; }
+	.mis-booking-box.is-sheet .mis-resv__top b { line-height: var(--mis-touch); }
 	html.mis-resv-open, html.mis-resv-open body { overflow: hidden; }
 	html.mis-resv-open .mis-sticky-cta { display: none; }
 	/* Hoja compacta (Julio, 18-11): el calendario entero a la vista en un móvil de 390 × 844; la casa
@@ -584,10 +587,13 @@ html.mis-tour-open { overflow: hidden; }
 	.mis-booking-box.is-sheet .mis-resv__top { padding-block: 0; }
 	.mis-booking-box.is-sheet .mis-resv__house { gap: 0.625rem; padding-top: 0.25rem; }
 	.mis-booking-box.is-sheet .mis-resv__house img { width: 48px; height: 48px; }
-	.mis-booking-box.is-sheet .mis-resv__house > div { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-start; column-gap: 0.625rem; row-gap: 0; flex: 1; min-width: 0; margin: 0; text-align: left; }
-	.mis-booking-box.is-sheet .mis-resv__house small { flex-basis: 100%; margin: 0; line-height: 1.2; text-align: left; }
+	/* Sin flex: con la web real (fuente y zoom del móvil) el reparto de líneas dejaba un hueco
+	   grande entre la zona y el nombre (Julio, 20-11). Zona arriba; nombre y valoración seguidos. */
+	.mis-booking-box.is-sheet .mis-resv__house > div { display: block; flex: 1; min-width: 0; margin: 0; text-align: left; }
+	.mis-booking-box.is-sheet .mis-resv__house small { display: block; margin: 0 0 2px; line-height: 1.2; text-align: left; }
+	.mis-booking-box.is-sheet .mis-resv__house .mis-resv__rating { margin-left: 0.5rem; white-space: nowrap; }
 	/* El tema da márgenes y centrado a los párrafos de los grupos: aquí la casa va pegada a la foto (Julio, 18-11). */
-	.mis-booking-box.is-sheet .mis-resv__house .mis-resv__name { margin: 0 !important; max-width: none; font-size: 1.0625rem; line-height: 1.25; text-align: left; }
+	.mis-booking-box.is-sheet .mis-resv__house .mis-resv__name { display: inline; margin: 0 !important; max-width: none; font-size: 1.0625rem; line-height: 1.25; text-align: left; }
 	.mis-booking-box.is-sheet .mis-resv__rating { font-size: var(--wp--preset--font-size--small); }
 	.mis-booking-box.is-sheet .mis-resv__date { min-height: 0; padding: 0.375rem 0.75rem; }
 	.mis-booking-box.is-sheet .mis-cal { padding: 0.25rem 0.5rem 0.5rem; }
