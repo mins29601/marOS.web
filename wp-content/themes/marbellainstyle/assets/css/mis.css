@@ -1038,3 +1038,15 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 	.mis-cerca { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
 	.mis-cerca-mapa { aspect-ratio: auto; height: 100%; min-height: 300px; }
 }
+
+/*
+ * Móvil: la cabecera de la ficha (también la de las zonas) ya no se queda fija (367db80). Como en la
+ * ficha de propiedad, las migas se van con la página y solo las pestañas Guide · Properties · Other
+ * areas se pegan arriba del todo, sin el hueco de la cabecera (Julio, 20-11-2026).
+ */
+@media (max-width: 1023px) {
+	.mis-zona-nav { display: contents; }
+	.mis-zona-crumbs { max-width: var(--mis-zona-max); margin-inline: auto; padding: 1.25rem var(--mis-zona-pad) 0.25rem; }
+	.mis-zona-anchors, .admin-bar .mis-zona-anchors { position: sticky; top: 0; z-index: 40; padding-inline: var(--mis-zona-pad); }
+	.mis-zona :where(#guia, #videos, #propiedades, #experiencias, #otras-zonas) { scroll-margin-top: 52px; }
+}
