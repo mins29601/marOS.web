@@ -243,8 +243,11 @@ add_shortcode(
 			'overview'  => array( true, $es ? 'Resumen' : 'Overview' ),
 			'videos'    => array( function_exists( 'maros_videos' ) && maros_videos( $post_id ), $es ? 'Vídeos' : 'Videos' ),
 			'bedrooms'  => array( is_array( $rooms ) && $rooms, $es ? 'Dormitorios' : 'Bedrooms' ),
+			'pool'      => array( function_exists( 'maros_pools' ) && maros_pools( $post_id ), $es ? 'Piscina' : 'Pool' ),
 			'amenities' => array( $terms && ! is_wp_error( $terms ), $es ? 'Comodidades' : 'Amenities' ),
-			'location'  => array( true, $es ? 'Ubicación' : 'Location' ),
+			// «Close to the Villa» y «Area Guide» (Julio, 18-11-2026); el script quita «Zona» si la casa no tiene.
+			'location'  => array( true, $es ? 'Cerca' : 'Nearby' ),
+			'area'      => array( true, $es ? 'Zona' : 'Area' ),
 			// Las opiniones solo se pintan si hay: al cargar la página se quita el enlace de toda sección que no esté.
 			'reviews'   => array( function_exists( 'glsr_get_reviews' ), $es ? 'Opiniones' : 'Reviews' ),
 			'faq'       => array( true, 'FAQ' ),
@@ -257,5 +260,104 @@ add_shortcode(
 		}
 		$js = '<script>document.addEventListener("DOMContentLoaded",function(){var n=document.querySelector(".mis-anchors");if(!n)return;var l=[].slice.call(n.querySelectorAll("a")).filter(function(a){var s=document.getElementById(a.hash.slice(1));if(!s){a.remove();return false;}a._s=s;return true;});if(!("IntersectionObserver" in window))return;var v=new Map();var o=new IntersectionObserver(function(es){es.forEach(function(e){v.set(e.target,e.isIntersecting);});var c=null;l.forEach(function(a){if(!c&&v.get(a._s))c=a;});l.forEach(function(a){if(a===c){a.setAttribute("aria-current","true");}else{a.removeAttribute("aria-current");}});if(c&&n.scrollWidth>n.clientWidth){n.scrollLeft=c.offsetLeft-24;}},{rootMargin:"-40% 0px -55% 0px"});l.forEach(function(a){o.observe(a._s);});});</script>';
 		return '<nav class="mis-anchors" aria-label="' . esc_attr( $es ? 'Secciones de la casa' : 'Property sections' ) . '">' . $html . '</nav>' . $js;
+	}
+);
+
+/**
+ * [maros_subtitle] El nombre comercial de Lodgify bajo el título, que es el nombre interno de marOS
+ * (Julio 19-11-2026: «Casa Coral» de título y «Beachfront 3BR Townhouse with Garden» de subtítulo).
+ */
+add_shortcode(
+	'maros_subtitle',
+	static function () {
+		$sub = trim( (string) get_post_meta( (int) get_the_ID(), 'maros_subtitle', true ) );
+		return '' !== $sub ? '<p class="mis-ficha-subtitle">' . esc_html( $sub ) . '</p>' : '';
+	}
+);
+
+/**
+ * Piscinas de la casa para el bloque «Piscina» (Julio 19-11-2026): las de marOS (spec 032/047) con
+ * su uso, si es interior o exterior, la climatización y sus comodidades, y la foto de su estancia.
+ * Si marOS solo trae el resumen de siempre (`maros_pool`), una tarjeta por tipo, sin más datos.
+ *
+ * @return array<int, array{access: string, covered: ?bool, heated: ?bool, heating: ?array, amenities: array, photo: int}>
+ */
+function maros_pools( int $post_id ): array {
+	$pools = json_decode( (string) get_post_meta( $post_id, 'maros_pools', true ), true );
+	$pools = is_array( $pools ) ? array_values( array_filter( $pools, static fn( $p ) => is_array( $p ) && in_array( $p['access'] ?? '', array( 'private', 'communal' ), true ) ) ) : array();
+	if ( ! $pools ) {
+		$summary = (string) get_post_meta( $post_id, 'maros_pool', true );
+		$kinds   = array( 'private' => array( 'private' ), 'communal' => array( 'communal' ), 'both' => array( 'private', 'communal' ) )[ $summary ] ?? array();
+		$pools   = array_map( static fn( $k ) => array( 'access' => $k, 'covered' => null, 'heated' => null, 'heating' => null, 'amenities' => array() ), $kinds );
+	}
+	// La foto: la de la estancia de tipo piscina de la galería, en el mismo orden (solo las que tienen foto).
+	$tour  = json_decode( (string) get_post_meta( $post_id, 'maros_tour', true ), true );
+	$shots = array();
+	foreach ( is_array( $tour ) ? $tour : array() as $room ) {
+		if ( is_array( $room ) && 'pool' === ( $room['type'] ?? '' ) && ! empty( $room['photos'] ) ) {
+			$shots[] = (int) reset( $room['photos'] );
+		}
+	}
+	$paired = count( $shots ) === count( $pools );
+	foreach ( $pools as $i => &$pool ) {
+		$pool['amenities'] = array_values( array_filter( is_array( $pool['amenities'] ?? null ) ? $pool['amenities'] : array(), 'is_array' ) );
+		$pool['photo']     = $paired ? $shots[ $i ] : ( 1 === count( $pools ) && $shots ? $shots[0] : 0 );
+	}
+	unset( $pool );
+	return $pools;
+}
+
+/** [maros_pools] Bloque «Piscina» de la ficha, con ancla #pool para la barra de secciones. */
+add_shortcode(
+	'maros_pools',
+	static function () {
+		$post_id = (int) get_the_ID();
+		$pools   = maros_pools( $post_id );
+		if ( ! $pools ) {
+			return '';
+		}
+		$es    = maros_is_es( $post_id );
+		$lang  = $es ? 'es' : 'en';
+		$cards = '';
+		foreach ( $pools as $pool ) {
+			$private = 'private' === $pool['access'];
+			$title   = $private ? ( $es ? 'Piscina privada' : 'Private pool' ) : ( $es ? 'Piscina comunitaria' : 'Communal pool' );
+			$facts   = array();
+			$facts[] = array( $private ? 'phosphor/lock-key' : 'phosphor/buildings', $private ? ( $es ? 'Solo para tu grupo' : 'Just for your group' ) : ( $es ? 'Compartida con la comunidad' : 'Shared with the community' ) );
+			if ( null !== ( $pool['covered'] ?? null ) ) {
+				$facts[] = array( $pool['covered'] ? 'phosphor/house-simple' : 'phosphor/sun', $pool['covered'] ? ( $es ? 'Interior, cubierta' : 'Indoor, covered' ) : ( $es ? 'Exterior' : 'Outdoor' ) );
+			}
+			if ( true === ( $pool['heated'] ?? null ) ) {
+				// El precio exacto se da en el presupuesto para las fechas del huésped (PC-15 §2.3, I2).
+				$heating = is_array( $pool['heating'] ?? null ) ? $pool['heating'] : array();
+				$facts[] = array(
+					'propios/piscina-climatizada',
+					! empty( $heating['included'] )
+						? ( $es ? 'Climatizada, incluida en el precio' : 'Heated, included in the price' )
+						: ( ! empty( $heating['mandatory'] )
+							? ( $es ? 'Climatizada (el coste se indica para tus fechas)' : 'Heated (cost shown for your dates)' )
+							: ( $es ? 'Climatizable bajo petición (el coste se indica para tus fechas)' : 'Heating available on request (cost shown for your dates)' ) ),
+				);
+			} elseif ( false === ( $pool['heated'] ?? null ) ) {
+				$facts[] = array( 'phosphor/swimming-pool', $es ? 'Sin climatizar' : 'Not heated' );
+			}
+			foreach ( maros_sort_amenities( $pool['amenities'] ) as $a ) {
+				if ( ! empty( $a[ $lang ] ) ) {
+					$facts[] = array( maros_amenity_icon( (string) ( $a['code'] ?? '' ) ), (string) $a[ $lang ] );
+				}
+			}
+			$items = '';
+			foreach ( $facts as list( $icon, $text ) ) {
+				$items .= '<li>' . maros_icon_svg( $icon, 18 ) . '<span>' . esc_html( $text ) . '</span></li>';
+			}
+			$img = $pool['photo'] ? wp_get_attachment_image( $pool['photo'], 'medium_large', false, array( 'class' => 'mis-pools__img', 'loading' => 'lazy', 'alt' => $title ) ) : '';
+			if ( $img ) {
+				// Abre la galería por estancias en el bloque de esta piscina, como los dormitorios.
+				$img = '<button type="button" class="mis-pools__open" data-mis-room-photo="' . (int) $pool['photo'] . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver fotos: %s' : 'View photos: %s', $title ) ) . '">' . $img . '</button>';
+			}
+			$cards .= '<li class="mis-pools__card' . ( $img ? '' : ' mis-pools__card--text' ) . '">' . $img . '<div class="mis-pools__body"><h3 class="mis-pools__title">' . esc_html( $title ) . '</h3><ul class="mis-pools__list">' . $items . '</ul></div></li>';
+		}
+		$heading = count( $pools ) > 1 ? ( $es ? 'Piscinas' : 'Pools' ) : ( $es ? 'Piscina' : 'Pool' );
+		return '<section id="pool" class="mis-pools"><h2 class="wp-block-heading has-large-font-size">' . esc_html( $heading ) . '</h2><ul class="mis-pools__cards">' . $cards . '</ul></section>';
 	}
 );

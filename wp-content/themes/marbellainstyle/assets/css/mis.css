@@ -171,14 +171,11 @@ a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 /* ------------------------------------------------------------------ Capa «Menú» */
 /* Pantalla completa sin JavaScript (details/summary). Mockup M6: fondo negro. */
 
-.mis-overlay > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; min-height: var(--mis-touch); color: var(--wp--preset--color--main); }
+.mis-overlay > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; min-height: var(--mis-touch); min-width: var(--mis-touch); color: var(--wp--preset--color--main); }
 .mis-overlay > summary::-webkit-details-marker { display: none; }
 .mis-overlay > summary::before { content: ""; width: 20px; height: 9px; border-top: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; }
-.mis-overlay > summary .mis-overlay__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-@media (min-width: 1024px) { .mis-overlay > summary .mis-overlay__label { position: static; width: auto; height: auto; overflow: visible; clip: auto; } }
 .mis-overlay[open] > summary { position: fixed; top: 0.75rem; right: var(--wp--preset--spacing--medium); z-index: 102; color: #fff; }
 .mis-overlay[open] > summary::before { content: "×"; border: 0; width: auto; height: auto; font-family: var(--wp--preset--font-family--primary); font-size: 1.75rem; font-weight: 300; line-height: 1; }
-.mis-overlay[open] > summary .mis-overlay__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 body:has(.mis-overlay[open]) { overflow: hidden; }
 
 .mis-overlay__panel {
@@ -320,6 +317,7 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-crumbs__sep { opacity: .6; }
 @media (min-width: 1024px) { .mis-crumbs { margin-inline: 0; padding-inline: 0; } }
 .mis-ficha-title { margin: 0; font-size: clamp(2.25rem, 7vw, 3.5rem); line-height: 1.08; letter-spacing: 0.06em; text-wrap: balance; }
+.mis-ficha-subtitle { margin: 0.5rem 0 0; font-size: var(--wp--preset--font-size--medium); line-height: 1.35; color: var(--wp--preset--color--main); }
 .mis-where { margin: 0.5rem 0 0; font-size: var(--wp--preset--font-size--medium); color: var(--wp--preset--color--secondary); }
 /* Huéspedes, dormitorios y baños: tres columnas fijas, número arriba y texto debajo */
 .mis-facts { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; list-style: none; margin: 1.25rem 0 0; padding: 0; }
@@ -358,7 +356,21 @@ html.mis-tour-open { overflow: hidden; }
 .mis-tour__close:hover, .mis-tour__close:focus-visible { border-color: var(--wp--preset--color--main); }
 .mis-tour__title { margin: 0; font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mis-tour__title span { color: var(--wp--preset--color--secondary); }
-.mis-tour__scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--wp--preset--spacing--medium) 3rem; }
+/* Móvil: barra de la galería más baja (Julio 19-11-2026: «la cabecera ocupa mucho») */
+@media (max-width: 1023px) {
+	/* Sin env(safe-area-inset-top): la web no usa viewport-fit=cover y en algunos Android dejaba un hueco
+	   en blanco encima de la barra (Julio 19-11-2026). */
+	.mis-tour { height: 100dvh; }
+	.mis-tour__bar { gap: 0.5rem; padding: 0 var(--wp--preset--spacing--medium) 0 calc(var(--wp--preset--spacing--medium) - 0.625rem); min-height: 44px; box-sizing: border-box; }
+	.mis-tour__bar .mis-tour__title { line-height: 1.2; }
+	.mis-lb__bar { padding-top: 0.5rem; }
+	.mis-tour__bar .mis-tour__close { width: 40px; height: 40px; border: 0; }
+	.mis-tour__title { font-size: 0.6875rem; letter-spacing: 0.1em; }
+	.mis-tour__chips { padding-block: 0.625rem; }
+	.mis-tour__chip { flex-basis: 96px; }
+	.mis-tour__sec { padding-block: 1.25rem; }
+}
+.mis-tour__scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--wp--preset--spacing--medium) 3rem; }
 .mis-tour__chips { display: flex; gap: 0.75rem; overflow-x: auto; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding: 0.875rem var(--wp--preset--spacing--medium); background: var(--wp--preset--color--base); border-bottom: 1px solid var(--mis-line); scrollbar-width: none; }
 .mis-tour__chips::-webkit-scrollbar { display: none; }
 .mis-tour__chip { flex: 0 0 112px; display: grid; gap: 4px; align-content: start; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; font-family: inherit; font-size: 0.75rem; line-height: 1.3; }
@@ -421,8 +433,25 @@ html.mis-tour-open { overflow: hidden; }
 .mis-video-lb.is-vertical .mis-video-lb__stage { aspect-ratio: auto; height: min(760px, calc(100dvh - 64px)); background: #fff; }
 .mis-video-lb__stage iframe { width: 100%; height: 100%; border: 0; display: block; }
 
+/* Bloque «Piscina» (Julio 19-11-2026): foto de la estancia y sus datos; en escritorio, foto al lado */
+.mis-pools h2 { margin: 0 0 1.25rem; }
+.mis-pools__cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
+.mis-pools__card { display: grid; background: var(--wp--preset--color--primary-alt-accent); border: 1px solid var(--mis-line); }
+.mis-pools__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
+.mis-pools__img { display: block; width: 100%; height: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.mis-pools__body { padding: 1rem 1.25rem 1.25rem; }
+.mis-pools__title { margin: 0 0 0.75rem; font-size: var(--wp--preset--font-size--medium); font-weight: 500; }
+.mis-pools__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+.mis-pools__list li { display: grid; grid-template-columns: 18px 1fr; gap: 0.625rem; align-items: start; }
+.mis-pools__list svg { margin-top: 1px; color: var(--wp--preset--color--primary); }
+@media (min-width: 768px) {
+	.mis-pools__card:not(.mis-pools__card--text) { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+	.mis-pools__img { aspect-ratio: auto; min-height: 240px; }
+	.mis-pools__body { padding: 1.5rem; align-self: center; }
+}
+
 /* Las fotos de Sleeping arrangements abren el visor */
-.mis-sleeping__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.mis-sleeping__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
 
 /* Subnavegación por anclas: pestañas en mayúsculas, fija bajo la cabecera */
 .mis-anchors {
@@ -440,8 +469,19 @@ html.mis-tour-open { overflow: hidden; }
 }
 .mis-anchors a:hover,
 .mis-anchors a[aria-current] { color: var(--wp--preset--color--main); border-bottom-color: var(--wp--preset--color--main); }
-:where(#overview, #videos, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, .mis-keys) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
+:where(#overview, #videos, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, #pool, .mis-keys) { scroll-margin-top: calc(var(--mis-header-h) + 64px); }
 .admin-bar .mis-anchors { top: calc(var(--mis-header-h) + var(--wp-admin--admin-bar--height, 0px)); }
+/*
+ * Móvil (Julio 19-11-2026: «la cabecera y el menú con Resumen… consumen mucho espacio»): la cabecera
+ * de la ficha se va con la página en vez de quedarse fija, y la barra de secciones, más baja, se
+ * queda arriba del todo.
+ */
+@media (max-width: 1023px) {
+	.wp-block-template-part:has(> .mis-header--ficha) { position: absolute; }
+	.mis-anchors, .admin-bar .mis-anchors { top: 0; }
+	.mis-anchors a { padding: 0.7rem 0 0.55rem; margin-right: 1.25rem; font-size: 0.6875rem; letter-spacing: 0.1em; }
+	:where(#overview, #videos, #amenities, #conditions, #location, #faq, #bedrooms, #reviews, #pool, .mis-keys) { scroll-margin-top: 52px; }
+}
 
 /* Caja de reserva (escritorio) y barra fija (móvil) */
 .mis-booking-box { border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); padding: 1.5rem; }
@@ -672,15 +712,17 @@ html.mis-req-open, html.mis-req-open body { overflow: hidden; }
 	background: var(--wp--preset--color--base);
 	border-top: 1px solid var(--mis-line);
 	box-shadow: 0 -6px 18px rgba(37, 39, 40, .06); /* única sombra permitida (spec 006 §0) */
-	padding: 0.75rem var(--wp--preset--spacing--medium) calc(0.75rem + env(safe-area-inset-bottom));
-	display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+	padding: 0.5rem var(--wp--preset--spacing--medium) calc(0.5rem + env(safe-area-inset-bottom));
+	display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
 }
-.mis-sticky-cta p { margin: 0; font-size: var(--wp--preset--font-size--small); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.mis-sticky-cta .wp-element-button { flex-shrink: 0; }
+/* Barra compacta (Julio 19-11-2026): el precio nunca se corta; si no cabe en una línea, «/ noche» baja. */
+.mis-sticky-cta p { margin: 0; font-size: var(--wp--preset--font-size--small); line-height: 1.25; min-width: 0; flex: 1 1 auto; }
+.mis-sticky-cta p strong { white-space: nowrap; }
+.mis-sticky-cta .wp-element-button { flex-shrink: 0; box-sizing: border-box; min-height: var(--mis-touch); padding: 0.55rem 1.1rem 0.45rem; font-size: 0.75rem; letter-spacing: 0.1em; }
 .mis-price-line strong { font-size: 1rem; font-weight: 500; }
 .mis-price-line small { font-size: 0.8125rem; color: var(--wp--preset--color--secondary); }
 @media (min-width: 1024px) { .mis-sticky-cta { display: none; } }
-body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
+body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 
 /* ------------------------------------------------------------------ Bloques varios */
 
@@ -950,3 +992,61 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 6rem !important; }
 .mis-person--compact .mis-person__text { font-size: var(--wp--preset--font-size--small); }
 .mis-person--compact .mis-person__actions { margin-top: 0.9rem; gap: 0.5rem; }
 .mis-person--compact .wp-element-button { min-height: 40px; padding: 0.5rem 0.9rem; font-size: 0.6875rem; }
+
+/* Apartado «Location» de la ficha: la zona con su foto, frase, «De un vistazo» y la guía */
+.mis-zona-ficha { display: grid; gap: 1.25rem; margin-top: 1.25rem; border: 1px solid var(--mis-line); background: var(--wp--preset--color--primary-alt-accent); }
+.mis-zona-ficha, .mis-zona-ficha * { box-sizing: border-box; }
+.mis-zona-ficha__ph { display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--wp--preset--color--tertiary); }
+.mis-zona-ficha__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mis-zona-ficha__body { padding: 0 1.25rem 1.5rem; min-width: 0; }
+.mis-zona-ficha__body > * { margin: 0; }
+.mis-zona-ficha__name { margin: 0.25rem 0 0; font-size: var(--wp--preset--font-size--large); }
+.mis-zona-ficha__name a { text-decoration: none; }
+.mis-zona-ficha__text { margin-top: 0.5rem !important; color: var(--wp--preset--color--secondary); }
+.mis-zona-ficha__dl { margin: 1rem 0 1.25rem !important; display: grid; gap: 0.75rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+.mis-zona-ficha__dl dt { font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--secondary); text-transform: uppercase; letter-spacing: 0.08em; }
+.mis-zona-ficha__dl dd { margin: 0.2rem 0 0; }
+@media (min-width: 768px) {
+	.mis-zona-ficha { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 0; }
+	.mis-zona-ficha__ph { aspect-ratio: auto; height: 100%; min-height: 260px; }
+	.mis-zona-ficha__body { padding: 1.5rem 1.75rem; }
+}
+
+/* «From this house, by car»: distancias medidas con OpenStreetMap (maros_nearby), bajo la zona. */
+.mis-zona-cerca { margin-top: 1.25rem; box-sizing: border-box; }
+.mis-zona-cerca * { box-sizing: border-box; }
+.mis-zona-cerca__list { list-style: none; margin: 0; padding: 0; display: grid; column-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); border-top: 1px solid var(--mis-line); }
+.mis-zona-cerca__item { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--mis-line); min-width: 0; }
+.mis-zona-cerca__name { min-width: 0; }
+.mis-zona-cerca__val { white-space: nowrap; color: var(--wp--preset--color--secondary); font-size: var(--wp--preset--font-size--small); }
+.mis-zona-cerca__val strong { color: var(--wp--preset--color--main); font-weight: 600; }
+.mis-zona-cerca__src { margin: 0.75rem 0 0; font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--secondary); }
+.mis-zona-cerca__src a { color: inherit; }
+
+/* «Close to the Villa» y «Area Guide»: dos apartados de la ficha, cada uno con su ancla. */
+.mis-ficha-seccion { padding-top: var(--wp--preset--spacing--medium); }
+.mis-ficha-seccion > h2 { margin-top: 0; }
+.mis-ficha-seccion .mis-zona-cerca { margin-top: 0; }
+
+/* Mapa de la zona aproximada junto a las distancias (Leaflet + OpenStreetMap, solo un círculo). */
+.mis-cerca { display: grid; gap: 1.5rem; }
+.mis-cerca__datos { min-width: 0; }
+.mis-cerca__datos .mis-zona-cerca__list { grid-template-columns: 1fr; }
+.mis-cerca-mapa { --mis-mapa-color: var(--wp--preset--color--primary); position: relative; z-index: 0; width: 100%; aspect-ratio: 4 / 3; max-height: 420px; border: 1px solid var(--mis-line); background: var(--wp--preset--color--tertiary); }
+.mis-cerca-mapa .leaflet-control-attribution { font-size: 10px; }
+@media (min-width: 768px) {
+	.mis-cerca { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+	.mis-cerca-mapa { aspect-ratio: auto; height: 100%; min-height: 300px; }
+}
+
+/*
+ * Móvil: la cabecera de la ficha (también la de las zonas) ya no se queda fija (367db80). Como en la
+ * ficha de propiedad, las migas se van con la página y solo las pestañas Guide · Properties · Other
+ * areas se pegan arriba del todo, sin el hueco de la cabecera (Julio, 20-11-2026).
+ */
+@media (max-width: 1023px) {
+	.mis-zona-nav { display: contents; }
+	.mis-zona-crumbs { max-width: var(--mis-zona-max); margin-inline: auto; padding: 1.25rem var(--mis-zona-pad) 0.25rem; }
+	.mis-zona-anchors, .admin-bar .mis-zona-anchors { position: sticky; top: 0; z-index: 40; padding-inline: var(--mis-zona-pad); }
+	.mis-zona :where(#guia, #videos, #propiedades, #experiencias, #otras-zonas) { scroll-margin-top: 52px; }
+}

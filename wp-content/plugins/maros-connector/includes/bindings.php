@@ -332,8 +332,8 @@ add_shortcode(
 			$title = sprintf( $es ? 'Dormitorio %d' : 'Bedroom %d', $n );
 			$img   = ! empty( $room['photo'] ) ? wp_get_attachment_image( (int) $room['photo'], 'medium_large', false, array( 'class' => 'mis-sleeping__img', 'loading' => 'lazy', 'alt' => $title ) ) : '';
 			if ( $img ) {
-				// Abre el visor de la galería (spec 041) en esta foto.
-				$img = '<button type="button" class="mis-sleeping__open" data-mis-photo="' . (int) $room['photo'] . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver fotos: %s' : 'View photos: %s', $title ) ) . '">' . $img . '</button>';
+				// Abre la galería por estancias en el bloque de este dormitorio (Julio 19-11-2026), no el visor.
+				$img = '<button type="button" class="mis-sleeping__open" data-mis-room-photo="' . (int) $room['photo'] . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver fotos: %s' : 'View photos: %s', $title ) ) . '">' . $img . '</button>';
 			}
 			$html  = '<li class="mis-sleeping__card"><div class="mis-sleeping__media">' . ( $img ?: '<div class="mis-sleeping__img mis-sleeping__img--empty" aria-hidden="true"></div>' );
 			if ( ! empty( $room['master'] ) ) {

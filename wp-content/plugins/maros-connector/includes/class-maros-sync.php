@@ -86,6 +86,9 @@ class Maros_Sync {
 	 */
 	private const FORMAT = '3';
 
+	/** Idiomas de la web: toda propiedad existe en todos, vinculada en Polylang (Julio, 19-11-2026). */
+	public const LANGS = array( 'en', 'es' );
+
 	/** Etag de marOS tal como se guarda en maros_etag: con la versión de formato de la web. */
 	private static function stamp( string $etag ): string {
 		return '' === $etag ? '' : $etag . '#' . self::FORMAT;
@@ -159,6 +162,7 @@ class Maros_Sync {
 		foreach ( $list as $summary ) {
 			$post = self::find_by_maros_id( $summary['id'] );
 			if ( ! $post
+				|| ! self::has_all_languages( $summary['id'] )
 				|| get_post_meta( $post, 'maros_etag', true ) !== self::stamp( (string) ( $summary['etag'] ?? '' ) )
 				|| get_post_meta( $post, 'maros_calendar_etag', true ) !== (string) ( $summary['calendar_etag'] ?? '' )
 				|| get_post_meta( $post, 'maros_withdrawn', true ) ) {
@@ -181,7 +185,8 @@ class Maros_Sync {
 		$existing   = self::find_by_maros_id( $maros_id );
 		$same_card  = $existing && ! $force && $summary && '' !== (string) ( $summary['etag'] ?? '' )
 			&& get_post_meta( $existing, 'maros_etag', true ) === self::stamp( (string) $summary['etag'] )
-			&& ! get_post_meta( $existing, 'maros_withdrawn', true );
+			&& ! get_post_meta( $existing, 'maros_withdrawn', true )
+			&& self::has_all_languages( $maros_id );
 		$outcome    = 'skipped';
 
 		if ( ! $same_card ) {
@@ -245,36 +250,57 @@ class Maros_Sync {
 		if ( ! $maros_id || empty( $data['name'] ) ) {
 			return new WP_Error( 'maros_contract', 'Ficha de marOS sin id o sin nombre.' );
 		}
-		$existing  = self::find_by_maros_id( $maros_id );
+		$found     = self::translations_of( $maros_id );
+		$existing  = (int) ( reset( $found ) ?: 0 );
 		$etag      = (string) ( $data['etag'] ?? $data['_etag'] ?? '' );
 		$withdrawn = $existing && get_post_meta( $existing, 'maros_withdrawn', true );
+		$complete  = self::complete( $found );
 
-		if ( $existing && ! $withdrawn && '' !== $etag && get_post_meta( $existing, 'maros_etag', true ) === self::stamp( $etag ) ) {
+		if ( $existing && $complete && ! $withdrawn && '' !== $etag && get_post_meta( $existing, 'maros_etag', true ) === self::stamp( $etag ) ) {
 			return 'skipped';
+		}
+		if ( $existing && ! $complete ) {
+			Maros_Log::info( sprintf( '%s: le faltaba una traducción (%s), no estaban vinculadas o no tenían el mismo estado; se corrige.', $maros_id, implode( ', ', array_diff( self::LANGS, array_keys( $found ) ) ) ?: 'en y es existen' ) );
 		}
 
 		// La API del catálogo solo entrega publicables; el campo se respeta por si llega en false.
 		$publishable = ! array_key_exists( 'publishable', $data ) || ! empty( $data['publishable'] );
 		$status      = $publishable && $publish ? 'publish' : 'draft';
 		$ids         = array();
+		$title       = self::title_of( $data );
 
-		foreach ( array( 'en', 'es' ) as $lang ) {
-			$post_id = $existing ? self::translation( $existing, $lang ) : 0;
+		foreach ( self::LANGS as $lang ) {
+			$post_id = (int) ( $found[ $lang ] ?? 0 );
 			if ( ! $post_id ) {
+				// Si la propiedad ya existe en otro idioma, la traducción que faltaba nace con su mismo estado
+				// (una propiedad publicada tiene que estar publicada en todos los idiomas).
+				$sibling = $existing ? get_post( $existing ) : null;
+				// El slug de la hermana sin su sufijo de idioma («villa-concha-es» → «villa-concha»).
+				$slug = $sibling ? preg_replace( '/-' . preg_quote( (string) array_key_first( $found ), '/' ) . '$/', '', $sibling->post_name ) : sanitize_title( $title );
 				$post_id = wp_insert_post(
 					array(
 						'post_type'    => 'mis_property',
-						'post_title'   => $data['name'],
-						'post_name'    => sanitize_title( $data['name'] ),
-						'post_status'  => $status,
+						'post_title'   => $sibling ? $sibling->post_title : $title,
+						'post_name'    => $slug,
+						'post_status'  => $sibling && $publishable ? $sibling->post_status : $status,
 					),
 					true
 				);
 				if ( is_wp_error( $post_id ) ) {
 					return $post_id;
 				}
-			} elseif ( ! $publishable ) {
-				wp_update_post( array( 'ID' => $post_id, 'post_status' => 'draft' ) );
+			} else {
+				$update = $publishable ? array() : array( 'post_status' => 'draft' );
+				// El título es el nombre interno de marOS (Julio 19-11-2026). Se cambia solo si sigue siendo
+				// el que puso la sincronización (el nombre de antes); un título escrito a mano se respeta.
+				$current = (string) get_post_field( 'post_title', $post_id, 'raw' );
+				$synced  = array_filter( array( (string) get_post_meta( $post_id, 'maros_name', true ), (string) get_post_meta( $post_id, 'maros_internal_name', true ), (string) $data['name'] ) );
+				if ( $current !== $title && in_array( $current, $synced, true ) ) {
+					$update['post_title'] = $title;
+				}
+				if ( $update ) {
+					wp_update_post( array( 'ID' => $post_id ) + $update );
+				}
 			}
 			if ( function_exists( 'pll_set_post_language' ) ) {
 				pll_set_post_language( $post_id, $lang );
@@ -287,6 +313,14 @@ class Maros_Sync {
 
 		if ( function_exists( 'pll_save_post_translations' ) ) {
 			pll_save_post_translations( $ids );
+		}
+		// Publicada en un idioma = publicada en todos (si sigue siendo publicable en marOS).
+		if ( $publishable && ! self::same_status( $ids ) && in_array( 'publish', array_map( 'get_post_status', $ids ), true ) ) {
+			foreach ( $ids as $post_id ) {
+				if ( 'publish' !== get_post_status( $post_id ) ) {
+					wp_update_post( array( 'ID' => $post_id, 'post_status' => 'publish' ) );
+				}
+			}
 		}
 
 		$complete = $photos ? self::sync_photos( $ids, $data['photos'] ?? array() ) : true;
@@ -371,6 +405,25 @@ class Maros_Sync {
 		return true;
 	}
 
+	/** Título de la ficha: el nombre interno de marOS («Casa Coral»); sin él, el de siempre. */
+	public static function title_of( array $d ): string {
+		$internal = trim( (string) ( $d['internal_name'] ?? '' ) );
+		return '' !== $internal ? $internal : trim( (string) $d['name'] );
+	}
+
+	/**
+	 * Subtítulo: el nombre comercial sin el nombre interno delante («Casa Coral - Beachfront 3BR
+	 * Townhouse with Garden» → «Beachfront 3BR Townhouse with Garden»). Vacío si no añade nada.
+	 */
+	public static function subtitle_of( array $d ): string {
+		$title      = self::title_of( $d );
+		$commercial = trim( (string) ( array_key_exists( 'commercial_name', $d ) ? ( $d['commercial_name'] ?? '' ) : ( $d['name'] ?? '' ) ) );
+		if ( '' !== $title && 0 === stripos( $commercial, $title ) ) {
+			$commercial = trim( preg_replace( '/^[\s\-–—|·:,]+/u', '', substr( $commercial, strlen( $title ) ) ) );
+		}
+		return 0 === strcasecmp( $commercial, $title ) ? '' : $commercial;
+	}
+
 	private static function type_of( array $d ): array {
 		$type = $d['type'] ?? '';
 		$slug = is_array( $type ) ? (string) ( $type['id'] ?? '' ) : (string) $type;
@@ -400,6 +453,8 @@ class Maros_Sync {
 			'maros_lodgify_id'  => (int) ( $d['lodgify_id'] ?? 0 ),
 			'maros_updated_at'  => (string) ( $d['updated_at'] ?? '' ),
 			'maros_name'        => (string) $d['name'],
+			'maros_internal_name' => self::title_of( $d ),
+			'maros_subtitle'    => self::subtitle_of( $d ),
 			'maros_max_guests'  => (int) ( $d['max_guests'] ?? 0 ),
 			'maros_bedrooms'    => (int) ( $d['bedrooms'] ?? 0 ),
 			'maros_bathrooms'   => (int) ( $d['bathrooms'] ?? 0 ),
@@ -417,10 +472,34 @@ class Maros_Sync {
 			'maros_room_types'  => wp_json_encode( array_values( is_array( $d['room_types'] ?? null ) ? $d['room_types'] : array() ) ),
 			'maros_synced_at'   => gmdate( 'c' ),
 			'maros_fees'        => wp_json_encode( array_values( self::fees( $d ) ) ),
+			'maros_nearby'      => wp_slash( wp_json_encode( self::nearby( $d ) ) ),
 		) + self::text_facts( $d );
 		foreach ( $map as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
 		}
+	}
+
+	/**
+	 * Distancias en coche de marOS medidas con OpenStreetMap (se pueden publicar, a diferencia de las de
+	 * Google). Solo las filas completas: nombre, km, minutos y fecha de la medida.
+	 */
+	private static function nearby( array $d ): array {
+		$out = array();
+		foreach ( is_array( $d['nearby'] ?? null ) ? $d['nearby'] : array() as $r ) {
+			if ( ! is_array( $r ) || 'openstreetmap' !== ( $r['source'] ?? '' ) || ! is_string( $r['name'] ?? null ) || '' === trim( $r['name'] )
+				|| ! is_numeric( $r['distance_km'] ?? null ) || ! is_numeric( $r['duration_minutes'] ?? null )
+				|| ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', (string) ( $r['measured_on'] ?? '' ) ) ) {
+				continue;
+			}
+			$out[] = array(
+				'name'             => sanitize_text_field( $r['name'] ),
+				'icon'             => sanitize_key( (string) ( $r['icon'] ?? '' ) ),
+				'distance_km'      => round( (float) $r['distance_km'], 1 ),
+				'duration_minutes' => max( 1, (int) $r['duration_minutes'] ),
+				'measured_on'      => (string) $r['measured_on'],
+			);
+		}
+		return $out;
 	}
 
 	private static function fees( array $d ): array {
@@ -464,7 +543,8 @@ class Maros_Sync {
 			'maros_pool_heating_included'  => $heating ? self::flag( $heating['included'] ?? null ) : '',
 			'maros_pool_heating_mandatory' => $heating ? self::flag( $heating['mandatory'] ?? null ) : '',
 			'maros_pool_heating_min_nights' => (int) ( $heating['minimum_nights'] ?? 0 ),
-			'maros_pools'                => wp_json_encode( array_values( array_filter( is_array( $d['pools'] ?? null ) ? $d['pools'] : array(), 'is_array' ) ) ),
+			// wp_slash: las comodidades de cada piscina llevan acentos («\u00ed») que update_post_meta quitaría.
+			'maros_pools'                => wp_slash( wp_json_encode( array_values( array_filter( is_array( $d['pools'] ?? null ) ? $d['pools'] : array(), 'is_array' ) ) ) ),
 			'maros_extra_cleaning'       => (float) ( $extra['standard'] ?? 0 ),
 			'maros_extra_cleaning_linen' => (float) ( $extra['with_linen'] ?? 0 ),
 			'maros_self_check_in'        => self::flag( $d['self_check_in'] ?? null ),
@@ -833,10 +913,98 @@ class Maros_Sync {
 		return array_map( 'intval', get_posts( $args ) );
 	}
 
-	private static function translation( int $post_id, string $lang ): int {
-		if ( function_exists( 'pll_get_post' ) ) {
-			return (int) pll_get_post( $post_id, $lang );
+	/**
+	 * Las traducciones que existen de una propiedad, por idioma: [ 'en' => id, 'es' => id ].
+	 *
+	 * Parte de las vinculadas en Polylang y, si falta algún idioma, recupera la entrada suelta de ese
+	 * idioma con el mismo id de marOS (p. ej. si se perdió el vínculo). No incluye las de la papelera.
+	 *
+	 * @return array<string,int>
+	 */
+	public static function translations_of( string $maros_id ): array {
+		$posts = self::all_posts( $maros_id );
+		if ( ! $posts ) {
+			return array();
 		}
-		return 'en' === $lang ? $post_id : 0;
+		if ( ! function_exists( 'pll_get_post_language' ) ) {
+			return array( 'en' => $posts[0] );
+		}
+		$found = array();
+		$first = self::find_by_maros_id( $maros_id ) ?: self::find_by_maros_id( $maros_id, 'es' );
+		if ( $first && function_exists( 'pll_get_post_translations' ) ) {
+			foreach ( (array) pll_get_post_translations( $first ) as $lang => $id ) {
+				if ( in_array( (int) $id, $posts, true ) ) {
+					$found[ $lang ] = (int) $id;
+				}
+			}
+		}
+		// Entradas sueltas: la publicada primero, después la más antigua.
+		usort( $posts, static fn( $a, $b ) => ( 'publish' !== get_post_status( $a ) ) <=> ( 'publish' !== get_post_status( $b ) ) ?: $a <=> $b );
+		foreach ( $posts as $id ) {
+			$lang = (string) pll_get_post_language( $id );
+			if ( in_array( $lang, self::LANGS, true ) && empty( $found[ $lang ] ) ) {
+				$found[ $lang ] = $id;
+			}
+		}
+		$sorted = array();
+		foreach ( self::LANGS as $lang ) {
+			if ( ! empty( $found[ $lang ] ) ) {
+				$sorted[ $lang ] = $found[ $lang ];
+			}
+		}
+		return $sorted;
+	}
+
+	/** Si la propiedad existe en todos los idiomas y con las traducciones vinculadas. */
+	public static function has_all_languages( string $maros_id ): bool {
+		return self::complete( self::translations_of( $maros_id ) );
+	}
+
+	/** Si están todas las traducciones y vinculadas (sin Polylang basta con una entrada). */
+	private static function complete( array $found ): bool {
+		if ( ! function_exists( 'pll_get_post_translations' ) ) {
+			return (bool) $found;
+		}
+		return count( $found ) === count( self::LANGS ) && self::linked( $found ) && self::same_status( $found );
+	}
+
+	/** Si todas las traducciones tienen el mismo estado (publicada en un idioma = publicada en todos). */
+	private static function same_status( array $found ): bool {
+		return 1 === count( array_unique( array_map( 'get_post_status', array_values( $found ) ) ) );
+	}
+
+	/**
+	 * Iguala el estado de las traducciones de una propiedad al de la que acaba de cambiar (p. ej. al
+	 * publicar la española en el editor, se publica también la inglesa). Solo publicar, borrador,
+	 * pendiente y privado; la papelera no se propaga.
+	 */
+	public static function align_status( string $new, string $old, WP_Post $post ): void {
+		static $running = false;
+		if ( $running || $new === $old || 'mis_property' !== $post->post_type || ! in_array( $new, array( 'publish', 'draft', 'pending', 'private' ), true )
+			|| ! function_exists( 'pll_get_post_translations' ) ) {
+			return;
+		}
+		$running = true;
+		foreach ( (array) pll_get_post_translations( $post->ID ) as $id ) {
+			$status = get_post_status( (int) $id );
+			if ( (int) $id !== $post->ID && $status && 'trash' !== $status && $status !== $new ) {
+				wp_update_post( array( 'ID' => (int) $id, 'post_status' => $new ) );
+			}
+		}
+		$running = false;
+	}
+
+	/** Si Polylang tiene vinculadas entre sí estas traducciones. */
+	private static function linked( array $ids ): bool {
+		if ( ! function_exists( 'pll_get_post_translations' ) || ! $ids ) {
+			return true;
+		}
+		$group = array_map( 'intval', (array) pll_get_post_translations( (int) reset( $ids ) ) );
+		foreach ( $ids as $lang => $id ) {
+			if ( ( $group[ $lang ] ?? 0 ) !== (int) $id ) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

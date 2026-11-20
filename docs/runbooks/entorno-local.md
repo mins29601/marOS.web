@@ -62,12 +62,14 @@ npm run wp -- maros sync --publish
 npm run wp -- eval-file wp-content/mis-scripts/setup/contenido-inicial.php
 npm run wp -- eval-file wp-content/mis-scripts/setup/zonas.php
 npm run wp -- eval-file wp-content/mis-scripts/setup/servicios.php
+npm run wp -- eval-file wp-content/mis-scripts/setup/slugs-idioma.php
 ```
 
 - `wp maros sync` carga las propiedades del mock (ficha, tipo, zona, equipamiento, fotos,
   calendario y tarifas) en inglés y español. Se puede repetir: solo actualiza lo que cambia (etag).
   Otros comandos: `wp maros status` (estado y últimos eventos), `wp maros tick` (la tarea de
-  5 minutos ahora mismo) y `wp maros sync --id=<id> --force`. El estado también se ve en
+  5 minutos ahora mismo), `wp maros sync --id=<id> --force` y `wp maros idiomas [--fix]` (cada
+  propiedad en inglés y español, vinculadas; con `--fix` crea o vincula la que falte). El estado también se ve en
   **Propiedades → marOS**, con el botón «Sincronizar ahora».
 - `contenido-inicial.php` crea zonas, tipos de servicio, el servicio de ejemplo de Eventos, las páginas
   del mapa del sitio (spec 005), los formularios de Contact Form 7 y los menús de cada idioma. Es
@@ -78,6 +80,9 @@ npm run wp -- eval-file wp-content/mis-scripts/setup/servicios.php
   textos de los borradores de marOS.content (`scripts/setup/servicios/servicios.json`, que genera
   `servicios/generar.py`). Pone las URLs de la web actual (`/services/<tipo>/<slug>/`) y ordena los menús.
   No pisa lo editado en WordPress (`… servicios.php forzar` para reescribirlo).
+- `slugs-idioma.php` cambia «-2» por «-es» en el slug de las traducciones que chocaban con el inglés
+  (p. ej. `/es/stay/villa-concha-2/` → `/es/stay/villa-concha-es/`); la URL vieja redirige con 301. Lo
+  nuevo ya nace así (mis-contenido, `includes/slugs.php`).
 
 ## 4. La API de marOS simulada
 

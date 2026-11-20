@@ -375,6 +375,10 @@ function maros_seo_schema_piece( int $post_id ): array {
 			)
 		),
 	);
+	// El nombre comercial, que la ficha enseña de subtítulo (Julio 19-11-2026).
+	if ( '' !== trim( (string) $m( 'maros_subtitle' ) ) ) {
+		$piece['alternateName'] = trim( (string) $m( 'maros_subtitle' ) );
+	}
 	if ( '' !== (string) $m( 'maros_check_in' ) ) {
 		$piece['checkinTime'] = (string) $m( 'maros_check_in' );
 	}

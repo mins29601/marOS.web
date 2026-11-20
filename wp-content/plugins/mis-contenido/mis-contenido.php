@@ -263,6 +263,8 @@ require_once __DIR__ . '/includes/contacto.php';
 // Campos de las zonas (foto, frase corta, perfiles y «De un vistazo»).
 require_once __DIR__ . '/includes/zonas.php';
 require_once __DIR__ . '/includes/zonas-vista.php';
+// Slugs de las traducciones con «-es» y no «-2».
+require_once __DIR__ . '/includes/slugs.php';
 // Portadas de los tipos de servicio (/services/<tipo>/) y sus tarjetas.
 require_once __DIR__ . '/includes/servicios.php';
 // Lugares recomendados por zona y sus herramientas MCP (Rebecca, desde ChatGPT).

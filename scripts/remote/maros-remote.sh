@@ -1,10 +1,10 @@
 # Se ejecuta EN EL SERVIDOR de IONOS a través de .github/workflows/maros-staging.yml (no a mano).
-# Argumentos: WP_PATH acción (status|sync|seo|zonas|opiniones|servicios) [id de marOS] [MIS_PATH]. Antes, el workflow antepone MIS_PHP y php-bin.sh.
+# Argumentos: WP_PATH acción (status|sync|seo|zonas|opiniones|servicios|slugs|idiomas|publicar) [id de marOS] [MIS_PATH]. Antes, el workflow antepone MIS_PHP y php-bin.sh.
 set -euo pipefail
 WP="$HOME/$1"; ACCION="$2"; ID="${3:-}"; MIS="$HOME/${4:-}"
 wp() { "$PHPBIN" "$WPCLI" --path="$WP" "$@"; }
 
-wp maros status || [[ "$ACCION" == "seo" || "$ACCION" == "zonas" || "$ACCION" == "opiniones" || "$ACCION" == "servicios" ]]  # SEO, zonas, opiniones y servicios no necesitan marOS
+wp maros status || [[ "$ACCION" == "seo" || "$ACCION" == "zonas" || "$ACCION" == "opiniones" || "$ACCION" == "servicios" || "$ACCION" == "slugs" ]]  # estas acciones no necesitan marOS
 
 if [[ "$ACCION" == "zonas" ]]; then
 	# Reescribe las 13 guías con el texto del código desplegado: pisa lo editado a mano en WordPress.
@@ -29,6 +29,26 @@ if [[ "$ACCION" == "servicios" ]]; then
 	echo "→ Servicios y experiencias (servicios.php)"
 	wp eval-file "$f"
 	wp rewrite flush  # el .htaccess lo escribe deploy.sh
+fi
+
+if [[ "$ACCION" == "slugs" ]]; then
+	# Traducciones con «-2» en el slug pasan a «-es» (las URLs viejas redirigen con 301).
+	f="$MIS/current/scripts/setup/slugs-idioma.php"
+	[[ -n "${4:-}" && -f "$f" ]] || { echo "✗ No encuentro $f (¿MIS_PATH?)"; exit 1; }
+	echo "→ Slugs por idioma (slugs-idioma.php)"
+	wp eval-file "$f"
+fi
+
+if [[ "$ACCION" == "idiomas" ]]; then
+	# Cada propiedad en inglés y español, vinculadas en Polylang; repara (vincula o crea) las que no.
+	echo "→ Propiedades en todos los idiomas (wp maros idiomas --fix)"
+	wp maros idiomas --fix
+fi
+
+if [[ "$ACCION" == "publicar" ]]; then
+	# Solo pruebas: publica en en y es las propiedades publicables en marOS (las demás siguen en borrador).
+	echo "→ Publicar las propiedades publicables (wp maros publicar)"
+	wp maros publicar
 fi
 
 if [[ "$ACCION" == "seo" ]]; then
