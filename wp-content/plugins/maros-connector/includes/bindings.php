@@ -148,8 +148,7 @@ function maros_property_binding_value( array $args, $block_instance ) {
 				)
 			);
 		case 'area':
-			$terms = get_the_terms( $post_id, 'zona' );
-			return esc_html( $terms && ! is_wp_error( $terms ) ? $terms[0]->name : (string) $m( 'maros_area' ) );
+			return esc_html( maros_area_name( $post_id ) );
 		case 'type':
 			$terms = get_the_terms( $post_id, 'tipo-propiedad' );
 			return esc_html( $terms && ! is_wp_error( $terms ) ? $terms[0]->name : '' );
