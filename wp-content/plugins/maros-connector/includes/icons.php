@@ -196,6 +196,27 @@ function maros_icon_svg( string $name, int $size = 24 ): string {
 }
 
 /**
+ * Tipo de punto de interés de marOS (src/properties.js, `icons`) → icono, para las distancias de
+ * «Close to the Villa». Sin coincidencia, el pin.
+ */
+const MAROS_POI_ICONS = array(
+	'beach'      => 'propios/playa',
+	'airport'    => 'phosphor/airplane-tilt',
+	'city'       => 'phosphor/city',
+	'golf'       => 'phosphor/golf',
+	'restaurant' => 'phosphor/fork-knife',
+	'shopping'   => 'phosphor/shopping-bag',
+	'sport'      => 'phosphor/tennis-ball',
+	'hospital'   => 'phosphor/first-aid',
+	'school'     => 'phosphor/graduation-cap',
+	'pin'        => 'phosphor/map-pin',
+);
+
+function maros_poi_icon( string $type ): string {
+	return MAROS_POI_ICONS[ $type ] ?? 'phosphor/map-pin';
+}
+
+/**
  * Icono para una comodidad: código de marOS («dryer», «sea_view») o término del sitio que
  * viene de Lodgify («private-pool», «tumble-dryer»…). Sin coincidencia, «check».
  */

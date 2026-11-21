@@ -41,8 +41,44 @@ class Maros_Sync {
 		'marbella-centre'        => 'marbella-centro',
 		'marbella-town-centre'   => 'marbella-centro',
 		'benahavis-pueblo'       => 'benahavis',
+		'benahavis-village'      => 'benahavis',
 		'flamingos'              => 'los-flamingos',
 		'alqueria'               => 'la-alqueria',
+	);
+
+	/**
+	 * Municipio de cada Area, para las migas de pan cuando marOS no trae un municipio reconocible
+	 * (el campo es texto libre: «Saladillo» es una urbanización de Estepona, no un municipio).
+	 */
+	public const ZONE_TOWNS = array(
+		'nueva-andalucia' => 'Marbella',
+		'sierra-blanca'   => 'Marbella',
+		'puerto-banus'    => 'Marbella',
+		'golden-mile'     => 'Marbella',
+		'rio-real'        => 'Marbella',
+		'marbella-centro' => 'Marbella',
+		'san-pedro'       => 'Marbella',
+		'guadalmina'      => 'Marbella',
+		'new-golden-mile' => 'Estepona',
+		'estepona'        => 'Estepona',
+		'los-flamingos'   => 'Benahavís',
+		'la-alqueria'     => 'Benahavís',
+		'benahavis'       => 'Benahavís',
+	);
+
+	/** Municipios que puede traer marOS, escritos como en la web (sin tilde y en minúsculas → nombre). */
+	public const TOWNS = array(
+		'marbella'   => 'Marbella',
+		'estepona'   => 'Estepona',
+		'benahavis'  => 'Benahavís',
+		'mijas'      => 'Mijas',
+		'ojen'       => 'Ojén',
+		'istan'      => 'Istán',
+		'casares'    => 'Casares',
+		'manilva'    => 'Manilva',
+		'fuengirola' => 'Fuengirola',
+		'benalmadena' => 'Benalmádena',
+		'malaga'     => 'Málaga',
 	);
 
 	private const TYPES = array(
@@ -566,11 +602,13 @@ class Maros_Sync {
 			wp_set_object_terms( $post_id, array( self::term( 'tipo-propiedad', $type_slug, $type_names, $lang ) ), 'tipo-propiedad' );
 		}
 
-		$area = (string) ( $d['location']['area'] ?? '' );
-		$zone = sanitize_title( (string) ( $d['zone'] ?? $area ) );
-		$zone = self::ZONE_ALIASES[ $zone ] ?? $zone;
+		// Solo las 13 Areas de la web (ZONES). Un nombre que no es ninguna (p. ej. la urbanización
+		// «Saladillo», texto libre de marOS) ya no crea una zona nueva: se deja la que tuviera y se avisa.
+		$zone = self::zone_slug( $d );
 		if ( $zone && taxonomy_exists( 'zona' ) ) {
-			wp_set_object_terms( $post_id, array( self::term( 'zona', $zone, self::ZONES[ $zone ] ?? array( $area, $area ), $lang ) ), 'zona' );
+			wp_set_object_terms( $post_id, array( self::term( 'zona', $zone, self::ZONES[ $zone ], $lang ) ), 'zona' );
+		} elseif ( 'en' === $lang && '' !== trim( (string) ( $d['zone'] ?? $d['location']['area'] ?? '' ) ) ) {
+			Maros_Log::info( sprintf( '%s: el área «%s» de marOS no es una de las Areas de la web; no se crea zona.', (string) ( $d['id'] ?? '' ), (string) ( $d['zone'] ?? $d['location']['area'] ) ) );
 		}
 
 		$amenities = array();
@@ -593,6 +631,27 @@ class Maros_Sync {
 			$amenities[] = self::term( 'equipamiento', $code, self::AMENITIES[ $code ], $lang );
 		}
 		wp_set_object_terms( $post_id, array_values( array_unique( array_filter( $amenities ) ) ), 'equipamiento' );
+	}
+
+	/**
+	 * Slug de la Area de la web para los datos de marOS (zone, location.area o location.area_en,
+	 * con los alias en español), o '' si no es ninguna de las de ZONES.
+	 */
+	public static function zone_slug( array $d ): string {
+		$loc = is_array( $d['location'] ?? null ) ? $d['location'] : array();
+		foreach ( array( $d['zone'] ?? null, $loc['area'] ?? null, $loc['area_en'] ?? null ) as $name ) {
+			$slug = sanitize_title( remove_accents( (string) $name ) );
+			$slug = self::ZONE_ALIASES[ $slug ] ?? $slug;
+			if ( '' !== $slug && isset( self::ZONES[ $slug ] ) ) {
+				return $slug;
+			}
+		}
+		return '';
+	}
+
+	/** Nombre de una Area de la web en inglés o en español. */
+	public static function zone_name( string $slug, bool $es ): string {
+		return self::ZONES[ $slug ][ $es ? 1 : 0 ] ?? '';
 	}
 
 	/** private-pool, shared-pool y heated-pool a partir de pool y pools de marOS. */

@@ -12,6 +12,46 @@ defined( 'ABSPATH' ) || exit;
 // Iconos: includes/icons.php (maros_icon_svg, maros_amenity_icon).
 
 /**
+ * Municipio de la casa para las migas y «Zona, Municipio»: el de marOS solo si es un municipio de
+ * verdad (Maros_Sync::TOWNS); si no, el de su Area (Maros_Sync::ZONE_TOWNS). El campo de marOS es
+ * texto libre y a veces trae la urbanización (Casa Coral: «Saladillo», Julio 20-11-2026).
+ */
+function maros_town( int $post_id ): string {
+	$raw  = sanitize_title( remove_accents( trim( (string) get_post_meta( $post_id, 'maros_municipality', true ) ) ) );
+	$raw  = preg_replace( '/^(municipio-de-|ayuntamiento-de-)/', '', $raw );
+	if ( isset( Maros_Sync::TOWNS[ $raw ] ) ) {
+		return Maros_Sync::TOWNS[ $raw ];
+	}
+	$zone = maros_zone_term( $post_id );
+	$slug = $zone ? preg_replace( '/-es$/', '', $zone->slug ) : '';
+	return Maros_Sync::ZONE_TOWNS[ $slug ] ?? '';
+}
+
+/** Término «zona» de la casa (una de las Areas de la web), o null. */
+function maros_zone_term( int $post_id ): ?WP_Term {
+	$terms = get_the_terms( $post_id, 'zona' );
+	return $terms && ! is_wp_error( $terms ) ? $terms[0] : null;
+}
+
+/**
+ * Nombre de la Area de la casa: el término «zona» o, si la web aún no lo tiene, el área de marOS
+ * solo cuando es una de las Areas de la web. Nunca una urbanización en texto libre.
+ */
+function maros_area_name( int $post_id ): string {
+	$zone = maros_zone_term( $post_id );
+	if ( $zone ) {
+		return $zone->name;
+	}
+	$slug = Maros_Sync::zone_slug( array( 'location' => array( 'area' => (string) get_post_meta( $post_id, 'maros_area', true ) ) ) );
+	return '' !== $slug ? Maros_Sync::zone_name( $slug, maros_is_es( $post_id ) ) : '';
+}
+
+/** true si el municipio y la zona se llaman igual («Estepona» y «Estepona»): se dice una vez. */
+function maros_same_place( string $a, string $b ): bool {
+	return 0 === strcasecmp( remove_accents( $a ), remove_accents( $b ) );
+}
+
+/**
  * [maros_breadcrumbs] All properties › Marbella › Nueva Andalucía, en una línea que se desliza en
  * horizontal si no cabe.
  */
@@ -22,16 +62,15 @@ add_shortcode(
 		$es      = maros_is_es( $post_id );
 		$all     = function_exists( 'mis_page_url' ) ? mis_page_url( 'stay' ) : home_url( '/stay/' );
 		$items   = array( '<a href="' . esc_url( $all ) . '">' . esc_html( $es ? 'Todas las casas' : 'All properties' ) . '</a>' );
-		$town    = trim( (string) get_post_meta( $post_id, 'maros_municipality', true ) );
-		if ( '' !== $town ) {
+		$town    = maros_town( $post_id );
+		$zone    = maros_zone_term( $post_id );
+		if ( '' !== $town && ! ( $zone && maros_same_place( $town, $zone->name ) ) ) {
 			$items[] = '<span>' . esc_html( $town ) . '</span>';
 		}
-		$terms = get_the_terms( $post_id, 'zona' );
-		if ( $terms && ! is_wp_error( $terms ) ) {
-			$link    = get_term_link( $terms[0] );
-			$items[] = is_wp_error( $link ) ? '<span>' . esc_html( $terms[0]->name ) . '</span>' : '<a href="' . esc_url( $link ) . '" aria-current="page">' . esc_html( $terms[0]->name ) . '</a>';
-		} elseif ( '' !== (string) get_post_meta( $post_id, 'maros_area', true ) ) {
-			$items[] = '<span>' . esc_html( (string) get_post_meta( $post_id, 'maros_area', true ) ) . '</span>';
+		// Solo una Area de la web (término «zona»); nunca el área en texto libre de marOS.
+		if ( $zone ) {
+			$link    = get_term_link( $zone );
+			$items[] = is_wp_error( $link ) ? '<span>' . esc_html( $zone->name ) . '</span>' : '<a href="' . esc_url( $link ) . '" aria-current="page">' . esc_html( $zone->name ) . '</a>';
 		}
 		return '<nav class="mis-crumbs" aria-label="' . esc_attr( $es ? 'Migas de pan' : 'Breadcrumbs' ) . '">' . implode( '<span class="mis-crumbs__sep" aria-hidden="true">›</span>', $items ) . '</nav>';
 	}
@@ -42,10 +81,10 @@ add_shortcode(
 	'maros_where',
 	static function () {
 		$post_id = (int) get_the_ID();
-		$terms   = get_the_terms( $post_id, 'zona' );
-		$area    = $terms && ! is_wp_error( $terms ) ? $terms[0]->name : (string) get_post_meta( $post_id, 'maros_area', true );
-		$parts   = array_filter( array( $area, (string) get_post_meta( $post_id, 'maros_municipality', true ) ) );
-		return $parts ? '<p class="mis-where">' . esc_html( implode( ', ', array_unique( $parts ) ) ) . '</p>' : '';
+		$zone    = maros_zone_term( $post_id );
+		$town    = maros_town( $post_id );
+		$parts   = array_filter( array( $zone ? $zone->name : '', $zone && maros_same_place( $town, $zone->name ) ? '' : $town ) );
+		return $parts ? '<p class="mis-where">' . esc_html( implode( ', ', $parts ) ) . '</p>' : '';
 	}
 );
 
@@ -84,22 +123,64 @@ add_shortcode(
 );
 
 /**
- * Key features de la propiedad, sacadas de marOS (Julio 17-11-2026: «Ok» a sacarlas solas):
- * piscina y su climatización, vistas, baños en-suite, self check-in y gimnasio. Como mucho cuatro.
+ * Key features de la propiedad, sacadas de marOS (Julio 17-11-2026: «Ok» a sacarlas solas). Como
+ * mucho cuatro, por orden de lo que más pesa al elegir casa (Julio 20-11-2026: «lo más destacable es
+ * que está junto a la playa», y «2 en-suite bedrooms» de 3 no dice nada):
  *
- * @return array<int, array{icon: string, title: string, text: string}>
+ * 1. La playa: primera línea o acceso directo (comodidad de marOS o el nombre comercial, que escribe
+ *    el equipo), o una playa medida a 2 km o menos (maros_nearby, OpenStreetMap; guía editorial §4:
+ *    solo distancias medidas).
+ * 2. Piscina privada (y su climatización). 3. Vistas al mar, al golf o a la montaña.
+ * 4. Golf medido a 2 km o menos. 5. Todos los dormitorios en-suite (solo si son todos).
+ * 6. Comedor exterior, barbacoa o jacuzzi de una estancia exterior. 7. Piscina comunitaria.
+ * 8. Vistas al jardín o a la piscina. 9. Self check-in. 10. Gimnasio.
+ *
+ * @return array<int, array{icon: string, title: string, text: string, phrase?: string}>
  */
 function maros_key_features( int $post_id, bool $es ): array {
 	$m        = static fn( string $k ) => (string) get_post_meta( $post_id, $k, true );
-	$sleeping = json_decode( $m( 'maros_sleeping' ), true );
-	$sleeping = is_array( $sleeping ) ? $sleeping : array();
-	$tour     = json_decode( $m( 'maros_tour' ), true );
-	$tour     = is_array( $tour ) ? $tour : array();
+	$json     = static fn( string $k ) => is_array( $v = json_decode( $m( $k ), true ) ) ? $v : array();
+	$sleeping = $json( 'maros_sleeping' );
+	$tour     = $json( 'maros_tour' );
+	$nearby   = array_values( array_filter( $json( 'maros_nearby' ), 'is_array' ) );
 	$terms    = get_the_terms( $post_id, 'equipamiento' );
 	$slugs    = $terms && ! is_wp_error( $terms ) ? wp_list_pluck( $terms, 'slug' ) : array();
-	$out      = array();
+	$codes    = array();
+	foreach ( array_merge( $sleeping, $tour ) as $room ) {
+		foreach ( (array) ( $room['amenities'] ?? array() ) as $a ) {
+			$codes[ (string) ( $a['code'] ?? '' ) ] = true;
+		}
+	}
+	$near = static function ( string $icon ) use ( $nearby ): ?array {
+		foreach ( $nearby as $r ) {
+			if ( $icon === ( $r['icon'] ?? '' ) && isset( $r['distance_km'] ) ) {
+				return $r;
+			}
+		}
+		return null;
+	};
+	$by_road = static fn( array $r ) => sprintf( $es ? '%1$s, a %2$s km por carretera' : '%1$s, %2$s km by road', $r['name'], number_format_i18n( (float) $r['distance_km'], 1 ) );
+	$out     = array();
 
-	// Piscina.
+	// 1. La playa.
+	$beach      = $near( 'beach' );
+	$beach_km   = $beach ? (float) $beach['distance_km'] : INF;
+	$front      = isset( $codes['waterfront'] ) || (bool) preg_match( '/beach\s*-?front|front\s*-?line|primera\s+l[ií]nea/i', $m( 'maros_subtitle' ) );
+	$access     = isset( $codes['beach_access'] ) || (bool) preg_grep( '/beach-access|acceso-a-la-playa/', $slugs );
+	if ( $front || $access || $beach_km <= 2 ) {
+		$out[] = array(
+			'icon'  => 'beach_access',
+			'title' => $front ? ( $es ? 'En primera línea de playa' : 'Beachfront' )
+				: ( $access ? ( $es ? 'Acceso directo a la playa' : 'Direct beach access' )
+				: ( $beach_km <= 0.5 ? ( $es ? 'Junto a la playa' : 'By the beach' ) : ( $es ? 'Cerca de la playa' : 'Close to the beach' ) ) ),
+			'text'  => $beach && $beach_km <= 2 ? $by_road( $beach ) : '',
+			// Para el extracto: «…, featuring a beachfront setting, …».
+			'phrase' => $front ? ( $es ? 'ubicación en primera línea de playa' : 'a beachfront setting' )
+				: ( $access ? ( $es ? 'acceso directo a la playa' : 'direct beach access' ) : ( $es ? 'la playa cerca' : 'the beach nearby' ) ),
+		);
+	}
+
+	// 2. Piscina privada.
 	$pool = $m( 'maros_pool' );
 	if ( in_array( $pool, array( 'private', 'both' ), true ) || ( '' === $pool && preg_grep( '/private-pool/', $slugs ) ) ) {
 		$heated = 'yes' === $m( 'maros_pool_heating' ) || (bool) preg_grep( '/heated-pool/', $slugs );
@@ -110,68 +191,62 @@ function maros_key_features( int $post_id, bool $es ): array {
 				? ( 'yes' === $m( 'maros_pool_heating_included' ) ? ( $es ? 'Climatización incluida en el precio' : 'Heating included in the price' ) : ( $es ? 'Climatización bajo petición' : 'Heating available on request' ) )
 				: ( $es ? 'Solo para tu grupo' : 'Just for your group' ),
 		);
-	} elseif ( 'communal' === $pool ) {
+	}
+
+	// 3 y 8. Vistas: de las estancias (spec 039) y, si no hay, de las comodidades de Lodgify.
+	$views = maros_key_views( $sleeping, $tour, $slugs, $es );
+	if ( $views['major'] ) {
+		$out[] = $views['major'];
+	}
+
+	// 4. Golf cerca, medido.
+	$golf = $near( 'golf' );
+	if ( $golf && (float) $golf['distance_km'] <= 2 ) {
+		$out[] = array( 'icon' => 'golf_view', 'title' => $es ? 'Cerca del golf' : 'Close to golf', 'text' => $by_road( $golf ), 'phrase' => $es ? 'el golf cerca' : 'golf nearby' );
+	}
+
+	// 5. Todos los dormitorios con su baño (si solo lo tienen algunos, no se destaca).
+	$suites = count( array_filter( $sleeping, static fn( $r ) => ! empty( $r['en_suite'] ) ) );
+	if ( $suites > 1 && $suites === count( $sleeping ) ) {
+		$out[] = array(
+			'icon'  => 'bed',
+			'title' => $es ? 'Todos los dormitorios en-suite' : 'Every bedroom en-suite',
+			'text'  => $es ? 'Cada dormitorio tiene su propio baño' : 'Each bedroom has its own bathroom',
+		);
+	}
+
+	// 6. Vida exterior: comedor, barbacoa o jacuzzi de una estancia exterior (la primera que los tenga).
+	foreach ( $tour as $room ) {
+		$has = array();
+		foreach ( (array) ( $room['amenities'] ?? array() ) as $a ) {
+			$has[ (string) ( $a['code'] ?? '' ) ] = true;
+		}
+		if ( empty( $room['outdoor'] ) || ! array_intersect_key( $has, array( 'bbq_grill' => 1, 'outdoor_dining_area' => 1, 'hot_tub' => 1 ) ) ) {
+			continue;
+		}
+		$bbq   = isset( $has['bbq_grill'] );
+		$dine  = isset( $has['outdoor_dining_area'] );
+		$out[] = isset( $has['hot_tub'] )
+			? array( 'icon' => 'hot_tub', 'title' => $es ? 'Jacuzzi exterior' : 'Outdoor hot tub', 'text' => (string) ( $room['name'] ?? '' ) )
+			: array(
+				'icon'  => $bbq ? 'bbq_grill' : 'outdoor_dining_area',
+				'title' => $bbq && $dine ? ( $es ? 'Comedor exterior con barbacoa' : 'Al fresco dining with barbecue' )
+					: ( $bbq ? ( $es ? 'Barbacoa' : 'Barbecue' ) : ( $es ? 'Comedor exterior' : 'Al fresco dining' ) ),
+				'text'  => (string) ( $room['name'] ?? '' ),
+			);
+		break;
+	}
+
+	// 7. Piscina comunitaria.
+	if ( 'communal' === $pool ) {
 		$out[] = array( 'icon' => 'pool', 'title' => $es ? 'Piscina comunitaria' : 'Communal pool', 'text' => '' );
 	}
 
-	// Vistas: de las estancias (spec 039) y, si no hay, de las comodidades de Lodgify.
-	$kinds = array(
-		'sea_view'      => array( 'sea', 'al mar' ),
-		'mountain_view' => array( 'mountain', 'a la montaña' ),
-		'golf_view'     => array( 'golf', 'al golf' ),
-		'garden_view'   => array( 'garden', 'al jardín' ),
-		'pool_view'     => array( 'pool', 'a la piscina' ),
-	);
-	$seen  = array();
-	$where = array();
-	foreach ( $sleeping as $room ) {
-		foreach ( (array) ( $room['amenities'] ?? array() ) as $a ) {
-			$code = (string) ( $a['code'] ?? '' );
-			if ( isset( $kinds[ $code ] ) ) {
-				$seen[ $code ] = true;
-				$where[]       = sprintf( $es ? 'Dormitorio %d' : 'Bedroom %d', (int) ( $room['number'] ?? 0 ) );
-			}
-		}
-	}
-	foreach ( $tour as $room ) {
-		if ( ! empty( $room['bedroom'] ) ) {
-			continue;
-		}
-		foreach ( (array) ( $room['amenities'] ?? array() ) as $a ) {
-			$code = (string) ( $a['code'] ?? '' );
-			if ( isset( $kinds[ $code ] ) ) {
-				$seen[ $code ] = true;
-				$where[]       = (string) ( $room['name'] ?? '' );
-			}
-		}
-	}
-	if ( ! $seen && preg_grep( '/sea-view/', $slugs ) ) {
-		$seen['sea_view'] = true;
-	}
-	if ( $seen ) {
-		$words = array_map( static fn( $c ) => $kinds[ $c ][ $es ? 1 : 0 ], array_keys( array_intersect_key( $kinds, $seen ) ) );
-		$last  = array_pop( $words );
-		$list  = $words ? implode( ', ', $words ) . ( $es ? ' y ' : ' and ' ) . $last : $last;
-		$where = array_slice( array_values( array_unique( array_filter( $where ) ) ), 0, 3 );
-		$out[] = array(
-			'icon'  => 'view',
-			'title' => $es ? 'Vistas ' . $list : ucfirst( $list ) . ' views',
-			'text'  => $where ? ( $es ? 'Desde ' : 'From ' ) . implode( ' · ', $where ) : '',
-		);
+	if ( $views['minor'] ) {
+		$out[] = $views['minor'];
 	}
 
-	// Baños en-suite.
-	$suites = count( array_filter( $sleeping, static fn( $r ) => ! empty( $r['en_suite'] ) ) );
-	if ( $suites > 0 ) {
-		$all   = $suites === count( $sleeping ) && $suites > 1;
-		$out[] = array(
-			'icon'  => 'bed',
-			'title' => 1 === $suites ? ( $es ? '1 dormitorio con baño en-suite' : '1 en-suite bedroom' ) : sprintf( $es ? '%d dormitorios con baño en-suite' : '%d en-suite bedrooms', $suites ),
-			'text'  => $all ? ( $es ? 'Cada dormitorio tiene su propio baño' : 'Every bedroom has its own bathroom' ) : '',
-		);
-	}
-
-	// Self check-in (es una opción además de la recepción en persona, marOS spec 032).
+	// 9. Self check-in (es una opción además de la recepción en persona, marOS spec 032).
 	if ( 'yes' === $m( 'maros_self_check_in' ) ) {
 		$out[] = array(
 			'icon'  => 'key',
@@ -180,10 +255,66 @@ function maros_key_features( int $post_id, bool $es ): array {
 		);
 	}
 
-	if ( count( $out ) < 4 && preg_grep( '/gym|fitness/', $slugs ) ) {
+	if ( preg_grep( '/gym|fitness/', $slugs ) ) {
 		$out[] = array( 'icon' => 'gym', 'title' => $es ? 'Gimnasio' : 'Gym', 'text' => '' );
 	}
 	return array_slice( $out, 0, 4 );
+}
+
+/**
+ * Vistas de la casa en dos grupos: las que pesan (mar, golf, montaña) y las menores (jardín,
+ * piscina), cada una con las estancias desde donde se ven.
+ *
+ * @return array{major: ?array, minor: ?array}
+ */
+function maros_key_views( array $sleeping, array $tour, array $slugs, bool $es ): array {
+	$kinds = array(
+		'sea_view'      => array( 'sea', 'al mar', true ),
+		'golf_view'     => array( 'golf', 'al golf', true ),
+		'mountain_view' => array( 'mountain', 'a la montaña', true ),
+		'garden_view'   => array( 'garden', 'al jardín', false ),
+		'pool_view'     => array( 'pool', 'a la piscina', false ),
+	);
+	$seen = array( true => array(), false => array() );
+	$from = array( true => array(), false => array() );
+	$add  = static function ( array $room, string $where ) use ( $kinds, &$seen, &$from ) {
+		foreach ( (array) ( $room['amenities'] ?? array() ) as $a ) {
+			$code = (string) ( $a['code'] ?? '' );
+			if ( isset( $kinds[ $code ] ) ) {
+				$major                    = $kinds[ $code ][2];
+				$seen[ $major ][ $code ] = true;
+				$from[ $major ][]        = $where;
+			}
+		}
+	};
+	foreach ( $sleeping as $room ) {
+		$add( $room, sprintf( $es ? 'Dormitorio %d' : 'Bedroom %d', (int) ( $room['number'] ?? 0 ) ) );
+	}
+	foreach ( $tour as $room ) {
+		if ( empty( $room['bedroom'] ) ) {
+			$add( $room, (string) ( $room['name'] ?? '' ) );
+		}
+	}
+	if ( ! $seen[ true ] && ! $seen[ false ] && preg_grep( '/sea-view/', $slugs ) ) {
+		$seen[ true ]['sea_view'] = true;
+	}
+	$out = array();
+	foreach ( array( 'major' => true, 'minor' => false ) as $key => $major ) {
+		if ( ! $seen[ $major ] ) {
+			$out[ $key ] = null;
+			continue;
+		}
+		$words       = array_map( static fn( $c ) => $kinds[ $c ][ $es ? 1 : 0 ], array_keys( array_intersect_key( $kinds, $seen[ $major ] ) ) );
+		$last        = array_pop( $words );
+		$list        = $words ? implode( ', ', $words ) . ( $es ? ' y ' : ' and ' ) . $last : $last;
+		$where       = array_slice( array_values( array_unique( array_filter( $from[ $major ] ) ) ), 0, 3 );
+		$out[ $key ] = array(
+			'icon'  => isset( $seen[ $major ]['golf_view'] ) && 1 === count( $seen[ $major ] ) ? 'golf_view' : ( $major ? 'view' : 'garden_view' ),
+			'title' => $es ? 'Vistas ' . $list : ucfirst( $list ) . ' views',
+			'text'  => $where ? ( $es ? 'Desde ' : 'From ' ) . implode( ' · ', $where ) : '',
+		);
+	}
+	return $out;
 }
 
 /** [maros_key_features] Bloque «Key features». */

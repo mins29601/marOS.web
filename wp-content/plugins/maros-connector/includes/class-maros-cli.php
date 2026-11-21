@@ -226,6 +226,38 @@ class Maros_CLI {
 	}
 
 	/**
+	 * Lista las zonas que no son una de las Areas de la web (las que creó la sincronización con el
+	 * nombre libre de marOS, p. ej. una urbanización) y, con --borrar, las borra. Las casas que las
+	 * tenían recuperan su Area en la siguiente sincronización.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--borrar]
+	 * : Borra las zonas que sobran. Sin esta opción solo las muestra.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp maros zonas-sobrantes
+	 *     wp maros zonas-sobrantes --borrar && wp maros sync
+	 *
+	 * @subcommand zonas-sobrantes
+	 */
+	public function zonas_sobrantes( $args, $assoc_args ) {
+		$terms = get_terms( array( 'taxonomy' => 'zona', 'hide_empty' => false, 'lang' => '' ) );
+		if ( is_wp_error( $terms ) ) {
+			WP_CLI::error( $terms->get_error_message() );
+		}
+		$extra = array_filter( $terms, static fn( $t ) => '' === Maros_Sync::zone_name( preg_replace( '/-es$/', '', $t->slug ), false ) );
+		foreach ( $extra as $t ) {
+			WP_CLI::log( sprintf( '  · %s (%s): %d casas', $t->name, $t->slug, $t->count ) );
+			if ( ! empty( $assoc_args['borrar'] ) ) {
+				wp_delete_term( $t->term_id, 'zona' );
+			}
+		}
+		WP_CLI::success( sprintf( '%d zonas que no son Areas de la web%s.', count( $extra ), $extra && ! empty( $assoc_args['borrar'] ) ? ', borradas' : '' ) );
+	}
+
+	/**
 	 * Muestra el estado de la conexión con marOS.
 	 */
 	public function status() {
