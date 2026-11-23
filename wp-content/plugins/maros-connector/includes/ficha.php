@@ -76,7 +76,10 @@ add_shortcode(
 	}
 );
 
-/** [maros_where] «Nueva Andalucía, Marbella» bajo el título. */
+/**
+ * [maros_where] «Nueva Andalucía, Marbella». Ya no va bajo el título: ahí va el nombre comercial
+ * (Julio 23-11-2026) y la zona está en las migas.
+ */
 add_shortcode(
 	'maros_where',
 	static function () {
@@ -376,11 +379,12 @@ add_shortcode(
 			'bedrooms'  => array( is_array( $rooms ) && $rooms, $es ? 'Dormitorios' : 'Bedrooms' ),
 			'pool'      => array( function_exists( 'maros_pools' ) && maros_pools( $post_id ), $es ? 'Piscina' : 'Pool' ),
 			'amenities' => array( $terms && ! is_wp_error( $terms ), $es ? 'Comodidades' : 'Amenities' ),
+			// Las opiniones solo se pintan si hay: al cargar la página se quita el enlace de toda sección que no esté.
+			// Van antes que la ubicación, como en la página (Julio 23-11-2026).
+			'reviews'   => array( function_exists( 'glsr_get_reviews' ), $es ? 'Opiniones' : 'Reviews' ),
 			// «Close to the Villa» y «Area Guide» (Julio, 18-11-2026); el script quita «Zona» si la casa no tiene.
 			'location'  => array( true, $es ? 'Cerca' : 'Nearby' ),
 			'area'      => array( true, $es ? 'Zona' : 'Area' ),
-			// Las opiniones solo se pintan si hay: al cargar la página se quita el enlace de toda sección que no esté.
-			'reviews'   => array( function_exists( 'glsr_get_reviews' ), $es ? 'Opiniones' : 'Reviews' ),
 			'faq'       => array( true, 'FAQ' ),
 		);
 		$html = '';
@@ -397,6 +401,7 @@ add_shortcode(
 /**
  * [maros_subtitle] El nombre comercial de Lodgify bajo el título, que es el nombre interno de marOS
  * (Julio 19-11-2026: «Casa Coral» de título y «Beachfront 3BR Townhouse with Garden» de subtítulo).
+ * Ocupa el sitio de «Zona, Municipio» (Julio 23-11-2026).
  */
 add_shortcode(
 	'maros_subtitle',

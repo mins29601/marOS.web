@@ -299,9 +299,11 @@ add_shortcode(
 		$items = array_map( static fn( $t ) => '<li>' . maros_icon_svg( maros_amenity_icon( $t->slug ), 22 ) . '<span>' . esc_html( maros_amenity_label( $t->name ) ) . '</span></li>', $terms );
 		$html  = '<ul class="mis-amenities">' . implode( '', $items ) . '</ul>';
 		if ( count( $items ) > 10 ) {
-			$html .= '<button type="button" class="mis-amenities__all" onclick="this.previousElementSibling.classList.add(\'is-open\');this.remove();">' . esc_html( sprintf( $es ? 'Ver las %d comodidades' : 'Show all %d amenities', count( $items ) ) ) . '</button>';
+			// El autop del bloque shortcode mete el botón en un <p>: la lista no es su hermano, sino la
+			// del mismo contenedor (Julio 23-11-2026: «no expande nada»).
+			$html .= '<button type="button" class="mis-amenities__all" onclick="var w=this.closest(\'.mis-amenities-wrap\'),l=w&&w.querySelector(\'.mis-amenities\');if(l){l.classList.add(\'is-open\');this.remove();}">' . esc_html( sprintf( $es ? 'Ver las %d comodidades' : 'Show all %d amenities', count( $items ) ) ) . '</button>';
 		}
-		return $html;
+		return '<div class="mis-amenities-wrap">' . $html . '</div>';
 	}
 );
 

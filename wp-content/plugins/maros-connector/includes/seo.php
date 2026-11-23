@@ -116,14 +116,22 @@ function maros_seo_keyphrase( int $post_id ): string {
 	return $generic;
 }
 
-/** Título SEO: la frase clave delante (Yoast lo pide), el nombre y la marca si caben. */
+/**
+ * Título SEO (el de la pestaña del navegador). Con nombre comercial: «Nombre · Nombre comercial |
+ * Marca», el mismo par que la ficha enseña de título y subtítulo (Julio 23-11-2026: «el título
+ * debería aparecer también en el title de la ventana»). Sin él, o si no cabe, la frase clave delante
+ * (Yoast lo pide), el nombre y la marca si caben.
+ */
 function maros_seo_title( int $post_id, string $keyphrase ): string {
 	$name = maros_seo_name( $post_id );
 	$site = get_bloginfo( 'name' );
 	$kw   = maros_seo_ucfirst( $keyphrase );
 	$has  = false !== mb_stripos( $keyphrase, $name );
+	$sub  = trim( (string) get_post_meta( $post_id, 'maros_subtitle', true ) );
 	$candidates = array_filter(
 		array(
+			'' === $sub ? '' : $name . ' · ' . $sub . ' | ' . $site,
+			'' === $sub ? '' : $name . ' · ' . $sub,
 			$has ? '' : $kw . ' · ' . $name . ' | ' . $site,
 			$has ? '' : $kw . ' · ' . $name,
 			$kw . ' | ' . $site,

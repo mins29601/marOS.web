@@ -434,11 +434,13 @@ class Maros_Reviews {
 	}
 
 	/**
-	 * [maros_reviews] en la ficha: nota media, número de opiniones y las últimas opiniones con
-	 * nombre, origen, fecha de estancia, estrellas y texto. No pinta nada si la casa no tiene.
+	 * [maros_reviews] en la ficha, a todo el ancho (Julio 23-11-2026, con el de Airbnb de modelo): nota
+	 * media, número de opiniones y las cuatro últimas en dos columnas, cada una cortada a unas cinco
+	 * líneas con «Ver más» si es más larga. Si hay más, «Ver todas las opiniones» abre una ventana con
+	 * todas. No pinta nada si la casa no tiene.
 	 */
 	public static function shortcode( $atts = array() ): string {
-		$atts    = shortcode_atts( array( 'limit' => 6 ), (array) $atts, 'maros_reviews' );
+		$atts    = shortcode_atts( array( 'limit' => 4 ), (array) $atts, 'maros_reviews' );
 		$post_id = (int) get_the_ID();
 		if ( ! $post_id || ! function_exists( 'glsr_get_reviews' ) ) {
 			return '';
@@ -463,43 +465,76 @@ class Maros_Reviews {
 		$es      = maros_is_es( $post_id );
 		$total   = max( count( $list ), (int) ( $reviews->total ?? 0 ) );
 		$average = array_sum( array_map( static fn( $r ) => (int) $r->rating, $list ) ) / count( $list );
-		$sources = array( 'airbnb' => 'Airbnb', 'booking' => 'Booking.com', 'vrbo' => 'Vrbo', 'google' => 'Google', 'direct' => '' );
-
-		$html  = '<section id="reviews" class="mis-reviews">';
-		$html .= '<h2 class="wp-block-heading has-large-font-size">' . esc_html( $es ? 'Opiniones' : 'Reviews' ) . '</h2>';
-		$html .= sprintf(
+		$limit   = max( 1, (int) $atts['limit'] );
+		$summary = sprintf(
 			'<p class="mis-reviews__summary"><span class="mis-reviews__average">★ %s</span> · %s</p>',
 			esc_html( number_format_i18n( $average, 2 ) ),
 			esc_html( sprintf( $es ? _n( '%d opinión', '%d opiniones', $total, 'maros-connector' ) : _n( '%d review', '%d reviews', $total, 'maros-connector' ), $total ) )
 		);
+
+		$html  = '<section id="reviews" class="mis-reviews">';
+		$html .= '<h2 class="wp-block-heading has-large-font-size">' . esc_html( $es ? 'Opiniones' : 'Reviews' ) . '</h2>' . $summary;
 		$html .= '<ul class="mis-reviews__list">';
-		foreach ( array_slice( $list, 0, max( 1, (int) $atts['limit'] ) ) as $review ) {
-			$id       = (int) $review->ID;
-			$source   = $sources[ (string) get_post_meta( $id, self::META_SOURCE, true ) ] ?? '';
-			$location = (string) get_post_meta( $id, self::META_LOCATION, true );
-			$stay     = (string) get_post_meta( $id, self::META_STAY, true );
-			$when     = $stay ? $stay . '-01' : substr( (string) $review->date, 0, 10 );
-			$lang     = sanitize_key( (string) get_post_meta( $id, self::META_LANGUAGE, true ) );
-			$meta     = array_filter(
-				array(
-					$location,
-					$when ? wp_date( 'F Y', strtotime( $when ) ) : '',
-					$source ? ( $es ? 'en ' : 'on ' ) . $source : '',
-				)
-			);
-			$html .= '<li class="mis-review">';
-			$html .= sprintf(
-				'<p class="mis-review__head"><strong>%s</strong> <span class="mis-review__stars" aria-label="%s">%s</span></p>',
-				esc_html( (string) $review->author ),
-				esc_attr( sprintf( $es ? '%d de 5 estrellas' : '%d out of 5 stars', (int) $review->rating ) ),
-				esc_html( str_repeat( '★', (int) $review->rating ) . str_repeat( '☆', 5 - (int) $review->rating ) )
-			);
-			$html .= $meta ? '<p class="mis-review__meta mis-muted">' . esc_html( implode( ' · ', $meta ) ) . '</p>' : '';
-			$html .= $review->title ? '<p class="mis-review__title"><strong>' . esc_html( (string) $review->title ) . '</strong></p>' : '';
-			$html .= sprintf( '<div class="mis-review__text"%s>%s</div>', $lang ? ' lang="' . esc_attr( $lang ) . '"' : '', wpautop( esc_html( (string) $review->content ) ) );
-			$html .= '</li>';
+		foreach ( array_slice( $list, 0, $limit ) as $review ) {
+			$html .= self::review_html( $review, $es, true );
 		}
-		$html .= '</ul></section>';
+		$html .= '</ul>';
+
+		if ( count( $list ) > $limit ) {
+			$title = $es ? 'Opiniones' : 'Reviews';
+			$html .= '<button type="button" class="mis-reviews__all" data-mis-reviews-open>' . esc_html( sprintf( $es ? 'Ver todas las opiniones (%d)' : 'Show all reviews (%d)', $total ) ) . '</button>';
+			$html .= '<dialog class="mis-reviews-modal" aria-labelledby="mis-reviews-modal-title">';
+			$html .= '<div class="mis-reviews-modal__bar"><button type="button" class="mis-reviews-modal__close" data-mis-reviews-close aria-label="' . esc_attr( $es ? 'Cerrar' : 'Close' ) . '"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+			$html .= '<div class="mis-reviews-modal__body"><h2 id="mis-reviews-modal-title" class="wp-block-heading has-large-font-size">' . esc_html( $title ) . '</h2>' . $summary . '<ul class="mis-reviews-modal__list">';
+			foreach ( $list as $review ) {
+				$html .= self::review_html( $review, $es, false );
+			}
+			$html .= '</ul></div></dialog>';
+		}
+		$html .= '</section>';
+
+		$file = dirname( __DIR__ ) . '/assets/reviews.js';
+		wp_enqueue_script( 'maros-reviews', plugins_url( 'assets/reviews.js', __DIR__ ), array(), (string) filemtime( $file ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		return $html;
+	}
+
+	/**
+	 * Una opinión: nombre, estrellas, lugar, fecha de estancia, origen y texto. En la ficha ($clamp)
+	 * el texto se corta a unas cinco líneas y lleva «Ver más», que reviews.js enseña solo si hace falta.
+	 */
+	private static function review_html( $review, bool $es, bool $clamp ): string {
+		$sources  = array( 'airbnb' => 'Airbnb', 'booking' => 'Booking.com', 'vrbo' => 'Vrbo', 'google' => 'Google', 'direct' => '' );
+		$id       = (int) $review->ID;
+		$source   = $sources[ (string) get_post_meta( $id, self::META_SOURCE, true ) ] ?? '';
+		$location = (string) get_post_meta( $id, self::META_LOCATION, true );
+		$stay     = (string) get_post_meta( $id, self::META_STAY, true );
+		$when     = $stay ? $stay . '-01' : substr( (string) $review->date, 0, 10 );
+		$lang     = sanitize_key( (string) get_post_meta( $id, self::META_LANGUAGE, true ) );
+		$meta     = array_filter(
+			array(
+				$location,
+				$when ? wp_date( 'F Y', strtotime( $when ) ) : '',
+				$source ? ( $es ? 'en ' : 'on ' ) . $source : '',
+			)
+		);
+		$html  = '<li class="mis-review">';
+		$html .= sprintf(
+			'<p class="mis-review__head"><strong>%s</strong> <span class="mis-review__stars" aria-label="%s">%s</span></p>',
+			esc_html( (string) $review->author ),
+			esc_attr( sprintf( $es ? '%d de 5 estrellas' : '%d out of 5 stars', (int) $review->rating ) ),
+			esc_html( str_repeat( '★', (int) $review->rating ) . str_repeat( '☆', 5 - (int) $review->rating ) )
+		);
+		$html .= $meta ? '<p class="mis-review__meta mis-muted">' . esc_html( implode( ' · ', $meta ) ) . '</p>' : '';
+		$html .= $review->title ? '<p class="mis-review__title"><strong>' . esc_html( (string) $review->title ) . '</strong></p>' : '';
+		$html .= sprintf(
+			'<div class="mis-review__text%s"%s>%s</div>',
+			$clamp ? ' is-clamped' : '',
+			$lang ? ' lang="' . esc_attr( $lang ) . '"' : '',
+			wpautop( esc_html( (string) $review->content ) )
+		);
+		if ( $clamp ) {
+			$html .= '<button type="button" class="mis-review__more" data-mis-review-more hidden data-less="' . esc_attr( $es ? 'Ver menos' : 'Show less' ) . '">' . esc_html( $es ? 'Ver más' : 'Show more' ) . '</button>';
+		}
+		return $html . '</li>';
 	}
 }
