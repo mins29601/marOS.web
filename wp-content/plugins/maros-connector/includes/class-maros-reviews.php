@@ -434,6 +434,38 @@ class Maros_Reviews {
 	}
 
 	/**
+	 * Nota media y número de opiniones aprobadas de una casa, o null si no tiene. La usan el pie
+	 * fijo del móvil ([maros_cta_line]) y el bloque de opiniones; se calcula una vez por página.
+	 *
+	 * @return array{average: float, total: int}|null
+	 */
+	public static function rating( int $post_id ): ?array {
+		static $cache = array();
+		if ( array_key_exists( $post_id, $cache ) ) {
+			return $cache[ $post_id ];
+		}
+		if ( ! $post_id || ! function_exists( 'glsr_get_reviews' ) ) {
+			return null;
+		}
+		$reviews = glsr_get_reviews(
+			array(
+				'assigned_posts' => $post_id,
+				'per_page'       => 100,
+				'status'         => 'approved',
+			)
+		);
+		$ratings = array();
+		foreach ( $reviews as $review ) {
+			$ratings[] = (int) $review->rating;
+		}
+		$cache[ $post_id ] = $ratings ? array(
+			'average' => array_sum( $ratings ) / count( $ratings ),
+			'total'   => max( count( $ratings ), (int) ( $reviews->total ?? 0 ) ),
+		) : null;
+		return $cache[ $post_id ];
+	}
+
+	/**
 	 * [maros_reviews] en la ficha, a todo el ancho (Julio 23-11-2026, con el de Airbnb de modelo): nota
 	 * media, número de opiniones y las cuatro últimas en dos columnas, cada una cortada a unas cinco
 	 * líneas con «Ver más» si es más larga. Si hay más, «Ver todas las opiniones» abre una ventana con

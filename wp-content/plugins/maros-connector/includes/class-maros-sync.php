@@ -592,6 +592,8 @@ class Maros_Sync {
 			'maros_pets_fee'             => (float) ( $pets['fee'] ?? $pet_fee['amount'] ?? 0 ),
 			'maros_pets_fee_freq'        => (string) ( $pets['frequency'] ?? $pet_fee['frequency'] ?? '' ),
 			'maros_events'               => self::flag( $d['events_allowed'] ?? null ),
+			// Julio 24-11-2026: la casa la gestiona Marbella in Style (marOS, Datos generales); sin el dato, nada.
+			'maros_managed'              => self::flag( $d['managed_by_us'] ?? null ),
 			'maros_license'              => sanitize_text_field( (string) ( $d['tourist_license'] ?? '' ) ),
 		);
 	}

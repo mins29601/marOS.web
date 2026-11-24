@@ -296,6 +296,10 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-carousel__videos { position: absolute; left: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 36px; padding: 6px 12px; background: rgba(37, 39, 40, .6); color: #fff; font-size: 0.9375rem; text-decoration: none; }
 .mis-carousel__videos:hover, .mis-carousel__videos:focus-visible { background: rgba(37, 39, 40, .85); color: #fff; }
 @media (min-width: 1024px) { .mis-carousel__videos { left: 28px; bottom: 24px; } }
+/* Móvil (Julio 24-11-2026, comparando con Airbnb): foto apaisada 4:3 en vez de casi vertical, para que la
+   casa se vea entera y el título asome debajo. */
+@media (max-width: 767px) { .mis-carousel { height: auto; aspect-ratio: 4 / 3; max-height: 72svh; } }
+@media (min-width: 768px) and (max-width: 1023px) { .mis-carousel { height: auto; aspect-ratio: 3 / 2; max-height: 72svh; } }
 @media (min-width: 1024px) { .mis-carousel { height: clamp(520px, 78vh, 820px); } .mis-carousel__nav--prev { left: 28px; } .mis-carousel__nav--next { right: 28px; } .mis-carousel__count { right: 28px; bottom: 24px; } }
 
 /* Cabecera de la ficha: blanca y transparente sobre la foto; al pasar la foto, la de siempre */
@@ -328,6 +332,12 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-facts li + li { border-left: 1px solid var(--mis-line); }
 .mis-facts strong { font-size: 1.375rem; font-weight: 500; color: var(--wp--preset--color--main); }
 @media (min-width: 768px) { .mis-facts li { padding-inline: 1.5rem; } }
+/* «Gestionada por Marbella in Style», bajo los datos de la casa (solo si marOS lo dice) */
+.mis-managed { display: flex; align-items: center; gap: 0.875rem; margin-top: 1.25rem; padding-block: 1rem; border-block: 1px solid var(--mis-line); }
+.mis-managed__mark { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--wp--preset--color--main); }
+.mis-managed p { margin: 0; display: grid; gap: 2px; line-height: 1.4; }
+.mis-managed strong { font-weight: 500; }
+.mis-managed span { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
 /* Descripción corta con «Read more» */
 .mis-desc { margin-top: 1.5rem; max-width: 62ch; max-height: calc(1.7em * 4); overflow: hidden; position: relative; }
 .mis-desc > * { margin-block: 0 1rem; }
@@ -483,6 +493,10 @@ html.mis-tour-open { overflow: hidden; }
 @media (max-width: 1023px) {
 	.wp-block-template-part:has(> .mis-header--ficha) { position: absolute; }
 	.mis-anchors, .admin-bar .mis-anchors { top: 0; }
+	/* No aparece hasta pasar la foto de cabecera (Julio 24-11-2026, como Airbnb): fija arriba y escondida;
+	   el script de [maros_anchors] le pone .is-shown. */
+	.mis-anchors--ficha { position: fixed; left: 0; right: 0; padding-inline: var(--wp--preset--spacing--medium); transform: translateY(-100%); visibility: hidden; transition: transform .2s ease, visibility 0s linear .2s; }
+	.mis-anchors--ficha.is-shown { transform: none; visibility: visible; transition: transform .2s ease; }
 	.mis-anchors a { padding: 0.7rem 0 0.55rem; margin-right: 1.25rem; font-size: 0.6875rem; letter-spacing: 0.1em; }
 	:where(#overview, #videos, #amenities, #conditions, #location, #area, #faq, #bedrooms, #reviews, #pool, .mis-keys) { scroll-margin-top: 52px; }
 }
@@ -665,7 +679,7 @@ html.mis-req-open, html.mis-req-open body { overflow: hidden; }
 .mis-req__foot .wp-element-button { flex: none; margin: 0; cursor: pointer; }
 .mis-req__foot .wp-element-button:disabled { opacity: 0.6; cursor: default; }
 .mis-req__done { padding-bottom: 1.5rem; }
-.mis-req__ok { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); }
+.mis-req__ok { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--wp--preset--color--main); color: var(--wp--preset--color--primary-alt-accent); }
 .mis-req__ok svg { width: 24px; height: 24px; }
 .mis-req__title { margin: 0; font-size: 1.5rem; font-weight: 500; outline: none; }
 .mis-req__ref b { font-size: 1.125rem; letter-spacing: 0.05em; }
@@ -729,6 +743,11 @@ html.mis-req-open, html.mis-req-open body { overflow: hidden; }
 .mis-sticky-cta p { margin: 0; font-size: var(--wp--preset--font-size--small); line-height: 1.25; min-width: 0; flex: 1 1 auto; }
 .mis-sticky-cta p strong { white-space: nowrap; }
 .mis-sticky-cta .wp-element-button { flex-shrink: 0; box-sizing: border-box; min-height: var(--mis-touch); padding: 0.55rem 1.1rem 0.45rem; font-size: 0.75rem; letter-spacing: 0.1em; }
+/* Pie fijo sin precio y con estrellas (Julio 24-11-2026, como Airbnb) */
+.mis-cta-line { display: grid; gap: 2px; }
+.mis-cta-line__dates { font-weight: 500; color: var(--wp--preset--color--main); }
+.mis-cta-line__rating { justify-self: start; font-size: 0.8125rem; color: var(--wp--preset--color--secondary); text-decoration: none; }
+.mis-cta-line__rating:hover, .mis-cta-line__rating:focus-visible { color: var(--wp--preset--color--main); text-decoration: underline; }
 .mis-price-line strong { font-size: 1rem; font-weight: 500; }
 .mis-price-line small { font-size: 0.8125rem; color: var(--wp--preset--color--secondary); }
 @media (min-width: 1024px) { .mis-sticky-cta { display: none; } }
