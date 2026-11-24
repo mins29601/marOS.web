@@ -262,6 +262,50 @@ foreach ( $mis_datos['tours'] as $tour ) {
 	$mis_tours_ids[ $en_slug ] = $par;
 }
 
+// Tipos de experiencia para los filtros del listado (Julio, 24-11-2026). Una experiencia puede tener
+// varios. Solo se ponen si la experiencia aún no tiene ninguno: lo cambiado en WordPress se respeta.
+WP_CLI::log( 'Tipos de experiencia…' );
+$mis_tipo_ids = array();
+foreach ( mis_tour_tipos() as $slug => $names ) {
+	Maros_Sync::term( 'tipo-tour', $slug, $names, 'en' );
+	foreach ( array( 'en' => $slug, 'es' => $slug . '-es' ) as $lang => $term_slug ) {
+		$t = get_term_by( 'slug', $term_slug, 'tipo-tour' );
+		if ( $t ) {
+			$mis_tipo_ids[ $lang ][ $slug ] = (int) $t->term_id;
+		}
+	}
+}
+$mis_tour_tipo = array(
+	'granada-private-tour'                          => array( 'day-tours' ),
+	'cordoba-private-tour'                          => array( 'day-tours' ),
+	'sevilla-private-tour'                          => array( 'day-tours' ),
+	'gibraltar-private-tour'                        => array( 'day-tours', 'nature-adventure' ),
+	'tangier-private-tour'                          => array( 'day-tours' ),
+	'wine-tour-ronda'                               => array( 'day-tours', 'food-drink' ),
+	'malaga-private-tour'                           => array( 'day-tours' ),
+	'winery-tour-by-jerez'                          => array( 'day-tours', 'food-drink' ),
+	'mijas-private-tour'                            => array( 'day-tours' ),
+	'marbella-tapas-tour'                           => array( 'food-drink' ),
+	'private-wine-tasting-in-marbella'              => array( 'food-drink' ),
+	'marbella-3-hour-guided-bicycle-tour'           => array( 'nature-adventure' ),
+	'marbella-puerto-banus-night-life-walking-tour' => array( 'lifestyle' ),
+	'marbella-golf-holidays'                        => array( 'lifestyle', 'multi-day-trips' ),
+	'3-day-best-of-andalusia-private-tour'          => array( 'multi-day-trips' ),
+	'5-day-andalusia-private-tour'                  => array( 'multi-day-trips' ),
+);
+$mis_tipos_puestos = 0;
+foreach ( $mis_tours_ids as $en_slug => $par ) {
+	foreach ( $par as $lang => $id ) {
+		if ( empty( $mis_tour_tipo[ $en_slug ] ) || wp_get_object_terms( $id, 'tipo-tour', array( 'fields' => 'ids' ) ) ) {
+			continue;
+		}
+		$ids = array_values( array_filter( array_map( static fn( $t ) => $mis_tipo_ids[ $lang ][ $t ] ?? 0, $mis_tour_tipo[ $en_slug ] ) ) );
+		wp_set_object_terms( $id, $ids, 'tipo-tour' );
+		++$mis_tipos_puestos;
+	}
+}
+WP_CLI::log( "  {$mis_tipos_puestos} experiencias con tipo nuevo." );
+
 // ---------------------------------------------------------------- menús
 
 WP_CLI::log( 'Menús…' );

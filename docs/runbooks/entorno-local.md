@@ -85,7 +85,9 @@ npm run wp -- eval-file wp-content/mis-scripts/setup/slugs-idioma.php
   web actual (`/services/<tipo>/<slug>/`) y ordena los menús. No pisa lo editado en WordPress
   (`… servicios.php forzar` para reescribirlo; `… servicios.php forzar-experiencias` reescribe solo
   las experiencias, y hace falta una vez para pasar a la ficha nueva las siete cargadas antes del
-  24-11-2026).
+  24-11-2026). También crea los tipos de experiencia (Day Tours, Food & Drink, Nature & Adventure,
+  Lifestyle, Multi-day Trips) que filtran el listado, y se los pone a las experiencias que aún no tienen
+  ninguno.
 - `opiniones-tours.php` importa las 117 opiniones de las fichas de experiencias de la web actual
   (`opiniones-tours.json`) y las asigna a cada experiencia en los dos idiomas. Se puede repetir.
 - `slugs-idioma.php` cambia «-2» por «-es» en el slug de las traducciones que chocaban con el inglés

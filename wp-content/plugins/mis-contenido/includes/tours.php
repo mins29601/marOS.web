@@ -10,6 +10,7 @@
  *  [mis_tour_book]     Caja de reserva (FareHarbor o solicitud).
  *  [mis_tour_sticky]   Barra de reserva fija en el móvil.
  *  [mis_tour_related]  «También te puede gustar»: otras experiencias del mismo idioma.
+ *  [mis_tour_filters]  Botones para filtrar el listado de experiencias por tipo (tipo-tour).
  *
  * Los textos se cargan con scripts/setup/servicios.php desde los borradores de marOS.content
  * (PC-40). Las listas son una línea por elemento; el programa, «hora | texto».
@@ -401,6 +402,12 @@ add_shortcode(
 		$line  = $price ? sprintf( $es ? 'Desde <strong>%s €</strong>' : 'From <strong>€%s</strong>', esc_html( number_format_i18n( $price ) ) ) : '<strong>' . esc_html( $dur ) . '</strong>';
 		$sub   = 'activity' === mis_tour_kind( $post_id ) ? ( $es ? 'Cancelación gratuita hasta 48 h' : 'Free cancellation up to 48 h' ) : ( 'tour' === mis_tour_kind( $post_id ) ? ( $es ? 'Cancelación flexible' : 'Flexible cancellation' ) : '' );
 		$sub   = $price && $dur ? trim( $dur . ' · ' . $sub, ' ·' ) : $sub;
+		// Con opiniones, arriba las estrellas y debajo precio o duración (Julio, 24-11-2026).
+		$r = mis_tour_rating( $post_id );
+		if ( $r ) {
+			$sub  = trim( wp_strip_all_tags( $line ) . ' · ' . $sub, ' ·' );
+			$line = '<a class="mis-tour-sticky__rating" href="#reviews">' . mis_tour_icon( 'star', 14 ) . '<strong>' . esc_html( number_format_i18n( $r['average'], 1 ) ) . '</strong> <span>(' . esc_html( sprintf( $es ? _n( '%d opinión', '%d opiniones', $r['count'], 'mis-contenido' ) : _n( '%d review', '%d reviews', $r['count'], 'mis-contenido' ), $r['count'] ) ) . ')</span></a>';
+		}
 		return '<div class="mis-sticky-cta mis-tour-sticky"><p class="mis-price-line">' . $line . ( $sub ? '<br><small>' . esc_html( $sub ) . '</small>' : '' ) . '</p><a class="wp-element-button" href="' . esc_url( mis_tour_book_url( $post_id ) ) . '">' . esc_html( $label ) . '</a></div>';
 	}
 );
@@ -447,5 +454,45 @@ add_shortcode(
 			$out .= '</div>';
 		}
 		return $out . '</div></section>';
+	}
+);
+
+/** Orden de los tipos de experiencia en los filtros (slug en inglés; el español lleva «-es»). */
+function mis_tour_tipos(): array {
+	return array(
+		'day-tours'          => array( 'Day Tours', 'Tours de un día' ),
+		'food-drink'         => array( 'Food & Drink', 'Gastronomía y vino' ),
+		'nature-adventure'   => array( 'Nature & Adventure', 'Naturaleza y aventura' ),
+		'lifestyle'          => array( 'Lifestyle', 'Estilo de vida' ),
+		'multi-day-trips'    => array( 'Multi-day Trips', 'Viajes de varios días' ),
+	);
+}
+
+add_shortcode(
+	'mis_tour_filters',
+	static function () {
+		$es    = function_exists( 'pll_current_language' ) && 'es' === pll_current_language();
+		$terms = get_terms( array( 'taxonomy' => 'tipo-tour', 'hide_empty' => true, 'lang' => $es ? 'es' : 'en' ) );
+		if ( is_wp_error( $terms ) || ! $terms ) {
+			return '';
+		}
+		$orden = array_keys( mis_tour_tipos() );
+		usort(
+			$terms,
+			static function ( $a, $b ) use ( $orden ) {
+				$pa = array_search( preg_replace( '/-es$/', '', $a->slug ), $orden, true );
+				$pb = array_search( preg_replace( '/-es$/', '', $b->slug ), $orden, true );
+				return ( false === $pa ? 99 : $pa ) <=> ( false === $pb ? 99 : $pb );
+			}
+		);
+		$out = '<div class="mis-tour-filters" role="group" aria-label="' . esc_attr( $es ? 'Filtrar experiencias' : 'Filter experiences' ) . '">';
+		$out .= '<button type="button" class="mis-chip is-active" data-tipo="" aria-pressed="true">' . esc_html( $es ? 'Todas' : 'All' ) . '</button>';
+		foreach ( $terms as $t ) {
+			$out .= '<button type="button" class="mis-chip" data-tipo="' . esc_attr( $t->slug ) . '" aria-pressed="false">' . esc_html( $t->name ) . '</button>';
+		}
+		$out .= '</div>';
+		// Filtra las tarjetas del listado (cada una lleva la clase tipo-tour-<slug>) y guarda el filtro en #<slug>.
+		$out .= "<script>(function(){var b=document.currentScript.previousElementSibling,q=b.parentElement.querySelector('.wp-block-post-template')||document.querySelector('.wp-block-post-template');if(!q)return;function f(t){b.querySelectorAll('.mis-chip').forEach(function(c){var on=c.dataset.tipo===t;c.classList.toggle('is-active',on);c.setAttribute('aria-pressed',on);});q.querySelectorAll(':scope>li').forEach(function(li){li.hidden=!!t&&!li.classList.contains('tipo-tour-'+t);});}b.addEventListener('click',function(e){var c=e.target.closest('.mis-chip');if(!c)return;f(c.dataset.tipo);history.replaceState(null,'',c.dataset.tipo?'#'+c.dataset.tipo:location.pathname+location.search);});var h=location.hash.slice(1);if(h&&b.querySelector('[data-tipo=\"'+CSS.escape(h)+'\"]'))f(h);})();</script>";
+		return $out;
 	}
 );

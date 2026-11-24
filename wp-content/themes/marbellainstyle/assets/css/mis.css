@@ -1173,3 +1173,20 @@ html.mis-no-scroll { overflow: hidden; }
 
 /* Barra del móvil: duración y cancelación a la izquierda. */
 .mis-tour-sticky small { color: var(--wp--preset--color--secondary); }
+
+/* Ficha de experiencia: menos aire entre la galería y las migas (Julio, 24-11-2026). */
+main.mis-tour-ficha { margin-block-start: 0; }
+.mis-tour-ficha > .mis-ficha-cols { padding-top: 1rem; }
+.mis-tour-sticky__rating { display: inline-flex; align-items: center; gap: 0.25rem; color: inherit; text-decoration: none; }
+.mis-tour-sticky__rating svg { color: var(--wp--preset--color--primary); }
+.mis-tour-sticky__rating span { color: var(--wp--preset--color--secondary); }
+
+/* Listado de experiencias: filtros por tipo y menos aire bajo el título de la página. */
+.wp-block-group.alignfull:has(+ .wp-block-group.alignfull > .mis-tour-grid) { padding-bottom: 0 !important; }
+.wp-block-group.alignfull:has(> .mis-tour-grid) { padding-top: var(--wp--preset--spacing--medium) !important; }
+.mis-tour-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.75rem; }
+.mis-chip { font: inherit; font-size: var(--wp--preset--font-size--small); min-height: 2.5rem; padding: 0.4rem 1rem; border: 1px solid var(--mis-line); border-radius: 999px; background: transparent; color: var(--wp--preset--color--main); cursor: pointer; }
+.mis-chip:hover { border-color: var(--wp--preset--color--main); }
+.mis-chip.is-active { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); color: var(--wp--preset--color--base); }
+.mis-tour-grid .wp-block-post[hidden] { display: none; }
+@media (max-width: 599px) { .mis-tour-filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding-inline: var(--wp--preset--spacing--medium); } .mis-chip { flex-shrink: 0; } }
