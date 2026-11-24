@@ -32,6 +32,32 @@ SERVICIOS = [
     {"draft": "PC-36-chef.md", "kind": "post", "type": "catering",
      "slug": {"en": "private-chef-in-marbella", "es": "chef-privado-en-marbella"}},
 ]
+# Servicios de la web actual (borradores/servicios/, 24-11-2026): «cats» son las categorías de los
+# filtros de la página Concierge (Julio, 24-11-2026); el slug sale del borrador.
+WEB = [
+    ("chauffeur", "transport", ["transfers"]),
+    ("malaga-airport", "transport", ["transfers"]),
+    ("gibraltar-airport", "transport", ["transfers"]),
+    ("marbella-airport", "transport", ["transfers"]),
+    ("golf-transfers", "transport", ["transfers"]),
+    ("catering-events", "catering", ["chef-catering", "events-weddings"]),
+    ("bbq", "catering", ["chef-catering", "events-weddings"]),
+    ("cocktail-bar", "catering", ["chef-catering", "events-weddings"]),
+    ("christmas", "catering", ["chef-catering"]),
+    ("event-management", "events", ["events-weddings"]),
+    ("party-planner", "events", ["events-weddings"]),
+    ("wedding-planner", "events", ["events-weddings"]),
+    ("private-jet", "concierge", ["yachts-jets"]),
+    ("yacht-charter", "concierge", ["yachts-jets"]),
+]
+# Portadas de tipo con texto de la web actual.
+SERVICIOS += [
+    {"draft": "servicios/catering.md", "kind": "term", "type": "catering"},
+    {"draft": "servicios/events.md", "kind": "term", "type": "events"},
+]
+SERVICIOS[2]["cats"] = ["chef-catering"]  # chef privado (PC-36)
+SERVICIOS += [{"draft": f"servicios/{d}.md", "kind": "post", "type": ty, "cats": c} for d, ty, c in WEB]
+
 TOURS = ["granada", "cordoba", "sevilla", "gibraltar", "tanger", "ronda", "tapas-marbella",
          "malaga", "jerez", "mijas", "bicicleta", "puerto-banus-noche", "cata-vinos-marbella",
          "andalucia-3-dias", "andalucia-5-dias", "golf"]
@@ -282,6 +308,8 @@ def main():
         item = dict(s)
         for lang, sec in (("en", "EN"), ("es", "ES")):
             body = seccion(md, sec)
+            if s["kind"] == "post" and "slug" not in s:
+                item.setdefault("slug", {})[lang] = re.search(r"\*\*Slug\*\*:\s*`([^`]+)`", body).group(1)
             if s.get("cortar") and s["cortar"] in body:
                 body = body.split(s["cortar"])[0]
             meta, exc, blk, plain = bloques(body, "service")

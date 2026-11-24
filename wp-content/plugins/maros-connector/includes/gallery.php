@@ -17,7 +17,8 @@ defined( 'ABSPATH' ) || exit;
  * experiencias (mis-contenido, `tour_gallery`).
  */
 function maros_gallery_meta_key( int $post_id ): string {
-	return 'mis_tour' === get_post_type( $post_id ) ? 'tour_gallery' : 'maros_gallery';
+	$keys = array( 'mis_tour' => 'tour_gallery', 'mis_service' => 'service_gallery' );
+	return $keys[ (string) get_post_type( $post_id ) ] ?? 'maros_gallery';
 }
 
 /**
@@ -29,7 +30,7 @@ function maros_gallery_meta_key( int $post_id ): string {
 function maros_gallery_sections( int $post_id, bool $es ): array {
 	$gallery  = array_values( array_unique( array_filter( array_map( 'intval', explode( ',', (string) get_post_meta( $post_id, maros_gallery_meta_key( $post_id ), true ) ) ) ) ) );
 	// Una experiencia sin galería enseña al menos su foto destacada.
-	if ( ! $gallery && 'mis_tour' === get_post_type( $post_id ) && has_post_thumbnail( $post_id ) ) {
+	if ( ! $gallery && in_array( get_post_type( $post_id ), array( 'mis_tour', 'mis_service' ), true ) && has_post_thumbnail( $post_id ) ) {
 		$gallery = array( (int) get_post_thumbnail_id( $post_id ) );
 	}
 	$tour     = json_decode( (string) get_post_meta( $post_id, 'maros_tour', true ), true );
@@ -100,7 +101,9 @@ function maros_gallery_sections( int $post_id, bool $es ): array {
 
 	$rest = array_values( array_diff( $gallery, $in_rooms ) );
 	if ( $rest ) {
-		array_unshift( $sections, array( 'title' => $es ? 'La villa' : 'The villa', 'line' => '', 'photos' => $rest ) );
+		// «La villa» solo en las propiedades; en experiencias y servicios, sin título.
+		$villa = 'mis_property' === get_post_type( $post_id ) ? ( $es ? 'La villa' : 'The villa' ) : '';
+		array_unshift( $sections, array( 'title' => $villa, 'line' => '', 'photos' => $rest ) );
 	}
 	return $sections;
 }

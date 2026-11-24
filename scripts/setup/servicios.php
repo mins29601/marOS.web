@@ -16,6 +16,13 @@
  *   galería (servicios/fotos-tours.json).
  * - Los servicios de ejemplo «Private driver» y «Concierge» pasan a borrador: su texto está
  *   ahora en la portada de su tipo.
+ * - Los servicios de la web actual (borradores/servicios/ de marOS.content, 24-11-2026): cinco de
+ *   transporte, cuatro de chef y catering, tres de eventos, jet privado y barcos, con el texto de las
+ *   portadas de Chef y catering y de Eventos, y las fotos de su página actual
+ *   (servicios/fotos-servicios.json). Sin los que no están activos (personal shopper, paquete
+ *   vacacional, personal doméstico, wellness). El de ejemplo de Eventos pasa a borrador.
+ * - Categorías de los filtros de la página Concierge (categoria-servicio, Julio 24-11-2026), y esa
+ *   página pasa de las tarjetas de los tipos al listado con filtros (patrón service-list).
  * - Menús: bajo Servicios, los cuatro tipos; bajo Experiencias, las que falten.
  * - Ilustraciones (servicios/img/, dibujadas con dibujar.py): sin etiqueta visible; el texto
  *   alternativo y el nombre del archivo dicen que son imágenes generadas con IA (Julio, 18-11-2026): imagen de cada tipo y de los servicios que aún no tienen foto.
@@ -137,7 +144,9 @@ foreach ( $mis_tipos as $slug => $tipo ) {
 // ---------------------------------------------------------------- servicios
 
 WP_CLI::log( 'Servicios…' );
-$ids_par = array();
+$ids_par      = array();
+$mis_srv_ids  = array();
+$mis_srv_cats = array();
 foreach ( $mis_datos['servicios'] as $s ) {
 	foreach ( array( 'en', 'es' ) as $lang ) {
 		$t   = $s[ $lang ];
@@ -161,12 +170,24 @@ foreach ( $mis_datos['servicios'] as $s ) {
 			WP_CLI::log( "  + tipo $lang " . wp_make_link_relative( get_term_link( $tid ) ) );
 			continue;
 		}
-		$old = 'en' === $lang ? array( 'private-chef' ) : array( 'chef-privado' );
-		$id  = mis_srv_post( 'mis_service', $lang, $s['slug'][ $lang ], $old, $t, $mis_forzar );
+		$old  = 'private-chef-in-marbella' === $s['slug']['en'] ? ( 'en' === $lang ? array( 'private-chef' ) : array( 'chef-privado' ) ) : array();
+		$slug = $s['slug'][ $lang ];
+		// Polylang (gratuito) no deja repetir el slug en otro idioma: el español lleva «-es».
+		if ( 'es' === $lang && $slug === $s['slug']['en'] ) {
+			$slug .= '-es';
+		}
+		$id = mis_srv_post( 'mis_service', $lang, $slug, $old, $t, $mis_forzar );
 		wp_set_object_terms( $id, array( $tid ), 'tipo-servicio' );
-		update_post_meta( $id, 'service_summary', $mis_tipos[ $s['type'] ][1][ 'en' === $lang ? 0 : 1 ] );
+		// La frase del tipo solo encaja con el chef (único servicio de su tipo cuando se escribió); los de
+		// la web actual ya abren con su extracto. Lo escrito en WordPress se respeta.
+		$frase = 'private-chef-in-marbella' === $s['slug']['en'] ? $mis_tipos[ $s['type'] ][1][ 'en' === $lang ? 0 : 1 ] : '';
+		if ( ! empty( $GLOBALS['mis_srv_escrito'] ) ) {
+			update_post_meta( $id, 'service_summary', $frase );
+		}
 		update_post_meta( $id, 'service_price_from', 'en' === $lang ? 'Price on request' : 'Precio a consultar' );
 		$ids_par[ $lang ] = $id;
+		$mis_srv_ids[ $s['slug']['en'] ][ $lang ] = $id;
+		$mis_srv_cats[ $s['slug']['en'] ]         = $s['cats'] ?? array();
 	}
 	if ( ! empty( $ids_par['en'] ) && ! empty( $ids_par['es'] ) ) {
 		pll_save_post_translations( $ids_par );
@@ -175,12 +196,13 @@ foreach ( $mis_datos['servicios'] as $s ) {
 }
 
 // Los servicios de ejemplo cuyo texto está ahora en la portada de su tipo.
-foreach ( array( 'en' => array( 'private-driver', 'concierge' ), 'es' => array( 'chofer-privado', 'conserjeria' ) ) as $lang => $slugs ) {
+// También el de ejemplo de Eventos: ya están los de la web actual (24-11-2026).
+foreach ( array( 'en' => array( 'private-driver', 'concierge', 'events-weddings' ), 'es' => array( 'chofer-privado', 'conserjeria', 'eventos-bodas' ) ) as $lang => $slugs ) {
 	foreach ( $slugs as $slug ) {
 		$id = mis_srv_buscar( 'mis_service', $lang, array( $slug ) );
 		if ( $id && 'publish' === get_post_status( $id ) ) {
 			wp_update_post( array( 'ID' => $id, 'post_status' => 'draft' ) );
-			WP_CLI::log( "  ~ mis_service $lang /$slug/ a borrador (su texto está en la portada del tipo)" );
+			WP_CLI::log( "  ~ mis_service $lang /$slug/ a borrador (era de ejemplo)" );
 		}
 	}
 }
@@ -192,6 +214,37 @@ foreach ( get_posts( array( 'post_type' => 'mis_service', 'lang' => '', 'numberp
 		update_post_meta( $id, 'service_note', $es ? 'También si no te alojas con nosotros.' : 'Also available if you are not staying with us.' );
 	}
 }
+
+// Categorías de los filtros de la página Concierge (Julio, 24-11-2026). Un servicio puede tener
+// varias. Solo se ponen si el servicio aún no tiene ninguna: lo cambiado en WordPress se respeta.
+WP_CLI::log( 'Categorías de servicio…' );
+$mis_cat_ids = array();
+foreach ( mis_servicio_categorias() as $slug => $names ) {
+	Maros_Sync::term( 'categoria-servicio', $slug, $names, 'en' );
+	foreach ( array( 'en' => $slug, 'es' => $slug . '-es' ) as $lang => $term_slug ) {
+		$term = get_term_by( 'slug', $term_slug, 'categoria-servicio' );
+		if ( $term ) {
+			$mis_cat_ids[ $lang ][ $slug ] = (int) $term->term_id;
+		}
+	}
+}
+$mis_cats_puestas = 0;
+foreach ( $mis_srv_ids as $en_slug => $par ) {
+	foreach ( $par as $lang => $id ) {
+		if ( empty( $mis_srv_cats[ $en_slug ] ) || wp_get_object_terms( $id, 'categoria-servicio', array( 'fields' => 'ids' ) ) ) {
+			continue;
+		}
+		wp_set_object_terms( $id, array_values( array_filter( array_map( static fn( $c ) => $mis_cat_ids[ $lang ][ $c ] ?? 0, $mis_srv_cats[ $en_slug ] ) ) ), 'categoria-servicio' );
+		++$mis_cats_puestas;
+	}
+}
+// Conserjería no tiene servicios sueltos: su portada sale como tarjeta en el listado.
+foreach ( $mis_tipo_ids['concierge'] ?? array() as $tid ) {
+	if ( '' === (string) get_term_meta( $tid, 'service_categories', true ) ) {
+		update_term_meta( $tid, 'service_categories', 'concierge-villa' );
+	}
+}
+WP_CLI::log( "  {$mis_cats_puestas} servicios con categoría nueva." );
 
 // ---------------------------------------------------------------- experiencias
 
@@ -307,6 +360,17 @@ foreach ( $mis_tours_ids as $en_slug => $par ) {
 WP_CLI::log( "  {$mis_tipos_puestos} experiencias con tipo nuevo." );
 
 // ---------------------------------------------------------------- menús
+
+// Página Concierge: el listado con filtros sustituye a las tarjetas de los tipos (Inicio las conserva).
+foreach ( array( 'en', 'es' ) as $lang ) {
+	$page = get_page_by_path( 'services' );
+	$pid  = $page ? (int) ( pll_get_post( $page->ID, $lang ) ?: 0 ) : 0;
+	$html = $pid ? (string) get_post_field( 'post_content', $pid, 'raw' ) : '';
+	if ( str_contains( $html, '"marbellainstyle/service-grid"' ) ) {
+		wp_update_post( array( 'ID' => $pid, 'post_content' => str_replace( '"marbellainstyle/service-grid"', '"marbellainstyle/service-list"', $html ) ) );
+		WP_CLI::log( "  ~ página Concierge ($lang): listado de servicios con filtros" );
+	}
+}
 
 WP_CLI::log( 'Menús…' );
 $mis_pagina = static function ( string $slug, string $lang ): int {
@@ -507,6 +571,76 @@ foreach ( $mis_tours_ids as $en_slug => $par ) {
 		}
 	}
 	WP_CLI::log( sprintf( '  + %s: %d fotos', $en_slug, count( $ids ) ) );
+}
+
+// ---------------------------------------------------------------- fotos de los servicios
+
+WP_CLI::log( 'Fotos de los servicios (web actual)…' );
+$mis_fotos_srv = json_decode( (string) file_get_contents( __DIR__ . '/servicios/fotos-servicios.json' ), true );
+// Sube (o encuentra, por su URL de origen) una foto de la web actual; devuelve su id en Medios.
+$mis_foto = static function ( string $url, string $name, string $alt_en, string $alt_es ): int {
+	$found = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'numberposts' => 1, 'fields' => 'ids', 'lang' => '', 'meta_key' => 'mis_foto_origen', 'meta_value' => $url ) ); // phpcs:ignore WordPress.DB.SlowDBQuery
+	if ( $found ) {
+		return (int) $found[0];
+	}
+	$tmp = download_url( $url, 60 );
+	if ( is_wp_error( $tmp ) ) {
+		WP_CLI::warning( "  $url: " . $tmp->get_error_message() );
+		return 0;
+	}
+	$att = media_handle_sideload( array( 'name' => sanitize_file_name( $name . '.' . pathinfo( (string) wp_parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION ) ), 'tmp_name' => $tmp ), 0, $alt_en );
+	if ( is_wp_error( $att ) ) {
+		@unlink( $tmp ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.unlink_unlink
+		WP_CLI::warning( "  $url: " . $att->get_error_message() );
+		return 0;
+	}
+	update_post_meta( $att, 'mis_foto_origen', $url );
+	update_post_meta( $att, '_wp_attachment_image_alt', $alt_en );
+	update_post_meta( $att, 'mis_alt_es', $alt_es );
+	return (int) $att;
+};
+foreach ( $mis_srv_ids as $en_slug => $par ) {
+	$urls = $mis_fotos_srv['fotos'][ $en_slug ] ?? array();
+	if ( ! $urls || empty( $par['en'] ) ) {
+		continue;
+	}
+	// Si alguien ya montó la galería en WordPress, se respeta.
+	if ( get_post_meta( $par['en'], 'service_gallery', true ) && 'web-actual' !== get_post_meta( $par['en'], 'service_gallery_origen', true ) ) {
+		WP_CLI::log( "  = $en_slug (galería editada en WordPress)" );
+		continue;
+	}
+	$title_en = get_the_title( $par['en'] );
+	$title_es = empty( $par['es'] ) ? $title_en : get_the_title( $par['es'] );
+	$ids      = array_values( array_filter( array_map( static fn( $n, $url ) => $mis_foto( $url, "servicio-$en_slug-" . ( $n + 1 ), $title_en, $title_es ), array_keys( $urls ), $urls ) ) );
+	if ( ! $ids ) {
+		continue;
+	}
+	foreach ( $par as $id ) {
+		update_post_meta( $id, 'service_gallery', implode( ',', $ids ) );
+		update_post_meta( $id, 'service_gallery_origen', 'web-actual' );
+		// La ilustración o la foto de ejemplo pasa a la primera foto real.
+		$thumb      = (int) get_post_thumbnail_id( $id );
+		$de_ejemplo = $thumb && ( get_post_meta( $thumb, 'maros_photo_hash', true ) || get_post_meta( $thumb, 'mis_ilustracion', true ) );
+		if ( ! $thumb || $de_ejemplo || in_array( $thumb, $ids, true ) ) {
+			set_post_thumbnail( $id, $ids[0] );
+		}
+	}
+	WP_CLI::log( sprintf( '  + %s: %d fotos', $en_slug, count( $ids ) ) );
+}
+// Foto real de cada tipo en lugar de la ilustración (si alguien puso otra en WordPress, se respeta).
+foreach ( $mis_fotos_srv['tipos'] ?? array() as $slug => $url ) {
+	foreach ( $mis_tipo_ids[ $slug ] ?? array() as $lang => $tid ) {
+		$actual = (int) get_term_meta( $tid, 'service_image', true );
+		if ( $actual && ! get_post_meta( $actual, 'mis_ilustracion', true ) ) {
+			continue;
+		}
+		$name = wp_specialchars_decode( get_term( $tid )->name );
+		$att  = $mis_foto( $url, "servicios-$slug", $name, $name );
+		if ( $att ) {
+			update_term_meta( $tid, 'service_image', $att );
+			WP_CLI::log( "  ~ tipo $slug ($lang) con foto de la web actual" );
+		}
+	}
 }
 
 flush_rewrite_rules( true );

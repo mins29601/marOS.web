@@ -41,6 +41,7 @@ function mis_service_fields(): array {
 		'service_summary'    => array( 'type' => 'string', 'label' => 'Resumen corto' ),
 		'service_price_from' => array( 'type' => 'string', 'label' => 'Precio orientativo' ),
 		'service_note'       => array( 'type' => 'string', 'label' => 'Nota bajo el botón (p. ej. «También si no te alojas con nosotros»)' ),
+		'service_gallery'    => array( 'type' => 'string', 'label' => 'Fotos (ids de Medios separados por comas)' ),
 	);
 }
 
@@ -83,7 +84,7 @@ function mis_contenido_register(): void {
 			// /services/<tipo>/<slug>/ (spec 005): %tipo-servicio% lo rellena mis_service_link().
 			'rewrite'      => array( 'slug' => 'services/%tipo-servicio%', 'with_front' => false ),
 			'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields', 'revisions' ),
-			'taxonomies'   => array( 'zona', 'tipo-servicio' ),
+			'taxonomies'   => array( 'zona', 'tipo-servicio', 'categoria-servicio' ),
 		)
 	);
 
@@ -135,6 +136,25 @@ function mis_contenido_register(): void {
 		)
 	);
 
+	// Categorías de los filtros de la página Concierge (Julio, 24-11-2026). Un servicio puede tener
+	// varias; no cambian la URL (eso lo hace el tipo de servicio).
+	register_taxonomy(
+		'categoria-servicio',
+		array( 'mis_service' ),
+		array(
+			'labels'            => array(
+				'name'          => __( 'Service categories', 'mis-contenido' ),
+				'singular_name' => __( 'Service category', 'mis-contenido' ),
+			),
+			'public'            => false,
+			'show_ui'           => true,
+			'hierarchical'      => true,
+			'show_in_rest'      => true,
+			'show_admin_column' => true,
+			'rewrite'           => false,
+		)
+	);
+
 	foreach ( array( 'mis_tour' => mis_tour_fields() + mis_tour_ficha_fields(), 'mis_service' => mis_service_fields() ) as $post_type => $fields ) {
 		foreach ( $fields as $key => $field ) {
 			register_post_meta(
@@ -176,7 +196,7 @@ add_filter(
 add_filter(
 	'pll_get_taxonomies',
 	static function ( array $taxonomies ): array {
-		return $taxonomies + array( 'zona' => 'zona', 'tipo-servicio' => 'tipo-servicio', 'tipo-tour' => 'tipo-tour' );
+		return $taxonomies + array( 'zona' => 'zona', 'tipo-servicio' => 'tipo-servicio', 'tipo-tour' => 'tipo-tour', 'categoria-servicio' => 'categoria-servicio' );
 	}
 );
 // Solo los datos que no dependen del idioma se copian a la traducción (los textos, no).

@@ -77,7 +77,8 @@ npm run wp -- eval-file wp-content/mis-scripts/setup/slugs-idioma.php
   idempotente y los textos son de ejemplo.
 - `zonas.php` crea las zonas que no crea el contenido inicial (New Golden Mile y 8 más), escribe la guía en inglés y español
   de las 13 y las añade a los menús. No pisa una guía que ya tenga texto (`… zonas.php forzar` para reescribirla).
-- `servicios.php` carga los servicios (Transporte, Chef privado, Conserjería) y las dieciséis experiencias de
+- `servicios.php` carga los servicios de la web actual (16, con sus fotos y sus categorías para los filtros de
+  la página Concierge) y las dieciséis experiencias de
   la web actual con los textos de los borradores de marOS.content (`scripts/setup/servicios/servicios.json`,
   que genera `servicios/generar.py`): destacados, programa, qué incluye, punto de encuentro, cancelación e
   id de FareHarbor en campos propios, y las fotos de la galería de cada ficha actual

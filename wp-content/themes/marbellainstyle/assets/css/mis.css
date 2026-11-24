@@ -1189,4 +1189,11 @@ main.mis-tour-ficha { margin-block-start: 0; }
 .mis-chip:hover { border-color: var(--wp--preset--color--main); }
 .mis-chip.is-active { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); color: var(--wp--preset--color--base); }
 .mis-tour-grid .wp-block-post[hidden] { display: none; }
+/* Listado de servicios (página Concierge): mismas tarjetas y filtros que Experiencias. */
+.wp-block-group.alignfull:has(+ .wp-block-group.alignfull > .mis-servicios) { padding-top: var(--wp--preset--spacing--large) !important; padding-bottom: 0 !important; }
+.wp-block-group.alignfull:has(> .mis-servicios) { padding-top: var(--wp--preset--spacing--x-small) !important; }
+.mis-servicios-listado { display: grid; gap: 2.5rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+@media (min-width: 1024px) { .mis-servicios-listado { grid-template-columns: repeat(3, 1fr); } }
+.mis-servicios-listado .mis-card[hidden] { display: none; }
+.mis-servicios-listado .mis-card h3 { margin: 0; font-size: var(--wp--preset--font-size--medium); }
 @media (max-width: 599px) { .mis-tour-filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding-inline: var(--wp--preset--spacing--medium); } .mis-chip { flex-shrink: 0; } }
