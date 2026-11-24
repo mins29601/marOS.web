@@ -244,3 +244,25 @@ add_shortcode(
 		return $forms ? do_shortcode( sprintf( '[contact-form-7 id="%d"]', $forms[0]->ID ) ) : '';
 	}
 );
+
+/**
+ * Una plantilla del tema con el slug de la página (page-areas.html, page-zonas.html) gana a la plantilla
+ * elegida en la página. Areas y Zonas se crearon con «page-no-title» (de Ollie), que estrecha el
+ * contenido a 760 px: la rejilla de zonas salía más estrecha que la cabecera y el resto de la web, y
+ * sin la portada de la plantilla (Julio, 24-11-2026).
+ */
+add_filter(
+	'page_template_hierarchy',
+	static function ( array $templates ): array {
+		$page = get_queried_object();
+		if ( ! $page instanceof WP_Post || '' === $page->post_name ) {
+			return $templates;
+		}
+		$slug = 'page-' . $page->post_name;
+		if ( ! file_exists( get_stylesheet_directory() . '/templates/' . $slug . '.html' ) ) {
+			return $templates;
+		}
+		$own = array_values( array_filter( $templates, static fn( $t ) => $t === $slug . '.php' || $t === $slug ) );
+		return array_values( array_unique( array_merge( $own ?: array( $slug . '.php' ), $templates ) ) );
+	}
+);
