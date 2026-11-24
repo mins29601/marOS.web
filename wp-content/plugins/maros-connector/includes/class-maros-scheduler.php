@@ -83,6 +83,11 @@ class Maros_Scheduler {
 	/** Tarea de 5 minutos. */
 	public static function tick( bool $force_poll = false ): array {
 		$done = array( 'polled' => false, 'processed' => 0, 'failed' => 0 );
+		// En una copia local de pruebas conectada al mock, la tarea pisaría las fichas con los datos
+		// simulados: scripts/bajar-pruebas.sh pone maros_sync_paused (wp option delete lo reactiva).
+		if ( get_option( 'maros_sync_paused' ) ) {
+			return $done;
+		}
 		if ( ! self::lock() ) {
 			return $done;
 		}

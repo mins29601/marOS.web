@@ -120,12 +120,26 @@ de `mins29601/marOS`). Presupuesto y reservas siguen siendo una propuesta (issue
 Para probar contra marOS pruebas en local, pon en `.wp-env.override.json` `MAROS_ENV=staging`,
 `MAROS_API_BASE` y `MAROS_API_KEY` (ese archivo no se sube).
 
-## 5. Traer contenido de pruebas (cuando exista)
+## 5. Traer contenido de pruebas
+
+Con wp-env arrancado y [`gh`](https://cli.github.com/) conectado a GitHub (`brew install gh && gh auth login`):
 
 ```bash
-# en pruebas (por SSH): wp db export pruebas.sql && wp export (o WPvivid)
-npm run wp -- db import /var/www/html/pruebas.sql   # copia el .sql a la raíz del repo antes
-npm run wp -- search-replace 'https://staging.privatevillacollection.com' 'http://localhost:8888' --all-tables
+scripts/bajar-pruebas.sh
 ```
+
+- Lanza en GitHub la acción **Bajar pruebas a local** (`.github/workflows/bajar-pruebas.yml`), que
+  exporta por SSH la base de datos y `wp-content/uploads` de pruebas (solo lee) y los deja como
+  descarga del run durante un día. También se puede lanzar a mano en Actions y pasar la carpeta
+  descargada: `scripts/bajar-pruebas.sh ~/Downloads/pruebas`.
+- En local: guarda la base actual en `scripts/.pruebas/local-<fecha>.sql.gz`, importa la de
+  pruebas, cambia el prefijo de tablas (`mis_` → `wp_`) y las URLs a `http://localhost:8888`,
+  copia las fotos y deja el usuario `admin` / `password`.
+- **Pausa la sincronización con marOS** (opción `maros_sync_paused`): la web local habla con el
+  mock y la tarea de cada 5 minutos pisaría las fichas de pruebas con los datos simulados. Para
+  reactivarla: `npm run wp -- option delete maros_sync_paused`. `wp maros sync` a mano sigue
+  funcionando, con el mismo problema.
+- Volver a la base anterior: `gunzip scripts/.pruebas/local-<fecha>.sql.gz` y
+  `npm run wp -- db import wp-content/mis-scripts/.pruebas/local-<fecha>.sql`.
 
 Nunca se sube nada desde local a pruebas o producción: el código va por Git y PR.
