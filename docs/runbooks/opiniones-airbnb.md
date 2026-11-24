@@ -51,5 +51,5 @@ Responde `review_id`, `created` (false si ya existía: se puede reenviar todo si
 
 `maros/list-reviews` (solo lectura) da las opiniones aprobadas de una casa (`maros_id` o
 `lodgify_id`, y opcional `since` AAAA-MM-DD), sin nombre ni datos del huésped: fecha, nota, portal,
-idioma, título y texto, más el total y la nota media. La usa el agente de n8n que redacta «Lo más
+idioma, título y texto, más el total y la nota media. La usa la tarea programada de Claude que redacta «Lo más
 destacado»; hay que activarla en **Ajustes → Enable Abilities for MCP** como las otras dos.
