@@ -62,6 +62,7 @@ npm run wp -- maros sync --publish
 npm run wp -- eval-file wp-content/mis-scripts/setup/contenido-inicial.php
 npm run wp -- eval-file wp-content/mis-scripts/setup/zonas.php
 npm run wp -- eval-file wp-content/mis-scripts/setup/servicios.php
+npm run wp -- eval-file wp-content/mis-scripts/setup/opiniones-tours.php
 npm run wp -- eval-file wp-content/mis-scripts/setup/slugs-idioma.php
 ```
 
@@ -76,10 +77,17 @@ npm run wp -- eval-file wp-content/mis-scripts/setup/slugs-idioma.php
   idempotente y los textos son de ejemplo.
 - `zonas.php` crea las zonas que no crea el contenido inicial (New Golden Mile y 8 más), escribe la guía en inglés y español
   de las 13 y las añade a los menús. No pisa una guía que ya tenga texto (`… zonas.php forzar` para reescribirla).
-- `servicios.php` carga los servicios (Transporte, Chef privado, Conserjería) y siete experiencias con los
-  textos de los borradores de marOS.content (`scripts/setup/servicios/servicios.json`, que genera
-  `servicios/generar.py`). Pone las URLs de la web actual (`/services/<tipo>/<slug>/`) y ordena los menús.
-  No pisa lo editado en WordPress (`… servicios.php forzar` para reescribirlo).
+- `servicios.php` carga los servicios (Transporte, Chef privado, Conserjería) y las dieciséis experiencias de
+  la web actual con los textos de los borradores de marOS.content (`scripts/setup/servicios/servicios.json`,
+  que genera `servicios/generar.py`): destacados, programa, qué incluye, punto de encuentro, cancelación e
+  id de FareHarbor en campos propios, y las fotos de la galería de cada ficha actual
+  (`servicios/fotos-tours.json`, que se bajan de marbellainstyle.com la primera vez). Pone las URLs de la
+  web actual (`/services/<tipo>/<slug>/`) y ordena los menús. No pisa lo editado en WordPress
+  (`… servicios.php forzar` para reescribirlo; `… servicios.php forzar-experiencias` reescribe solo
+  las experiencias, y hace falta una vez para pasar a la ficha nueva las siete cargadas antes del
+  24-11-2026).
+- `opiniones-tours.php` importa las 117 opiniones de las fichas de experiencias de la web actual
+  (`opiniones-tours.json`) y las asigna a cada experiencia en los dos idiomas. Se puede repetir.
 - `slugs-idioma.php` cambia «-2» por «-es» en el slug de las traducciones que chocaban con el inglés
   (p. ej. `/es/stay/villa-concha-2/` → `/es/stay/villa-concha-es/`); la URL vieja redirige con 301. Lo
   nuevo ya nace así (mis-contenido, `includes/slugs.php`).

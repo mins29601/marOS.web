@@ -6,7 +6,7 @@
  * Description: Tarjetas de mis_tour en el idioma actual (Polylang filtra la consulta).
  */
 ?>
-<!-- wp:query {"queryId":0,"query":{"perPage":12,"pages":0,"offset":0,"postType":"mis_tour","order":"asc","orderBy":"title","inherit":false},"align":"wide"} -->
+<!-- wp:query {"queryId":0,"query":{"perPage":24,"pages":0,"offset":0,"postType":"mis_tour","order":"asc","orderBy":"title","inherit":false},"align":"wide"} -->
 <div class="wp-block-query alignwide">
 <!-- wp:post-template {"layout":{"type":"grid","columnCount":3,"minimumColumnWidth":"16rem"}} -->
 <!-- wp:group {"className":"mis-card","layout":{"type":"default"}} -->

@@ -3,14 +3,17 @@
  * Servicios y experiencias de la web nueva con sus textos (borradores de marOS.content:
  * PC-35 traslados, PC-36 chef, PC-37 conserjería y las fichas de tour de PC-40). Idempotente.
  *
- * Uso: wp eval-file scripts/setup/servicios.php [forzar]
+ * Uso: wp eval-file scripts/setup/servicios.php [forzar | forzar-experiencias]
  * (en local: npm run wp -- eval-file wp-content/mis-scripts/setup/servicios.php)
  *
  * - Tipos de servicio con las URLs de la web actual: /services/transport/, /services/catering/,
  *   /services/events/ y /services/concierge/ (cambia «chef-catering» y «events-weddings»).
  * - Transporte y Conserjería son la portada de su tipo (el texto va en la descripción del
  *   término); el chef privado es un servicio en /services/catering/private-chef-in-marbella/.
- * - Siete experiencias con los slugs de la web actual, sin precios (se toman de FareHarbor).
+ * - Las dieciséis experiencias de la web actual con sus slugs, sin precios (se toman de FareHarbor):
+ *   la ficha (destacados, programa, qué incluye, punto de encuentro, cancelación…) va en campos
+ *   propios, el id de FareHarbor es el del botón de la ficha actual y las fotos se bajan de su
+ *   galería (servicios/fotos-tours.json).
  * - Los servicios de ejemplo «Private driver» y «Concierge» pasan a borrador: su texto está
  *   ahora en la portada de su tipo.
  * - Menús: bajo Servicios, los cuatro tipos; bajo Experiencias, las que falten.
@@ -33,6 +36,8 @@ kses_remove_filters();
 remove_filter( 'pre_term_description', 'wp_filter_kses' );
 
 $mis_forzar = in_array( 'forzar', $args ?? array(), true );
+// Solo las experiencias (p. ej. para pasar las siete del 18-11-2026 a la ficha nueva sin tocar el resto).
+$mis_forzar_tours = $mis_forzar || in_array( 'forzar-experiencias', $args ?? array(), true );
 $mis_datos  = json_decode( (string) file_get_contents( __DIR__ . '/servicios/servicios.json' ), true );
 if ( ! is_array( $mis_datos ) ) {
 	WP_CLI::error( 'No puedo leer servicios/servicios.json' );
@@ -58,7 +63,10 @@ function mis_srv_buscar( string $type, string $lang, array $slugs ): int {
 function mis_srv_post( string $type, string $lang, string $slug, array $old_slugs, array $t, bool $forzar ): int {
 	$id     = mis_srv_buscar( $type, $lang, array_merge( array( $slug ), $old_slugs ) );
 	$origen = $id ? (string) get_post_meta( $id, 'mis_origen', true ) : '';
-	if ( $id && ! mis_srv_escribir( $origen, $forzar ) ) {
+	// Lo cargado que nadie ha tocado desde entonces (mismo texto que se guardó) sí se actualiza.
+	$intacto = $id && MIS_ORIGEN === $origen && get_post_meta( $id, 'mis_origen_md5', true ) === md5( (string) get_post_field( 'post_content', $id, 'raw' ) );
+	$GLOBALS['mis_srv_escrito'] = false;
+	if ( $id && ! $intacto && ! mis_srv_escribir( $origen, $forzar ) ) {
 		WP_CLI::log( "  = $type $lang /$slug/ (editado en WordPress; «forzar» para reescribirlo)" );
 		return $id;
 	}
@@ -82,6 +90,8 @@ function mis_srv_post( string $type, string $lang, string $slug, array $old_slug
 	$id = (int) $res;
 	pll_set_post_language( $id, $lang );
 	update_post_meta( $id, 'mis_origen', MIS_ORIGEN );
+	update_post_meta( $id, 'mis_origen_md5', md5( (string) get_post_field( 'post_content', $id, 'raw' ) ) );
+	$GLOBALS['mis_srv_escrito'] = true;
 	update_post_meta( $id, '_yoast_wpseo_title', $t['seo_title'] );
 	update_post_meta( $id, '_yoast_wpseo_metadesc', $t['metadesc'] );
 	WP_CLI::log( "  + $type $lang " . wp_make_link_relative( get_permalink( $id ) ) );
@@ -186,12 +196,28 @@ foreach ( get_posts( array( 'post_type' => 'mis_service', 'lang' => '', 'numberp
 // ---------------------------------------------------------------- experiencias
 
 WP_CLI::log( 'Experiencias…' );
-// Slugs de la versión de ejemplo (contenido-inicial.php) que pasan a los de la web actual.
+// Slugs de la versión de ejemplo (contenido-inicial.php) o de la web actual que pasan a los nuevos.
 $mis_old_tours = array(
 	'wine-tour-ronda' => array( 'en' => array( 'ronda-wine-tour' ), 'es' => array( 'ruta-vino-ronda' ) ),
+	// El mapa del sitio fusiona «…-tour-2» en «…-tour» (inventario-urls.csv).
+	'marbella-puerto-banus-night-life-walking-tour' => array( 'en' => array( 'marbella-puerto-banus-night-life-walking-tour-2' ), 'es' => array() ),
 );
 // Zona de la experiencia (las que salen de Marbella a otra ciudad no llevan zona).
-$mis_tour_zona = array( 'marbella-tapas-tour' => 'marbella-centro' );
+$mis_tour_zona = array(
+	'marbella-tapas-tour'                           => 'marbella-centro',
+	'private-wine-tasting-in-marbella'              => 'marbella-centro',
+	'marbella-puerto-banus-night-life-walking-tour' => 'puerto-banus',
+);
+// Campos de la ficha: clave del JSON → meta (las listas, una línea por elemento).
+$mis_tour_listas = array(
+	'highlights'  => 'tour_highlights',
+	'includes'    => 'tour_includes',
+	'excludes'    => 'tour_excludes',
+	'extras'      => 'tour_extras',
+	'bring'       => 'tour_bring',
+	'not_allowed' => 'tour_not_allowed',
+	'know'        => 'tour_know',
+);
 $mis_tours_ids = array();
 foreach ( $mis_datos['tours'] as $tour ) {
 	$en_slug = $tour['slug']['en'];
@@ -199,15 +225,31 @@ foreach ( $mis_datos['tours'] as $tour ) {
 	$es_slug = $tour['slug']['es'] === $en_slug ? $en_slug . '-es' : $tour['slug']['es'];
 	$par     = array();
 	foreach ( array( 'en' => $en_slug, 'es' => $es_slug ) as $lang => $slug ) {
-		$id = mis_srv_post( 'mis_tour', $lang, $slug, $mis_old_tours[ $en_slug ][ $lang ] ?? array(), $tour[ $lang ], $mis_forzar );
+		$id = mis_srv_post( 'mis_tour', $lang, $slug, $mis_old_tours[ $en_slug ][ $lang ] ?? array(), $tour[ $lang ], $mis_forzar_tours );
 		$f  = $tour['fields'];
+		update_post_meta( $id, 'tour_kind', $tour['kind'] );
 		update_post_meta( $id, 'tour_duration', $f['duration'][ $lang ] );
+		update_post_meta( $id, 'tour_start_time', $f['start_time'][ $lang ] );
+		update_post_meta( $id, 'tour_meeting_point', $f['meeting_point'][ $lang ] );
 		update_post_meta( $id, 'tour_private', (bool) $f['private'] );
 		update_post_meta( $id, 'tour_languages', $f['languages'][ $lang ] );
 		update_post_meta( $id, 'tour_pickup', $f['pickup'][ $lang ] );
 		update_post_meta( $id, 'tour_group_size', $f['group_size'][ $lang ] );
-		// Sin precio ni id de FareHarbor todavía: «Precio a consultar» y el botón lleva al contacto.
-		if ( ! get_post_meta( $id, 'tour_fareharbor_item', true ) ) {
+		// Los campos de la ficha se escriben con el texto, y con la misma regla: lo editado no se pisa.
+		if ( ! empty( $GLOBALS['mis_srv_escrito'] ) ) {
+			$c = $tour[ $lang ]['campos'];
+			foreach ( $mis_tour_listas as $key => $meta ) {
+				update_post_meta( $id, $meta, implode( "\n", $c[ $key ] ) );
+			}
+			update_post_meta( $id, 'tour_itinerary', implode( "\n", array_map( static fn( $s ) => $s[0] . ' | ' . $s[1], $c['itinerary'] ) ) );
+			update_post_meta( $id, 'tour_itinerary_note', $c['itinerary_note'] );
+			update_post_meta( $id, 'tour_cancellation', $c['cancellation'] );
+		}
+		// Reserva: FareHarbor con el id de la ficha actual; sin él (viajes de varios días), formulario.
+		if ( $tour['fareharbor'] ) {
+			update_post_meta( $id, 'tour_fareharbor_item', $tour['fareharbor'] );
+			update_post_meta( $id, 'tour_booking_mode', 'fareharbor' );
+		} elseif ( ! get_post_meta( $id, 'tour_fareharbor_item', true ) ) {
 			delete_post_meta( $id, 'tour_price_from' );
 			update_post_meta( $id, 'tour_booking_mode', 'formulario' );
 		}
@@ -217,7 +259,7 @@ foreach ( $mis_datos['tours'] as $tour ) {
 		$par[ $lang ] = $id;
 	}
 	pll_save_post_translations( $par );
-	$mis_tours_ids[] = $par;
+	$mis_tours_ids[ $en_slug ] = $par;
 }
 
 // ---------------------------------------------------------------- menús
@@ -367,6 +409,60 @@ foreach ( get_posts( array( 'post_type' => 'mis_service', 'lang' => '', 'numberp
 		set_post_thumbnail( $id, $mis_ilus[ $slug ] );
 		WP_CLI::log( '  ~ ' . get_the_title( $id ) . ' con ilustración' );
 	}
+}
+
+// ---------------------------------------------------------------- fotos de las experiencias
+
+WP_CLI::log( 'Fotos de las experiencias (web actual)…' );
+$mis_fotos = json_decode( (string) file_get_contents( __DIR__ . '/servicios/fotos-tours.json' ), true );
+foreach ( $mis_tours_ids as $en_slug => $par ) {
+	$urls = $mis_fotos['fotos'][ $en_slug ] ?? array();
+	if ( ! $urls || empty( $par['en'] ) ) {
+		continue;
+	}
+	// Si alguien ya montó la galería en WordPress, se respeta.
+	if ( get_post_meta( $par['en'], 'tour_gallery', true ) && 'web-actual' !== get_post_meta( $par['en'], 'tour_gallery_origen', true ) ) {
+		WP_CLI::log( "  = $en_slug (galería editada en WordPress)" );
+		continue;
+	}
+	$title_en = get_the_title( $par['en'] );
+	$title_es = empty( $par['es'] ) ? $title_en : get_the_title( $par['es'] );
+	$ids      = array();
+	foreach ( $urls as $n => $url ) {
+		$found = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'numberposts' => 1, 'fields' => 'ids', 'lang' => '', 'meta_key' => 'mis_foto_origen', 'meta_value' => $url ) ); // phpcs:ignore WordPress.DB.SlowDBQuery
+		$att   = $found ? (int) $found[0] : 0;
+		if ( ! $att ) {
+			$tmp = download_url( $url, 60 );
+			if ( is_wp_error( $tmp ) ) {
+				WP_CLI::warning( "  $url: " . $tmp->get_error_message() );
+				continue;
+			}
+			$att = media_handle_sideload( array( 'name' => sanitize_file_name( "experiencia-$en_slug-" . ( $n + 1 ) . '.' . pathinfo( (string) wp_parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION ) ), 'tmp_name' => $tmp ), 0, $title_en );
+			if ( is_wp_error( $att ) ) {
+				@unlink( $tmp ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.unlink_unlink
+				WP_CLI::warning( "  $url: " . $att->get_error_message() );
+				continue;
+			}
+			update_post_meta( $att, 'mis_foto_origen', $url );
+		}
+		update_post_meta( $att, '_wp_attachment_image_alt', $title_en );
+		update_post_meta( $att, 'mis_alt_es', $title_es );
+		$ids[] = (int) $att;
+	}
+	if ( ! $ids ) {
+		continue;
+	}
+	foreach ( $par as $id ) {
+		update_post_meta( $id, 'tour_gallery', implode( ',', $ids ) );
+		update_post_meta( $id, 'tour_gallery_origen', 'web-actual' );
+		// La foto destacada de ejemplo (de una villa, puesta por contenido-inicial.php) pasa a la primera.
+		$thumb      = (int) get_post_thumbnail_id( $id );
+		$de_ejemplo = $thumb && ( get_post_meta( $thumb, 'maros_photo_hash', true ) || get_post_meta( $thumb, 'mis_ilustracion', true ) );
+		if ( ! $thumb || $de_ejemplo || in_array( $thumb, $ids, true ) ) {
+			set_post_thumbnail( $id, $ids[0] );
+		}
+	}
+	WP_CLI::log( sprintf( '  + %s: %d fotos', $en_slug, count( $ids ) ) );
 }
 
 flush_rewrite_rules( true );

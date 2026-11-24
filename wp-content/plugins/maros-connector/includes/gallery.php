@@ -13,13 +13,25 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Meta con los ids de las fotos: las de Lodgify en las propiedades; las de la web actual en las
+ * experiencias (mis-contenido, `tour_gallery`).
+ */
+function maros_gallery_meta_key( int $post_id ): string {
+	return 'mis_tour' === get_post_type( $post_id ) ? 'tour_gallery' : 'maros_gallery';
+}
+
+/**
  * Secciones de la galería en el orden en que se enseñan: «La villa» primero y cada baño en-suite
  * justo después de su dormitorio.
  *
  * @return array<int, array{title: string, line: string, photos: int[]}>
  */
 function maros_gallery_sections( int $post_id, bool $es ): array {
-	$gallery  = array_values( array_unique( array_filter( array_map( 'intval', explode( ',', (string) get_post_meta( $post_id, 'maros_gallery', true ) ) ) ) ) );
+	$gallery  = array_values( array_unique( array_filter( array_map( 'intval', explode( ',', (string) get_post_meta( $post_id, maros_gallery_meta_key( $post_id ), true ) ) ) ) ) );
+	// Una experiencia sin galería enseña al menos su foto destacada.
+	if ( ! $gallery && 'mis_tour' === get_post_type( $post_id ) && has_post_thumbnail( $post_id ) ) {
+		$gallery = array( (int) get_post_thumbnail_id( $post_id ) );
+	}
 	$tour     = json_decode( (string) get_post_meta( $post_id, 'maros_tour', true ), true );
 	$tour     = is_array( $tour ) ? array_values( array_filter( $tour, static fn( $r ) => is_array( $r ) && ! empty( $r['photos'] ) ) ) : array();
 	$sleeping = json_decode( (string) get_post_meta( $post_id, 'maros_sleeping', true ), true );
@@ -124,7 +136,7 @@ add_shortcode(
 		// de Lodgify, flechas, deslizar y «1/N», que abre la galería por estancias.
 		$html = '<div class="mis-gallery-wrap mis-hero-gallery" data-mis-tour="' . esc_attr( $id ) . '"><div class="mis-carousel" tabindex="0" aria-roledescription="carousel" aria-label="' . esc_attr( sprintf( $es ? 'Fotos de %s' : 'Photos of %s', $name ) ) . '">';
 		foreach ( $hero as $i => $att ) {
-			$img   = wp_get_attachment_image( $att, 'large', false, array( 'class' => 'mis-carousel__img', 'alt' => 0 === $i && function_exists( 'maros_seo_hero_alt' ) ? maros_seo_hero_alt( $post_id ) : $alt( $att ), 'loading' => 0 === $i ? 'eager' : 'lazy', 'fetchpriority' => 0 === $i ? 'high' : 'auto', 'sizes' => '100vw' ) );
+			$img   = wp_get_attachment_image( $att, 'large', false, array( 'class' => 'mis-carousel__img', 'alt' => 0 === $i && 'mis_property' === get_post_type( $post_id ) && function_exists( 'maros_seo_hero_alt' ) ? maros_seo_hero_alt( $post_id ) : $alt( $att ), 'loading' => 0 === $i ? 'eager' : 'lazy', 'fetchpriority' => 0 === $i ? 'high' : 'auto', 'sizes' => '100vw' ) );
 			$html .= '<button type="button" class="mis-carousel__slide" data-mis-photo="' . (int) $att . '" aria-label="' . esc_attr( sprintf( $es ? 'Ver foto %1$d de %2$d' : 'View photo %1$d of %2$d', $i + 1, $total ) ) . '">' . $img . '</button>';
 		}
 		$html .= '</div>';
