@@ -460,7 +460,10 @@ html.mis-tour-open { overflow: hidden; }
 .mis-pools__list svg { margin-top: 1px; color: var(--wp--preset--color--primary); }
 @media (min-width: 768px) {
 	.mis-pools__card:not(.mis-pools__card--text) { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
-	.mis-pools__img { aspect-ratio: auto; min-height: 240px; }
+	/* La foto rellena su mitad sin marcar la altura: la marca el texto (Julio 24-11-2026: con
+	   height 100 % la foto crecía a 1500 px y dejaba el texto abajo con un hueco blanco). */
+	.mis-pools__card:not(.mis-pools__card--text) .mis-pools__open { position: relative; min-height: 260px; overflow: hidden; }
+	.mis-pools__card:not(.mis-pools__card--text) .mis-pools__img { position: absolute; inset: 0; height: 100%; aspect-ratio: auto; }
 	.mis-pools__body { padding: 1.5rem; align-self: center; }
 }
 
