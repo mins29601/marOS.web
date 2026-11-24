@@ -73,7 +73,7 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /about-marbella-instyle/,page,Páginas,/about/,301,mantener,,propuesta,
 /,page,Páginas,/,200,misma URL,,propuesta,Portada en inglés; el español en /es/
 /work-with-us/,page,Páginas,/work-with-us/,200,misma URL,,propuesta,
-/domestic-staff-marbella/,page,Páginas,/services/concierge/domestic-staff/,301,mantener,,propuesta,Pasa a ser un servicio de conserjería
+/domestic-staff-marbella/,page,Páginas,/services/concierge/,301,fusionar,,propuesta,"No activo (Julio, 24-11-2026)"
 /terms-and-conditions/,page,Páginas,/terms-and-conditions/,200,misma URL,,propuesta,
 /legal-notice/,page,Páginas,/legal-notice/,200,misma URL,,propuesta,
 /testimonials-from-our-customers/,page,Páginas,/reviews/,301,fusionar,,propuesta,Opiniones de todo (Site Reviews)
@@ -112,8 +112,8 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services/events/private-party-planner-in-marbella/,portfolio,Servicios,/services/events/private-party-planner-in-marbella/,200,misma URL,,propuesta,
 /services/events/wedding-planner-marbella/,portfolio,Servicios,/services/events/wedding-planner-marbella/,200,misma URL,,propuesta,
 /services/lifestyle/concierge-marbella/,portfolio,Servicios,/services/concierge/,301,fusionar,,propuesta,Es la portada de Conserjería
-/services/lifestyle/marbella-villa-holiday-package/,portfolio,Servicios,/services/concierge/marbella-villa-holiday-package/,301,mantener,,propuesta,
-/services/lifestyle/personal-shopper-in-marbella/,portfolio,Servicios,/services/concierge/personal-shopper-in-marbella/,301,mantener,,propuesta,
+/services/lifestyle/marbella-villa-holiday-package/,portfolio,Servicios,/services/concierge/,301,fusionar,,propuesta,"No activo (Julio, 24-11-2026)"
+/services/lifestyle/personal-shopper-in-marbella/,portfolio,Servicios,/services/concierge/,301,fusionar,,propuesta,"No activo (Julio, 24-11-2026)"
 /services/catering/,portfolio,Servicios,/services/catering/,200,misma URL,,propuesta,
 /services/tours/private-wine-tasting-in-marbella/,portfolio,Experiencias,/experiences/private-wine-tasting-in-marbella/,301,mantener,,propuesta,
 /services/tours/wine-tour-marbella/,portfolio,Experiencias,/experiences/wine-tour-marbella/,301,mantener,,propuesta,
@@ -124,7 +124,7 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services/tours/marbella-golf-holidays/,portfolio,Experiencias,/experiences/marbella-golf-holidays/,301,mantener,,propuesta,
 /services/accommodation/,portfolio,Alquileres,/stay/,301,fusionar,,propuesta,
 /services/hotels/,portfolio,Alquileres,/stay/,301,fusionar,,revisar,Ya no ofrecemos hoteles; revisar si tiene tráfico
-/services/holidays/,portfolio,Servicios,/services/concierge/marbella-villa-holiday-package/,301,fusionar,,propuesta,
+/services/holidays/,portfolio,Servicios,/services/concierge/,301,fusionar,,propuesta,"No activo (Julio, 24-11-2026)"
 /services/mice/,portfolio,Servicios,/services/events/,301,fusionar,,propuesta,Eventos de empresa
 /services/tours/mijas-private-tour/,portfolio,Experiencias,/experiences/mijas-private-tour/,301,mantener,,propuesta,
 /services/tours/marbella-tapas-tour/,portfolio,Experiencias,/experiences/marbella-tapas-tour/,301,mantener,,propuesta,
@@ -140,7 +140,7 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services/events/events-gallery/,portfolio,Servicios,/services/events/gallery/,301,mantener,,propuesta,
 /services/lifestyle/private-jet/,portfolio,Servicios,/services/concierge/private-jet/,301,mantener,,propuesta,
 /services/lifestyle/yacht-charter/,portfolio,Servicios,/services/concierge/yacht-charter/,301,mantener,,propuesta,
-/services/wellness-and-fitness/,portfolio,Servicios,/services/concierge/,301,fusionar,,propuesta,
+/services/wellness-and-fitness/,portfolio,Servicios,/services/concierge/,301,fusionar,,propuesta,"No activo (Julio, 24-11-2026)"
 /services/events/marbella-tropical-wedding/,portfolio,Servicios (eventos realizados),/services/events/marbella-tropical-wedding/,200,misma URL,,revisar,"Galería de un evento: mantener si tiene tráfico; si no, 301 a Eventos"
 /services/events/40th-birthday-party-marbella/,portfolio,Servicios (eventos realizados),/services/events/40th-birthday-party-marbella/,200,misma URL,,revisar,"Galería de un evento: mantener si tiene tráfico; si no, 301 a Eventos"
 /services/events/marbella-gold-wedding/,portfolio,Servicios (eventos realizados),/services/events/marbella-gold-wedding/,200,misma URL,,revisar,"Galería de un evento: mantener si tiene tráfico; si no, 301 a Eventos"
@@ -259,7 +259,7 @@ url_antigua,tipo_actual,seccion_nueva,destino,codigo,accion,propiedad_maros,esta
 /services_cat/lifestyle/,services_cat,Listados,/services/concierge/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/catering/,services_cat,Listados,/services/catering/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/villas/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
-/services_cat/holidays/,services_cat,Listados,/services/concierge/marbella-villa-holiday-package/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
+/services_cat/holidays/,services_cat,Listados,/services/concierge/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/accommodation/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/beach-villas/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*
 /services_cat/wedding-villas/,services_cat,Listados,/stay/,301,fusionar,,propuesta,Las categorías de servicios desaparecen; regla por patrón /services_cat/*

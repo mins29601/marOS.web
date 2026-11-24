@@ -41,6 +41,7 @@ function mis_service_fields(): array {
 		'service_summary'    => array( 'type' => 'string', 'label' => 'Resumen corto' ),
 		'service_price_from' => array( 'type' => 'string', 'label' => 'Precio orientativo' ),
 		'service_note'       => array( 'type' => 'string', 'label' => 'Nota bajo el botón (p. ej. «También si no te alojas con nosotros»)' ),
+		'service_gallery'    => array( 'type' => 'string', 'label' => 'Fotos (ids de Medios separados por comas)' ),
 	);
 }
 
@@ -83,7 +84,7 @@ function mis_contenido_register(): void {
 			// /services/<tipo>/<slug>/ (spec 005): %tipo-servicio% lo rellena mis_service_link().
 			'rewrite'      => array( 'slug' => 'services/%tipo-servicio%', 'with_front' => false ),
 			'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields', 'revisions' ),
-			'taxonomies'   => array( 'zona', 'tipo-servicio' ),
+			'taxonomies'   => array( 'zona', 'tipo-servicio', 'categoria-servicio' ),
 		)
 	);
 
@@ -135,7 +136,26 @@ function mis_contenido_register(): void {
 		)
 	);
 
-	foreach ( array( 'mis_tour' => mis_tour_fields(), 'mis_service' => mis_service_fields() ) as $post_type => $fields ) {
+	// Categorías de los filtros de la página Concierge (Julio, 24-11-2026). Un servicio puede tener
+	// varias; no cambian la URL (eso lo hace el tipo de servicio).
+	register_taxonomy(
+		'categoria-servicio',
+		array( 'mis_service' ),
+		array(
+			'labels'            => array(
+				'name'          => __( 'Service categories', 'mis-contenido' ),
+				'singular_name' => __( 'Service category', 'mis-contenido' ),
+			),
+			'public'            => false,
+			'show_ui'           => true,
+			'hierarchical'      => true,
+			'show_in_rest'      => true,
+			'show_admin_column' => true,
+			'rewrite'           => false,
+		)
+	);
+
+	foreach ( array( 'mis_tour' => mis_tour_fields() + mis_tour_ficha_fields(), 'mis_service' => mis_service_fields() ) as $post_type => $fields ) {
 		foreach ( $fields as $key => $field ) {
 			register_post_meta(
 				$post_type,
@@ -176,14 +196,14 @@ add_filter(
 add_filter(
 	'pll_get_taxonomies',
 	static function ( array $taxonomies ): array {
-		return $taxonomies + array( 'zona' => 'zona', 'tipo-servicio' => 'tipo-servicio', 'tipo-tour' => 'tipo-tour' );
+		return $taxonomies + array( 'zona' => 'zona', 'tipo-servicio' => 'tipo-servicio', 'tipo-tour' => 'tipo-tour', 'categoria-servicio' => 'categoria-servicio' );
 	}
 );
 // Solo los datos que no dependen del idioma se copian a la traducción (los textos, no).
 add_filter(
 	'pll_copy_post_metas',
 	static function ( array $metas ): array {
-		return array_merge( $metas, array( 'tour_start_time', 'tour_private', 'tour_price_from', 'tour_fareharbor_item', 'tour_booking_mode' ) );
+		return array_merge( $metas, array( 'tour_private', 'tour_price_from', 'tour_fareharbor_item', 'tour_booking_mode', 'tour_kind', 'tour_gallery' ) );
 	}
 );
 
@@ -223,16 +243,12 @@ function mis_tour_binding_value( array $args, $block_instance ) {
 		case 'price':
 			$price = (float) get_post_meta( $post_id, 'tour_price_from', true );
 			if ( ! $price ) {
-				return $es ? 'Precio a consultar' : 'Price on request';
+				// Con FareHarbor el precio se ve al reservar; sin él, se pide.
+				return mis_tour_fareharbor( (int) $post_id ) ? '' : ( $es ? 'Precio a consultar' : 'Price on request' );
 			}
 			return esc_html( sprintf( $es ? 'Desde %s €' : 'From €%s', number_format_i18n( $price ) ) );
 		case 'booking_url':
-			$item = get_post_meta( $post_id, 'tour_fareharbor_item', true );
-			if ( $item && 'formulario' !== get_post_meta( $post_id, 'tour_booking_mode', true ) ) {
-				return esc_url( 'https://fareharbor.com/embeds/book/marbella-in-style/items/' . rawurlencode( $item ) . '/?full-items=yes&flow=no' );
-			}
-			// El título sin pasar por los filtros de get_the_title(), que convierten «&» en «&#038;».
-			return esc_url( home_url( $es ? '/es/contacto/' : '/contact/' ) . '?tour=' . rawurlencode( get_post_field( 'post_title', $post_id, 'raw' ) ) );
+			return esc_url( mis_tour_book_url( (int) $post_id ) );
 		default:
 			$value = get_post_meta( $post_id, $key, true );
 			return is_scalar( $value ) ? esc_html( (string) $value ) : '';
@@ -256,6 +272,9 @@ register_activation_hook(
 		flush_rewrite_rules();
 	}
 );
+
+// Ficha de experiencia: secciones, caja de reserva, barra del móvil y relacionadas.
+require_once __DIR__ . '/includes/tours.php';
 
 // Datos de contacto (teléfono, email, redes) para el pie y la capa «Menú».
 require_once __DIR__ . '/includes/contacto.php';
