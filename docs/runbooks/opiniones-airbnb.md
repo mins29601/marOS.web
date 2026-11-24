@@ -46,3 +46,10 @@ Responde `review_id`, `created` (false si ya existía: se puede reenviar todo si
 - Cada opinión guardada queda en **Propiedades → marOS** (registro) con el usuario que la envió.
 - La ficha las muestra con `[maros_reviews]` (nota media, número y las últimas 6). Si la casa no
   tiene opiniones, la sección no aparece.
+
+## Lectura de opiniones (marOS spec 053)
+
+`maros/list-reviews` (solo lectura) da las opiniones aprobadas de una casa (`maros_id` o
+`lodgify_id`, y opcional `since` AAAA-MM-DD), sin nombre ni datos del huésped: fecha, nota, portal,
+idioma, título y texto, más el total y la nota media. La usa el agente de n8n que redacta «Lo más
+destacado»; hay que activarla en **Ajustes → Enable Abilities for MCP** como las otras dos.

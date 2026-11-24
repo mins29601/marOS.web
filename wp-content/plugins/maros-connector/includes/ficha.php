@@ -143,6 +143,18 @@ add_shortcode(
 function maros_key_features( int $post_id, bool $es ): array {
 	$m        = static fn( string $k ) => (string) get_post_meta( $post_id, $k, true );
 	$json     = static fn( string $k ) => is_array( $v = json_decode( $m( $k ), true ) ) ? $v : array();
+	// marOS spec 053: si el agente de «Lo más destacado» ya los ha escrito, mandan los suyos.
+	$ai = array();
+	foreach ( $json( 'maros_key_features_ai' ) as $item ) {
+		$lang  = $es ? 'es' : 'en';
+		$title = is_array( $item ) ? trim( (string) ( $item['title'][ $lang ] ?? '' ) ) : '';
+		if ( '' !== $title ) {
+			$ai[] = array( 'icon' => (string) ( $item['icon'] ?? 'check' ), 'title' => $title, 'text' => trim( (string) ( $item['text'][ $lang ] ?? '' ) ) );
+		}
+	}
+	if ( $ai ) {
+		return $ai;
+	}
 	$sleeping = $json( 'maros_sleeping' );
 	$tour     = $json( 'maros_tour' );
 	$nearby   = array_values( array_filter( $json( 'maros_nearby' ), 'is_array' ) );

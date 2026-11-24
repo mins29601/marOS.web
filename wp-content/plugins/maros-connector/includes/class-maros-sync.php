@@ -513,6 +513,8 @@ class Maros_Sync {
 			'maros_synced_at'   => gmdate( 'c' ),
 			'maros_fees'        => wp_json_encode( array_values( self::fees( $d ) ) ),
 			'maros_nearby'      => wp_slash( wp_json_encode( self::nearby( $d ) ) ),
+			// marOS spec 053: «Lo más destacado» del agente (vacío si aún no tiene; la ficha usa entonces sus reglas).
+			'maros_key_features_ai' => wp_slash( wp_json_encode( array_values( array_filter( is_array( $d['key_features'] ?? null ) ? $d['key_features'] : array(), 'is_array' ) ) ) ),
 		) + self::text_facts( $d );
 		foreach ( $map as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
