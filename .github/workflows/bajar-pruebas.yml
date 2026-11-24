@@ -1,0 +1,72 @@
+# Copia de PRUEBAS (IONOS) para el entorno local, a mano: base de datos y fotos como descarga del
+# run (se borra al día siguiente). Solo lee en pruebas. En el Mac la importa scripts/bajar-pruebas.sh
+# (runbook entorno-local, «Traer contenido de pruebas»). Julio 24-11-2026.
+name: Bajar pruebas a local
+
+on:
+  workflow_dispatch:
+    inputs:
+      fotos:
+        description: "Incluir las fotos (wp-content/uploads). Sin ellas, la copia local no enseña las imágenes nuevas"
+        type: boolean
+        default: true
+
+concurrency:
+  group: maros-staging
+  cancel-in-progress: false
+
+jobs:
+  exportar:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ vars.SITE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clave SSH de IONOS
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Exportar de pruebas
+        env:
+          SSH_HOST: ${{ vars.SSH_HOST }}
+          SSH_USER: ${{ vars.SSH_USER }}
+          SSH_PORT: ${{ vars.SSH_PORT || '22' }}
+          MIS_PHP: ${{ vars.MIS_PHP }}
+          WP_PATH: ${{ vars.WP_PATH }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          FOTOS: ${{ inputs.fotos }}
+        run: |
+          set -o pipefail
+          mkdir -p pruebas
+          remoto() {
+            { printf 'MIS_PHP=%q\n' "$MIS_PHP"; cat scripts/remote/php-bin.sh scripts/remote/exportar-pruebas.sh; } \
+              | ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "bash -s -- $(printf '%q ' "$WP_PATH" "$1")"
+          }
+          remoto bd > pruebas/bd.sql.gz
+          gzip -t pruebas/bd.sql.gz
+          if [ "$FOTOS" = "true" ]; then
+            remoto fotos > pruebas/fotos.tar.gz
+            gzip -t pruebas/fotos.tar.gz
+          fi
+          # Lo que necesita el script local para cambiar las URLs y el prefijo de las tablas.
+          prefijo="$(remoto prefijo | tr -d '[:space:]')"
+          printf '%s' "$prefijo" | grep -Eq '^[A-Za-z0-9_]+$' || { echo "::error::Prefijo de tablas raro: $prefijo"; exit 1; }
+          printf 'SITE_URL=%s\nPREFIJO=%s\nFECHA=%s\n' "$SITE_URL" "$prefijo" "$(date -u +%FT%TZ)" > pruebas/info.env
+          {
+            echo "### Copia de pruebas"
+            echo "- Base de datos: $(du -h pruebas/bd.sql.gz | cut -f1) (prefijo \`$prefijo\`)"
+            [ -f pruebas/fotos.tar.gz ] && echo "- Fotos: $(du -h pruebas/fotos.tar.gz | cut -f1)"
+            echo "- En el Mac: \`scripts/bajar-pruebas.sh\` (descarga este run e importa)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pruebas
+          path: pruebas/
+          retention-days: 1
+          compression-level: 0
