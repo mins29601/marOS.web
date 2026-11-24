@@ -143,6 +143,18 @@ add_shortcode(
 function maros_key_features( int $post_id, bool $es ): array {
 	$m        = static fn( string $k ) => (string) get_post_meta( $post_id, $k, true );
 	$json     = static fn( string $k ) => is_array( $v = json_decode( $m( $k ), true ) ) ? $v : array();
+	// marOS spec 053: si el agente de «Lo más destacado» ya los ha escrito, mandan los suyos.
+	$ai = array();
+	foreach ( $json( 'maros_key_features_ai' ) as $item ) {
+		$lang  = $es ? 'es' : 'en';
+		$title = is_array( $item ) ? trim( (string) ( $item['title'][ $lang ] ?? '' ) ) : '';
+		if ( '' !== $title ) {
+			$ai[] = array( 'icon' => (string) ( $item['icon'] ?? 'check' ), 'title' => $title, 'text' => trim( (string) ( $item['text'][ $lang ] ?? '' ) ) );
+		}
+	}
+	if ( $ai ) {
+		return $ai;
+	}
 	$sleeping = $json( 'maros_sleeping' );
 	$tour     = $json( 'maros_tour' );
 	$nearby   = array_values( array_filter( $json( 'maros_nearby' ), 'is_array' ) );
@@ -362,6 +374,51 @@ add_shortcode(
 );
 
 /**
+ * [maros_cta_line] Texto del pie fijo del móvil (Julio 24-11-2026, con el de Airbnb de modelo): sin
+ * precio, «Añade fechas para ver el precio» y debajo la nota media con estrellas, que lleva a las
+ * opiniones. Sin opiniones, solo la primera línea. Al elegir fechas, booking.js pone el total.
+ */
+add_shortcode(
+	'maros_cta_line',
+	static function () {
+		$post_id = (int) get_the_ID();
+		$es      = maros_is_es( $post_id );
+		$rating  = class_exists( 'Maros_Reviews' ) ? Maros_Reviews::rating( $post_id ) : null;
+		$html    = '<span class="mis-cta-line__dates">' . esc_html( $es ? 'Añade fechas para ver el precio' : 'Add dates to see prices' ) . '</span>';
+		if ( $rating ) {
+			$label = sprintf(
+				$es ? 'Nota media %1$s de 5 en %2$d opiniones' : 'Rated %1$s out of 5 in %2$d reviews',
+				number_format_i18n( $rating['average'], 2 ),
+				$rating['total']
+			);
+			$html .= '<a class="mis-cta-line__rating" href="#reviews" aria-label="' . esc_attr( $label ) . '"><span aria-hidden="true">★ ' . esc_html( number_format_i18n( $rating['average'], 2 ) ) . ' · ' . esc_html( sprintf( $es ? _n( '%d opinión', '%d opiniones', $rating['total'], 'maros-connector' ) : _n( '%d review', '%d reviews', $rating['total'], 'maros-connector' ), $rating['total'] ) ) . '</span></a>';
+		}
+		return '<p class="mis-cta-line">' . $html . '</p>';
+	}
+);
+
+/**
+ * [maros_managed] «Gestionada por Marbella in Style» (Julio 24-11-2026, como el anfitrión de
+ * Airbnb): solo si en marOS consta que la casa la gestionamos nosotros (managed_by_us). Textos de
+ * marOS.content (PC-14 «Nosotros»: equipo local en la Costa del Sol desde 2008).
+ */
+add_shortcode(
+	'maros_managed',
+	static function () {
+		$post_id = (int) get_the_ID();
+		if ( 'yes' !== get_post_meta( $post_id, 'maros_managed', true ) ) {
+			return '';
+		}
+		$es   = maros_is_es( $post_id );
+		$logo = get_stylesheet_directory_uri() . '/assets/logo/marbellainstyle-simbolo-oro.svg';
+		return '<div class="mis-managed"><span class="mis-managed__mark"><img src="' . esc_url( $logo ) . '" width="28" height="28" alt=""></span><p><strong>'
+			. esc_html( $es ? 'Gestionada por Marbella in Style' : 'Managed by Marbella in Style' ) . '</strong><span>'
+			. esc_html( $es ? 'Equipo local en la Costa del Sol desde 2008' : 'Local team on the Costa del Sol since 2008' )
+			. '</span></p></div>';
+	}
+);
+
+/**
  * [maros_anchors] Subnavegación fija por anclas (spec 006: Resumen · Vídeos · Dormitorios ·
  * Comodidades · Zona · Opiniones · FAQ). Solo enlaza las secciones que tiene esta casa y marca la
  * que se está leyendo.
@@ -393,8 +450,10 @@ add_shortcode(
 				$html .= '<a href="#' . esc_attr( $id ) . '">' . esc_html( $label ) . '</a>';
 			}
 		}
-		$js = '<script>document.addEventListener("DOMContentLoaded",function(){var n=document.querySelector(".mis-anchors");if(!n)return;var l=[].slice.call(n.querySelectorAll("a")).filter(function(a){var s=document.getElementById(a.hash.slice(1));if(!s){a.remove();return false;}a._s=s;return true;});if(!("IntersectionObserver" in window))return;var v=new Map();var o=new IntersectionObserver(function(es){es.forEach(function(e){v.set(e.target,e.isIntersecting);});var c=null;l.forEach(function(a){if(!c&&v.get(a._s))c=a;});l.forEach(function(a){if(a===c){a.setAttribute("aria-current","true");}else{a.removeAttribute("aria-current");}});if(c&&n.scrollWidth>n.clientWidth){n.scrollLeft=c.offsetLeft-24;}},{rootMargin:"-40% 0px -55% 0px"});l.forEach(function(a){o.observe(a._s);});});</script>';
-		return '<nav class="mis-anchors" aria-label="' . esc_attr( $es ? 'Secciones de la casa' : 'Property sections' ) . '">' . $html . '</nav>' . $js;
+		// En móvil la barra no aparece hasta pasar la foto de cabecera (Julio 24-11-2026, como Airbnb):
+		// .is-shown la deja ver; sin galería se ve siempre.
+		$js = '<script>document.addEventListener("DOMContentLoaded",function(){var n=document.querySelector(".mis-anchors");if(!n)return;var g=document.querySelector(".mis-hero-gallery");function sh(){n.classList.toggle("is-shown",!g||g.getBoundingClientRect().bottom<=0);}addEventListener("scroll",sh,{passive:true});addEventListener("resize",sh);sh();var l=[].slice.call(n.querySelectorAll("a")).filter(function(a){var s=document.getElementById(a.hash.slice(1));if(!s){a.remove();return false;}a._s=s;return true;});if(!("IntersectionObserver" in window))return;var v=new Map();var o=new IntersectionObserver(function(es){es.forEach(function(e){v.set(e.target,e.isIntersecting);});var c=null;l.forEach(function(a){if(!c&&v.get(a._s))c=a;});l.forEach(function(a){if(a===c){a.setAttribute("aria-current","true");}else{a.removeAttribute("aria-current");}});if(c&&n.scrollWidth>n.clientWidth){n.scrollLeft=c.offsetLeft-24;}},{rootMargin:"-40% 0px -55% 0px"});l.forEach(function(a){o.observe(a._s);});});</script>';
+		return '<nav class="mis-anchors mis-anchors--ficha" aria-label="' . esc_attr( $es ? 'Secciones de la casa' : 'Property sections' ) . '">' . $html . '</nav>' . $js;
 	}
 );
 

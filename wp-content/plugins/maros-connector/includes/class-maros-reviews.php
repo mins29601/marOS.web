@@ -201,6 +201,84 @@ class Maros_Reviews {
 				'meta'                => $meta( false, true ),
 			)
 		);
+
+		// marOS spec 053: el agente de «Lo más destacado» lee las opiniones aprobadas de una casa.
+		wp_register_ability(
+			'maros/list-reviews',
+			array(
+				'label'               => 'Leer las opiniones de una propiedad',
+				'description'         => 'Opiniones aprobadas de una propiedad, de la más reciente a la más antigua: fecha, nota, portal, idioma, título y texto. Sin nombre ni datos del huésped. Con «since» (AAAA-MM-DD) solo las posteriores a esa fecha. Solo lectura.',
+				'category'            => 'maros',
+				'input_schema'        => array(
+					'type'                 => 'object',
+					'properties'           => array(
+						'maros_id'   => array( 'type' => 'string', 'description' => 'Id de marOS (list_key_features).' ),
+						'lodgify_id' => array( 'type' => 'integer', 'description' => 'Id de Lodgify, si no tienes el de marOS.' ),
+						'since'      => array( 'type' => 'string', 'pattern' => '^\\d{4}-\\d{2}-\\d{2}$', 'description' => 'Solo opiniones posteriores a este día (opcional).' ),
+					),
+					'additionalProperties' => false,
+				),
+				'output_schema'       => array(
+					'type'       => 'object',
+					'properties' => array(
+						'property_id' => array( 'type' => 'integer' ),
+						'total'       => array( 'type' => 'integer' ),
+						'average'     => array( 'type' => array( 'number', 'null' ) ),
+						'reviews'     => array( 'type' => 'array' ),
+					),
+				),
+				'execute_callback'    => array( __CLASS__, 'list_reviews' ),
+				'permission_callback' => static fn() => current_user_can( 'edit_posts' ),
+				'meta'                => $meta( true, true ),
+			)
+		);
+	}
+
+	/**
+	 * Ability maros/list-reviews (marOS spec 053): opiniones aprobadas de una casa, sin datos del huésped.
+	 *
+	 * @return array|WP_Error
+	 */
+	public static function list_reviews( $input = array() ) {
+		$input    = is_array( $input ) ? $input : array();
+		$property = self::find_property( array_intersect_key( $input, array_flip( array( 'maros_id', 'lodgify_id' ) ) ) );
+		if ( is_wp_error( $property ) ) {
+			return $property;
+		}
+		$since = preg_match( '/^\d{4}-\d{2}-\d{2}$/', (string) ( $input['since'] ?? '' ) ) ? (string) $input['since'] : '';
+		$out   = array();
+		if ( function_exists( 'glsr_get_reviews' ) ) {
+			$reviews = glsr_get_reviews(
+				array(
+					'assigned_posts' => $property,
+					'per_page'       => 200,
+					'status'         => 'approved',
+					'order'          => 'DESC',
+					'orderby'        => 'date',
+				)
+			);
+			foreach ( $reviews as $review ) {
+				$date = substr( (string) $review->date, 0, 10 );
+				if ( '' !== $since && $date <= $since ) {
+					continue;
+				}
+				$out[] = array(
+					'date'     => $date,
+					'rating'   => (int) $review->rating,
+					'source'   => (string) get_post_meta( (int) $review->ID, self::META_SOURCE, true ),
+					'language' => (string) get_post_meta( (int) $review->ID, self::META_LANGUAGE, true ),
+					'title'    => (string) $review->title,
+					'content'  => (string) $review->content,
+				);
+			}
+		}
+		$rating = self::rating( $property );
+		return array(
+			'property_id' => $property,
+			'total'       => $rating ? $rating['total'] : 0,
+			'average'     => $rating ? round( $rating['average'], 2 ) : null,
+			'reviews'     => $out,
+		);
 	}
 
 	/**
@@ -431,6 +509,38 @@ class Maros_Reviews {
 		}
 		$reviews = glsr_get_reviews( array( 'assigned_posts' => $property, 'per_page' => 1 ) );
 		return (int) ( $reviews->total ?? 0 );
+	}
+
+	/**
+	 * Nota media y número de opiniones aprobadas de una casa, o null si no tiene. La usan el pie
+	 * fijo del móvil ([maros_cta_line]) y el bloque de opiniones; se calcula una vez por página.
+	 *
+	 * @return array{average: float, total: int}|null
+	 */
+	public static function rating( int $post_id ): ?array {
+		static $cache = array();
+		if ( array_key_exists( $post_id, $cache ) ) {
+			return $cache[ $post_id ];
+		}
+		if ( ! $post_id || ! function_exists( 'glsr_get_reviews' ) ) {
+			return null;
+		}
+		$reviews = glsr_get_reviews(
+			array(
+				'assigned_posts' => $post_id,
+				'per_page'       => 100,
+				'status'         => 'approved',
+			)
+		);
+		$ratings = array();
+		foreach ( $reviews as $review ) {
+			$ratings[] = (int) $review->rating;
+		}
+		$cache[ $post_id ] = $ratings ? array(
+			'average' => array_sum( $ratings ) / count( $ratings ),
+			'total'   => max( count( $ratings ), (int) ( $reviews->total ?? 0 ) ),
+		) : null;
+		return $cache[ $post_id ];
 	}
 
 	/**

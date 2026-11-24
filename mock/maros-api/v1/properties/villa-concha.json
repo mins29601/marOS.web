@@ -471,7 +471,7 @@
     }
   ],
   "updated_at": "2026-11-12T09:00:00Z",
-  "etag": "\"mock-villa-concha-pool-1\"",
+  "etag": "\"mock-villa-concha-managed-1\"",
   "pool": "private",
   "pools": [
     {
@@ -508,5 +508,6 @@
     "frequency": "PerWeek",
     "minimum_nights": 7,
     "mandatory": false
-  }
+  },
+  "managed_by_us": true
 }
