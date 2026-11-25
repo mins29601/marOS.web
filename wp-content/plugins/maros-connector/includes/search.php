@@ -38,8 +38,10 @@ class Maros_Search {
 	/**
 	 * Chips del buscador: solo las características importantes (Julio, 25-11-2026: «los filtros los
 	 * podemos quitar… o dejar sólo características importantes»). Fuera tipo, zona y dormitorios.
+	 * Desactivados por ahora (Julio, 25-11-2026) hasta que marOS tenga «exclusiva», «cerca de la
+	 * playa» y «a pie de todo»; para volver a enseñarlos: array( 'sea-view', 'heated-pool' ).
 	 */
-	private const CHIPS = array( 'sea-view', 'heated-pool' );
+	private const CHIPS = array();
 
 	/**
 	 * Tipos de propiedad del filtro: la categoría de la propiedad en marOS (catálogo «category»,
