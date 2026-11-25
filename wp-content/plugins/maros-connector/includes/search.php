@@ -53,8 +53,12 @@ class Maros_Search {
 	/** @var array<int,array{nights:int,total:float,currency:string}>|null Casas libres por id de entrada. */
 	private static ?array $available = null;
 
+	/** Si el buscador ya se pintó encima del título de Alojamiento. */
+	private static bool $form_on_top = false;
+
 	public static function init(): void {
 		add_filter( 'query_loop_block_query_vars', array( __CLASS__, 'filter_query' ), 10, 2 );
+		add_filter( 'render_block_core/group', array( __CLASS__, 'render_hero' ), 10, 2 );
 		add_filter( 'render_block_core/query', array( __CLASS__, 'render_query' ), 10, 2 );
 		add_filter( 'render_block_core/query-no-results', array( __CLASS__, 'render_no_results' ), 10, 2 );
 		add_action( 'template_redirect', array( __CLASS__, 'headers' ) );
@@ -351,13 +355,43 @@ class Maros_Search {
 		return $n . ' ' . $currency;
 	}
 
-	/** Pone el buscador y el resumen encima del listado de Alojamiento. */
+	/**
+	 * En Alojamiento, el buscador va encima del título (Julio, 25-11-2026): se mete al principio del
+	 * grupo que lleva el h1 de la página.
+	 */
+	public static function render_hero( string $html, array $block ): string {
+		if ( self::$form_on_top || ! self::is_stay_page() || ! self::has_h1( $block['innerBlocks'] ?? array() ) ) {
+			return $html;
+		}
+		$at = strpos( $html, '>' );
+		if ( false === $at ) {
+			return $html;
+		}
+		self::$form_on_top = true;
+		return substr( $html, 0, $at + 1 ) . '<div class="mis-stay-search mis-stay-search--top alignwide">' . self::form() . '</div>' . substr( $html, $at + 1 );
+	}
+
+	/** Si entre estos bloques (o justo dentro de ellos) está el título h1. */
+	private static function has_h1( array $blocks ): bool {
+		foreach ( $blocks as $b ) {
+			$name = $b['blockName'] ?? '';
+			if ( in_array( $name, array( 'core/heading', 'core/post-title' ), true ) && 1 === (int) ( $b['attrs']['level'] ?? ( 'core/post-title' === $name ? 2 : 0 ) ) ) {
+				return true;
+			}
+			if ( 'core/heading' === $name && preg_match( '/^\s*<h1[\s>]/', $b['innerHTML'] ?? '' ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** Pone el resumen encima del listado de Alojamiento (y el buscador, si no lo tiene el título). */
 	public static function render_query( string $html, array $block ): string {
 		if ( ! self::is_stay_page() || ! self::is_property_query( $block ) ) {
 			return $html;
 		}
 		// Mismo ancho que el listado (el bloque Query es «alignwide»).
-		return '<div class="mis-stay-search alignwide">' . self::form() . self::summary() . '</div>' . $html;
+		return '<div class="mis-stay-search alignwide">' . ( self::$form_on_top ? '' : self::form() ) . self::summary() . '</div>' . $html;
 	}
 
 	/** «3 casas libres del 12 al 19 de julio · 7 noches» y el enlace para quitar filtros. */

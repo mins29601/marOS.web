@@ -548,7 +548,8 @@ html.mis-tour-open { overflow: hidden; }
 .mis-cal { border: 1px solid var(--mis-line); padding: 0.75rem; background: var(--wp--preset--color--primary-alt-accent); color: var(--wp--preset--color--main); font-family: var(--wp--preset--font-family--primary, inherit); font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none; text-align: left; }
 .mis-cal[hidden] { display: none; }
 .mis-cal__bar { display: flex; align-items: center; justify-content: space-between; }
-.mis-cal__bar strong { font-weight: 500; text-transform: capitalize; }
+.mis-cal__bar strong { display: inline-block; font-weight: 500; }
+.mis-cal__bar strong::first-letter { text-transform: uppercase; } /* «Diciembre de 2026», no «Diciembre De 2026» */
 .mis-cal__bar button { width: var(--mis-touch); height: var(--mis-touch); border: 0; background: transparent; font-size: 1.25rem; cursor: pointer; color: var(--wp--preset--color--main); }
 .mis-cal__bar button:disabled { opacity: 0.3; cursor: default; }
 .mis-cal__hint { margin: 0.25rem 0 0.5rem; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
@@ -911,19 +912,21 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 	.mis-search--full { display: block; margin: 0; border: 0; background: transparent; }
 	.mis-search--full .mis-search__row { display: grid; grid-template-columns: 1fr 1fr 1.1fr auto; align-items: center; max-width: 46rem; border: 1px solid var(--mis-line); border-radius: 999px; background: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, .06); transition: background-color .2s ease; }
 	.mis-search--full .mis-search__row:has(.is-active) { background: var(--wp--preset--color--tertiary); }
-	.mis-search--full .mis-search__row .mis-search__field { align-self: stretch; padding: 0.625rem 1.5rem; border-right: 1px solid var(--mis-line); border-bottom: 0; border-radius: 999px; }
+	.mis-search--full .mis-search__row .mis-search__field { align-self: stretch; padding: 0.625rem 1.5rem; border-right: 1px solid var(--mis-line); border-bottom: 0; border-radius: 0; }
 	.mis-search--full .mis-search__row .mis-search__field:has(+ .mis-search__submit),
 	.mis-search--full .mis-search__row .mis-search__field:has(+ .is-active),
 	.mis-search--full .mis-search__row .mis-search__field.is-active { border-right-color: transparent; }
-	.mis-search--full .mis-search__row .mis-search__field.is-active { background: #fff; box-shadow: 0 4px 16px rgba(0, 0, 0, .12); }
+	.mis-search--full .mis-search__row .mis-search__field.is-active { border-radius: 999px; background: #fff; box-shadow: 0 4px 16px rgba(0, 0, 0, .12); }
 	.mis-search--full .mis-search__field:focus-within { box-shadow: none; }
 	.mis-search--full label { white-space: nowrap; color: var(--wp--preset--color--main); }
 	.mis-search--full .mis-search__row input,
 	.mis-search--full .mis-search__row select,
 	.mis-search--full .mis-search__row .mis-search__date { min-height: 24px; padding-top: 0.125rem; }
-	.mis-search--full .mis-search__submit.wp-element-button { display: inline-flex; align-items: center; gap: 0.5rem; height: 46px; min-height: 0; margin: 0 6px; padding: 0 1.25rem; border-radius: 999px; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
+	.mis-search--full .mis-search__submit.wp-element-button { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; min-height: 0; margin: 0 7px; padding: 0; border-radius: 50%; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
 	.mis-search--full .mis-search__submit.wp-element-button:is(:hover, :focus-visible) { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); }
-	.mis-search--full .mis-search__icon { display: block; width: 18px; height: 18px; }
+	.mis-search--full .mis-search__icon { display: block; width: 20px; height: 20px; }
+	/* Redondo, solo con la lupa (Julio, 25-11-2026); el texto queda para lectores de pantalla */
+	.mis-search--full .mis-search__submit-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 	/* Huéspedes: botón y ventanita con «− 2 +» (assets/search.js); el desplegable queda para el móvil */
 	.mis-search--full .mis-search__field--guests { position: relative; }
 	.mis-search--full .mis-search__field--guests:has(.mis-search__guests) select { display: none; }
