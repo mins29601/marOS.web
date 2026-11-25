@@ -368,6 +368,10 @@ class Maros_Search {
 			return $html;
 		}
 		self::$form_on_top = true;
+		// Fuera la entradilla «Todas las casas las gestiona nuestro equipo»: no todas las gestionamos
+		// nosotros (Julio, 25-11-2026). Está en el contenido de la página, por eso se quita aquí.
+		$html = preg_replace( '#<p[^>]*class="[^"]*\bmis-muted\b[^"]*"[^>]*>.*?</p>#s', '', $html );
+		$at   = strpos( $html, '>' );
 		return substr( $html, 0, $at + 1 ) . '<div class="mis-stay-search mis-stay-search--top alignwide">' . self::form() . '</div>' . substr( $html, $at + 1 );
 	}
 
