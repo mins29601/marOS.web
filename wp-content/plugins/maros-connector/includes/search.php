@@ -455,10 +455,10 @@ class Maros_Search {
 
 	/**
 	 * [maros_buscador] Buscador completo (spec 003, FR-005 «maros/buscador»): fechas, huéspedes,
-	 * tipo, zona, dormitorios y chips de equipamiento. En escritorio, todo en dos filas finas: fechas,
-	 * huéspedes y «Search»; debajo, tipo, zona, dormitorios y chips (Julio, 25-11-2026: el buscador
-	 * ocupaba media pantalla). En móvil, la segunda fila va en el desplegable «Filtros», cerrado si no
-	 * hay ninguno puesto (assets/search.js). Envía por GET a Alojamiento.
+	 * tipo, zona, dormitorios y chips de equipamiento. Sigue el buscador de la portada (Julio,
+	 * 25-11-2026): en escritorio, una barra redonda con todas las celdas y la lupa dorada, y los chips
+	 * debajo; en el móvil, la barra de la portada, que abre el formulario con los filtros en un panel
+	 * desde abajo. Envía por GET a Alojamiento.
 	 */
 	public static function form(): string {
 		static $n = 0;
@@ -499,26 +499,27 @@ class Maros_Search {
 				esc_html( $names[ $es ? 1 : 0 ] )
 			);
 		}
-		$count = ( $p['type'] ? 1 : 0 ) + ( $p['area'] ? 1 : 0 ) + ( $p['bedrooms'] ? 1 : 0 ) + count( $p['feat'] );
-		$cols  = $type_opts ? 6 : 5;
 		$icon  = '<svg class="mis-search__icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>';
 
-		$html  = '<form class="mis-search mis-search--full" role="search" method="get" action="' . esc_url( $action ) . '" style="--mis-cols:' . $cols . '">';
-		// La fila de celdas y la lupa; en el panel del móvil no es una caja (display: contents).
+		$html  = '<form class="mis-search mis-search--full" role="search" method="get" action="' . esc_url( $action ) . '">';
+		// La barra de la portada: llegada, salida, huéspedes y lupa. En el panel del móvil no es una
+		// caja (display: contents) y la lupa es el botón ancho «Search».
 		$html .= '<div class="mis-search__row">';
 		$html .= '<div class="mis-search__field"><label for="' . $id( 'in' ) . '">' . $t( 'Arrival', 'Llegada' ) . '</label><input id="' . $id( 'in' ) . '" type="date" name="checkin" min="' . esc_attr( $today ) . '" value="' . esc_attr( $p['checkin'] ) . '"></div>';
 		$html .= '<div class="mis-search__field"><label for="' . $id( 'out' ) . '">' . $t( 'Departure', 'Salida' ) . '</label><input id="' . $id( 'out' ) . '" type="date" name="checkout" min="' . esc_attr( $today ) . '" value="' . esc_attr( $p['checkout'] ) . '"></div>';
 		$html .= '<div class="mis-search__field mis-search__field--guests"><label for="' . $id( 'g' ) . '">' . $t( 'Guests', 'Huéspedes' ) . '</label><select id="' . $id( 'g' ) . '" name="guests">' . $guests . '</select></div>';
-		if ( $type_opts ) {
-			$html .= '<div class="mis-search__field mis-search__field--filter" data-qs-filters><label for="' . $id( 't' ) . '">' . $t( 'Type', 'Tipo' ) . '</label><select id="' . $id( 't' ) . '" name="type">' . $type_opts . '</select></div>';
-		}
-		$html .= '<div class="mis-search__field mis-search__field--filter"' . ( $type_opts ? '' : ' data-qs-filters' ) . '><label for="' . $id( 'a' ) . '">' . $t( 'Area', 'Zona' ) . '</label><select id="' . $id( 'a' ) . '" name="area">' . $areas . '</select></div>';
-		$html .= '<div class="mis-search__field mis-search__field--filter"><label for="' . $id( 'b' ) . '">' . $t( 'Bedrooms', 'Dormitorios' ) . '</label><select id="' . $id( 'b' ) . '" name="bedrooms">' . $beds . '</select></div>';
-		// En escritorio, círculo dorado con la lupa (como la barra de la portada); en el panel del móvil, botón ancho con texto.
 		$html .= '<button class="mis-search__submit wp-element-button" type="submit">' . $icon . '<span class="mis-search__submit-text">' . $t( 'Search', 'Buscar' ) . '</span></button></div>';
+		// Filtros: en escritorio, una línea de píldoras bajo la barra; en el panel del móvil, celdas.
+		$html .= '<div class="mis-search__filters">';
+		if ( $type_opts ) {
+			$html .= '<div class="mis-search__field mis-search__field--filter"><label for="' . $id( 't' ) . '">' . $t( 'Type', 'Tipo' ) . '</label><select id="' . $id( 't' ) . '" name="type">' . $type_opts . '</select></div>';
+		}
+		$html .= '<div class="mis-search__field mis-search__field--filter"><label for="' . $id( 'a' ) . '">' . $t( 'Area', 'Zona' ) . '</label><select id="' . $id( 'a' ) . '" name="area">' . $areas . '</select></div>';
+		$html .= '<div class="mis-search__field mis-search__field--filter"><label for="' . $id( 'b' ) . '">' . $t( 'Bedrooms', 'Dormitorios' ) . '</label><select id="' . $id( 'b' ) . '" name="bedrooms">' . $beds . '</select></div>';
 		if ( $chips ) {
 			$html .= '<fieldset class="mis-search__chips"><legend>' . $t( 'Amenities', 'Equipamiento' ) . '</legend>' . $chips . '</fieldset>';
 		}
+		$html .= '</div>';
 		$html .= '<p class="mis-search__error" role="alert" hidden>' . $t( 'Choose a departure date after the arrival date.', 'Elige una salida posterior a la llegada.' ) . '</p>';
 		$html .= '</form>';
 		wp_enqueue_script( 'maros-search' );
@@ -526,24 +527,20 @@ class Maros_Search {
 			return $html;
 		}
 
-		// Alojamiento en el móvil: la barra del buscador de la portada (fechas, huéspedes y lupa) y,
-		// al lado, el botón de filtros con cuántos hay puestos. Los dos abren el buscador completo en
-		// un panel desde abajo (Julio, 25-11-2026). En escritorio no se ven: el formulario va en línea.
+		// Alojamiento en el móvil: la barra del buscador de la portada (fechas, huéspedes y lupa), que
+		// abre el buscador completo, con los filtros, en un panel desde abajo (Julio, 25-11-2026: sin
+		// botón de filtros aparte). En escritorio no se ve: el formulario va en línea.
 		$dates = $p['nights']
 			? wp_date( $es ? 'j M' : 'M j', strtotime( $p['checkin'] . ' 12:00:00' ) ) . ' – ' . wp_date( $es ? 'j M' : 'M j', strtotime( $p['checkout'] . ' 12:00:00' ) )
 			: ( $es ? 'Añadir fechas' : 'Add dates' );
 		$sheet = 'mis-qs-sheet-' . $n;
-		$bar   = '<div class="mis-qs__row">'
-			. '<button type="button" class="mis-qs__bar" aria-expanded="false" aria-controls="' . $sheet . '">'
+		$bar   = '<button type="button" class="mis-qs__bar" aria-expanded="false" aria-controls="' . $sheet . '">'
 			. '<span class="mis-qs__cell"><span class="mis-qs__label">' . $t( 'Dates', 'Fechas' ) . '</span><span class="mis-qs__value" data-qs="dates" data-empty="' . esc_attr( $es ? 'Añadir fechas' : 'Add dates' ) . '">' . esc_html( $dates ) . '</span></span>'
 			. '<span class="mis-qs__cell"><span class="mis-qs__label">' . $t( 'Guests', 'Huéspedes' ) . '</span><span class="mis-qs__value" data-qs="guests">' . ( $p['guests'] ? (int) $p['guests'] : $t( 'Any', 'Cualquiera' ) ) . '</span></span>'
 			. '<span class="mis-qs__go" aria-hidden="true">' . str_replace( 'class="mis-search__icon" ', '', $icon ) . '</span>'
 			. '<span class="screen-reader-text">' . $t( 'Search homes', 'Buscar casas' ) . '</span>'
 			. '</button>'
-			. '<button type="button" class="mis-qs__filters" aria-controls="' . $sheet . '" aria-label="' . esc_attr( $es ? 'Filtros' : 'Filters' ) . '">'
-			. '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'
-			. '<span class="mis-qs__count" data-qs="count"' . ( $count ? '' : ' hidden' ) . '>' . (int) $count . '</span>'
-			. '</button></div>';
+			. '</button>';
 		$top   = '<div class="mis-qs__top"><strong>' . $t( 'Your stay', 'Tu estancia' ) . '</strong><button type="button" class="mis-qs__close" aria-label="' . esc_attr( $es ? 'Cerrar' : 'Close' ) . '">×</button></div>';
 		// Panel del móvil: el script de la portada (tema). Se registra después; la cola lo espera.
 		wp_enqueue_script( 'mis-inicio' );

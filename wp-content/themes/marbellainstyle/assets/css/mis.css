@@ -867,8 +867,8 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 /* Alojamiento compacto (Julio, 25-11-2026): el buscador ocupaba media pantalla y las casas
    empezaban por debajo. Título en una línea y fotos apaisadas (3:2), para que la primera fila de
    casas se vea entera sin bajar. El buscador sigue al de la portada: en el móvil, su barra (fechas,
-   huéspedes y lupa) y un botón de filtros abren el formulario completo en un panel desde abajo; en
-   escritorio, una barra redonda con todas las celdas, la lupa dorada y los chips debajo. */
+   huéspedes y lupa) abre el formulario completo, con los filtros, en un panel desde abajo; en
+   escritorio, la misma barra, pequeña, y los filtros debajo en una línea de píldoras. */
 .wp-block-group.alignfull:has(+ .wp-block-group.alignfull .mis-stay-search) { padding-top: var(--wp--preset--spacing--small) !important; }
 .wp-block-group.alignfull:has(+ .wp-block-group.alignfull .mis-stay-search) > * { margin-block: 0; }
 .wp-block-group.alignfull:has(+ .wp-block-group.alignfull .mis-stay-search) > * + * { margin-block-start: 0.5rem; }
@@ -886,46 +886,49 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 .mis-search .mis-chip { display: inline-flex; flex: 0 0 auto; width: auto; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; }
 .mis-search .mis-chip span { padding: 0.35rem 0.85rem; font-size: 0.8125rem; white-space: nowrap; }
 .mis-search--full .mis-search__chips { gap: 0.375rem; }
-.mis-qs__row { display: none; }
-.mis-search__row { display: contents; }
+.mis-search__row,
+.mis-search__filters { display: contents; }
 @media (max-width: 767px) {
-	/* Barra de la portada sobre fondo claro, con el botón de filtros al lado */
-	.mis-qs__row { display: flex; align-items: center; gap: 0.5rem; }
-	.mis-qs--stay .mis-qs__bar { flex: 1 1 auto; border: 1px solid var(--mis-line); box-shadow: 0 6px 18px rgba(0, 0, 0, .08); }
+	/* Barra de la portada sobre fondo claro */
+	.mis-qs--stay .mis-qs__bar { border: 1px solid var(--mis-line); box-shadow: 0 6px 18px rgba(0, 0, 0, .08); }
 	.mis-qs--stay .mis-qs__bar:focus-visible { outline-color: var(--wp--preset--color--main); }
 	.mis-qs--stay .mis-qs__cell { padding: 0 0.875rem; }
 	.mis-qs--stay .mis-qs__go { width: 44px; height: 44px; }
-	.mis-qs__filters { position: relative; flex: 0 0 auto; display: grid; place-items: center; width: 58px; height: 58px; padding: 0; border: 1px solid var(--mis-line); border-radius: 50%; background: #fff; color: var(--wp--preset--color--main); box-shadow: 0 6px 18px rgba(0, 0, 0, .08); cursor: pointer; }
-	.mis-qs__count { position: absolute; top: -2px; right: -2px; min-width: 20px; height: 20px; padding: 0 5px; box-sizing: border-box; border-radius: 10px; background: var(--wp--preset--color--main); color: #fff; font-size: 0.6875rem; font-weight: 600; line-height: 20px; text-align: center; }
-	.mis-qs__count[hidden] { display: none; }
 	/* Panel: fechas y calendario, huéspedes, tipo | zona, dormitorios, chips y «Search» */
 	.mis-qs--stay .mis-search__field--filter { order: 3; }
-	.mis-qs--stay .mis-search__field--filter[data-qs-filters] { border-right: 1px solid var(--mis-line); scroll-margin-top: 1rem; }
+	.mis-qs--stay .mis-search__field--filter:has(+ .mis-search__field--filter + .mis-search__field--filter) { border-right: 1px solid var(--mis-line); }
 	.mis-qs--stay .mis-search__chips { order: 3; padding: 0.875rem 1rem; border-bottom: 1px solid var(--mis-line); }
 	.mis-qs--stay .mis-search__submit { order: 4; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
 	.mis-qs--stay .mis-search__error { order: 5; }
 }
 @media (min-width: 768px) {
-	/* Una barra redonda: Llegada | Salida | Huéspedes | Tipo | Zona | Dormitorios | lupa; chips debajo */
+	/* La barra de la portada (Llegada | Salida | Huéspedes | lupa), sin estirarse, y debajo los
+	   filtros en una línea de píldoras: «TIPO Villas ▾» «ZONA Todas ▾» «DORMITORIOS 3+ ▾» y los chips */
 	.mis-search--full { display: block; margin: 0; border: 0; background: transparent; }
-	.mis-search--full .mis-search__row { display: grid; grid-template-columns: repeat(var(--mis-cols, 5), minmax(0, 1fr)) auto; align-items: stretch; border: 1px solid var(--mis-line); border-radius: 999px; background: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, .06); }
-	.mis-search--full .mis-search__field { padding: 0.625rem 1rem; border-right: 1px solid var(--mis-line); }
-	.mis-search--full .mis-search__field:first-child { padding-left: 1.75rem; }
-	.mis-search--full .mis-search__field:has(+ .mis-search__submit) { border-right: 0; }
+	.mis-search--full .mis-search__row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; align-items: center; max-width: 42rem; border: 1px solid var(--mis-line); border-radius: 999px; background: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, .06); }
+	.mis-search--full .mis-search__row .mis-search__field { align-self: stretch; padding: 0.375rem 1rem; border-right: 1px solid var(--mis-line); border-bottom: 0; }
+	.mis-search--full .mis-search__row .mis-search__field:first-child { padding-left: 1.5rem; }
+	.mis-search--full .mis-search__row .mis-search__field:has(+ .mis-search__submit) { border-right: 0; }
 	.mis-search--full .mis-search__field:focus-within,
 	.mis-search--full .mis-search__field.is-active { box-shadow: none; }
 	.mis-search--full .mis-search__field.is-active label,
 	.mis-search--full .mis-search__field:focus-within label { color: var(--wp--preset--color--main); }
-	.mis-search--full label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-	.mis-search--full .mis-search__submit.wp-element-button { align-self: center; justify-self: end; display: grid; place-items: center; width: 52px; height: 52px; min-height: 0; margin: 0 6px; padding: 0; border-radius: 50%; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
+	.mis-search--full label { white-space: nowrap; }
+	.mis-search--full .mis-search__row input,
+	.mis-search--full .mis-search__row select,
+	.mis-search--full .mis-search__row .mis-search__date { min-height: 24px; padding-top: 0.125rem; }
+	.mis-search--full .mis-search__submit.wp-element-button { display: grid; place-items: center; width: 42px; height: 42px; min-height: 0; margin: 0 5px; padding: 0; border-radius: 50%; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
 	.mis-search--full .mis-search__submit.wp-element-button:is(:hover, :focus-visible) { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); }
-	.mis-search--full .mis-search__icon { display: block; }
+	.mis-search--full .mis-search__icon { display: block; width: 18px; height: 18px; }
 	.mis-search--full .mis-search__submit-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-	.mis-search--full .mis-search__chips { padding: 0.75rem 0 0 1.25rem; }
+	.mis-search--full .mis-search__filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }
+	.mis-search--full .mis-search__filters .mis-search__field { flex-direction: row; align-items: center; gap: 0.5rem; height: 32px; box-sizing: border-box; padding: 0 0.5rem 0 0.875rem; border: 1px solid var(--mis-line-dark); border-radius: 999px; background: transparent; }
+	.mis-search--full .mis-search__filters label { font-size: 0.625rem; }
+	.mis-search--full .mis-search__filters select { width: auto; min-height: 0; padding: 0 1.25rem 0 0; font-size: 0.8125rem; background-position: right 0.25rem center; cursor: pointer; }
+	.mis-search--full .mis-search__filters .mis-search__field:has(option:checked:not([value=""])) { border-color: var(--wp--preset--color--main); }
+	.mis-search--full .mis-search__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; }
 	.mis-search--full .mis-search__error { margin-top: 0.5rem; }
 }
-@media (min-width: 768px) and (max-width: 1023px) {
-	.mis-search--full .mis-search__field { padding-inline: 0.75rem; }
 	.mis-search--full .mis-search__field:first-child { padding-left: 1.25rem; }
 	.mis-search--full label { letter-spacing: 0.06em; }
 	.mis-search--full input, .mis-search--full select, .mis-search--full .mis-search__date { font-size: 0.875rem; }
