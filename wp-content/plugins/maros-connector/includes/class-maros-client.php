@@ -161,6 +161,56 @@ class Maros_Client {
 	}
 
 	/**
+	 * Ficha PDF de una propiedad (marOS spec 057). Con el ETag que ya se tiene, marOS contesta 304 sin
+	 * generarla otra vez. Generar tarda unos segundos: un solo intento, con 60 s de margen.
+	 *
+	 * @return array|WP_Error array( 'not_modified' => true ) o array( 'pdf' => bytes, 'etag' => string ).
+	 */
+	public static function get_brochure( string $id, string $lang, string $etag = '' ) {
+		$ok = self::check_config();
+		if ( is_wp_error( $ok ) ) {
+			return $ok;
+		}
+		if ( ! self::safe_id( $id ) || ! in_array( $lang, array( 'es', 'en' ), true ) ) {
+			return new WP_Error( 'maros_id', 'Id de marOS o idioma no válido.' );
+		}
+		if ( 'mock' === self::env() ) {
+			return new WP_Error( 'maros_mock', 'La ficha PDF no tiene datos de ejemplo.' );
+		}
+		$headers = array(
+			'Authorization' => 'Bearer ' . MAROS_API_KEY,
+			'Accept'        => 'application/pdf',
+		);
+		if ( '' !== $etag ) {
+			$headers['If-None-Match'] = $etag;
+		}
+		$path     = '/catalog/properties/' . $id . '/brochure?lang=' . $lang;
+		$response = wp_remote_get(
+			self::base() . '/v1' . $path,
+			array(
+				'timeout'     => 60,
+				'redirection' => 0,
+				'user-agent'  => 'marOS-Connector/' . MAROS_CONNECTOR_VERSION . '; ' . wp_parse_url( home_url(), PHP_URL_HOST ),
+				'headers'     => $headers,
+			)
+		);
+		if ( is_wp_error( $response ) ) {
+			return new WP_Error( 'maros_http', sprintf( 'marOS no responde en %s: %s', $path, $response->get_error_message() ) );
+		}
+		$code = (int) wp_remote_retrieve_response_code( $response );
+		if ( 304 === $code ) {
+			return array( 'not_modified' => true );
+		}
+		$body = (string) wp_remote_retrieve_body( $response );
+		if ( 200 !== $code || ! str_starts_with( $body, '%PDF-' ) ) {
+			$data   = json_decode( $body, true );
+			$detail = is_array( $data ) ? (string) ( $data['error']['message'] ?? '' ) : '';
+			return new WP_Error( 'maros_http', trim( sprintf( 'marOS respondió %d en %s. %s', $code, $path, $detail ) ), array( 'status' => $code ) );
+		}
+		return array( 'pdf' => $body, 'etag' => (string) wp_remote_retrieve_header( $response, 'etag' ) );
+	}
+
+	/**
 	 * Presupuesto de una estancia (marOS spec 044): se calcula con la copia del catálogo de marOS,
 	 * sin guardar nada. Devuelve el cuerpo tal cual: { available, exact, nights, lines, total,
 	 * deposit, … } o { available: false, reasons }.
