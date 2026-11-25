@@ -105,24 +105,6 @@
 		var checkout = form.querySelector( '[name=checkout]' );
 		var error = form.querySelector( '.mis-search__error' );
 
-		// «Filtros»: llega abierto (en escritorio es la segunda fila del buscador, sin desplegable).
-		// En el móvil se cierra si no hay ningún filtro puesto; al pasar a escritorio, se abre.
-		var more = form.querySelector( '.mis-search__more' );
-		if ( more && window.matchMedia ) {
-			var wide = window.matchMedia( '(min-width: 768px)' );
-			if ( ! wide.matches && '0' === more.getAttribute( 'data-count' ) ) {
-				more.open = false;
-			}
-			var onWide = function () {
-				if ( wide.matches ) {
-					more.open = true;
-				}
-			};
-			if ( wide.addEventListener ) {
-				wide.addEventListener( 'change', onWide );
-			}
-		}
-
 		form.addEventListener( 'submit', function ( event ) {
 			var some = checkin.value || checkout.value;
 			var bad = ! checkin.value || ! checkout.value || checkout.value <= checkin.value;

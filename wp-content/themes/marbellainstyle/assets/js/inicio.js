@@ -2,7 +2,8 @@
  * Inicio en el móvil (maqueta «home en móvil», Julio, 25-11-2026).
  *
  * - Barra del buscador: abre el buscador de la portada en un panel desde abajo, con el calendario
- *   ya abierto en la llegada, y resume las fechas y los huéspedes elegidos.
+ *   ya abierto en la llegada, y resume las fechas y los huéspedes elegidos. Alojamiento usa la
+ *   misma barra con el buscador completo y un botón de filtros que abre el panel en los filtros.
  * - Carruseles (tarjetas Stay / Concierge / Experiences y zonas): los puntos marcan la tarjeta
  *   que se ve.
  * - Experiencias: solo cuatro de la etiqueta elegida; «See all experiences» lleva a la página de
@@ -21,16 +22,28 @@
 		}
 		var datesOut = bar.querySelector( '[data-qs=dates]' );
 		var guestsOut = bar.querySelector( '[data-qs=guests]' );
-		var emptyDates = datesOut.textContent;
+		var emptyDates = datesOut.getAttribute( 'data-empty' ) || datesOut.textContent;
+		var countOut = qs.querySelector( '[data-qs=count]' );
+		var filtersBtn = qs.querySelector( '.mis-qs__filters' );
 
 		function summary() {
 			var a = form.querySelector( '[name=checkin]' ).value;
 			var d = form.querySelector( '[name=checkout]' ).value;
 			var f = window.MisCalendar && window.MisCalendar.format;
 			datesOut.textContent = a && d && f ? f( a ) + ' – ' + f( d ) : emptyDates;
-			guestsOut.textContent = form.querySelector( '[name=guests]' ).value;
+			var g = form.querySelector( '[name=guests]' );
+			guestsOut.textContent = g.options[ g.selectedIndex ] ? g.options[ g.selectedIndex ].text : g.value;
+			if ( countOut ) {
+				var n = form.querySelectorAll( 'input[name="feat[]"]:checked' ).length;
+				[ 'type', 'area', 'bedrooms' ].forEach( function ( k ) {
+					var f = form.querySelector( '[name=' + k + ']' );
+					n += f && f.value ? 1 : 0;
+				} );
+				countOut.textContent = n;
+				countOut.hidden = ! n;
+			}
 		}
-		function open() {
+		function open( e, toFilters ) {
 			sheet.classList.add( 'is-open' );
 			sheet.setAttribute( 'role', 'dialog' );
 			sheet.setAttribute( 'aria-modal', 'true' );
@@ -40,6 +53,11 @@
 			// El calendario de la llegada, ya abierto (search.js de marOS Connector).
 			// Después de este clic: si no, search.js lo toma por un clic fuera y lo cierra.
 			setTimeout( function () {
+				var filters = toFilters && form.querySelector( '[data-qs-filters]' );
+				if ( filters ) {
+					filters.scrollIntoView( { block: 'start' } );
+					return;
+				}
 				var arrival = form.querySelector( '.mis-search__field' );
 				if ( arrival && arrival.querySelector( '.mis-search__date' ) ) {
 					arrival.click();
@@ -58,6 +76,11 @@
 			bar.focus( { preventScroll: true } );
 		}
 		bar.addEventListener( 'click', open );
+		if ( filtersBtn ) {
+			filtersBtn.addEventListener( 'click', function ( e ) {
+				open( e, true );
+			} );
+		}
 		qs.querySelector( '.mis-qs__close' ).addEventListener( 'click', close );
 		sheet.addEventListener( 'click', function ( e ) {
 			if ( e.target === sheet ) {
