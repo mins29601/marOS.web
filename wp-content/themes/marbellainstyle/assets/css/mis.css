@@ -341,16 +341,15 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-facts strong { font-size: 1.375rem; font-weight: 500; color: var(--wp--preset--color--main); }
 @media (min-width: 768px) { .mis-facts li { padding-inline: 1.5rem; } }
 /* «Gestionada por Marbella in Style», bajo los datos de la casa (solo si marOS lo dice) */
-/* Sello «Managed by Marbella in Style» (Julio 25-11-2026): etiqueta inclinada, sin líneas arriba ni
-   abajo. El símbolo dorado va en una pestaña oscura que asoma por arriba y el texto en una franja
-   crema con un filo dorado, los dos con el mismo corte en diagonal. */
-.mis-managed { --mis-slant: 12px; display: flex; align-items: stretch; width: fit-content; max-width: 100%; margin-top: 1.75rem; filter: drop-shadow(0 6px 14px rgb(37 39 40 / 0.08)); }
-.mis-managed__mark { position: relative; z-index: 1; flex-shrink: 0; width: 60px; margin-block: -6px 6px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--wp--preset--color--main-accent), var(--wp--preset--color--main)); clip-path: polygon(var(--mis-slant) 0, 100% 0, calc(100% - var(--mis-slant)) 100%, 0 100%); }
-.mis-managed__mark img { width: 28px; height: 28px; }
-.mis-managed p { margin: 0 0 0 calc(-1 * var(--mis-slant)); min-width: 0; text-wrap: balance; display: grid; gap: 3px; line-height: 1.4; padding: 0.875rem calc(var(--mis-slant) + 1.5rem) 0.875rem calc(var(--mis-slant) + 1rem); background: linear-gradient(90deg, var(--wp--preset--color--primary), var(--wp--preset--color--primary-accent)) top / 100% 2px no-repeat, var(--wp--preset--color--tertiary); clip-path: polygon(0 0, 100% 0, calc(100% - var(--mis-slant)) 100%, 0 100%); }
-.mis-managed strong { font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--small); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wp--preset--color--main); }
-.mis-managed p span { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
-@media (max-width: 767px) { .mis-managed__mark { width: 52px; } .mis-managed p { padding-right: calc(var(--mis-slant) + 0.75rem); } .mis-managed strong { letter-spacing: 0.08em; } }
+/* Sello «Managed by Marbella in Style» (Julio 25-11-2026): sin líneas arriba ni abajo. El símbolo
+   dorado va en un cuadrado oscuro y el texto, compacto, en una franja crema con un filo dorado y el
+   borde derecho cortado en diagonal. */
+.mis-managed { --mis-slant: 10px; display: flex; align-items: stretch; width: fit-content; max-width: 100%; margin-top: 1.5rem; filter: drop-shadow(0 4px 10px rgb(37 39 40 / 0.07)); }
+.mis-managed__mark { flex-shrink: 0; width: 48px; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; background: var(--wp--preset--color--main); }
+.mis-managed__mark img { width: 26px; height: 26px; }
+.mis-managed p { margin: 0; min-width: 0; display: grid; align-content: center; gap: 1px; line-height: 1.35; padding: 0.375rem calc(var(--mis-slant) + 1rem) 0.375rem 0.875rem; background: linear-gradient(90deg, var(--wp--preset--color--primary), var(--wp--preset--color--primary-accent)) top / 100% 2px no-repeat, var(--wp--preset--color--tertiary); clip-path: polygon(0 0, 100% 0, calc(100% - var(--mis-slant)) 100%, 0 100%); }
+.mis-managed strong { font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wp--preset--color--main); }
+.mis-managed p span { font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--secondary); }
 /* Ficha PDF (marOS spec 057): enlace de descarga al final de Condiciones */
 .mis-brochure { margin-top: 1.25rem; }
 .mis-brochure a { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--wp--preset--color--main); text-decoration: none; font-weight: 500; }
