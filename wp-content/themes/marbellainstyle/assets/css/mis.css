@@ -1224,3 +1224,101 @@ main.mis-tour-ficha { margin-block-start: 0; }
 .mis-servicios-listado .mis-card[hidden] { display: none; }
 .mis-servicios-listado .mis-card h3 { margin: 0; font-size: var(--wp--preset--font-size--medium); }
 @media (max-width: 599px) { .mis-tour-filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--wp--preset--spacing--medium) * -1); padding-inline: var(--wp--preset--spacing--medium); } .mis-chip { flex-shrink: 0; } }
+
+/* ------------------------------------------------------------------ Inicio en el móvil */
+/* Maqueta «home en móvil» (Julio, 25-11-2026): título más corto y barra de búsqueda sobre la
+   foto (opción 5), tarjetas Stay / Concierge / Experiences en carrusel con foto, fotos a todo lo
+   ancho sobre casas y experiencias, cuatro casas, servicios y experiencias a dos columnas con
+   «See all», y cuatro zonas en carrusel. El escritorio no cambia. */
+
+/* Lo nuevo solo existe en el móvil */
+.mis-qs__bar, .mis-qs__top, .mis-pillar__ph, .mis-dots, .mis-home-banner, .mis-home-more { display: none; }
+.mis-qs__sheet, .mis-qs__panel { display: contents; }
+
+/* Botón de contorno («See all …») */
+.mis-btn-outline { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; min-width: min(100%, 17rem); padding: 0 1.75rem; border: 1px solid var(--wp--preset--color--main); color: var(--wp--preset--color--main); font-family: var(--mis-label-font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; box-sizing: border-box; }
+.mis-btn-outline:is(:hover, :focus-visible) { background: var(--wp--preset--color--main); color: #fff; }
+
+/* Puntos de los carruseles */
+.mis-dots { justify-content: center; gap: 8px; margin-top: 1.25rem; }
+.mis-dots i { width: 7px; height: 7px; border-radius: 99px; background: var(--wp--preset--color--border-light); transition: width .25s ease, background-color .25s ease; }
+.mis-dots i.is-on { width: 22px; background: var(--wp--preset--color--main); }
+
+@media (max-width: 767px) {
+	/* Portada: cabe entera en la primera pantalla; título en unas cuatro líneas */
+	.mis-front .mis-hero.wp-block-cover { min-height: min(100svh, 760px) !important; padding-bottom: 1.75rem; }
+	.mis-front .mis-hero .mis-eyebrow { font-size: 0.625rem; }
+	.mis-front .mis-hero__title { font-size: 1.625rem; line-height: 1.18; max-width: none; text-wrap: balance; }
+	.mis-front .mis-hero .wp-block-cover__inner-container > * { margin-bottom: 1rem; }
+	.mis-front .mis-hero .wp-block-cover__inner-container > :last-child { margin-bottom: 0; }
+
+	/* Barra del buscador: fechas, huéspedes y lupa dorada; abre el panel */
+	.mis-qs__bar { display: grid; grid-template-columns: 1.35fr 1fr auto; align-items: center; width: 100%; min-height: 58px; padding: 0 5px 0 0; border: 0; border-radius: 999px; background: #fff; color: var(--wp--preset--color--main); box-shadow: 0 10px 28px rgba(0, 0, 0, .25); font: inherit; text-align: left; cursor: pointer; }
+	.mis-qs__cell { display: flex; flex-direction: column; min-width: 0; padding: 0 1.1rem; }
+	.mis-qs__cell + .mis-qs__cell { border-left: 1px solid var(--mis-line); }
+	.mis-qs__label { font-family: var(--mis-label-font); font-size: 0.625rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--wp--preset--color--secondary); }
+	.mis-qs__value { font-size: 0.9375rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+	.mis-qs__go { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--wp--preset--color--primary-alt); color: #fff; }
+	.mis-qs__bar:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+	/* Panel desde abajo con el buscador de siempre y el calendario */
+	.mis-qs__sheet { display: none; }
+	.mis-qs__sheet.is-open { display: flex; position: fixed; inset: 0; z-index: 100; align-items: flex-end; background: rgba(0, 0, 0, .45); }
+	.mis-qs__panel { display: block; width: 100%; max-height: 92svh; overflow-y: auto; box-sizing: border-box; padding: 1.1rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px)); border-radius: 16px 16px 0 0; background: var(--wp--preset--color--base); color: var(--wp--preset--color--main); }
+	.mis-qs__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+	.mis-qs__top strong { font-family: var(--mis-label-font); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+	.mis-qs__close { width: var(--mis-touch); height: var(--mis-touch); margin-right: -0.75rem; border: 0; background: none; font-size: 1.75rem; line-height: 1; color: var(--wp--preset--color--main); cursor: pointer; }
+	.mis-qs .mis-search { position: relative; max-width: none; margin: 0; border: 1px solid var(--mis-line); }
+	/* En el panel, el calendario va dentro, entre las fechas y los huéspedes, no flotando */
+	.mis-qs .mis-search__cal { position: static !important; grid-column: 1 / -1; order: 2; width: auto; border: 0; border-bottom: 1px solid var(--mis-line); }
+	.mis-qs .mis-search__field--guests { order: 3; }
+	.mis-qs .mis-search__submit { order: 4; }
+	.mis-qs .mis-search__hint { order: 5; }
+	html.mis-qs-open, html.mis-qs-open body { overflow: hidden; }
+
+	/* Stay / Concierge / Experiences: carrusel con foto y el título encima */
+	.mis-front .mis-pillars.wp-block-columns { display: flex; flex-wrap: nowrap !important; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; max-width: none !important; margin-inline: calc(var(--wp--preset--spacing--medium) * -1) !important; padding-inline: var(--wp--preset--spacing--medium); scroll-padding-inline: var(--wp--preset--spacing--medium); }
+	.mis-front .mis-pillars::-webkit-scrollbar { display: none; }
+	.mis-front .mis-pillars .wp-block-column { flex: 0 0 82% !important; scroll-snap-align: start; border-top: 0; padding-top: 0; }
+	.mis-front .mis-pillars .wp-block-column > * { margin-block: 0; }
+	.mis-front .mis-pillars:has(.mis-pillar__ph) .wp-block-column > h3 { display: none; }
+	.mis-front .mis-pillars .mis-muted { margin: 0.75rem 0 0.5rem; }
+	.mis-pillar__ph { display: block; position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--wp--preset--color--tertiary); }
+	.mis-pillar__img { display: block; width: 100%; height: 100%; object-fit: cover; }
+	.mis-pillar__ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 50%, rgba(0, 0, 0, .6)); }
+	.mis-pillar__name { position: absolute; z-index: 1; left: 1.1rem; bottom: 1rem; font-family: var(--wp--preset--font-family--heading); font-size: 1.625rem; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; }
+	.mis-front .mis-dots { display: flex; }
+
+	/* Foto a todo lo ancho encima de casas y experiencias */
+	.mis-front .wp-block-group.alignfull:has(> .mis-home-banner) { padding-top: 0 !important; }
+	.mis-home-banner { display: block; margin: 0 calc(var(--wp--preset--spacing--medium) * -1) 2.25rem !important; width: auto; max-width: none !important; aspect-ratio: 4 / 5; overflow: hidden; background: var(--wp--preset--color--tertiary); }
+	.mis-home-banner__img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+	/* Casas, servicios y experiencias: cuatro, a dos columnas */
+	.mis-front .wp-block-post-template.is-layout-grid { grid-template-columns: 1fr 1fr !important; column-gap: 12px; row-gap: 1.75rem; }
+	.mis-front .wp-block-post-template > li:nth-child(n+5),
+	.mis-front .mis-tour-grid .wp-block-post-template > li.is-over { display: none; }
+	.mis-front .mis-servicios-tipos { grid-template-columns: 1fr 1fr; gap: 1.75rem 12px; }
+	.mis-front .mis-servicios-tipos > .mis-card:nth-child(n+5) { display: none; }
+	.mis-front .mis-servicios-tipos .mis-card__foto img { aspect-ratio: 1; height: auto; }
+	.mis-front .mis-card { gap: 0.25rem; }
+	.mis-front .mis-card .wp-block-post-title { font-size: 0.875rem; }
+	.mis-front .mis-card p { font-size: 0.75rem; line-height: 1.45; }
+	.mis-front .mis-card .mis-eyebrow { font-size: 0.5938rem; }
+	.mis-front .mis-card__features { display: none; }
+	.mis-front .mis-tour-grid .wp-block-post-featured-image img { aspect-ratio: 1 !important; height: auto !important; }
+	.mis-home-more { display: flex; justify-content: center; margin: 1.75rem 0 0; }
+
+	/* Zonas: cuatro en carrusel */
+	.mis-front .mis-zgrid { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; max-width: none !important; margin-inline: calc(var(--wp--preset--spacing--medium) * -1) !important; padding-inline: var(--wp--preset--spacing--medium); scroll-padding-inline: var(--wp--preset--spacing--medium); }
+	.mis-front .mis-zgrid::-webkit-scrollbar { display: none; }
+	.mis-front .mis-zgrid > .mis-zcard { flex: 0 0 62%; scroll-snap-align: start; }
+	.mis-front .mis-zgrid > .mis-zcard:nth-child(n+5) { display: none; }
+	.mis-front .mis-zcard__name { font-size: 1.125rem; left: 0.9rem; right: 0.9rem; bottom: 0.8rem; }
+	.mis-front .mis-zgrid + .mis-dots { margin-bottom: 0.5rem; }
+	/* «See all areas» (enlace del contenido) con el mismo botón de contorno que los demás */
+	.mis-front .wp-block-group:has(.mis-zgrid) p:has(> .mis-link-action) { display: flex; justify-content: center; margin-top: 1.75rem; }
+	.mis-front .wp-block-group:has(.mis-zgrid) .mis-link-action { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; min-width: min(100%, 17rem); padding: 0 1.75rem; border: 1px solid var(--wp--preset--color--main); text-decoration: none; box-sizing: border-box; }
+	.mis-front .wp-block-group:has(.mis-zgrid) .mis-link-action::after { content: none; }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) { .mis-dots i { transition: none; } }
