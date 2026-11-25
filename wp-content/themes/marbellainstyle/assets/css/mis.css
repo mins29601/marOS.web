@@ -901,37 +901,59 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 	.mis-qs--stay .mis-search__submit { order: 4; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
 	.mis-qs--stay .mis-search__error { order: 5; }
 }
+@media (max-width: 767px) {
+	.mis-search__guests, .mis-search__pop { display: none !important; }
+}
 @media (min-width: 768px) {
-	/* La barra de la portada (Llegada | Salida | Huéspedes | lupa), sin estirarse, y debajo los
-	   filtros en una línea de píldoras: «TIPO Villas ▾» «ZONA Todas ▾» «DORMITORIOS 3+ ▾» y los chips */
+	/* Barra como la de Airbnb (Julio, 25-11-2026): Llegada | Salida | Huéspedes | «Search»; la celda
+	   abierta se levanta en blanco sobre la barra en gris. Debajo, los filtros en una línea de
+	   píldoras: «TIPO Villas ▾» «ZONA Todas ▾» «DORMITORIOS 3+ ▾» y los chips */
 	.mis-search--full { display: block; margin: 0; border: 0; background: transparent; }
-	.mis-search--full .mis-search__row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; align-items: center; max-width: 42rem; border: 1px solid var(--mis-line); border-radius: 999px; background: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, .06); }
-	.mis-search--full .mis-search__row .mis-search__field { align-self: stretch; padding: 0.375rem 1rem; border-right: 1px solid var(--mis-line); border-bottom: 0; }
-	.mis-search--full .mis-search__row .mis-search__field:first-child { padding-left: 1.5rem; }
-	.mis-search--full .mis-search__row .mis-search__field:has(+ .mis-search__submit) { border-right: 0; }
-	.mis-search--full .mis-search__field:focus-within,
-	.mis-search--full .mis-search__field.is-active { box-shadow: none; }
-	.mis-search--full .mis-search__field.is-active label,
-	.mis-search--full .mis-search__field:focus-within label { color: var(--wp--preset--color--main); }
-	.mis-search--full label { white-space: nowrap; }
+	.mis-search--full .mis-search__row { display: grid; grid-template-columns: 1fr 1fr 1.1fr auto; align-items: center; max-width: 46rem; border: 1px solid var(--mis-line); border-radius: 999px; background: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, .06); transition: background-color .2s ease; }
+	.mis-search--full .mis-search__row:has(.is-active) { background: var(--wp--preset--color--tertiary); }
+	.mis-search--full .mis-search__row .mis-search__field { align-self: stretch; padding: 0.625rem 1.5rem; border-right: 1px solid var(--mis-line); border-bottom: 0; border-radius: 999px; }
+	.mis-search--full .mis-search__row .mis-search__field:has(+ .mis-search__submit),
+	.mis-search--full .mis-search__row .mis-search__field:has(+ .is-active),
+	.mis-search--full .mis-search__row .mis-search__field.is-active { border-right-color: transparent; }
+	.mis-search--full .mis-search__row .mis-search__field.is-active { background: #fff; box-shadow: 0 4px 16px rgba(0, 0, 0, .12); }
+	.mis-search--full .mis-search__field:focus-within { box-shadow: none; }
+	.mis-search--full label { white-space: nowrap; color: var(--wp--preset--color--main); }
 	.mis-search--full .mis-search__row input,
 	.mis-search--full .mis-search__row select,
 	.mis-search--full .mis-search__row .mis-search__date { min-height: 24px; padding-top: 0.125rem; }
-	.mis-search--full .mis-search__submit.wp-element-button { display: grid; place-items: center; width: 42px; height: 42px; min-height: 0; margin: 0 5px; padding: 0; border-radius: 50%; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
+	.mis-search--full .mis-search__submit.wp-element-button { display: inline-flex; align-items: center; gap: 0.5rem; height: 46px; min-height: 0; margin: 0 6px; padding: 0 1.25rem; border-radius: 999px; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
 	.mis-search--full .mis-search__submit.wp-element-button:is(:hover, :focus-visible) { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); }
 	.mis-search--full .mis-search__icon { display: block; width: 18px; height: 18px; }
-	.mis-search--full .mis-search__submit-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+	/* Huéspedes: botón y ventanita con «− 2 +» (assets/search.js); el desplegable queda para el móvil */
+	.mis-search--full .mis-search__field--guests { position: relative; }
+	.mis-search--full .mis-search__field--guests:has(.mis-search__guests) select { display: none; }
+	.mis-search__guests { width: 100%; min-height: 24px; padding: 0.125rem 0 0; border: 0; background: none; font: inherit; font-size: 0.9375rem; text-align: left; color: var(--wp--preset--color--main); cursor: pointer; }
+	.mis-search__guests.is-empty { color: var(--wp--preset--color--secondary); }
+	.mis-search__guests:focus-visible { outline: none; }
+	.mis-search__pop { position: absolute; top: calc(100% + 10px); right: -4rem; z-index: 60; width: 300px; box-sizing: border-box; padding: 1.25rem 1.5rem; border-radius: 24px; background: #fff; box-shadow: 0 8px 28px rgba(0, 0, 0, .16); cursor: default; }
+	.mis-search__pop[hidden] { display: none; }
+	.mis-stepper { display: flex; align-items: center; gap: 0.75rem; }
+	.mis-stepper__name { flex: 1; font-size: 1rem; }
+	.mis-stepper output { min-width: 1.5rem; text-align: center; }
+	.mis-stepper button { width: 32px; height: 32px; padding: 0; border: 1px solid var(--wp--preset--color--border-dark); border-radius: 50%; background: #fff; font: inherit; font-size: 1.125rem; line-height: 1; color: var(--wp--preset--color--main); cursor: pointer; }
+	.mis-stepper button:disabled { opacity: .3; cursor: default; }
+	/* Calendario: ventana redonda con sombra; en escritorio, dos meses (calendar.js, «pair») */
+	.mis-search--full .mis-search__cal { width: min(360px, calc(100vw - 2rem)); padding: 1.25rem 1.5rem; border: 0; border-radius: 24px; box-shadow: 0 8px 28px rgba(0, 0, 0, .16); }
+	.mis-search--full .mis-search__cal.is-pair { width: min(760px, calc(100vw - 2rem)); padding: 1.5rem 2rem; }
+	.mis-cal.is-pair .mis-cal__hint { text-align: center; margin-top: 0; }
+	.mis-cal.is-pair .mis-cal__months { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+	.mis-search--full .mis-cal__grid button { border-radius: 50%; }
+	.mis-search--full .mis-cal__grid button.is-range { border-radius: 0; }
 	.mis-search--full .mis-search__filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }
 	.mis-search--full .mis-search__filters .mis-search__field { flex-direction: row; align-items: center; gap: 0.5rem; height: 32px; box-sizing: border-box; padding: 0 0.5rem 0 0.875rem; border: 1px solid var(--mis-line-dark); border-radius: 999px; background: transparent; }
-	.mis-search--full .mis-search__filters label { font-size: 0.625rem; }
+	.mis-search--full .mis-search__filters label { font-size: 0.625rem; color: var(--wp--preset--color--secondary); }
 	.mis-search--full .mis-search__filters select { width: auto; min-height: 0; padding: 0 1.25rem 0 0; font-size: 0.8125rem; background-position: right 0.25rem center; cursor: pointer; }
 	.mis-search--full .mis-search__filters .mis-search__field:has(option:checked:not([value=""])) { border-color: var(--wp--preset--color--main); }
 	.mis-search--full .mis-search__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; }
 	.mis-search--full .mis-search__error { margin-top: 0.5rem; }
 }
-	.mis-search--full .mis-search__field:first-child { padding-left: 1.25rem; }
-	.mis-search--full label { letter-spacing: 0.06em; }
-	.mis-search--full input, .mis-search--full select, .mis-search--full .mis-search__date { font-size: 0.875rem; }
+@media (min-width: 768px) and (max-width: 1023px) {
+	.mis-search--full .mis-search__row .mis-search__field { padding-inline: 1.125rem; }
 }
 
 .wp-block-details { border-top: 1px solid var(--mis-line); padding: 0; }
