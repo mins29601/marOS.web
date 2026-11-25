@@ -198,7 +198,7 @@ $no_title = array( 'page_template' => 'page-no-title' );
 // La portada (título y buscador) la pone la plantilla front-page.html del tema.
 $home_en = mis_section(
 	'<!-- wp:columns {"className":"mis-pillars"} --><div class="wp-block-columns mis-pillars">'
-	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Stay', 3, 'medium' ) . mis_p( 'Villas and apartments managed by our own team.', 'mis-muted' ) . mis_p( '<a href="/stay/">See the homes →</a>' ) . '</div><!-- /wp:column -->'
+	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Stay', 3, 'medium' ) . mis_p( 'Villas and apartments direct from their owners.', 'mis-muted' ) . mis_p( '<a href="/stay/">See the homes →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Concierge', 3, 'medium' ) . mis_p( 'Chefs, drivers, events. Also if you are not staying with us.', 'mis-muted' ) . mis_p( '<a href="/services/">See the services →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Experiences', 3, 'medium' ) . mis_p( 'Private days out in Andalusia with local guides.', 'mis-muted' ) . mis_p( '<a href="/experiences/">See the experiences →</a>' ) . '</div><!-- /wp:column -->'
 	. '</div><!-- /wp:columns -->'
@@ -211,7 +211,7 @@ $home_en = mis_section(
 // La portada (título y buscador) la pone la plantilla front-page.html del tema.
 $home_es = mis_section(
 	'<!-- wp:columns {"className":"mis-pillars"} --><div class="wp-block-columns mis-pillars">'
-	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Alojamiento', 3, 'medium' ) . mis_p( 'Villas y apartamentos gestionados por nuestro equipo.', 'mis-muted' ) . mis_p( '<a href="/es/alojamiento/">Ver las casas →</a>' ) . '</div><!-- /wp:column -->'
+	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Alojamiento', 3, 'medium' ) . mis_p( 'Villas y apartamentos directamente de sus propietarios.', 'mis-muted' ) . mis_p( '<a href="/es/alojamiento/">Ver las casas →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Servicios', 3, 'medium' ) . mis_p( 'Chefs, chóferes, eventos. También si no te alojas con nosotros.', 'mis-muted' ) . mis_p( '<a href="/es/servicios/">Ver los servicios →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Experiencias', 3, 'medium' ) . mis_p( 'Días privados por Andalucía con guías locales.', 'mis-muted' ) . mis_p( '<a href="/es/experiencias/">Ver las experiencias →</a>' ) . '</div><!-- /wp:column -->'
 	. '</div><!-- /wp:columns -->'
