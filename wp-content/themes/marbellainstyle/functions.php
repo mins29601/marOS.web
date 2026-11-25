@@ -34,6 +34,12 @@ add_action(
 	static function () {
 		$file = get_stylesheet_directory() . '/assets/css/mis.css';
 		wp_enqueue_style( 'marbellainstyle', get_stylesheet_directory_uri() . '/assets/css/mis.css', array(), (string) filemtime( $file ) );
+		// Inicio en el móvil: panel del buscador, carruseles con puntos y «See all» de experiencias.
+		$js = get_stylesheet_directory() . '/assets/js/inicio.js';
+		wp_register_script( 'mis-inicio', get_stylesheet_directory_uri() . '/assets/js/inicio.js', array(), (string) filemtime( $js ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		if ( is_front_page() ) {
+			wp_enqueue_script( 'mis-inicio' );
+		}
 	}
 );
 add_action(
@@ -107,7 +113,28 @@ add_shortcode(
 		$today = wp_date( 'Y-m-d' );
 		// Fechas que abren el calendario al pulsar la celda (script de marOS Connector).
 		wp_enqueue_script( 'maros-search' );
-		return sprintf(
+		wp_enqueue_script( 'mis-inicio' );
+		// En el móvil, sobre la foto solo se ve una barra (fechas, huéspedes y lupa) que abre el
+		// buscador en un panel desde abajo (opción 5 de la maqueta, Julio, 25-11-2026). En
+		// escritorio la barra no se ve y el formulario sigue como antes.
+		$bar = sprintf(
+			'<button type="button" class="mis-qs__bar" aria-expanded="false" aria-controls="mis-qs-sheet">'
+			. '<span class="mis-qs__cell"><span class="mis-qs__label">%1$s</span><span class="mis-qs__value" data-qs="dates">%2$s</span></span>'
+			. '<span class="mis-qs__cell"><span class="mis-qs__label">%3$s</span><span class="mis-qs__value" data-qs="guests">2</span></span>'
+			. '<span class="mis-qs__go" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></span>'
+			. '<span class="screen-reader-text">%4$s</span>'
+			. '</button>',
+			esc_html( mis_t( 'Dates', 'Fechas' ) ),
+			esc_html( mis_t( 'Add dates', 'Añadir fechas' ) ),
+			esc_html( mis_t( 'Guests', 'Huéspedes' ) ),
+			esc_html( mis_t( 'Search homes', 'Buscar casas' ) )
+		);
+		$top = sprintf(
+			'<div class="mis-qs__top"><strong>%1$s</strong><button type="button" class="mis-qs__close" aria-label="%2$s">×</button></div>',
+			esc_html( mis_t( 'Your stay', 'Tu estancia' ) ),
+			esc_html( mis_t( 'Close', 'Cerrar' ) )
+		);
+		return '<div class="mis-qs">' . $bar . '<div class="mis-qs__sheet" id="mis-qs-sheet"><div class="mis-qs__panel">' . $top . sprintf(
 			'<form class="mis-search" role="search" method="get" action="%1$s">'
 			. '<div class="mis-search__field"><label for="mis-checkin">%2$s</label><input id="mis-checkin" type="date" name="checkin" min="%8$s"></div>'
 			. '<div class="mis-search__field"><label for="mis-checkout">%3$s</label><input id="mis-checkout" type="date" name="checkout" min="%8$s"></div>'
@@ -123,7 +150,7 @@ add_shortcode(
 			esc_html( mis_t( 'See available homes', 'Ver casas disponibles' ) ),
 			esc_html( mis_t( 'Flexible dates? Leave them empty and we will show you every home.', '¿Fechas flexibles? Déjalas en blanco y te enseñamos todas las casas.' ) ),
 			esc_attr( $today )
-		);
+		) . '</div></div></div>';
 	}
 );
 
@@ -265,4 +292,121 @@ add_filter(
 		$own = array_values( array_filter( $templates, static fn( $t ) => $t === $slug . '.php' || $t === $slug ) );
 		return array_values( array_unique( array_merge( $own ?: array( $slug . '.php' ), $templates ) ) );
 	}
+);
+
+/*
+ * ------------------------------------------------------------------ Inicio en el móvil
+ * Maqueta «home en móvil» (Julio, 25-11-2026). El contenido de Inicio vive en la base de datos;
+ * estos filtros añaden al pintarlo, solo en la portada, lo que el móvil necesita. En escritorio
+ * no se ve nada nuevo (lo esconde mis.css).
+ */
+
+/** Foto de Inicio (mis-contenido, includes/inicio.php) con el tamaño y la clase pedidos. */
+function mis_inicio_img( string $hueco, string $class, string $size = 'large' ): string {
+	$id = function_exists( 'mis_inicio_foto' ) ? mis_inicio_foto( $hueco ) : 0;
+	return $id ? wp_get_attachment_image( $id, $size, false, array( 'class' => $class, 'loading' => 'lazy', 'sizes' => '(max-width: 767px) 100vw, 33vw' ) ) : '';
+}
+
+/**
+ * Tarjetas Stay / Concierge / Experiences: cada columna lleva encima su foto con el título,
+ * enlazada como el «See the …» de la columna. En el móvil van en carrusel con puntos.
+ */
+add_filter(
+	'render_block_core/columns',
+	static function ( string $html, array $block ): string {
+		if ( ! is_front_page() || false === strpos( (string) ( $block['attrs']['className'] ?? '' ), 'mis-pillars' ) ) {
+			return $html;
+		}
+		$huecos = array( 'stay', 'concierge', 'experiences' );
+		$i      = 0;
+		$html   = preg_replace_callback(
+			'#<div class="wp-block-column(?: [^"]*)?"[^>]*>(.*?)</div>(?=\s*(?:<div class="wp-block-column[ "]|</div>\s*$))#s',
+			static function ( array $m ) use ( &$i, $huecos ): string {
+				$hueco = $huecos[ $i++ ] ?? '';
+				$img   = $hueco ? mis_inicio_img( $hueco, 'mis-pillar__img' ) : '';
+				preg_match( '#<h3[^>]*>(.*?)</h3>#s', $m[1], $h );
+				preg_match( '#<a [^>]*href="([^"]+)"#', $m[1], $a );
+				if ( ! $img || ! $h || ! $a ) {
+					return $m[0];
+				}
+				$foto = sprintf(
+					'<a class="mis-pillar__ph" href="%1$s" tabindex="-1" aria-hidden="true">%2$s<span class="mis-pillar__name">%3$s</span></a>',
+					esc_url( html_entity_decode( $a[1] ) ),
+					$img,
+					wp_strip_all_tags( $h[1] )
+				);
+				return str_replace( $m[1], $foto . $m[1], $m[0] );
+			},
+			$html
+		);
+		$dots = '<div class="mis-dots" aria-hidden="true">' . str_repeat( '<i></i>', max( 1, $i ) ) . '</div>';
+		return $html . $dots;
+	},
+	10,
+	2
+);
+
+/** Patrón de rejilla que lleva dentro un bloque (o '' si ninguno). */
+function mis_inicio_rejilla( array $block ): string {
+	foreach ( $block['innerBlocks'] ?? array() as $inner ) {
+		if ( 'core/pattern' === $inner['blockName'] ) {
+			return (string) ( $inner['attrs']['slug'] ?? '' );
+		}
+	}
+	return '';
+}
+
+/**
+ * Foto a todo lo ancho encima de las secciones «Exclusive homes» y «Experiences» (como en el
+ * ejemplo de Louis Vuitton que pasó Julio). Solo en el móvil.
+ */
+add_filter(
+	'render_block_core/group',
+	static function ( string $html, array $block ): string {
+		if ( ! is_front_page() ) {
+			return $html;
+		}
+		$huecos = array(
+			'marbellainstyle/property-grid' => 'banner_homes',
+			'marbellainstyle/tour-grid'     => 'banner_tours',
+		);
+		$hueco  = $huecos[ mis_inicio_rejilla( $block ) ] ?? '';
+		$img    = $hueco ? mis_inicio_img( $hueco, 'mis-home-banner__img' ) : '';
+		if ( ! $img ) {
+			return $html;
+		}
+		return preg_replace( '#^(\s*<div[^>]*>)#', '$1<figure class="mis-home-banner">' . $img . '</figure>', $html, 1 );
+	},
+	10,
+	2
+);
+
+/**
+ * «See all …» bajo las casas, los servicios y las experiencias de Inicio. En el móvil solo se ven
+ * cuatro de cada; en escritorio el botón no se ve y la rejilla sigue entera.
+ */
+add_filter(
+	'render_block_core/pattern',
+	static function ( string $html, array $block ): string {
+		if ( ! is_front_page() ) {
+			return $html;
+		}
+		$botones = array(
+			'marbellainstyle/property-grid' => array( 'stay', 'See all homes', 'Ver todas las casas' ),
+			'marbellainstyle/service-grid'  => array( 'services', 'See all services', 'Ver todos los servicios' ),
+			'marbellainstyle/tour-grid'     => array( 'experiences', 'See all experiences', 'Ver todas las experiencias' ),
+		);
+		$b = $botones[ (string) ( $block['attrs']['slug'] ?? '' ) ] ?? null;
+		if ( ! $b ) {
+			return $html;
+		}
+		return $html . sprintf(
+			'<p class="mis-home-more"><a class="mis-btn-outline" href="%1$s"%3$s>%2$s</a></p>',
+			esc_url( mis_page_url( $b[0] ) ),
+			esc_html( mis_t( $b[1], $b[2] ) ),
+			'experiences' === $b[0] ? ' data-mis-tours-all' : ''
+		);
+	},
+	10,
+	2
 );

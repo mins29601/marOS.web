@@ -289,3 +289,5 @@ require_once __DIR__ . '/includes/servicios.php';
 // Lugares recomendados por zona y sus herramientas MCP (Rebecca, desde ChatGPT).
 require_once __DIR__ . '/includes/lugares.php';
 require_once __DIR__ . '/includes/lugares-mcp.php';
+// Fotos de Inicio en el móvil (carrusel y fotos a todo lo ancho).
+require_once __DIR__ . '/includes/inicio.php';
