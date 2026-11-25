@@ -22,7 +22,10 @@ defined( 'ABSPATH' ) || exit;
 
 class Maros_Search {
 
-	/** Filtros rápidos en chips (spec 005, conclusión 10: pocos y útiles). Código => [EN, ES]. */
+	/**
+	 * Equipamiento que entiende la URL (&feat=…). Código => [EN, ES]. En el buscador solo salen los
+	 * de CHIPS; los demás siguen valiendo en enlaces.
+	 */
 	public const FEATURES = array(
 		'private-pool'     => array( 'Private pool', 'Piscina privada' ),
 		'heated-pool'      => array( 'Heated pool', 'Piscina climatizada' ),
@@ -31,6 +34,12 @@ class Maros_Search {
 		'gym'              => array( 'Gym', 'Gimnasio' ),
 		'bbq'              => array( 'BBQ', 'Barbacoa' ),
 	);
+
+	/**
+	 * Chips del buscador: solo las características importantes (Julio, 25-11-2026: «los filtros los
+	 * podemos quitar… o dejar sólo características importantes»). Fuera tipo, zona y dormitorios.
+	 */
+	private const CHIPS = array( 'sea-view', 'heated-pool' );
 
 	/**
 	 * Tipos de propiedad del filtro: la categoría de la propiedad en marOS (catálogo «category»,
@@ -441,28 +450,11 @@ class Maros_Search {
 			. ' <a href="' . esc_url( $contact ) . '">' . esc_html( $es ? 'Habla con nosotros' : 'Talk to us' ) . '</a></p></div>';
 	}
 
-	/** Zonas que tienen alguna casa publicada, en el idioma de la página. */
-	private static function areas(): array {
-		$ids = get_posts(
-			array(
-				'post_type'        => 'mis_property',
-				'post_status'      => 'publish',
-				'numberposts'      => -1,
-				'fields'           => 'ids',
-				'suppress_filters' => false,
-			)
-		);
-		if ( ! $ids ) {
-			return array();
-		}
-		$terms = get_terms( array( 'taxonomy' => 'zona', 'object_ids' => $ids, 'hide_empty' => true, 'orderby' => 'name' ) );
-		return is_wp_error( $terms ) ? array() : $terms;
-	}
-
 	/** Chips con alguna casa detrás (no ofrecemos un filtro que deja la lista vacía). */
 	private static function features(): array {
 		$out = array();
-		foreach ( self::FEATURES as $code => $names ) {
+		foreach ( self::CHIPS as $code ) {
+			$names = self::FEATURES[ $code ];
 			$en = get_term_by( 'slug', $code, 'equipamiento' );
 			$es = get_term_by( 'slug', $code . '-es', 'equipamiento' );
 			if ( ( $en && $en->count ) || ( $es && $es->count ) ) {
@@ -472,19 +464,6 @@ class Maros_Search {
 		return $out;
 	}
 
-	/** Tipos con alguna casa detrás; si solo hay uno, el filtro no sirve y no se pinta. */
-	private static function types(): array {
-		$out = array();
-		foreach ( self::TYPES as $code => $names ) {
-			$en = get_term_by( 'slug', $code, 'tipo-propiedad' );
-			$es = get_term_by( 'slug', $code . '-es', 'tipo-propiedad' );
-			if ( ( $en && $en->count ) || ( $es && $es->count ) ) {
-				$out[ $code ] = $names;
-			}
-		}
-		return count( $out ) > 1 ? $out : array();
-	}
-
 	/** URL del listado de Alojamiento filtrado por un tipo (submenú «Villas» / «Apartments»). */
 	public static function type_url( string $code ): string {
 		$stay = function_exists( 'mis_page_url' ) ? mis_page_url( 'stay' ) : home_url( '/stay/' );
@@ -492,8 +471,8 @@ class Maros_Search {
 	}
 
 	/**
-	 * [maros_buscador] Buscador completo (spec 003, FR-005 «maros/buscador»): fechas, huéspedes,
-	 * tipo, zona, dormitorios y chips de equipamiento. Sigue el buscador de la portada (Julio,
+	 * [maros_buscador] Buscador completo (spec 003, FR-005 «maros/buscador»): fechas, huéspedes y
+	 * chips de características (vistas al mar, piscina climatizada). Sigue el buscador de la portada (Julio,
 	 * 25-11-2026): en escritorio, una barra redonda con todas las celdas y la lupa dorada, y los chips
 	 * debajo; en el móvil, la barra de la portada, que abre el formulario con los filtros en un panel
 	 * desde abajo. Envía por GET a Alojamiento.
@@ -512,24 +491,20 @@ class Maros_Search {
 		for ( $g = 1; $g <= 16; $g++ ) {
 			$guests .= sprintf( '<option value="%1$d"%2$s>%1$d</option>', $g, selected( $p['guests'], $g, false ) );
 		}
-		$beds = '<option value="">' . $t( 'Any', 'Cualquiera' ) . '</option>';
-		for ( $b = 1; $b <= 8; $b++ ) {
-			$beds .= sprintf( '<option value="%1$d"%2$s>%1$d+</option>', $b, selected( $p['bedrooms'], $b, false ) );
-		}
-		$areas = '<option value="">' . $t( 'All areas', 'Todas las zonas' ) . '</option>';
-		foreach ( self::areas() as $term ) {
-			$areas .= sprintf( '<option value="%s"%s>%s</option>', esc_attr( $term->slug ), selected( $p['area'], $term->slug, false ), esc_html( $term->name ) );
-		}
-		$types     = self::types();
-		$type_opts = '';
-		if ( $types || $p['type'] ) {
-			$type_opts = '<option value="">' . $t( 'Any', 'Cualquiera' ) . '</option>';
-			foreach ( $types ?: array( $p['type'] => self::TYPES[ $p['type'] ] ) as $code => $names ) {
-				$type_opts .= sprintf( '<option value="%s"%s>%s</option>', esc_attr( $code ), selected( $p['type'], $code, false ), esc_html( $names[ $es ? 1 : 0 ] ) );
+		// Lo que llega en la URL y el buscador ya no enseña (tipo desde el menú Villas / Apartments,
+		// zona, dormitorios o un chip antiguo) sigue en la búsqueda al volver a buscar.
+		$keep = '';
+		foreach ( array( 'type', 'area', 'bedrooms' ) as $k ) {
+			if ( $p[ $k ] ) {
+				$keep .= '<input type="hidden" name="' . $k . '" value="' . esc_attr( (string) $p[ $k ] ) . '">';
 			}
 		}
+		$shown = self::features();
+		foreach ( array_diff( $p['feat'], array_keys( $shown ) ) as $code ) {
+			$keep .= '<input type="hidden" name="feat[]" value="' . esc_attr( $code ) . '">';
+		}
 		$chips = '';
-		foreach ( self::features() as $code => $names ) {
+		foreach ( $shown as $code => $names ) {
 			$chips .= sprintf(
 				'<label class="mis-chip"><input type="checkbox" name="feat[]" value="%1$s"%2$s><span>%3$s</span></label>',
 				esc_attr( $code ),
@@ -548,14 +523,10 @@ class Maros_Search {
 		$html .= '<div class="mis-search__field mis-search__field--guests"><label for="' . $id( 'g' ) . '">' . $t( 'Guests', 'Huéspedes' ) . '</label><select id="' . $id( 'g' ) . '" name="guests">' . $guests . '</select></div>';
 		$html .= '<button class="mis-search__submit wp-element-button" type="submit">' . $icon . '<span class="mis-search__submit-text">' . $t( 'Search', 'Buscar' ) . '</span></button></div>';
 		// Filtros: en escritorio, una línea de píldoras bajo la barra; en el panel del móvil, celdas.
-		$html .= '<div class="mis-search__filters">';
-		if ( $type_opts ) {
-			$html .= '<div class="mis-search__field mis-search__field--filter"><label for="' . $id( 't' ) . '">' . $t( 'Type', 'Tipo' ) . '</label><select id="' . $id( 't' ) . '" name="type">' . $type_opts . '</select></div>';
-		}
-		$html .= '<div class="mis-search__field mis-search__field--filter"><label for="' . $id( 'a' ) . '">' . $t( 'Area', 'Zona' ) . '</label><select id="' . $id( 'a' ) . '" name="area">' . $areas . '</select></div>';
-		$html .= '<div class="mis-search__field mis-search__field--filter"><label for="' . $id( 'b' ) . '">' . $t( 'Bedrooms', 'Dormitorios' ) . '</label><select id="' . $id( 'b' ) . '" name="bedrooms">' . $beds . '</select></div>';
+		// Chips de características debajo: en escritorio, una línea; en el panel del móvil, antes de «Search».
+		$html .= '<div class="mis-search__filters">' . $keep;
 		if ( $chips ) {
-			$html .= '<fieldset class="mis-search__chips"><legend>' . $t( 'Amenities', 'Equipamiento' ) . '</legend>' . $chips . '</fieldset>';
+			$html .= '<fieldset class="mis-search__chips"><legend>' . $t( 'Features', 'Características' ) . '</legend>' . $chips . '</fieldset>';
 		}
 		$html .= '</div>';
 		$html .= '<p class="mis-search__error" role="alert" hidden>' . $t( 'Choose a departure date after the arrival date.', 'Elige una salida posterior a la llegada.' ) . '</p>';
