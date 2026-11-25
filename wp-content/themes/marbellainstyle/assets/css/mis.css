@@ -910,7 +910,7 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 	   abierta se levanta en blanco sobre la barra en gris. Debajo, los filtros en una línea de
 	   píldoras: «TIPO Villas ▾» «ZONA Todas ▾» «DORMITORIOS 3+ ▾» y los chips */
 	.mis-search--full { display: block; margin: 0; border: 0; background: transparent; }
-	.mis-search--full .mis-search__row { display: grid; grid-template-columns: 1fr 1fr 1.1fr auto; align-items: center; max-width: 46rem; border: 1px solid var(--mis-line); border-radius: 999px; background: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, .06); transition: background-color .2s ease; }
+	.mis-search--full .mis-search__row { display: grid; grid-template-columns: 1fr 1fr 1.1fr auto; align-items: center; max-width: 46rem; margin-inline: auto; border: 1px solid var(--mis-line); border-radius: 999px; background: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, .06); transition: background-color .2s ease; }
 	.mis-search--full .mis-search__row:has(.is-active) { background: var(--wp--preset--color--tertiary); }
 	.mis-search--full .mis-search__row .mis-search__field { align-self: stretch; padding: 0.625rem 1.5rem; border-right: 1px solid var(--mis-line); border-bottom: 0; border-radius: 0; }
 	.mis-search--full .mis-search__row .mis-search__field:has(+ .mis-search__submit),
@@ -941,7 +941,8 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 	.mis-stepper button { width: 32px; height: 32px; padding: 0; border: 1px solid var(--wp--preset--color--border-dark); border-radius: 50%; background: #fff; font: inherit; font-size: 1.125rem; line-height: 1; color: var(--wp--preset--color--main); cursor: pointer; }
 	.mis-stepper button:disabled { opacity: .3; cursor: default; }
 	/* Calendario: ventana redonda con sombra; en escritorio, dos meses (calendar.js, «pair») */
-	.mis-search--full .mis-search__cal { width: min(360px, calc(100vw - 2rem)); padding: 1.25rem 1.5rem; border: 0; border-radius: 24px; box-shadow: 0 8px 28px rgba(0, 0, 0, .16); }
+	/* Barra y calendario centrados (Julio, 25-11-2026) */
+	.mis-search--full .mis-search__cal { left: 50%; transform: translateX(-50%); width: min(360px, calc(100vw - 2rem)); padding: 1.25rem 1.5rem; border: 0; border-radius: 24px; box-shadow: 0 8px 28px rgba(0, 0, 0, .16); }
 	.mis-search--full .mis-search__cal.is-pair { width: min(760px, calc(100vw - 2rem)); padding: 1.5rem 2rem; }
 	.mis-cal.is-pair .mis-cal__hint { text-align: center; margin-top: 0; }
 	.mis-cal.is-pair .mis-cal__months { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
