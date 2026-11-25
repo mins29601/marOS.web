@@ -197,6 +197,88 @@ add_shortcode(
 );
 
 /**
+ * Menú principal: bajo «Stay» van «Villas» y «Apartments», que llevan al listado filtrado por tipo
+ * (Julio, 25-11-2026). Sustituyen a las casas sueltas que el menú guardado tiene como hijas de
+ * «Stay», así que no hace falta tocar los menús de WordPress. En escritorio se abre al pasar el
+ * ratón; en el menú en capa salen debajo de «Stay».
+ */
+add_filter(
+	'wp_nav_menu_objects',
+	static function ( array $items, $args ): array {
+		if ( 'primary' !== ( $args->theme_location ?? '' ) || ! class_exists( 'Maros_Search' ) ) {
+			return $items;
+		}
+		$stay = get_page_by_path( 'stay' );
+		if ( ! $stay ) {
+			return $items;
+		}
+		$en_id  = static fn( int $id ): int => function_exists( 'pll_get_post' ) ? (int) ( pll_get_post( $id, 'en' ) ?: $id ) : $id;
+		$stay   = $en_id( (int) $stay->ID );
+		$parent = null;
+		foreach ( $items as $item ) {
+			if ( 'page' === $item->object && ! (int) $item->menu_item_parent && $en_id( (int) $item->object_id ) === $stay ) {
+				$parent = $item;
+				break;
+			}
+		}
+		if ( ! $parent ) {
+			return $items;
+		}
+		$on_stay = Maros_Search::is_stay_page();
+		$type    = $on_stay ? Maros_Search::params()['type'] : '';
+		$out     = array();
+		foreach ( $items as $item ) {
+			if ( (int) $item->menu_item_parent === (int) $parent->db_id ) {
+				continue;
+			}
+			$out[] = $item;
+			if ( $item !== $parent ) {
+				continue;
+			}
+			$item->classes[] = 'menu-item-has-children';
+			$item->classes[] = 'mis-menu__stay';
+			$order           = 0;
+			foreach ( Maros_Search::TYPES as $code => $names ) {
+				$id      = -1000 - ( ++$order );
+				$current = $type === $code;
+				$out[]   = new WP_Post(
+					(object) array(
+						'ID'                    => $id,
+						'db_id'                 => $id,
+						'menu_item_parent'      => (string) $parent->db_id,
+						'object_id'             => 0,
+						'object'                => 'custom',
+						'type'                  => 'custom',
+						'type_label'            => '',
+						'post_type'             => 'nav_menu_item',
+						'post_status'           => 'publish',
+						'title'                 => $names[ mis_is_es() ? 1 : 0 ],
+						'url'                   => Maros_Search::type_url( $code ),
+						'target'                => '',
+						'attr_title'            => '',
+						'description'           => '',
+						'xfn'                   => '',
+						'classes'               => array( 'menu-item', 'menu-item-type-custom', 'mis-menu__type' ) + ( $current ? array( 3 => 'current-menu-item' ) : array() ),
+						'current'               => $current,
+						'current_item_ancestor' => false,
+						'current_item_parent'   => false,
+						'menu_order'            => (int) $parent->menu_order,
+					)
+				);
+			}
+			// Con un tipo elegido, «Stay» no es la página actual: lo es su hija.
+			if ( $type ) {
+				$item->classes = array_diff( $item->classes, array( 'current-menu-item', 'current_page_item' ) );
+				$item->classes[] = 'current-menu-parent';
+			}
+		}
+		return $out;
+	},
+	10,
+	2
+);
+
+/**
  * [mis_lang] Selector de idioma EN / ES.
  */
 add_shortcode(
