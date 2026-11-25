@@ -198,7 +198,7 @@ $no_title = array( 'page_template' => 'page-no-title' );
 // La portada (título y buscador) la pone la plantilla front-page.html del tema.
 $home_en = mis_section(
 	'<!-- wp:columns {"className":"mis-pillars"} --><div class="wp-block-columns mis-pillars">'
-	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Stay', 3, 'medium' ) . mis_p( 'Villas and apartments managed by our own team.', 'mis-muted' ) . mis_p( '<a href="/stay/">See the homes →</a>' ) . '</div><!-- /wp:column -->'
+	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Stay', 3, 'medium' ) . mis_p( 'Villas and apartments direct from their owners.', 'mis-muted' ) . mis_p( '<a href="/stay/">See the homes →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Concierge', 3, 'medium' ) . mis_p( 'Chefs, drivers, events. Also if you are not staying with us.', 'mis-muted' ) . mis_p( '<a href="/services/">See the services →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Experiences', 3, 'medium' ) . mis_p( 'Private days out in Andalusia with local guides.', 'mis-muted' ) . mis_p( '<a href="/experiences/">See the experiences →</a>' ) . '</div><!-- /wp:column -->'
 	. '</div><!-- /wp:columns -->'
@@ -211,7 +211,7 @@ $home_en = mis_section(
 // La portada (título y buscador) la pone la plantilla front-page.html del tema.
 $home_es = mis_section(
 	'<!-- wp:columns {"className":"mis-pillars"} --><div class="wp-block-columns mis-pillars">'
-	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Alojamiento', 3, 'medium' ) . mis_p( 'Villas y apartamentos gestionados por nuestro equipo.', 'mis-muted' ) . mis_p( '<a href="/es/alojamiento/">Ver las casas →</a>' ) . '</div><!-- /wp:column -->'
+	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Alojamiento', 3, 'medium' ) . mis_p( 'Villas y apartamentos directamente de sus propietarios.', 'mis-muted' ) . mis_p( '<a href="/es/alojamiento/">Ver las casas →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Servicios', 3, 'medium' ) . mis_p( 'Chefs, chóferes, eventos. También si no te alojas con nosotros.', 'mis-muted' ) . mis_p( '<a href="/es/servicios/">Ver los servicios →</a>' ) . '</div><!-- /wp:column -->'
 	. '<!-- wp:column --><div class="wp-block-column">' . mis_h( 'Experiencias', 3, 'medium' ) . mis_p( 'Días privados por Andalucía con guías locales.', 'mis-muted' ) . mis_p( '<a href="/es/experiencias/">Ver las experiencias →</a>' ) . '</div><!-- /wp:column -->'
 	. '</div><!-- /wp:columns -->'
@@ -224,7 +224,7 @@ $home_es = mis_section(
 $pages = array(
 	// clave => [ slug en, título en, contenido en, slug es, título es, contenido es, padre ]
 	'home'        => array( 'home', 'Home', $home_en, 'inicio', 'Inicio', $home_es ),
-	'stay'        => array( 'stay', 'Stay', mis_page_hero( 'Stay', 'Villas & apartments in Marbella', 'Every home is managed by our own team.' ) . mis_section( mis_pattern( 'property-grid' ) ), 'alojamiento', 'Alojamiento', mis_page_hero( 'Alojamiento', 'Villas y apartamentos en Marbella', 'Todas las casas las gestiona nuestro equipo.' ) . mis_section( mis_pattern( 'property-grid' ) ) ),
+	'stay'        => array( 'stay', 'Stay', mis_page_hero( 'Stay', 'Villas & apartments in Marbella', '' ) . mis_section( mis_pattern( 'property-grid' ) ), 'alojamiento', 'Alojamiento', mis_page_hero( 'Alojamiento', 'Villas y apartamentos en Marbella', '' ) . mis_section( mis_pattern( 'property-grid' ) ) ),
 	'services'    => array( 'services', 'Concierge', mis_page_hero( 'Concierge', 'Services in Marbella', 'Transport, chefs, events and concierge. Also if you are not staying with us.' ) . mis_section( mis_pattern( 'service-grid' ) ), 'servicios', 'Servicios', mis_page_hero( 'Servicios', 'Servicios en Marbella', 'Transporte, chefs, eventos y conserjería. También si no te alojas con nosotros.' ) . mis_section( mis_pattern( 'service-grid' ) ) ),
 	'experiences' => array( 'experiences', 'Experiences', mis_page_hero( 'Experiences', 'Private experiences in Andalusia', 'Book online in a few clicks.' ) . mis_section( mis_pattern( 'tour-grid' ) ), 'experiencias', 'Experiencias', mis_page_hero( 'Experiencias', 'Experiencias privadas en Andalucía', 'Reserva online en unos clics.' ) . mis_section( mis_pattern( 'tour-grid' ) ) ),
 	'areas'       => array( 'areas', 'Areas', $mis_zonas_pagina, 'zonas', 'Zonas', $mis_zonas_pagina ), // La portada la pone la plantilla page-areas / page-zonas.

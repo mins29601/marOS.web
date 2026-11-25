@@ -10,6 +10,8 @@
  *                        2 se puede llegar, 4 se puede salir); vacío = todo libre
  *   min,                 estancia mínima por tramos [[día desde start, noches], …]
  *   months,              meses que se pueden recorrer (18 por defecto)
+ *   pair,                función que dice si se pintan dos meses juntos (buscador de Alojamiento
+ *                        en escritorio, como Airbnb); sin ella, uno
  *   arrival, departure,  fechas de partida
  *   onChange( arrival, departure, done )   done = true al elegir la salida
  * } ) → { open( which ), close(), set( arrival, departure ), el }
@@ -92,23 +94,19 @@
 			return Math.max( 0, ( b.getUTCFullYear() - a.getUTCFullYear() ) * 12 + b.getUTCMonth() - a.getUTCMonth() );
 		}
 
-		function render() {
+		function month( k, prev, next, last ) {
 			var first = new Date( start );
 			first.setUTCDate( 1 );
-			first.setUTCMonth( first.getUTCMonth() + s.month );
+			first.setUTCMonth( first.getUTCMonth() + k );
 			var y = first.getUTCFullYear();
 			var m = first.getUTCMonth();
 			var lead = ( first.getUTCDay() + 6 ) % 7;
 			var count = new Date( Date.UTC( y, m + 1, 0 ) ).getUTCDate();
-			var last = days ? Math.ceil( days.length / 30 ) : months;
-			var hint = s.picking === 'arrival' ? T.pickIn : T.pickOut;
-			if ( s.picking === 'departure' && minStay( s.arrival ) > 1 ) {
-				hint += ' · ' + T.minStay.replace( '%d', minStay( s.arrival ) );
-			}
-			var html = '<div class="mis-cal__bar"><button type="button" data-month="-1" aria-label="' + T.prev + '"' + ( s.month <= 0 ? ' disabled' : '' ) + '>‹</button>'
+			var html = '<div class="mis-cal__month"><div class="mis-cal__bar">'
+				+ ( prev ? '<button type="button" data-month="-1" aria-label="' + T.prev + '"' + ( s.month <= 0 ? ' disabled' : '' ) + '>‹</button>' : '<span></span>' )
 				+ '<strong>' + monthName.format( first ) + '</strong>'
-				+ '<button type="button" data-month="1" aria-label="' + T.next + '"' + ( s.month >= last ? ' disabled' : '' ) + '>›</button></div>'
-				+ '<p class="mis-cal__hint' + ( hint.indexOf( ' · ' ) > -1 ? ' has-min' : '' ) + '">' + hint + '</p><div class="mis-cal__grid">';
+				+ ( next ? '<button type="button" data-month="1" aria-label="' + T.next + '"' + ( k >= last ? ' disabled' : '' ) + '>›</button>' : '<span></span>' )
+				+ '</div><div class="mis-cal__grid">';
 			T.weekdays.forEach( function ( w ) {
 				html += '<span class="mis-cal__wd" aria-hidden="true">' + w + '</span>';
 			} );
@@ -144,7 +142,28 @@
 				}
 				html += '<button type="button" data-date="' + date + '" class="' + cls.join( ' ' ) + '"' + ( ok ? '' : ' disabled' ) + ( title ? ' title="' + title + '"' : '' ) + ' aria-label="' + short.format( parse( date ) ) + '"' + ( date === s.arrival || date === s.departure ? ' aria-pressed="true"' : '' ) + '>' + d + '</button>';
 			}
-			html += '</div>';
+			return html + '</div></div>';
+		}
+
+		function render() {
+			var last = days ? Math.ceil( days.length / 30 ) : months;
+			var pair = !! ( o.pair && o.pair() );
+			var hint = s.picking === 'arrival' ? T.pickIn : T.pickOut;
+			if ( s.picking === 'departure' && minStay( s.arrival ) > 1 ) {
+				hint += ' · ' + T.minStay.replace( '%d', minStay( s.arrival ) );
+			}
+			var hintHtml = '<p class="mis-cal__hint' + ( hint.indexOf( ' · ' ) > -1 ? ' has-min' : '' ) + '">' + hint + '</p>';
+			var html;
+			if ( pair ) {
+				// Dos meses: ‹ en el primero y › en el segundo; la pista, encima.
+				s.month = Math.min( s.month, Math.max( 0, last - 1 ) );
+				html = hintHtml + '<div class="mis-cal__months">' + month( s.month, true, false, last ) + month( s.month + 1, false, true, last ) + '</div>';
+			} else {
+				html = month( s.month, true, true, last );
+				// La pista va entre la cabecera del mes y la rejilla, como siempre.
+				html = html.replace( '</div><div class="mis-cal__grid">', '</div>' + hintHtml + '<div class="mis-cal__grid">' );
+			}
+			panel.classList.toggle( 'is-pair', pair );
 			if ( s.arrival ) {
 				html += '<button type="button" class="mis-cal__clear" data-clear>' + T.clear + '</button>';
 			}

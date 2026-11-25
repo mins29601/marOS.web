@@ -492,3 +492,20 @@ add_filter(
 	10,
 	2
 );
+
+/**
+ * Portada, columna «Stay»: no todas las casas las gestionamos nosotros (Julio, 25-11-2026). La frase
+ * está guardada en el contenido de la página, así que se cambia al pintarla.
+ */
+add_filter(
+	'render_block_core/paragraph',
+	static function ( string $html ): string {
+		return strtr(
+			$html,
+			array(
+				'Villas and apartments managed by our own team.'          => 'Villas and apartments direct from their owners.',
+				'Villas y apartamentos gestionados por nuestro equipo.' => 'Villas y apartamentos directamente de sus propietarios.',
+			)
+		);
+	}
+);

@@ -50,8 +50,13 @@
 				buttons[ k ].closest( '.mis-search__field' ).classList.toggle( 'is-active', k === which );
 			} );
 		}
+		// Alojamiento en escritorio: dos meses juntos, como Airbnb (Julio, 25-11-2026).
+		var wide = window.matchMedia( '(min-width: 1024px)' );
 		var picker = window.MisCalendar.range( {
 			panel: panel,
+			pair: function () {
+				return form.classList.contains( 'mis-search--full' ) && wide.matches;
+			},
 			arrival: inputs.arrival.value,
 			departure: inputs.departure.value,
 			onChange: function ( a, d, done ) {
@@ -105,22 +110,63 @@
 		var checkout = form.querySelector( '[name=checkout]' );
 		var error = form.querySelector( '.mis-search__error' );
 
-		// «Filtros»: llega abierto (en escritorio es la segunda fila del buscador, sin desplegable).
-		// En el móvil se cierra si no hay ningún filtro puesto; al pasar a escritorio, se abre.
-		var more = form.querySelector( '.mis-search__more' );
-		if ( more && window.matchMedia ) {
-			var wide = window.matchMedia( '(min-width: 768px)' );
-			if ( ! wide.matches && '0' === more.getAttribute( 'data-count' ) ) {
-				more.open = false;
-			}
-			var onWide = function () {
-				if ( wide.matches ) {
-					more.open = true;
-				}
+		// Huéspedes en escritorio: botón con «− 2 +» en una ventanita, como Airbnb. El desplegable
+		// sigue en el formulario (es el que se envía) y es el que se ve en el panel del móvil.
+		var guests = form.querySelector( 'select[name=guests]' );
+		if ( guests && form.closest( '.mis-stay-search' ) ) {
+			var es = /^es/i.test( document.documentElement.lang || '' );
+			var field = guests.closest( '.mis-search__field' );
+			var max = guests.options.length - 1;
+			var btn = document.createElement( 'button' );
+			btn.type = 'button';
+			btn.className = 'mis-search__guests';
+			btn.setAttribute( 'aria-expanded', 'false' );
+			var pop = document.createElement( 'div' );
+			pop.className = 'mis-search__pop';
+			pop.hidden = true;
+			pop.innerHTML = '<div class="mis-stepper"><span class="mis-stepper__name">' + ( es ? 'Huéspedes' : 'Guests' ) + '</span>'
+				+ '<button type="button" data-step="-1" aria-label="' + ( es ? 'Menos' : 'Fewer' ) + '">−</button>'
+				+ '<output aria-live="polite"></output>'
+				+ '<button type="button" data-step="1" aria-label="' + ( es ? 'Más' : 'More' ) + '">+</button></div>';
+			guests.after( btn );
+			field.appendChild( pop );
+			var paint = function () {
+				var n = +guests.value || 0;
+				btn.textContent = n ? n + ' ' + ( es ? ( 1 === n ? 'huésped' : 'huéspedes' ) : ( 1 === n ? 'guest' : 'guests' ) ) : guests.options[ 0 ].text;
+				btn.classList.toggle( 'is-empty', ! n );
+				pop.querySelector( 'output' ).textContent = n;
+				pop.querySelector( '[data-step="-1"]' ).disabled = ! n;
+				pop.querySelector( '[data-step="1"]' ).disabled = n >= max;
 			};
-			if ( wide.addEventListener ) {
-				wide.addEventListener( 'change', onWide );
-			}
+			var show = function ( on ) {
+				pop.hidden = ! on;
+				btn.setAttribute( 'aria-expanded', on ? 'true' : 'false' );
+				field.classList.toggle( 'is-active', on );
+			};
+			btn.addEventListener( 'click', function () {
+				show( pop.hidden );
+			} );
+			pop.addEventListener( 'click', function ( e ) {
+				var step = e.target.closest( '[data-step]' );
+				if ( step && ! step.disabled ) {
+					guests.value = String( Math.min( max, Math.max( 0, ( +guests.value || 0 ) + +step.getAttribute( 'data-step' ) ) ) || '' );
+					guests.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+					paint();
+				}
+			} );
+			guests.addEventListener( 'change', paint );
+			document.addEventListener( 'click', function ( e ) {
+				if ( ! pop.hidden && ! field.contains( e.target ) ) {
+					show( false );
+				}
+			} );
+			document.addEventListener( 'keydown', function ( e ) {
+				if ( 'Escape' === e.key && ! pop.hidden ) {
+					show( false );
+					btn.focus();
+				}
+			} );
+			paint();
 		}
 
 		form.addEventListener( 'submit', function ( event ) {

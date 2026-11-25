@@ -548,7 +548,8 @@ html.mis-tour-open { overflow: hidden; }
 .mis-cal { border: 1px solid var(--mis-line); padding: 0.75rem; background: var(--wp--preset--color--primary-alt-accent); color: var(--wp--preset--color--main); font-family: var(--wp--preset--font-family--primary, inherit); font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none; text-align: left; }
 .mis-cal[hidden] { display: none; }
 .mis-cal__bar { display: flex; align-items: center; justify-content: space-between; }
-.mis-cal__bar strong { font-weight: 500; text-transform: capitalize; }
+.mis-cal__bar strong { display: inline-block; font-weight: 500; }
+.mis-cal__bar strong::first-letter { text-transform: uppercase; } /* «Diciembre de 2026», no «Diciembre De 2026» */
 .mis-cal__bar button { width: var(--mis-touch); height: var(--mis-touch); border: 0; background: transparent; font-size: 1.25rem; cursor: pointer; color: var(--wp--preset--color--main); }
 .mis-cal__bar button:disabled { opacity: 0.3; cursor: default; }
 .mis-cal__hint { margin: 0.25rem 0 0.5rem; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
@@ -834,18 +835,10 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 .mis-search .mis-search__field:has(input[type=date]) { cursor: pointer; }
 .mis-search input[type=date] { cursor: pointer; }
 
-/* Buscador completo de Alojamiento (marOS Connector, [maros_buscador]): la misma caja, con
-   «Filtros» plegable debajo (zona, dormitorios y chips de equipamiento) */
+/* Buscador completo de Alojamiento (marOS Connector, [maros_buscador]); su diseño, más abajo
+   («Alojamiento compacto») */
 .mis-search--full { max-width: none; margin: 0 0 1.5rem; border: 1px solid var(--mis-line); }
 .mis-search .mis-chip { font-family: inherit; font-size: inherit; font-weight: 400; letter-spacing: normal; text-transform: none; color: var(--wp--preset--color--main); }
-.mis-search__more { grid-column: 1 / -1; border-top: 1px solid var(--mis-line); }
-.mis-search__more > summary { cursor: pointer; list-style: none; padding: 0.75rem 1rem; font-family: var(--mis-label-font); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
-.mis-search__more > summary::-webkit-details-marker { display: none; }
-.mis-search__more > summary::after { content: "+"; float: right; font-size: 1rem; line-height: 1; font-weight: 300; }
-.mis-search__more[open] > summary::after { content: "−"; }
-.mis-search__count { display: inline-block; min-width: 1.4em; padding: 0 0.35em; margin-left: 0.25rem; background: var(--wp--preset--color--main); color: #fff; border-radius: 1em; text-align: center; letter-spacing: 0; }
-.mis-search__filters { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--mis-line); }
-.mis-search__filters .mis-search__field { border-bottom: 1px solid var(--mis-line); }
 .mis-search__chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0.875rem 1rem; border: 0; }
 .mis-search__chips > legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .mis-chip { position: relative; cursor: pointer; }
@@ -871,50 +864,100 @@ body:has(.mis-sticky-cta) .mis-footer { padding-bottom: 5rem !important; }
 .mis-card__features:empty { display: none; }
 .mis-no-results { max-width: 40rem; padding: 2rem 0; }
 .mis-no-results__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
-@media (min-width: 768px) {
-	.mis-search__filters { grid-template-columns: 1fr 1fr 2fr; }
-	.mis-search__filters .mis-search__field { border-bottom: 0; }
-	.mis-search__chips { grid-column: auto; align-items: center; }
-}
 
 /* Alojamiento compacto (Julio, 25-11-2026): el buscador ocupaba media pantalla y las casas
-   empezaban por debajo. Ahora: título en una línea, buscador en dos filas finas (fechas, huéspedes
-   y «Search»; debajo tipo, zona, dormitorios y chips) y fotos apaisadas (3:2), para que la primera fila
-   de casas se vea entera sin bajar. */
+   empezaban por debajo. Título en una línea y fotos apaisadas (3:2), para que la primera fila de
+   casas se vea entera sin bajar. El buscador sigue al de la portada: en el móvil, su barra (fechas,
+   huéspedes y lupa) abre el formulario completo, con los filtros, en un panel desde abajo; en
+   escritorio, la misma barra, pequeña, y los filtros debajo en una línea de píldoras. */
 .wp-block-group.alignfull:has(+ .wp-block-group.alignfull .mis-stay-search) { padding-top: var(--wp--preset--spacing--small) !important; }
 .wp-block-group.alignfull:has(+ .wp-block-group.alignfull .mis-stay-search) > * { margin-block: 0; }
 .wp-block-group.alignfull:has(+ .wp-block-group.alignfull .mis-stay-search) > * + * { margin-block-start: 0.5rem; }
 .wp-block-group.alignfull:has(+ .wp-block-group.alignfull .mis-stay-search) h1 { font-size: var(--wp--preset--font-size--large) !important; line-height: 1.2; }
-.mis-stay-search .mis-search--full { margin-bottom: 1rem; }
-.mis-search--full .mis-search__field { padding: 0.5rem 0.875rem; }
+.mis-stay-search > .mis-qs,
+.mis-stay-search > .mis-search { margin-bottom: 1.25rem; }
+.mis-stay-search ~ .wp-block-query .mis-card--property .wp-block-post-featured-image img { aspect-ratio: 3 / 2 !important; height: auto !important; }
 .mis-search--full input,
 .mis-search--full select,
 .mis-search--full .mis-search__date { min-height: 28px; font-size: 0.9375rem; }
+.mis-search__icon { display: none; }
 /* Chips: la etiqueta no lleva la caja de los chips de Experiencias (.mis-chip, más abajo), solo
    la píldora de dentro; antes cada píldora salía dentro de otra caja enorme */
 .mis-search__chips { flex-direction: row; }
 .mis-search .mis-chip { display: inline-flex; flex: 0 0 auto; width: auto; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; }
-.mis-search .mis-chip span { padding: 0.3rem 0.8rem; font-size: 0.8125rem; white-space: nowrap; }
-.mis-search--full .mis-search__chips { padding: 0.625rem 0.875rem; gap: 0.375rem; }
-.mis-search--full .mis-search__more > summary { padding: 0.625rem 0.875rem; }
-.mis-stay-search ~ .wp-block-query .mis-card--property .wp-block-post-featured-image img { aspect-ratio: 3 / 2 !important; height: auto !important; }
+.mis-search .mis-chip span { padding: 0.35rem 0.85rem; font-size: 0.8125rem; white-space: nowrap; }
+.mis-search--full .mis-search__chips { gap: 0.375rem; }
+.mis-search__row,
+.mis-search__filters { display: contents; }
 @media (max-width: 767px) {
-	/* Llegada | Salida; Huéspedes | Search; Filtros */
-	.mis-search--full .mis-search__field--guests { grid-column: auto; }
-	.mis-search--full .mis-search__submit { grid-column: auto; min-height: 0; height: 100%; padding-block: 0.5rem; }
-	.mis-search--full .mis-search__filters { grid-template-columns: 1fr 1fr; }
-	.mis-search--full .mis-search__filters .mis-search__field:nth-child(odd) { border-right: 1px solid var(--mis-line); }
+	/* Barra de la portada sobre fondo claro */
+	.mis-qs--stay .mis-qs__bar { border: 1px solid var(--mis-line); box-shadow: 0 6px 18px rgba(0, 0, 0, .08); }
+	.mis-qs--stay .mis-qs__bar:focus-visible { outline-color: var(--wp--preset--color--main); }
+	.mis-qs--stay .mis-qs__cell { padding: 0 0.875rem; }
+	.mis-qs--stay .mis-qs__go { width: 44px; height: 44px; }
+	/* Panel: fechas y calendario, huéspedes, tipo | zona, dormitorios, chips y «Search» */
+	.mis-qs--stay .mis-search__field--filter { order: 3; }
+	.mis-qs--stay .mis-search__field--filter:has(+ .mis-search__field--filter + .mis-search__field--filter) { border-right: 1px solid var(--mis-line); }
+	.mis-qs--stay .mis-search__chips { order: 3; padding: 0.875rem 1rem; border-bottom: 1px solid var(--mis-line); }
+	.mis-qs--stay .mis-search__submit { order: 4; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
+	.mis-qs--stay .mis-search__error { order: 5; }
+}
+@media (max-width: 767px) {
+	.mis-search__guests, .mis-search__pop { display: none !important; }
 }
 @media (min-width: 768px) {
-	.mis-search--full { grid-template-columns: 1fr 1fr 1fr auto; }
-	.mis-search--full .mis-search__field { padding: 0.5rem 1.25rem; }
-	.mis-search--full .mis-search__more > summary { display: none; }
-	/* Segunda fila: «TIPO Villas ▾ | ZONA Todas ▾ | DORMITORIOS 3+ ▾ | chips» */
-	.mis-search--full .mis-search__filters { display: flex; flex-wrap: wrap; align-items: stretch; border-top: 0; }
-	.mis-search--full .mis-search__filters .mis-search__field { flex-direction: row; align-items: center; gap: 0.625rem; border-bottom: 0; border-right: 1px solid var(--mis-line); padding-block: 0.375rem; }
-	.mis-search--full .mis-search__filters label { white-space: nowrap; }
-	.mis-search--full .mis-search__filters select { width: auto; min-width: 6.5rem; padding-top: 0; }
-	.mis-search--full .mis-search__chips { flex: 1 1 auto; padding: 0.5rem 1.25rem; }
+	/* Barra como la de Airbnb (Julio, 25-11-2026): Llegada | Salida | Huéspedes | «Search»; la celda
+	   abierta se levanta en blanco sobre la barra en gris. Debajo, los filtros en una línea de
+	   píldoras: «TIPO Villas ▾» «ZONA Todas ▾» «DORMITORIOS 3+ ▾» y los chips */
+	.mis-search--full { display: block; margin: 0; border: 0; background: transparent; }
+	.mis-search--full .mis-search__row { display: grid; grid-template-columns: 1fr 1fr 1.1fr auto; align-items: center; max-width: 46rem; margin-inline: auto; border: 1px solid var(--mis-line); border-radius: 999px; background: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, .06); transition: background-color .2s ease; }
+	.mis-search--full .mis-search__row:has(.is-active) { background: var(--wp--preset--color--tertiary); }
+	.mis-search--full .mis-search__row .mis-search__field { align-self: stretch; padding: 0.625rem 1.5rem; border-right: 1px solid var(--mis-line); border-bottom: 0; border-radius: 0; }
+	.mis-search--full .mis-search__row .mis-search__field:has(+ .mis-search__submit),
+	.mis-search--full .mis-search__row .mis-search__field:has(+ .is-active),
+	.mis-search--full .mis-search__row .mis-search__field.is-active { border-right-color: transparent; }
+	.mis-search--full .mis-search__row .mis-search__field.is-active { border-radius: 999px; background: #fff; box-shadow: 0 4px 16px rgba(0, 0, 0, .12); }
+	.mis-search--full .mis-search__field:focus-within { box-shadow: none; }
+	.mis-search--full label { white-space: nowrap; color: var(--wp--preset--color--main); }
+	.mis-search--full .mis-search__row input,
+	.mis-search--full .mis-search__row select,
+	.mis-search--full .mis-search__row .mis-search__date { min-height: 24px; padding-top: 0.125rem; }
+	.mis-search--full .mis-search__submit.wp-element-button { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; min-height: 0; margin: 0 7px; padding: 0; border-radius: 50%; background: var(--wp--preset--color--primary-alt); border-color: var(--wp--preset--color--primary-alt); color: #fff; }
+	.mis-search--full .mis-search__submit.wp-element-button:is(:hover, :focus-visible) { background: var(--wp--preset--color--main); border-color: var(--wp--preset--color--main); }
+	.mis-search--full .mis-search__icon { display: block; width: 20px; height: 20px; }
+	/* Redondo, solo con la lupa (Julio, 25-11-2026); el texto queda para lectores de pantalla */
+	.mis-search--full .mis-search__submit-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+	/* Huéspedes: botón y ventanita con «− 2 +» (assets/search.js); el desplegable queda para el móvil */
+	.mis-search--full .mis-search__field--guests { position: relative; }
+	.mis-search--full .mis-search__field--guests:has(.mis-search__guests) select { display: none; }
+	.mis-search__guests { width: 100%; min-height: 24px; padding: 0.125rem 0 0; border: 0; background: none; font: inherit; font-size: 0.9375rem; text-align: left; color: var(--wp--preset--color--main); cursor: pointer; }
+	.mis-search__guests.is-empty { color: var(--wp--preset--color--secondary); }
+	.mis-search__guests:focus-visible { outline: none; }
+	.mis-search__pop { position: absolute; top: calc(100% + 10px); right: -4rem; z-index: 60; width: 300px; box-sizing: border-box; padding: 1.25rem 1.5rem; border-radius: 24px; background: #fff; box-shadow: 0 8px 28px rgba(0, 0, 0, .16); cursor: default; }
+	.mis-search__pop[hidden] { display: none; }
+	.mis-stepper { display: flex; align-items: center; gap: 0.75rem; }
+	.mis-stepper__name { flex: 1; font-size: 1rem; }
+	.mis-stepper output { min-width: 1.5rem; text-align: center; }
+	.mis-stepper button { width: 32px; height: 32px; padding: 0; border: 1px solid var(--wp--preset--color--border-dark); border-radius: 50%; background: #fff; font: inherit; font-size: 1.125rem; line-height: 1; color: var(--wp--preset--color--main); cursor: pointer; }
+	.mis-stepper button:disabled { opacity: .3; cursor: default; }
+	/* Calendario: ventana redonda con sombra; en escritorio, dos meses (calendar.js, «pair») */
+	/* Barra y calendario centrados (Julio, 25-11-2026) */
+	.mis-search--full .mis-search__cal { left: 50%; transform: translateX(-50%); width: min(360px, calc(100vw - 2rem)); padding: 1.25rem 1.5rem; border: 0; border-radius: 24px; box-shadow: 0 8px 28px rgba(0, 0, 0, .16); }
+	.mis-search--full .mis-search__cal.is-pair { width: min(760px, calc(100vw - 2rem)); padding: 1.5rem 2rem; }
+	.mis-cal.is-pair .mis-cal__hint { text-align: center; margin-top: 0; }
+	.mis-cal.is-pair .mis-cal__months { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+	.mis-search--full .mis-cal__grid button { border-radius: 50%; }
+	.mis-search--full .mis-cal__grid button.is-range { border-radius: 0; }
+	.mis-search--full .mis-search__filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }
+	.mis-search--full .mis-search__filters .mis-search__field { flex-direction: row; align-items: center; gap: 0.5rem; height: 32px; box-sizing: border-box; padding: 0 0.5rem 0 0.875rem; border: 1px solid var(--mis-line-dark); border-radius: 999px; background: transparent; }
+	.mis-search--full .mis-search__filters label { font-size: 0.625rem; color: var(--wp--preset--color--secondary); }
+	.mis-search--full .mis-search__filters select { width: auto; min-height: 0; padding: 0 1.25rem 0 0; font-size: 0.8125rem; background-position: right 0.25rem center; cursor: pointer; }
+	.mis-search--full .mis-search__filters .mis-search__field:has(option:checked:not([value=""])) { border-color: var(--wp--preset--color--main); }
+	.mis-search--full .mis-search__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; }
+	.mis-search--full .mis-search__error { margin-top: 0.5rem; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+	.mis-search--full .mis-search__row .mis-search__field { padding-inline: 1.125rem; }
 }
 
 .wp-block-details { border-top: 1px solid var(--mis-line); padding: 0; }

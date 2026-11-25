@@ -2,7 +2,8 @@
  * Inicio en el móvil (maqueta «home en móvil», Julio, 25-11-2026).
  *
  * - Barra del buscador: abre el buscador de la portada en un panel desde abajo, con el calendario
- *   ya abierto en la llegada, y resume las fechas y los huéspedes elegidos.
+ *   ya abierto en la llegada, y resume las fechas y los huéspedes elegidos. Alojamiento usa la
+ *   misma barra con el buscador completo (con los filtros).
  * - Carruseles (tarjetas Stay / Concierge / Experiences y zonas): los puntos marcan la tarjeta
  *   que se ve.
  * - Experiencias: solo cuatro de la etiqueta elegida; «See all experiences» lleva a la página de
@@ -21,14 +22,15 @@
 		}
 		var datesOut = bar.querySelector( '[data-qs=dates]' );
 		var guestsOut = bar.querySelector( '[data-qs=guests]' );
-		var emptyDates = datesOut.textContent;
+		var emptyDates = datesOut.getAttribute( 'data-empty' ) || datesOut.textContent;
 
 		function summary() {
 			var a = form.querySelector( '[name=checkin]' ).value;
 			var d = form.querySelector( '[name=checkout]' ).value;
 			var f = window.MisCalendar && window.MisCalendar.format;
 			datesOut.textContent = a && d && f ? f( a ) + ' – ' + f( d ) : emptyDates;
-			guestsOut.textContent = form.querySelector( '[name=guests]' ).value;
+			var g = form.querySelector( '[name=guests]' );
+			guestsOut.textContent = g.options[ g.selectedIndex ] ? g.options[ g.selectedIndex ].text : g.value;
 		}
 		function open() {
 			sheet.classList.add( 'is-open' );
@@ -58,6 +60,7 @@
 			bar.focus( { preventScroll: true } );
 		}
 		bar.addEventListener( 'click', open );
+
 		qs.querySelector( '.mis-qs__close' ).addEventListener( 'click', close );
 		sheet.addEventListener( 'click', function ( e ) {
 			if ( e.target === sheet ) {
