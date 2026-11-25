@@ -338,6 +338,11 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-managed p { margin: 0; display: grid; gap: 2px; line-height: 1.4; }
 .mis-managed strong { font-weight: 500; }
 .mis-managed span { font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--secondary); }
+/* Ficha PDF (marOS spec 057): enlace de descarga al final de Condiciones */
+.mis-brochure { margin-top: 1.25rem; }
+.mis-brochure a { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--wp--preset--color--main); text-decoration: none; font-weight: 500; }
+.mis-brochure a:hover span, .mis-brochure a:focus-visible span { text-decoration: underline; }
+.mis-brochure .mis-icon { flex-shrink: 0; }
 /* Descripción corta con «Read more» */
 .mis-desc { margin-top: 1.5rem; max-width: 62ch; max-height: calc(1.7em * 4); overflow: hidden; position: relative; }
 .mis-desc > * { margin-block: 0 1rem; }
