@@ -341,21 +341,20 @@ body:has(.mis-overlay[open]) { overflow: hidden; }
 .mis-facts strong { font-size: 1.375rem; font-weight: 500; color: var(--wp--preset--color--main); }
 @media (min-width: 768px) { .mis-facts li { padding-inline: 1.5rem; } }
 /* «Gestionada por Marbella in Style», bajo los datos de la casa (solo si marOS lo dice) */
-/* Sello «Managed by Marbella in Style» (Julio 25-11-2026): sin líneas arriba ni abajo; pastilla
-   crema redondeada como el buscador y un borde fino dorado, sin sombra, y el símbolo dorado en un
-   círculo oscuro a la izquierda, como un interruptor. Textos compactos en el móvil. */
-.mis-managed { display: flex; align-items: center; gap: 0.75rem; width: fit-content; max-width: 100%; box-sizing: border-box; margin-top: 1.5rem; padding: 5px 1.5rem 5px 5px; border: 1px solid var(--wp--preset--color--primary); border-radius: 999px; background: var(--wp--preset--color--tertiary); }
-.mis-managed__mark { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--wp--preset--color--main); }
-.mis-managed__mark img { width: 26px; height: 26px; }
-.mis-managed p { margin: 0; min-width: 0; display: grid; gap: 1px; line-height: 1.35; }
+/* Sello «Managed by Marbella in Style» (Julio 26-11-2026): pastilla crema pequeña, redondeada como el
+   buscador, con un borde fino dorado y sin sombra; el símbolo dorado en un círculo oscuro a la
+   izquierda, como un interruptor, y una sola línea de texto: «Managed by» en Poppins fina gris y
+   «Marbella in Style» en Josefin en mayúsculas. */
+.mis-managed { display: flex; align-items: center; gap: 0.5rem; width: fit-content; max-width: 100%; box-sizing: border-box; margin-top: 1.25rem; padding: 3px 1rem 3px 3px; border: 1px solid var(--wp--preset--color--primary); border-radius: 999px; background: var(--wp--preset--color--tertiary); }
+.mis-managed__mark { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--wp--preset--color--main); }
+.mis-managed__mark img { width: 17px; height: 17px; }
+.mis-managed p { margin: 0; min-width: 0; line-height: 1.2; white-space: nowrap; }
+.mis-managed p span { font-size: var(--wp--preset--font-size--small); font-weight: 300; color: var(--wp--preset--color--secondary); }
 .mis-managed strong { font-family: var(--mis-label-font); font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wp--preset--color--main); }
-.mis-managed p span { font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--secondary); }
 @media (min-width: 768px) {
-	.mis-managed { gap: 1rem; margin-top: 1.75rem; padding: 6px 2rem 6px 6px; }
-	.mis-managed__mark { width: 52px; height: 52px; }
-	.mis-managed__mark img { width: 28px; height: 28px; }
-	.mis-managed p { gap: 2px; line-height: 1.4; }
-	.mis-managed strong, .mis-managed p span { font-size: var(--wp--preset--font-size--small); }
+	.mis-managed { gap: 0.625rem; padding-right: 1.25rem; }
+	.mis-managed__mark { width: 32px; height: 32px; }
+	.mis-managed__mark img { width: 19px; height: 19px; }
 }
 /* Ficha PDF (marOS spec 057): enlace de descarga al final de Condiciones */
 .mis-brochure { margin-top: 1.25rem; }
