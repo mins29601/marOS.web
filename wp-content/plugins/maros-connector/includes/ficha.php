@@ -399,8 +399,8 @@ add_shortcode(
 
 /**
  * [maros_managed] «Gestionada por Marbella in Style» (Julio 24-11-2026, como el anfitrión de
- * Airbnb): solo si en marOS consta que la casa la gestionamos nosotros (managed_by_us). Textos de
- * marOS.content (PC-14 «Nosotros»: equipo local en la Costa del Sol desde 2008).
+ * Airbnb): solo si en marOS consta que la casa la gestionamos nosotros (managed_by_us). Una sola
+ * línea, sin «equipo local desde 2008» (Julio 26-11-2026).
  */
 add_shortcode(
 	'maros_managed',
@@ -411,10 +411,9 @@ add_shortcode(
 		}
 		$es   = maros_is_es( $post_id );
 		$logo = get_stylesheet_directory_uri() . '/assets/logo/marbellainstyle-simbolo-oro.svg';
-		return '<div class="mis-managed"><span class="mis-managed__mark"><img src="' . esc_url( $logo ) . '" width="28" height="28" alt=""></span><p><strong>'
-			. esc_html( $es ? 'Gestionada por Marbella in Style' : 'Managed by Marbella in Style' ) . '</strong><span>'
-			. esc_html( $es ? 'Equipo local en la Costa del Sol desde 2008' : 'Local team on the Costa del Sol since 2008' )
-			. '</span></p></div>';
+		return '<div class="mis-managed"><span class="mis-managed__mark"><img src="' . esc_url( $logo ) . '" width="17" height="17" alt=""></span><p><strong>'
+			. esc_html( $es ? 'Gestionada por Marbella in Style' : 'Managed by Marbella in Style' )
+			. '</strong></p></div>';
 	}
 );
 
