@@ -411,9 +411,8 @@ add_shortcode(
 		}
 		$es   = maros_is_es( $post_id );
 		$logo = get_stylesheet_directory_uri() . '/assets/logo/marbellainstyle-simbolo-oro.svg';
-		return '<div class="mis-managed"><span class="mis-managed__mark"><img src="' . esc_url( $logo ) . '" width="17" height="17" alt=""></span><p><strong>'
-			. esc_html( $es ? 'Gestionada por Marbella in Style' : 'Managed by Marbella in Style' )
-			. '</strong></p></div>';
+		return '<div class="mis-managed"><span class="mis-managed__mark"><img src="' . esc_url( $logo ) . '" width="17" height="17" alt=""></span><p><span>'
+			. esc_html( $es ? 'Gestionada por' : 'Managed by' ) . '</span> <strong>Marbella in Style</strong></p></div>';
 	}
 );
 
